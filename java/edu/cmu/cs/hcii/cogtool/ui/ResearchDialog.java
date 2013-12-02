@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -46,29 +46,6 @@
  * 
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
- * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Mozilla XULRunner 1.9.0.5
  * 
@@ -117,19 +94,6 @@ import edu.cmu.cs.hcii.cogtool.util.WindowUtil;
 
 public class ResearchDialog extends WindowUtil.SimpleDialog
 {
-    private static final String BACK_BUTTON_HELP_TEXT =
-        L10N.get("PREFDG.BKBUTHELP",
-          "This is a place holder for some text describing the various " +
-          "settings associated with the back button in CogTool-Explorer. " +
-          "The pop-up distinguishes three possible behaviors: just stopping and " +
-          "giving up when a search bottoms out; clicking on a distinguished " +
-          "back button when we bottom out, following a transition from that " +
-          "button, if any, and otherwise going back via history; or just going " +
-          "back magically using the history without clicking anything. " +
-          "The text for a back button can be set; multiple possible names for the " +
-          "back button can be set by providing one per line in the relevant " +
-          "text box.");
-    
     private Interaction interaction;
     private Button allowResearchCmds;
     private Button useKeypad;
@@ -143,17 +107,12 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
     private IntegerEntry actrTimeoutEntry;
     private DoubleEntry pmiGSizeEntry;
     private Button cteSuppressNoiseCheckbox;
-    private Button cteSuppressNoninteractiveCheckbox;
     private ManagedText converterDirectoryEntry;
     private Button alternativeParametersCheckbox;
     private IntegerEntry visualAttentionEntry;
     private IntegerEntry motorInitiationEntry;
     private IntegerEntry peckFittsCoeffEntry;
     private IntegerEntry actrDATEntry;
-    private Combo cteBackButtonSemantics;
-    private ManagedText cteBackButtonEntry;
-    private Button enableLoggingCheckbox;
-    private ManagedText logDirectoryEntry;
     
     public ResearchDialog(Shell parentWin, Interaction interact)
     {
@@ -245,32 +204,6 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
                                                "Emit ACT-R Traces"));
         enableTracingCheckbox.setSelection(CogToolPref.IS_TRACING.getBoolean());
         
-        enableLoggingCheckbox = new Button(dialog, SWT.CHECK);
-        enableLoggingCheckbox.setText(L10N.get("PREFDG.ENABLELOG",
-                                               "Emit detailed log file"));
-        enableLoggingCheckbox.setSelection(CogToolPref.IS_LOGGING.getBoolean());
-        
-        Label logDirectoryLabel = new Label(dialog, SWT.NONE);
-        logDirectoryLabel.setText(L10N.get("PREFDG.LogDirectory", "Log file Directory:"));
-        logDirectoryEntry = new ManagedText(dialog, SWT.BORDER, Keypad.FULL_KEYPAD);
-        String directory = CogToolPref.LOG_DIRECTORY.getString();
-        if( directory != null){
-            logDirectoryEntry.setText(directory);
-        }
-        Button logBrowseButton = new Button(dialog, SWT.PUSH);
-        logBrowseButton.setText(L10N.get("PREFDG.ChooseLog", "Choose..."));
-        logBrowseButton.addListener(SWT.Selection,
-                                   new Listener() {
-                                      public void handleEvent(Event e) {
-                                         String dir = interaction.askUserForDirectory("Log Files","Choose the directory into which to write log files." );
-
-                                         if (dir != null)
-                                         {
-                                             logDirectoryEntry.setText(dir);
-                                         }
-                                      }
-                                   });
-        
         useEMMACheckbox = new Button(dialog, SWT.CHECK);
         useEMMACheckbox.setText(L10N.get("PREFDG.EMMA",
                                          "Use EMMA to model vision"));
@@ -286,7 +219,7 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         actrDebugLevelCombo.add("2");
         actrDebugLevelCombo.add("3");
         actrDebugLevelCombo.select(CogToolPref.ACTR_DEBUG_LEVEL.getInt());
-        
+
         Label actrTimeoutLabel = new Label(dialog, SWT.NONE);
         actrTimeoutLabel.setText(L10N.get("PREFDG.ACTRTIMEOUT",
                                           "ACT-R timeout:"));
@@ -350,34 +283,8 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         
         cteSuppressNoiseCheckbox = new Button(dialog, SWT.CHECK);
         cteSuppressNoiseCheckbox.setText(L10N.get("PREFDG.CTE_SUPPRESS_NOISE",
-                                                  "Suppress noise in CogTool Explorer"));
+                                                  "Suppress Noise in CogTool Explorer"));
         cteSuppressNoiseCheckbox.setSelection(CogToolPref.CTE_SUPPRESS_NOISE.getBoolean());
-        
-        cteSuppressNoninteractiveCheckbox = new Button(dialog, SWT.CHECK);
-        cteSuppressNoninteractiveCheckbox.setText(L10N.get("PREFDG.CTE_SUPPRESS_NONINTERACTIVE",
-                                                           "Ignore non-interactive widgets with no display or auxilliary text in CogTool Explorer"));
-        cteSuppressNoninteractiveCheckbox.setSelection(CogToolPref.CTE_SUPPRESS_NONINTERACTIVE.getBoolean());
-        
-        cteBackButtonSemantics = new Combo(dialog, SWT.READ_ONLY);
-        cteBackButtonSemantics.add("Never go back");
-        cteBackButtonSemantics.add("Use back button to go back");
-        cteBackButtonSemantics.add("Go back implicitly");
-        cteBackButtonSemantics.select(CogToolPref.CTE_BACK_BUTTON_SEMANTICS.getInt());
-        Button cteBackButtonHelp = new Button(dialog, SWT.PUSH);
-        cteBackButtonHelp.setText("?");
-        cteBackButtonHelp.addListener(SWT.Selection,
-                                      new Listener() {
-                                     public void handleEvent(Event e) {
-                                         WindowUtil.presentInformationDialog(dialog,
-                                             L10N.get("PREFDG.CTE_BACK_BUTTON_HELP_TITLE",
-                                                      "Back Button Help"),
-                                             BACK_BUTTON_HELP_TEXT);                                                                                
-                                     }
-                                 });
-        Label cteBackButtonEntryLabel = new Label(dialog, SWT.NONE);
-        cteBackButtonEntryLabel.setText(L10N.get("PREFDG.CTEBACKLABEL", "Back button label:"));
-        cteBackButtonEntry = new ManagedText(dialog, (SWT.BORDER | SWT.MULTI | SWT.LEFT), Keypad.FULL_KEYPAD);
-        cteBackButtonEntry.setText(CogToolPref.CTE_DEFAULT_BACK_LABEL.getString());
         
         Label pmiGSizeLabel = new Label(dialog, SWT.NONE);
         pmiGSizeLabel.setText(L10N.get("PREFDG.PMIGSIZE",
@@ -393,13 +300,13 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         converterDirectoryLabel.setText(L10N.get("PREFDG.ConverterDirectory", "Converter Directory:"));
         converterDirectoryEntry = new ManagedText(dialog, SWT.BORDER, Keypad.FULL_KEYPAD);
         //Set the text entry to be equal to the current specified directory
-        directory = CogToolPref.CONVERTER_DIRECTORY.getString();
+        String directory = CogToolPref.CONVERTER_DIRECTORY.getString();
         if( directory != null){
             converterDirectoryEntry.setText(directory);
         }
-        Button convertBrowseButton = new Button(dialog, SWT.PUSH);
-        convertBrowseButton.setText(L10N.get("PREFDG.ChooseConverter", "Choose..."));
-        convertBrowseButton.addListener(SWT.Selection,
+        Button browseButton = new Button(dialog, SWT.PUSH);
+        browseButton.setText(L10N.get("PREFDG.Choose", "Choose..."));
+        browseButton.addListener(SWT.Selection,
                                    new Listener() {
                                       public void handleEvent(Event e) {
                                          String dir = interaction.askUserForDirectory("Import Converter Files","Choose the directory that contains the converter files." );
@@ -480,29 +387,8 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         fd = new FormData();
         fd.top = new FormAttachment(enableTracingCheckbox, 15);
         fd.left = new FormAttachment(enableTracingCheckbox, 0, SWT.LEFT);
-        enableLoggingCheckbox.setLayoutData(fd);
-        
-        fd = new FormData();
-        fd.top = new FormAttachment(enableLoggingCheckbox, 15);
-        fd.left = new FormAttachment(enableLoggingCheckbox, 0, SWT.LEFT);
-        logDirectoryLabel.setLayoutData(fd);
-        
-        fd = new FormData();
-        fd.top = new FormAttachment(logDirectoryLabel, 0, SWT.CENTER);
-        fd.left = new FormAttachment(logDirectoryLabel, 5, SWT.RIGHT);
-        fd.right = new FormAttachment(logDirectoryLabel, 305, SWT.RIGHT);
-        logDirectoryEntry.setLayoutData(fd);
-
-        fd = new FormData();
-        fd.top = new FormAttachment(logDirectoryEntry, 0, SWT.CENTER);
-        fd.left = new FormAttachment(logDirectoryEntry, 5, SWT.RIGHT);
-        logBrowseButton.setLayoutData(fd);
-
-        fd = new FormData();
-        fd.top = new FormAttachment(logDirectoryLabel, 15);
-        fd.left = new FormAttachment(logDirectoryLabel, 0, SWT.LEFT);
         useEMMACheckbox.setLayoutData(fd);
-        
+
         fd = new FormData();
         fd.top = new FormAttachment(useEMMACheckbox, 15);
         fd.left = new FormAttachment(useEMMACheckbox, 0, SWT.LEFT);
@@ -602,44 +488,16 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         fd.top = new FormAttachment(actrDATEntry.getOuter(), 18);
         fd.left = new FormAttachment(alternativeParametersCheckbox, 0, SWT.LEFT);
         cteSuppressNoiseCheckbox.setLayoutData(fd);
-        
+
         fd = new FormData();
         fd.top = new FormAttachment(cteSuppressNoiseCheckbox, 18);
-        fd.left = new FormAttachment(cteSuppressNoiseCheckbox, 0, SWT.LEFT);
-        fd.right = new FormAttachment(100, -35);
-        cteSuppressNoninteractiveCheckbox.setLayoutData(fd);
-
-        fd = new FormData();
-        fd.top = new FormAttachment(cteSuppressNoninteractiveCheckbox, 18);
-        fd.left = new FormAttachment(cteSuppressNoninteractiveCheckbox, 0, SWT.LEFT);
-        cteBackButtonSemantics.setLayoutData(fd);
-
-        fd = new FormData();
-        fd.top = new FormAttachment(cteBackButtonSemantics, 8);
-        fd.left = new FormAttachment(cteBackButtonEntryLabel, 5);
-        fd.right = new FormAttachment(cteBackButtonEntryLabel, 180, SWT.RIGHT);
-        fd.bottom = new FormAttachment(cteBackButtonSemantics, 110);
-        cteBackButtonEntry.setLayoutData(fd);
-        
-        fd = new FormData();
-        fd.top = new FormAttachment(cteBackButtonEntry, 0, SWT.CENTER);
-        fd.left = new FormAttachment(cteBackButtonSemantics, 30, SWT.LEFT);
-        cteBackButtonEntryLabel.setLayoutData(fd);
-        
-        fd = new FormData();
-        fd.top = new FormAttachment(cteBackButtonSemantics, 0, SWT.CENTER);
-        fd.left = new FormAttachment(cteBackButtonSemantics, 15, SWT.RIGHT);
-        cteBackButtonHelp.setLayoutData(fd);
-        
-        fd = new FormData();
-        fd.top = new FormAttachment(cteBackButtonEntry, 24);
         fd.left = new FormAttachment(cteSuppressNoiseCheckbox, 0, SWT.LEFT);
         pmiGSizeLabel.setLayoutData(fd);
         
         fd = new FormData();
         fd.top = new FormAttachment(pmiGSizeLabel, 0, SWT.CENTER);
         fd.left = new FormAttachment(pmiGSizeLabel, 5);
-        fd.right = new FormAttachment(pmiGSizeLabel, 140, SWT.RIGHT);
+        fd.right = new FormAttachment(pmiGSizeLabel, 80, SWT.RIGHT);
         pmiGSizeEntry.getOuter().setLayoutData(fd);
         
         fd = new FormData();
@@ -658,7 +516,7 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         fd.left = new FormAttachment(converterDirectoryEntry, 5, SWT.RIGHT);
         fd.right = new FormAttachment(okButton, 0, SWT.RIGHT);
         fd.bottom = new FormAttachment(okButton, -30);
-        convertBrowseButton.setLayoutData(fd);
+        browseButton.setLayoutData(fd);
     }
 
     protected void updateEnabled() {
@@ -680,9 +538,6 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         actrDATEntry.getOuter().setEnabled(resrch && alt);
         pmiGSizeEntry.getOuter().setEnabled(resrch);
         cteSuppressNoiseCheckbox.setEnabled(resrch);
-        cteSuppressNoninteractiveCheckbox.setEnabled(resrch);
-        cteBackButtonSemantics.setEnabled(resrch);
-        cteBackButtonEntry.setEnabled(resrch);
     }
 
     // returns true iff something has actually been changed
@@ -737,26 +592,11 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         if (CogToolPref.CTE_SUPPRESS_NOISE.setBoolean(cteSuppressNoiseCheckbox.getSelection())) {
             changed.add(CogToolPref.CTE_SUPPRESS_NOISE);
         }
-        if (CogToolPref.CTE_SUPPRESS_NONINTERACTIVE.setBoolean(cteSuppressNoninteractiveCheckbox.getSelection())) {
-            changed.add(CogToolPref.CTE_SUPPRESS_NONINTERACTIVE);
-        }
         if (CogToolPref.PMI_G_SIZE.setDouble(pmiGSizeEntry.getDoubleValue())) {
             changed.add(CogToolPref.PMI_G_SIZE);
         }
         if (CogToolPref.CONVERTER_DIRECTORY.setString(converterDirectoryEntry.getText())) {
             changed.add(CogToolPref.CONVERTER_DIRECTORY);
-        }
-        if (CogToolPref.CTE_BACK_BUTTON_SEMANTICS.setInt(cteBackButtonSemantics.getSelectionIndex())) {
-            changed.add(CogToolPref.CTE_BACK_BUTTON_SEMANTICS);
-        }
-        if (CogToolPref.CTE_DEFAULT_BACK_LABEL.setString(cteBackButtonEntry.getText())) {
-            changed.add(CogToolPref.CTE_DEFAULT_BACK_LABEL);
-        }
-        if (CogToolPref.IS_LOGGING.setBoolean(enableTracingCheckbox.getSelection())) {
-            changed.add(CogToolPref.IS_LOGGING);
-        }
-        if (CogToolPref.LOG_DIRECTORY.setString(logDirectoryEntry.getText())) {
-            changed.add(CogToolPref.LOG_DIRECTORY);
         }
         if (changed.isEmpty()) {
             return false;
@@ -782,9 +622,6 @@ public class ResearchDialog extends WindowUtil.SimpleDialog
         peckFittsCoeffEntry.setValue(CogToolPref.PECK_FITTS_COEFF.getIntDefault());
         actrDATEntry.setValue(CogToolPref.ACTR_DAT.getIntDefault());
         cteSuppressNoiseCheckbox.setSelection(CogToolPref.CTE_SUPPRESS_NOISE.getBooleanDefault());
-        cteSuppressNoninteractiveCheckbox.setSelection(CogToolPref.CTE_SUPPRESS_NONINTERACTIVE.getBooleanDefault());
-        cteBackButtonSemantics.select(CogToolPref.CTE_BACK_BUTTON_SEMANTICS.getIntDefault());
-        cteBackButtonEntry.setText(CogToolPref.CTE_DEFAULT_BACK_LABEL.getStringDefault());
         pmiGSizeEntry.setValue((int)CogToolPref.PMI_G_SIZE.getDoubleDefault());
         String dir = CogToolPref.CONVERTER_DIRECTORY.getStringDefault();
         if (dir == null) {

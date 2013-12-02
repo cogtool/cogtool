@@ -277,12 +277,12 @@
                    delay-label
                    old-system-wait
                    old-system-wait-label
-                   force-transition
+		   force-transition
               &allow-other-keys)
   (cogtool-debug 2 "Setting plist at time ~A: ~S" (mp-time) keys)
   (unless df-supplied
     (setq keys (list* :destination-frame destination-frame keys)))
-  (when (and destination-frame (or (null (curframe *cogtool-design*)) force-transition)) 
+  (when (and destination-frame (or (null (curframe *cogtool-design*)) force-transition))
     ;; sets the initial frame
     (transition destination-frame *cogtool-design*))
   (when (or key hand)
@@ -865,8 +865,7 @@
    ;; for Leonghwee's SNIF-ACT stuff
    (transitions :accessor transitions :initarg :transitions
         :initform (make-hash-table :test #'equal)
-        :documentation "hashtable of (action => transition)")
-   (is-back-button :accessor back-button-p :initarg :is-back-button :initform nil)))
+        :documentation "hashtable of (action => transition)")))
 
 ;; we never actually use transitions in CogTool per se, but need to keep them around
 ;; for Leonghwee's SNIF-ACT stuff
@@ -914,17 +913,15 @@
 
 (defun make-frame-vis-locs (frame)
   (cogtool-debug 1 "Making vis-locs for ~S" frame)
-  (cogtool-debug 3 "Widgets: ~S" (widgets frame))
   (let ((groups (let ((tab (make-hash-table)))
           (labels ((find-groups (thing)
                       (loop for g in (member-of-groups thing)
-                    do (when g
-			 (setf (gethash g tab) t)
-			 (find-groups g)))))
+                    do (progn
+                     (setf (gethash g tab) t)
+                     (find-groups g)))))
             (mapc #'find-groups (widgets frame)))
           (loop for g being each hash-key of tab
             collect g))))
-    (cogtool-debug 3 "Groups: ~S" groups)
     (loop for thing in (append groups (widgets frame))
       do (cogtool-debug 2 "vis-loc info for ~S, ~A, ~A, ~S" thing (name thing) (wtype thing) (member-of-groups thing))
       nconc (if (member-of-groups thing)
@@ -949,7 +946,6 @@
       height ,(height thing)
       width ,(width thing)
       kind ,(wtype thing)
-      is-back-button ,(back-button-p thing)
       textual-cue ,(textual-cue thing)
       remote-label-of ,(remote-label-of thing)
       has-remote-label ,(has-remote-label thing)
@@ -1179,15 +1175,11 @@
        (cogtool-debug 1 "Setting params to ~A" ',params)
        (sgp ,@params)
        (set-audloc-default :location loudspeaker :onset highest)
-       ;; The following file will typically not exist, but can be created to
-       ;; exert a little last minute control over things, if desired. The pathname
-       ;; probably only works on Macintosh, though.
-       (load "/tmp/act-r-kludge.lisp" :verbose t :print t :if-does-not-exist nil)
        (unless *suppress-trace*
      (print *features*)
      (sgp))
        (chunk-type (cogtool-visual-location (:include visual-location))
-           widget-name display-label textual-cue remote-label-of has-remote-label member-of-group is-back-button)
+           widget-name display-label textual-cue remote-label-of has-remote-label member-of-group)
        (chunk-type (cogtool-button (:include visual-object)) ())
        (chunk-type (cogtool-link (:include visual-object)) ())
        (chunk-type (cogtool-context-menu (:include visual-object)) ())

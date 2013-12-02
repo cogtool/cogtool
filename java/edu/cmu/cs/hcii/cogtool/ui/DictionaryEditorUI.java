@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -95,7 +72,6 @@ import java.util.Arrays;
 import java.util.EventObject;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -114,17 +90,16 @@ import org.eclipse.swt.widgets.Text;
 import edu.cmu.cs.hcii.cogtool.CogTool;
 import edu.cmu.cs.hcii.cogtool.CogToolLID;
 import edu.cmu.cs.hcii.cogtool.model.Design;
-import edu.cmu.cs.hcii.cogtool.model.GensimLSASimilarity;
 import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary;
-import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary.DictEntry;
-import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary.EntryChange;
 import edu.cmu.cs.hcii.cogtool.model.ISitedTermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.ITermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.LSASimilarity;
 import edu.cmu.cs.hcii.cogtool.model.Project;
+import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary.DictEntry;
+import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary.EntryChange;
 import edu.cmu.cs.hcii.cogtool.uimodel.DictionaryEditorUIModel;
-import edu.cmu.cs.hcii.cogtool.util.AlertHandler;
 import edu.cmu.cs.hcii.cogtool.util.DoubleEntry;
+import edu.cmu.cs.hcii.cogtool.util.AlertHandler;
 import edu.cmu.cs.hcii.cogtool.util.L10N;
 import edu.cmu.cs.hcii.cogtool.util.ListenerIdentifier;
 import edu.cmu.cs.hcii.cogtool.util.ListenerIdentifierMap;
@@ -226,8 +201,6 @@ public class DictionaryEditorUI extends DefaultUI
 
     protected static final String DICT_PREFIX =
         L10N.get("WT.DictPrefix", "Dictionary");
-    
-    protected Combo spaceCombo;
 
     protected SelectionListener algListener = new SelectionAdapter()
     {
@@ -240,26 +213,11 @@ public class DictionaryEditorUI extends DefaultUI
             int index = c.getSelectionIndex();
             String algString = c.getItem(index);
             boolean isLSA = (index == DictionaryEditorUIModel.LSA_INDEX);
-            boolean isGENSIM = (index == DictionaryEditorUIModel.GENSIM_LSA_INDEX);
-            
+
             view.setURLEnabled((index == DictionaryEditorUIModel.GOOGLE_WORD_INDEX)
                                 || (index == DictionaryEditorUIModel.GOOGLE_PHRASE_INDEX)
                                 || isLSA);
-            view.setURLEnabled(isLSA || isGENSIM);
-            
-            
-            //Where should these get updated versus just using what is already there??
-            //It appears that the URL is just used from the previous rather than being set here
-            if (isGENSIM) {
-                //view.setItems(GensimLSASimilarity.KNOWN_SPACES);
-                view.setSpace(GensimLSASimilarity.DEFAULT_SPACE);
-                view.setURL(GensimLSASimilarity.GENSIM_SIMPLE_LSA_URL);
-            }
-            else { //LSA
-                //view.setItems(LSASimilarity.KNOWN_SPACES);
-                view.setSpace(LSASimilarity.DEFAULT_SPACE);
-                view.setURL(LSASimilarity.DEFAULT_LSA_URL);
-            }
+            view.setURLEnabled(isLSA);
 
             Table dictTable = view.getDictTable();
             modifiedRow = dictTable.indexOf(row);
@@ -437,12 +395,7 @@ public class DictionaryEditorUI extends DefaultUI
     protected void updateView()
     {
         Table dictTable = view.getDictTable();
-        int selectionCount = 0;
-        try {
-            selectionCount = dictTable.getSelectionCount();
-        } catch (SWTException e) {
-            return;
-        }
+        int selectionCount = dictTable.getSelectionCount();
 
         if (selectionCount == 1) {
             int index = dictTable.getSelectionIndex();
@@ -467,19 +420,6 @@ public class DictionaryEditorUI extends DefaultUI
 
                     if (url == null) {
                         url = LSASimilarity.DEFAULT_LSA_URL;
-                    }
-
-                    view.setURLEnabled(true);
-                    view.setSpaceEnabled(true);
-                }
-                else if (entry.algorithm instanceof GensimLSASimilarity) {
-                    GensimLSASimilarity lsa = (GensimLSASimilarity) entry.algorithm;
-
-                    space = lsa.getSpace();
-                    url = lsa.getURL();
-
-                    if (url == null) {
-                        url = GensimLSASimilarity.DEFAULT_LSA_URL;
                     }
 
                     view.setURLEnabled(true);
@@ -741,23 +681,19 @@ public class DictionaryEditorUI extends DefaultUI
 
     protected void setViewEnabledState(Boolean context)
     {
-        try {
-            Table dictTable = view.getDictTable();
-            int selectionCount = dictTable.getSelectionCount();
-            boolean pendingSelected =
-                    dictTable.isSelected(dictTable.getItemCount() - 1);
-            boolean enabled = ! pendingSelected && (selectionCount >= 1);
+        Table dictTable = view.getDictTable();
+        int selectionCount = dictTable.getSelectionCount();
+        boolean pendingSelected =
+            dictTable.isSelected(dictTable.getItemCount() - 1);
+        boolean enabled = ! pendingSelected && (selectionCount >= 1);
 
-            setEnabled(CogToolLID.Delete, context, enabled);
+        setEnabled(CogToolLID.Delete, context, enabled);
 
-            enabled = selectionCount == 1;
+        enabled = selectionCount == 1;
 
-            setEnabled(DictionaryEditorLID.SetSimilarity, context, enabled);
-            setEnabled(DictionaryEditorLID.SetGoalString, context, enabled);
-            setEnabled(DictionaryEditorLID.SetSearchString, context, enabled);
-        } catch (SWTException e) {
-            // ignore
-        }
+        setEnabled(DictionaryEditorLID.SetSimilarity, context, enabled);
+        setEnabled(DictionaryEditorLID.SetGoalString, context, enabled);
+        setEnabled(DictionaryEditorLID.SetSearchString, context, enabled);
     }
 
     protected boolean commitEdit()

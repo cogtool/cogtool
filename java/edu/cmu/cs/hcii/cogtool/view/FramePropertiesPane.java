@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -109,8 +86,6 @@ import edu.cmu.cs.hcii.cogtool.CogToolPref;
 import edu.cmu.cs.hcii.cogtool.model.Frame;
 import edu.cmu.cs.hcii.cogtool.model.FrameElement;
 import edu.cmu.cs.hcii.cogtool.model.FrameElementGroup;
-import edu.cmu.cs.hcii.cogtool.model.IWidget;
-import edu.cmu.cs.hcii.cogtool.model.SimpleWidgetGroup;
 import edu.cmu.cs.hcii.cogtool.model.Transition;
 import edu.cmu.cs.hcii.cogtool.model.TransitionSource;
 import edu.cmu.cs.hcii.cogtool.model.WidgetAttributes;
@@ -153,7 +128,6 @@ public class FramePropertiesPane extends Composite
     private Label implicitGroupTreeLabel = null;
     private Tree implicitGroupTree = null;
     private TreeItemUpdater<FrameElementGroup, FrameElement> eltGroupUpdater;
-    private TreeItemUpdater<SimpleWidgetGroup, IWidget> implicitGroupUpdater;
 
     public FramePropertiesPane(Composite parent, int style, View view)
     {
@@ -301,8 +275,7 @@ public class FramePropertiesPane extends Composite
             implicitGroupTree =
                 new Tree(this, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER);
             implicitGroupTree.setLinesVisible(true);
-            implicitGroupUpdater =
-                new TreeItemUpdater.ImplicitGroupItemUpdater(implicitGroupTree);
+            // TODO add the updater
         }
     }
 
@@ -337,14 +310,6 @@ public class FramePropertiesPane extends Composite
                 grps = filterNestedGroups(grps);
             }
             eltGroupUpdater.updateTree(grps.iterator());
-            Set<SimpleWidgetGroup> implicitGroups = new HashSet<SimpleWidgetGroup>();
-            for (IWidget w : frame.getWidgets()) {
-                SimpleWidgetGroup g = w.getParentGroup();
-                if (g != null) {
-                    implicitGroups.add(g);
-                }
-            }
-            implicitGroupUpdater.updateTree(implicitGroups.iterator());
         }
         setFrameName(frame);
     }
@@ -366,9 +331,9 @@ public class FramePropertiesPane extends Composite
     public void setTreeListener(SelectionListener treeListener)
     {
         widgetTree.addSelectionListener(treeListener);
+
         if (eltGroupTreeLabel != null) {
             eltGroupTree.addSelectionListener(treeListener);
-            implicitGroupTree.addSelectionListener(treeListener);
         }
     }
 }

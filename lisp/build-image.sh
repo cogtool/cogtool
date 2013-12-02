@@ -6,6 +6,8 @@
 # of OS X $MACHTYPE was not being set correctly.
 
 case $MACHTYPE in
+    powerpc*)
+	    platform=mac-ppc ;;
     i?86-apple*)
 	    platform=mac-intel ;;
     x86_64-apple*)

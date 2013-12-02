@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -106,6 +83,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -120,14 +98,12 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import edu.cmu.cs.hcii.cogtool.controller.CommandFile;
 import edu.cmu.cs.hcii.cogtool.controller.ControllerNexus;
 import edu.cmu.cs.hcii.cogtool.controller.ControllerRegistry;
 import edu.cmu.cs.hcii.cogtool.controller.ProjectController;
 import edu.cmu.cs.hcii.cogtool.controller.RootController;
 import edu.cmu.cs.hcii.cogtool.model.CogToolSerialization;
 import edu.cmu.cs.hcii.cogtool.model.Project;
-import edu.cmu.cs.hcii.cogtool.ui.ProjectContextSelectionState;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectInteraction;
 import edu.cmu.cs.hcii.cogtool.ui.RcvrExceptionHandler;
 import edu.cmu.cs.hcii.cogtool.util.DelayedWorkManager;
@@ -224,8 +200,63 @@ public class CogTool
 
     // The exportCVSKludge doesn't work on Windows
     public static File exportCSVKludgeDir = null;
+
+    private static String[] COMMANDS = { 
+        "import-xml", "export-xml", "import-html", "export-csv" }; 
     
-    public static boolean quietCommands = false;
+    private static OptionSet parseOptions(String args[]) {
+        OptionParser parser = new OptionParser();
+        // The psn is supplied on MacOS when a GUI application is double-cliced;
+        // we just ignore it, but need to recognize it so we can ignore it.
+        parser.accepts("psn", "process serial number (ignored)").withRequiredArg();
+        for (String c : COMMANDS) {
+            parser.accepts(c);
+        }
+        OptionSet result = null;
+        try {
+            result = parser.parse(args);
+        } catch (OptionException ex) {
+            System.err.println(L10N.get(
+               "CT.CLIError",
+               "Could not interpret the command line arguments to CogTool: ")
+               + args);
+            System.exit(1);
+        }
+        return result;
+    }
+    
+    private static String getCommand(OptionSet opts) {
+        String result = null;
+        for (String c : COMMANDS) {
+            if (opts.has(c)) {
+                if (result != null) {
+                    System.err.println(
+                        String.format(
+                          L10N.get(
+                              "CT.CLIDuplicate",
+                              "Too many commands in command line arguments to CogTool: %s, %s"),
+                          result,
+                          c));                        
+                    System.exit(4);
+                } else {
+                    result = c;
+                }
+            }
+        }
+        return result;
+    }
+    
+    private static void testArgs(List<String> args, int count, String cmd) {
+        if (args.size() != count) {
+            System.err.println(String.format(
+                L10N.get("CT.CLIWrongArgCount",
+                         "Wrong number of arguments for %s command; expected %d but got %d."),
+                cmd,
+                count,
+                args.size()));
+            System.exit(16);
+        }
+    }                            
 
     public static void main(String args[])
     {
@@ -251,10 +282,6 @@ public class CogTool
 
         try {
             if (OSUtils.MACOSX) {
-                if (!OSUtils.isIntelMac()) {
-                    System.out.println("CogTool no longer runs on PowerPC");
-                    System.exit(16);
-                }
                 // we need to create the RootController, but will never
                 // actually need to interact with it programmatically
                 rootCtl = new RootController();
@@ -266,20 +293,30 @@ public class CogTool
             
             enableLogging(CogToolPref.IS_LOGGING.getBoolean());
             
-            OptionParser parser = new OptionParser("f:i:re:s:qQ");
-            // The psn is supplied on MacOS when a GUI application is double-clicked;
-            // we just ignore it, but need to recognize it so we can ignore it.
-            parser.accepts("psn", "process serial number (ignored)").withRequiredArg();
-            OptionSet opts = parser.parse(args);
-            
-            if (opts.has("Q")) {
-                quietCommands = true;
-            }
-            
+            OptionSet opts = parseOptions(args);
+            String command = getCommand(opts);
+            List<String> arguments = opts.nonOptionArguments();
             List<String> filesToLoad = new ArrayList<String>();
-            for (Object obj : opts.nonOptionArguments()) {
-                filesToLoad.add((String)obj);
+            if (command == null) {
+                filesToLoad.addAll(arguments);
+            } else if (command.equals("import-xml")) {
+                testArgs(arguments, 2, "import-xml");
+                filesToLoad.add(arguments.get(1));                
+            } else if (command.equals("export-xml")) {
+                testArgs(arguments, 2, "export-xml");
+                filesToLoad.add(arguments.get(0));
+            } else if (command.equals("import-html")) {
+                testArgs(arguments, 9, "import-html");
+            } else if (command.equals("export-csv")) {
+                testArgs(arguments, 1, "iexport-csv");
+                filesToLoad.add(arguments.get(0));
+            } else {
+                // No need to localize this, as it's an illegal state that
+                // can't be caused by user input
+                System.err.println("Unknown command line command: " + command);
+                System.exit(8);
             }
+            
             List<RecoverableException> loadExceptions =
             	new ArrayList<RecoverableException>();
             ProjectController openedProject = null;
@@ -303,28 +340,6 @@ public class CogTool
                     }
                 }
             }
-            
-            if (opts.has("f")) {
-                openedProject = (new CommandFile((String)opts.valueOf("f"))).run();
-            } else {
-                if (opts.has("i")) {
-                    openedProject = ProjectController.newProjectController();
-                    openedProject.importFile = new File((String)opts.valueOf("i"));
-                    openedProject.importFileComputes = opts.has("r");
-                    openedProject.performAction(CogToolLID.ImportXML, 
-                                                new ProjectContextSelectionState(openedProject.getModel()));
-                }
-                if (openedProject != null && opts.has("e")) {
-                    openedProject.exportFile = (String)opts.valueOf("e");
-                    openedProject.exportResultsToCSV();
-                }
-                if (openedProject != null && opts.has("s")) {
-                    openedProject.saveAsFilename((String)opts.valueOf("s"));
-                }
-                if (opts.has("q")) {
-                    System.exit(0);
-                }
-            }
 
             if (openedProject != null) {
                 if (System.getProperty("edu.cmu.cs.hcii.cogtool.ExportCSVKludge") != null) {
@@ -335,46 +350,47 @@ public class CogTool
                 }
             }
             
-            if (openedProject == null) {
-                // no project was opened successfully, or none were specified,
-                // so create a fresh project and use its Interaction to
-                // report load errors
-                ProjectController c =
+            if (command == null) {
+                if (openedProject == null) {
+                    // no project was opened successfully, or none were specified,
+                    // so create a fresh project and use its Interaction to
+                    // report load errors
+                    ProjectController c =
                         ProjectController.newProjectController();
-                c.setLocation(25.0, 25.0);
-                String response = c.getInteraction().createNewOrOpenExisting();
-                if (response == ProjectInteraction.CREATE) {
-                    // Populate the empty project to avoid a "blank screen".
-                    c.populateProject();
-                }
-                else if (response == null) {
-                    c.requestClose();
-                } else {
-                    if (response == ProjectInteraction.OPEN) {
-                        c.openExistingProject(c.getLocation());
-                    } else {
-                        c.performAction(CogToolLID.OpenProjectFile,
-                                        response,
-                                        false);
+                    c.setLocation(25.0, 25.0);
+                    String response = c.getInteraction().createNewOrOpenExisting();
+                    if (response == ProjectInteraction.CREATE) {
+                        // Populate the empty project to avoid a "blank screen".
+                        c.populateProject();
                     }
-                    if (ControllerRegistry.ONLY.openControllerCount() > 1) {
+                    else if (response == null) {
                         c.requestClose();
+                    } else {
+                        if (response == ProjectInteraction.OPEN) {
+                            c.openExistingProject(c.getLocation());
+                        } else {
+                            c.performAction(CogToolLID.OpenProjectFile,
+                                            response,
+                                            false);
+                        }
+                        if (ControllerRegistry.ONLY.openControllerCount() > 1) {
+                            c.requestClose();
+                        }
                     }
                 }
+            } else if (command.equals("export-csv")) {
+                if (openedProject == null) {
+                    System.err.println(String.format(
+                            L10N.get("CT.NoFileForCSV",
+                                     "Couldn't open %s for CSV export."),
+                            arguments.get(0)));
+                    System.exit(32);
+                }
+                exportCSVKludgeDir =
+                    file.getAbsoluteFile().getParentFile();
+                openedProject.exportCSVKludge();
+                System.exit(0);
             }
-//            } else if (command.equals("export-csv")) {
-//                if (openedProject == null) {
-//                    System.err.println(String.format(
-//                            L10N.get("CT.NoFileForCSV",
-//                                     "Couldn't open %s for CSV export."),
-//                            arguments.get(0)));
-//                    System.exit(32);
-//                }
-//                exportCSVKludgeDir =
-//                    file.getAbsoluteFile().getParentFile();
-//                openedProject.exportCSVKludge();
-//                System.exit(0);
-//            }
 
             // Note that the following catches and does not rethrow any
             // SWTExceptions. This means reportTopLevelException never gets
@@ -427,7 +443,7 @@ public class CogTool
         // but left a background thread alive
         System.exit(-1);
     }
-    
+
     /**
      * Attend to an Exception or Error caught at top level.
      * Attempts to interact with the user, presenting a stack trace and

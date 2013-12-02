@@ -1,0 +1,22 @@
+<mockup version="1.0" skin="sketch" measuredW="607" measuredH="381">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Button" x="254" y="187" w="-1" h="-1" measuredW="73" measuredH="28" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Previous</text>
+        <href>next.bmml</href>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="455" y="343" w="-1" h="-1" measuredW="81" measuredH="28" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Previous2</text>
+        <href>next.bmml</href>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="529" y="143" w="-1" h="-1" measuredW="68" measuredH="28" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Center</text>
+        <href>center.bmml</href>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

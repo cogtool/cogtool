@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -98,14 +75,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -125,7 +100,6 @@ import edu.cmu.cs.hcii.cogtool.util.NamedObject;
 import edu.cmu.cs.hcii.cogtool.util.ObjectLoader;
 import edu.cmu.cs.hcii.cogtool.util.ObjectSaver;
 import edu.cmu.cs.hcii.cogtool.util.ProcessTraceCallback;
-import edu.cmu.cs.hcii.cogtool.util.StringUtil;
 import edu.cmu.cs.hcii.cogtool.util.Subprocess;
 
 // TODO the model file we write, while capable of being run standalone, still
@@ -150,7 +124,6 @@ public class ACTRPredictionAlgo extends APredictionAlgo
     // or not we're going to want this for real, but even if not it's is
     // convenient to be able to turn it on easily for debugging
     private static final boolean EMIT_KEEP_ALIVE = false;
-    private static final String BACK_BUTTON_SEPARATOR = "[\n\r]+";
     
     private static final String CTE_LOG_FILE = "cogtool-explorer.log";
 
@@ -168,8 +141,6 @@ public class ACTRPredictionAlgo extends APredictionAlgo
             "edu/cmu/cs/hcii/cogtool/resources/emma.lisp";
     
     private static final double TIME_EQUALITY_TOLERANCE = 0.0001;
-    
-    public static boolean emitVirtualFrames = false;
     
     private static boolean equalTimes(Double t1, Double t2) {
         return Math.abs(t1 - t2) <= TIME_EQUALITY_TOLERANCE;
@@ -446,7 +417,7 @@ public class ACTRPredictionAlgo extends APredictionAlgo
     protected static void outputDesign(Design d, PrintWriter out)
     {
         out.println("(terpri)");
-        if (CogToolPref.isTraceEmitted()) {
+        if (! CogToolPref.RESEARCH.getBoolean() || CogToolPref.IS_TRACING.getBoolean()) {
             out.println("(princ \"Cogtool " +
                         LispUtil.clean(CogTool.getVersion()) +
                         "\")");
@@ -462,8 +433,7 @@ public class ACTRPredictionAlgo extends APredictionAlgo
         }
         boolean useACTRDefaults = 
                 (!CogToolPref.RESEARCH.getBoolean() || !CogToolPref.ACTR_ALTERNATIVE_PARAMETERS.getBoolean());
-        out.format(Locale.US,
-                   ("(setq *overridden-global-parameters* `(" +
+        out.format(("(setq *overridden-global-parameters* `(" +
                     ":visual-attention-latency %.3f :motor-initiation-time %.3f :peck-fitts-coeff %.3f :dat %.3f " +
                     ",@*overridden-global-parameters*))\n"),
                     (useACTRDefaults ? CogToolPref.VISUAL_ATTENTION.getIntDefault() : CogToolPref.VISUAL_ATTENTION.getInt()) / 1000.0,
@@ -482,13 +452,17 @@ public class ACTRPredictionAlgo extends APredictionAlgo
 
         while (framesIt.hasNext()) {
             Frame frame = framesIt.next();
+
             String fn = "cogtool-frame-fn-" + (++i);
             out.println("(defun " + fn + " ()");
             out.println("\n  (let ((frames (frames *cogtool-design*)) frame widget groups)");
+
             outputFrame(frame, out);
+
             out.println("\n\n    (setf (gethash "
                                + LispUtil.safeString(frame.getName())
                                + " frames) frame)))\n");
+
             out.println("(push #'" + fn + " *frame-definitions*)\n");
         }
 
@@ -501,9 +475,7 @@ public class ACTRPredictionAlgo extends APredictionAlgo
         out.println("(when *cogtool-random-seed*");
         out.println("  (setf (getf *default-global-parameters* :seed) *cogtool-random-seed*))\n\n");
     }
-    
-    private static Set<String> backButtonLabels = null;
-    
+
     public void outputModel(Design design,
                             AUndertaking task,
                             Frame startFrame,
@@ -512,8 +484,6 @@ public class ACTRPredictionAlgo extends APredictionAlgo
                             Map<String, Object> variablesToDefine)
         throws IOException
     {
-        backButtonLabels = new HashSet<String>(
-                Arrays.asList(CogToolPref.CTE_DEFAULT_BACK_LABEL.getString().split(BACK_BUTTON_SEPARATOR)));
         PrintWriter w = null;
         try {
             w = new PrintWriter(
@@ -571,14 +541,7 @@ public class ACTRPredictionAlgo extends APredictionAlgo
             }
         }
     }
-    
-    // While in normal CogTool we take special care of clicks and taps
-    // in exactly the same location, this logic is not available to CT-E,
-    // which causes trouble, particularly with taps. Therefore as a temporary
-    // kludge until we figure out a better way to deal with it, when emitting
-    // a design for CT-E ensure that no widgets are at identical positions.
-    private static List<DoublePoint>frameElementPositions = null;
-    
+
     public void outputModel(Design design,
                             AUndertaking task,  // may be null if unknown or irrelevant
                             File file,
@@ -625,33 +588,10 @@ public class ACTRPredictionAlgo extends APredictionAlgo
         if (! CogToolPref.CTE_SUPPRESS_NOISE.getBoolean()) {
             lispVars.put("*cogtool-random-seed*", "nil");
         }
-        int backButtonSemantics = CogToolPref.CTE_BACK_BUTTON_SEMANTICS.getInt();
-        if (backButtonSemantics !=  SNIFACTPredictionAlgo.IMPLICIT_BACK &&
-                backButtonSemantics != SNIFACTPredictionAlgo.NO_BACK) {
-            lispVars.put("*use-back-button*", "t");
-            lispVars.put("*use-back-button-history-in-half-flatten-layout*", "t");
-        } else {
-            lispVars.put("*use-back-button*", "nil");
-            if (backButtonSemantics == SNIFACTPredictionAlgo.IMPLICIT_BACK) {
-                lispVars.put("*allow-magic-go-backs*", "t");
-            } else {
-                lispVars.put("*allow-magic-go-backs*", "nil");
-            }
-        }
-        String logDir = CogToolPref.LOG_DIRECTORY.getString();
-        if (!logDir.endsWith("/")) {
-            logDir += "/";
-        }
-        lispVars.put("*log-file-directory*", LispUtil.safeString(logDir));
 
-        frameElementPositions = new ArrayList<DoublePoint>();
         outputModel(design, task, null, null, file, lispVars);
-        frameElementPositions = null;
     }
-    
-    private static Map<SimpleWidgetGroup, FrameElement> simpleWidgetGroupOwners =
-            new HashMap<SimpleWidgetGroup, FrameElement>();
-    
+
     /**
      * Write a Lisp representation of this frame to a PrintWriter.
      * Uses the Lisp free variables frame, widget, frame-trans and
@@ -660,9 +600,8 @@ public class ACTRPredictionAlgo extends APredictionAlgo
      */
     private static void outputFrame(Frame f, PrintWriter out)
     {
-        virtualFrames.clear(); // redundant, but extra safety
         Set<FrameElement> grps = new HashSet<FrameElement>();
-        simpleWidgetGroupOwners.clear();
+
         out.println("\n  ;; ==== New Frame ====\n");
 
         // Create the frame
@@ -679,29 +618,9 @@ public class ACTRPredictionAlgo extends APredictionAlgo
         out.print("))");
 
         for (IWidget widget : f.getWidgets()) {
-            if (widget.getWidgetType() == WidgetType.Noninteractive &&
-                    StringUtil.isNullOrEmpty(widget.getTitle()) &&
-                    StringUtil.isNullOrEmpty(widget.getAuxiliaryText()) &&
-                    CogToolPref.CTE_SUPPRESS_NONINTERACTIVE.getBoolean()) {
-                continue;
-            }
-            if (emitVirtualFrames) {
-                if (widget instanceof MenuHeader || 
-                        widget instanceof ContextMenu ||
-                        widget instanceof PullDownHeader ||
-                        (widget instanceof MenuItem && ((MenuItem)widget).isSubmenu())) { 
-                    addVirtualFrame(f.getName(), (AParentWidget)widget); 
-                } else if (widget instanceof MenuItem || widget instanceof PullDownItem) {
-                    VirtualFrame vf = virtualFrames.get(((ChildWidget)widget).getParent());
-                    if (vf != null) {
-                        vf.items.add((ChildWidget)widget);
-                    }
-                    continue;
-                }   
-            }
             outputWidget(widget, grps, out);
             out.print("    (push widget (widgets frame))");
-        }  
+         }
         
         out.println();
         out.println();
@@ -718,49 +637,10 @@ public class ACTRPredictionAlgo extends APredictionAlgo
             }
             grps = newGrps;
         }
-        
+
         out.println();
         out.println();
         out.print("    (resolve-widget-refs frame groups)");
-        simpleWidgetGroupOwners.clear();
-        
-        for (VirtualFrame vf : virtualFrames.values()) {
-            vf.outputSelf(out);
-        }
-        virtualFrames.clear();
-
-    }
-    
-    private static class VirtualFrame {
-
-        private final String name;
-        private List<ChildWidget> items = new ArrayList<ChildWidget>();
-
-        private VirtualFrame(String nm) {
-            name = nm;
-        }
-
-        private void outputSelf(PrintWriter out) {
-            out.print(String.format("\n\n    (let ((subframe (make-instance 'cogtool-frame :name %s)))",
-                                    LispUtil.safeString(name)));
-            for (ChildWidget it : items) {
-                outputWidget(it, null, out);
-                out.print("    (push widget (widgets subframe))");
-            }
-            out.print("\n      (setf (gethash "
-                    + LispUtil.safeString(name)
-                    + " frames) subframe)) ; end subframe");
-        }
-    }
-    
-    private static Map<AParentWidget, VirtualFrame> virtualFrames =
-            new HashMap<AParentWidget, VirtualFrame>();
-    
-    private static void addVirtualFrame(String parentName, AParentWidget header) {
-        virtualFrames.put(header,
-                          new VirtualFrame(String.format("Virtual Subframe %d of %s",
-                                                         (virtualFrames.size() + 1),
-                                                         parentName)));
     }
 
     private static String articulateTextForDuration(String text, double duration)
@@ -852,19 +732,9 @@ public class ACTRPredictionAlgo extends APredictionAlgo
                 out.print(")");
             }
             out.println(")");
-        } else if (emitVirtualFrames && 
-                     (widget instanceof MenuHeader || 
-                         widget instanceof ContextMenu ||
-                         widget instanceof PullDownHeader ||
-                         (widget instanceof MenuItem && 
-                             ((MenuItem)widget).isSubmenu()))) {
-            out.print("    (let ((widget-trans (transitions widget)))");
-            out.print("\n      (setf (gethash '((click left)) widget-trans)\n          ");
-            outputTransition(virtualFrames.get(widget).name, out);
-            out.println("))");
         }
     }
-    
+
     /**
      * Write a Lisp representation of this widget to a PrintWriter.
      * Uses the Lisp free variables widget and
@@ -894,13 +764,7 @@ public class ACTRPredictionAlgo extends APredictionAlgo
             out.println(LispUtil.safeString(aux));
         }
 
-        DoubleRectangle bounds = new DoubleRectangle(fe.getEltBounds());
-        if (frameElementPositions != null) {
-            while (isExisitingPosition(bounds)) {
-                bounds.x += 10;
-            }
-            frameElementPositions.add(new DoublePoint(bounds.x, bounds.y));
-        }
+        DoubleRectangle bounds = fe.getEltBounds();
 
         String wTypeName = null;
         if (typ == null) {
@@ -921,11 +785,6 @@ public class ACTRPredictionAlgo extends APredictionAlgo
         out.print(bounds.getWidth());
         out.print(" :height ");
         out.println(bounds.getHeight());
-
-        if (title != null && backButtonLabels.contains(title)) {
-            out.println("                                :is-back-button t");
-        }
-        
         out.print("                                :wtype '");
         out.print(wTypeName);
 
@@ -952,29 +811,11 @@ public class ACTRPredictionAlgo extends APredictionAlgo
                 out.print(safeGlobalName(g, frame));
             }
             out.print(")");
-        }
-        
-        if (fe instanceof AParentWidget) {
-            SimpleWidgetGroup swg = ((AParentWidget)fe).getChildren();
-            if (swg != null) {
-                simpleWidgetGroupOwners.put(swg, fe);
-            }
-        }
-        
-        if (fe instanceof SimpleWidgetGroup) {
-            FrameElement owner = simpleWidgetGroupOwners.get(fe);
-            if (owner != null) {
-                out.println();
-                out.print("                                :member-of-groups '(");
-                out.print(safeGlobalName(((AParentWidget)owner).getParentGroup(), frame));
-                out.print(")");
-            }
-        }
-        
+        } 
         if (fe instanceof IWidget) {
             IWidget widget = (IWidget)fe;
             SimpleWidgetGroup pgrp = widget.getParentGroup();
-            if (pgrp != null && allGrps != null) {
+            if (pgrp != null) {
                 allGrps.add(pgrp);
                 out.println();
                 out.print("                                :member-of-groups '(");
@@ -985,21 +826,6 @@ public class ACTRPredictionAlgo extends APredictionAlgo
 
         out.println("))");
     }
-    
-    private static boolean isExisitingPosition(DoubleRectangle bnds) {
-        for (DoublePoint p : frameElementPositions) {
-            if (Math.abs(p.x - bnds.x) < 2.1 && Math.abs(p.y - bnds.y) < 2.1) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public static void outputTransition(String destName, PrintWriter out) {
-        out.print("(make-instance 'cogtool-transition :target \"");
-        out.print(LispUtil.clean(destName));
-        out.print("\")");
-    }
 
     /**
      * Write a lisp representation of this transition to a PrintWriter.
@@ -1007,7 +833,9 @@ public class ACTRPredictionAlgo extends APredictionAlgo
      */
     public static void outputTransition(Transition t, PrintWriter out)
     {
-        outputTransition(t.getDestination().getName(), out);
+        out.print("(make-instance 'cogtool-transition :target \"");
+        out.print(LispUtil.clean(t.getDestination().getName()));
+        out.print("\")");
     }
 
     /**
@@ -1340,7 +1168,7 @@ public class ACTRPredictionAlgo extends APredictionAlgo
     private static WeakHashMap<Frame, ArrayList<NamedObject>> implicitGroups = 
             new WeakHashMap<Frame, ArrayList<NamedObject>>();
     
-    public static int putImplicitGroup(NamedObject thing, Frame frame) {
+    private static int putImplicitGroup(NamedObject thing, Frame frame) {
         ArrayList<NamedObject> grps = implicitGroups.get(frame);
         if (grps == null) {
             grps = new ArrayList<NamedObject>();
@@ -1367,14 +1195,14 @@ public class ACTRPredictionAlgo extends APredictionAlgo
     // that might not be an appropriate scheme for non-English languages.
     // However, this really isn't intended for presentation to the user,
     // and even localizing this much is probably silly....
-    private static final String GLOBAL_NAME_INFIX =
+    protected static final String GLOBAL_NAME_INFIX =
         L10N.get("lisp.infix", " in ");
 
     protected static String safeGlobalName(NamedObject thing, Frame frame)
     {
-        String name = (thing != null ? thing.getName() : null);
+        String name = thing.getName();
         if (name == null) {
-            name = String.format("GROUP [i%d]", putImplicitGroup(thing, frame));
+            name = String.format("GROUP [+%d]", putImplicitGroup(thing, frame));
         }
         return LispUtil.safeString(name + GLOBAL_NAME_INFIX + frame.getName());
     }

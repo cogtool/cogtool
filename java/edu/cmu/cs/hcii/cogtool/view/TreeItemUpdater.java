@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -102,16 +79,16 @@ import org.eclipse.swt.widgets.TreeItem;
 import edu.cmu.cs.hcii.cogtool.model.Frame;
 import edu.cmu.cs.hcii.cogtool.model.FrameElement;
 import edu.cmu.cs.hcii.cogtool.model.FrameElementGroup;
-import edu.cmu.cs.hcii.cogtool.model.IWidget;
-import edu.cmu.cs.hcii.cogtool.model.SimpleWidgetGroup;
 import edu.cmu.cs.hcii.cogtool.model.Transition;
 import edu.cmu.cs.hcii.cogtool.model.TransitionSource;
+import edu.cmu.cs.hcii.cogtool.model.IWidget;
+import edu.cmu.cs.hcii.cogtool.model.SimpleWidgetGroup;
 import edu.cmu.cs.hcii.cogtool.util.EmptyIterator;
 import edu.cmu.cs.hcii.cogtool.util.FontUtils;
 import edu.cmu.cs.hcii.cogtool.util.IEllipsizer;
 import edu.cmu.cs.hcii.cogtool.util.SWTStringUtil;
-import edu.cmu.cs.hcii.cogtool.util.SWTStringUtil.SWTWidthComputer;
 import edu.cmu.cs.hcii.cogtool.util.StringUtil;
+import edu.cmu.cs.hcii.cogtool.util.SWTStringUtil.SWTWidthComputer;
 
 public abstract class TreeItemUpdater<T, C>
 {
@@ -403,8 +380,11 @@ public abstract class TreeItemUpdater<T, C>
         protected TreeItem createNextItem(FrameElementGroup o)
         {
             TreeItem row = new TreeItem(this.eltGroupTree, SWT.NONE);
+
             Iterator<FrameElement> elements = getObjectChildren(o);
+
             getChildUpdater(row).populateExtraItems(elements);
+
             return row;
         }
 
@@ -412,9 +392,11 @@ public abstract class TreeItemUpdater<T, C>
         protected String getObjectText(FrameElementGroup o)
         {
             String text = o.getName();
+
             if (text == null) {
-                text = "[unnamed group]";
+                return "[unnamed group]";
             }
+
             return text;
         }
 
@@ -425,148 +407,11 @@ public abstract class TreeItemUpdater<T, C>
         }
 
         @Override
-        protected TreeItemUpdater<FrameElement, Transition> getChildUpdater(TreeItem row)
+        protected TreeItemUpdater<FrameElement,
+                                  Transition> getChildUpdater(TreeItem row)
         {
             FRAME_ELT_ITEM_UPDATER.resetRow(row);
             return FRAME_ELT_ITEM_UPDATER;
-        }
-    }
-    
-    public static class ImplicitItemUpdater extends TreeItemUpdater<IWidget, Transition>
-    {
-        protected Tree groupTree = null;
-        protected TreeItem row = null;
-
-        public ImplicitItemUpdater()
-        {
-            // resetRow will set the row properly
-        }
-
-        public ImplicitItemUpdater(Tree tree)
-        {
-            this.groupTree = tree;
-        }
-
-        public void resetRow(TreeItem newRow)
-        {
-            this.row = newRow;
-        }
-
-        @Override
-        protected TreeItem[] getUpdateItems()
-        {
-            if (this.groupTree != null) {
-                return this.groupTree.getItems();
-            }
-            return super.getUpdateItems();
-        }
-
-        @Override
-        protected TreeItem createNextItem(IWidget o)
-        {
-            if (this.groupTree != null) {
-                TreeItem row = new TreeItem(this.groupTree, SWT.NONE);
-                Iterator<Transition> transitions = getObjectChildren(o);
-                TreeItemUpdater<Transition, ?> updater = getChildUpdater(row);
-                if (updater != null) {
-                    updater.populateExtraItems(transitions);
-                }
-                return row;
-            }
-            TreeItem subrow = new TreeItem(this.row, SWT.NONE);
-            subrow.setFont(FontUtils.SYMBOL_FONT);
-            return subrow;
-        }
-
-        @Override
-        protected String getObjectText(IWidget o)
-        {
-            String text = ((TransitionSource)o).getNameLabel();
-            if (text == null) {
-                if (o instanceof SimpleWidgetGroup) {
-                    return "[anonymous group]";
-                }
-
-                if (o instanceof FrameElementGroup) {
-                    return "[unnamed group]";
-                }
-
-                return "[UNNAMED OBJECT; COMPLAIN!]";
-            }
-            return text;
-        }
-
-        @Override
-        protected Iterator<Transition> getObjectChildren(IWidget o)
-        {
-            if ((this.groupTree != null)) {
-                return o.getTransitions().values().iterator();
-            }
-            return super.getObjectChildren(o);
-        }
-
-        @Override
-        protected TreeItemUpdater<Transition, ?> getChildUpdater(TreeItem row)
-        {
-            if ((this.groupTree != null) &&
-                    (row.getData() instanceof IWidget))
-            {
-                TRANSITION_ITEM_UPDATER.resetRow(row);
-                return TRANSITION_ITEM_UPDATER;
-            }
-            return super.getChildUpdater(row);
-        }
-    }
-
-    public static final ImplicitItemUpdater IMPLICIT_ITEM_UPDATER = new ImplicitItemUpdater();
-
-    
-    public static class ImplicitGroupItemUpdater
-            extends TreeItemUpdater<SimpleWidgetGroup, IWidget>
-    {
-        protected Tree implicitGroupTree = null;
-
-        public ImplicitGroupItemUpdater(Tree tree)
-        {
-            this.implicitGroupTree = tree;
-        }
-
-        @Override
-        protected TreeItem[] getUpdateItems()
-        {
-            return this.implicitGroupTree.getItems();
-        }
-
-        @Override
-        protected TreeItem createNextItem(SimpleWidgetGroup o)
-        {
-            TreeItem row = new TreeItem(this.implicitGroupTree, SWT.NONE);
-            Iterator<IWidget> elements = getObjectChildren(o);
-            getChildUpdater(row).populateExtraItems(elements);
-            return row;
-        }
-
-        @Override
-        protected String getObjectText(SimpleWidgetGroup o)
-        {
-            String text = o.getName();
-            if (text == null) {
-                text = "[unnamed group]";
-            }
-            return text;
-        }
-
-        @Override
-        protected Iterator<IWidget> getObjectChildren(SimpleWidgetGroup o)
-        {
-            return o.iterator();
-        }
-
-        @Override
-        protected TreeItemUpdater<IWidget, Transition> getChildUpdater(TreeItem row)
-        {
-            IMPLICIT_ITEM_UPDATER.resetRow(row);
-            return IMPLICIT_ITEM_UPDATER;
         }
     }
 

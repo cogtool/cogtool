@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -112,7 +89,6 @@ import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary;
 import edu.cmu.cs.hcii.cogtool.model.ISitedTermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.ITermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.LSASimilarity;
-import edu.cmu.cs.hcii.cogtool.model.GensimLSASimilarity;
 import edu.cmu.cs.hcii.cogtool.model.MSRSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.WidgetAttributes;
 import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary.DictEntry;
@@ -152,9 +128,6 @@ public class DictionaryEditorCmd
         else if (algorithm instanceof LSASimilarity) {
             result = "LSA";
         }
-        else if (algorithm instanceof GensimLSASimilarity) {
-            result = "GENSIM";
-        }
         else if (algorithm instanceof CachedGoogleSimilarity) {
             result = "Old Google";
         }
@@ -179,9 +152,6 @@ public class DictionaryEditorCmd
         }
         else if ("LSA".equals(name)) {
             result = LSASimilarity.create(space, site);
-        }
-        else if ("GENSIM".equals(name)) {
-            result = GensimLSASimilarity.create(site);
         }
         else if ("Old Google".equals(name)) {
             result = CachedGoogleSimilarity.create(site);
@@ -305,21 +275,15 @@ public class DictionaryEditorCmd
 
     /**
      * Replace prevDict with dict after reading the entries from the file.
-     * @param csvFile TODO
      */
-    // I (dfm) believe the above is a lie. I think prevDict was already replaced 
-    // by dict by the caller, and prevDict is simply a vestigal bit of data that
-    // is passed around and encapsulated in undo and redo forms for no reason
-    // at all. But I'm not sufficiently confident of that diagnosis to zap it
-    // just yet....
     public static boolean importDictionary(final Design design,
                                            final ISimilarityDictionary dict,
                                            final ISimilarityDictionary prevDict,
                                            Interaction interaction,
-                                           IUndoableEditSequence editSeq, 
-                                           String csvFile)
+                                           IUndoableEditSequence editSeq)
     {
-        File dataFile = (csvFile != null ? new File(csvFile) : interaction.selectCSVFile()); 
+        // Get csv file
+        File dataFile = interaction.selectCSVFile();
 
         if (dataFile == null) {
             return false;
@@ -410,44 +374,41 @@ public class DictionaryEditorCmd
 
         dict.insertEntries(newEntries, false);
 
-        if (editSeq != null) {
-            editSeq.addEdit(new AUndoableEdit(ProjectLID.ImportDict) {
-                @Override
-                public String getPresentationName()
-                {
-                    return IMPORT_DICTIONARY;
+        editSeq.addEdit(new AUndoableEdit(ProjectLID.ImportDict) {
+            @Override
+            public String getPresentationName()
+            {
+                return IMPORT_DICTIONARY;
+            }
+
+            @Override
+            public void redo()
+            {
+                super.redo();
+
+                if (! NullSafe.equals(prevDict, WidgetAttributes.NO_DICTIONARY)) {
+                    design.setAttribute(WidgetAttributes.DICTIONARY_ATTR, dict);
                 }
-
-                @Override
-                public void redo()
-                {
-                    super.redo();
-
-                    if (! NullSafe.equals(prevDict, WidgetAttributes.NO_DICTIONARY)) {
-                        design.setAttribute(WidgetAttributes.DICTIONARY_ATTR, dict);
-                    }
-                    else {
-                        dict.insertEntries(newEntries, false);
-                    }
+                else {
+                    dict.insertEntries(newEntries, false);
                 }
+            }
 
-                @Override
-                public void undo()
-                {
-                    super.undo();
+            @Override
+            public void undo()
+            {
+                super.undo();
 
-                    if (! NullSafe.equals(prevDict, WidgetAttributes.NO_DICTIONARY)) {
-                        design.setAttribute(WidgetAttributes.DICTIONARY_ATTR, prevDict);
-                    }
-                    else {
-                        dict.removeEntries(newEntries);
-                    }
+                if (! NullSafe.equals(prevDict, WidgetAttributes.NO_DICTIONARY)) {
+                    design.setAttribute(WidgetAttributes.DICTIONARY_ATTR, prevDict);
                 }
-            });
-        }
-        if (interaction != null) {
-            interaction.setStatusMessage("Import successful");
-        }
+                else {
+                    dict.removeEntries(newEntries);
+                }
+            }
+        });
+
+        interaction.setStatusMessage("Import successful");
         return true;
     }
 }

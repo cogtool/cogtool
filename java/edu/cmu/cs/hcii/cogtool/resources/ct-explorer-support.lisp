@@ -27,7 +27,6 @@
       height ,(height thing)
       width ,(width thing)
       kind ,(wtype thing)
-      is-back-button ,(back-button-p thing)
       textual-cue ,(textual-cue thing)
       remote-label-of ,(and (remote-label-of thing) (name (remote-label-of thing)))
       has-remote-label ,(and hrl (if (stringp hrl) hrl (name hrl)))

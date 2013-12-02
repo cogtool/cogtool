@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -46,29 +46,6 @@
  * 
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
- * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Mozilla XULRunner 1.9.0.5
  * 
@@ -167,10 +144,6 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
                                     edu_cmu_cs_hcii_cogtool_model_SNIFACTPredictionAlgo_version,
                                     LOADER);
     }
-    
-    public static final int NO_BACK = 0;
-    public static final int EXPLICT_BACK = 1;
-    public static final int IMPLICIT_BACK = 2;
 
     /**
      * The five parameters that the SNIF-ACT algorithm needs for execution.
@@ -776,7 +749,7 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
     }
     
     private static final Pattern IMPLICIT_GROUP_PAT = 
-            Pattern.compile("Group \\[i(\\d+)\\]", Pattern.CASE_INSENSITIVE);                                               
+            Pattern.compile("GROUP \\[\\+(\\d+)\\]");                                               
 
     /**
      * This extractor uses the visual encoding result step to detect that a
@@ -1098,12 +1071,10 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
         String path = createSimilarityScoresFile(dict);
         File actrFile = null;
 
-        boolean oldEmitVirtualFrames = ACTRPredictionAlgo.emitVirtualFrames;
         try {
             // Create a temp file to hold the ACT-R model
             actrFile = File.createTempFile("cogtool-actr-model-", ".lisp");
             actrFile.deleteOnExit();
-            ACTRPredictionAlgo.emitVirtualFrames = true;
             ACTR6PredictionAlgo.ONLY.outputModel(design,
                                                  null,
                                                  actrFile,
@@ -1113,9 +1084,6 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
         catch (IOException e) {
             throw new ComputationException("IOException creating ACT-R model", e);
         }
-        finally {
-            ACTRPredictionAlgo.emitVirtualFrames = oldEmitVirtualFrames;            
-        } 
 
         return new SNIFACTAnalysisInput(design,
                                         "actr6.mem",

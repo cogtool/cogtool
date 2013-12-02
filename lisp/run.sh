@@ -5,6 +5,8 @@
 case $MACHTYPE in
     *86*apple*)
         platform=mac-intel ;;
+    powerpc*)
+		platform=mac-ppc ;;
     i?86-pc*)
         platform=win ;;
     *)

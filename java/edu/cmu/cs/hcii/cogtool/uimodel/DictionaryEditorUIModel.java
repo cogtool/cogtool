@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,29 +47,6 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
  * Mozilla XULRunner 1.9.0.5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -111,7 +88,6 @@ import edu.cmu.cs.hcii.cogtool.model.GoogleSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary;
 import edu.cmu.cs.hcii.cogtool.model.ITermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.LSASimilarity;
-import edu.cmu.cs.hcii.cogtool.model.GensimLSASimilarity;
 import edu.cmu.cs.hcii.cogtool.model.MSRSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.Project;
 import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary.DictEntry;
@@ -144,13 +120,12 @@ public class DictionaryEditorUIModel extends DefaultUIModel
     public static final int GLSA_INDEX = 2;
     public static final int GOOGLE_WORD_INDEX = 3;
     public static final int GOOGLE_PHRASE_INDEX = 4;
-    public static final int GENSIM_LSA_INDEX = 5;
 
     public static final String DEFAULT_ALGORITHM = "LSA";
 
     public static final String[] ALGORITHMS =
         { DEFAULT_ALGORITHM,
-          "RPI", "GLSA", "PMI-G (Word)", "PMI-G (Phrase)", "GENSIM", "Manual" };
+          "RPI", "GLSA", "PMI-G (Word)", "PMI-G (Phrase)", "Manual" };
 
     public static final int MANUAL_INDEX = ALGORITHMS.length - 1;
 
@@ -310,9 +285,6 @@ public class DictionaryEditorUIModel extends DefaultUIModel
         else if (algorithm instanceof LSASimilarity) {
             index = LSA_INDEX;
         }
-        else if (algorithm instanceof GensimLSASimilarity) {
-            index = GENSIM_LSA_INDEX;
-        }
         else if (algorithm instanceof CachedGoogleSimilarity) {
             index = GOOGLE_WORD_INDEX;
         }
@@ -412,9 +384,6 @@ public class DictionaryEditorUIModel extends DefaultUIModel
         }
         else if (ALGORITHMS[LSA_INDEX].equals(algSeln)) {
             computeSimilarity = LSASimilarity.create(space, site);
-        }
-        else if (ALGORITHMS[GENSIM_LSA_INDEX].equals(algSeln)) {
-            computeSimilarity = GensimLSASimilarity.create(space, site);
         }
         else {
             if ((site != null) && site.equals("")) {

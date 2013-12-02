@@ -11,13 +11,12 @@
 (defparameter *modified-mean-prev-page* t)
 (defparameter *modified-mean-current-page* t)
 (defparameter *update-confidence* t)
-(defvar *use-back-button* t) ;;; t means model will look for a Back button and click on it to go-back, nil means model will either stop or "magically" go back to the previous frame it came from.
-(defvar *allow-magic-go-backs* nil)
+(defparameter *use-back-button* t) ;;; t means model will look for a Back button and click on it to go-back, nil means model can "magically" go back to the previous frame it came from.
 
 (defparameter *mixed-visual-search* nil) ;;; t means model may choose to focus next on the nearest group instead of doing a strict header-first process
 (defparameter *non-header-process-conf-scale* 3) ;;; numeric value only applies if  *mixed-visual-search* is t
 
-(defvar *use-back-button-history-in-half-flatten-layout* t) ;;; in the half-flatten layout, back buttons have no transitions, so have to use exploration history when set to t
+(defparameter *use-back-button-history-in-half-flatten-layout* nil) ;;; in the half-flatten layout, back buttons have no transitions, so have to use exploration history when set to t
 (defparameter *recognize-equivalent-links-in-half-flatten-layout* nil)
 (defparameter *handle-groups-in-half-flatten-layout* nil)
 ;; TODO should these be in generic CogTool? They're specific to Leonghwee's research, right?
@@ -42,8 +41,6 @@
 
 ;;; Model log file
 (defparameter *file* nil)
-;; TODO for historical reasons the log file's path is built up by concatenation of strings; some day it should be fixed to use proper CL pathnames
-(defvar *log-file-directory* "~/") 
 
 (defparameter *model-run* 0)
 
@@ -56,7 +53,7 @@
 	(setf *step-index* 1)
 	(set-visloc-default isa cogtool-visual-location
 		member-of-group	nil
-		is-back-button nil
+	  - display-label "Back"
 		:attended new
 		:nearest current)
 	(if *infoscent_variabilty_between_runs* (setf *assessed-infoscent* (make-hash-table :test #'equalp)))
@@ -126,7 +123,7 @@
 	!eval! (transition *CogTool-Explorer-start-frame* *cogtool-design*)
 	!eval! (if *CT-E-Debug* (print-visicon))
 
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -170,7 +167,7 @@
 		isa 			cogtool-visual-location
 		member-of-group	nil
 		remote-label-of nil ;;; there is a need to remove this restriction in the PFIS task modeling
-		is-back-button          nil
+	  - display-label 	"Back" ;;; Task specific knowledge about Back button in browser window	
 		:attended 		nil
 		:nearest 		current
     
@@ -194,7 +191,7 @@
 		isa 			cogtool-visual-location
 		member-of-group	=group
 		remote-label-of nil ;;; there is a need to remove this restriction in the PFIS task modeling
-		is-back-button          nil
+	  - display-label 	"Back" ;;; Task specific knowledge about Back button in browser window
 		:attended 		nil
 		:nearest 		current
     
@@ -217,7 +214,7 @@
 	=visual-location>
 		isa				cogtool-visual-location
 		remote-label-of nil ;;; there is a need to remove this restriction in the PFIS task modeling
-		is-back-button          nil
+	  - display-label 	"Back" ;;; Task specific knowledge about Back button in browser window
 		member-of-group	nil
 	
 	?visual>
@@ -242,7 +239,7 @@
 	=visual-location>
 		isa				cogtool-visual-location
 		remote-label-of nil ;;; there is a need to remove this restriction in the PFIS task modeling
-		is-back-button          nil
+	  - display-label 	"Back" ;;; Task specific knowledge about Back button in browser window
 		member-of-group	=group
 	
 	?visual>
@@ -280,7 +277,7 @@
 		
 	=visual-location>
 		isa				cogtool-visual-location
-		is-back-button          t
+		display-label	"Back" ;;; Task specific knowledge about Back button in browser window
 	
 	?visual>
 		state			free
@@ -367,7 +364,7 @@
     
 	=visual-location>
 		isa			cogtool-visual-location
-		is-back-button          nil
+	  - display-label "Back" ;;; Task specific knowledge about Back button in browser window
    
 	?visual>
 		state		free
@@ -577,7 +574,7 @@
 		ISA			search-task
 		state		whats-next
 ==>	
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -697,7 +694,7 @@
 	!eval! (push (list *best-widget-scent*) *widget-infoscent-list*) ;;; Apr 1 - To support *modified-mean-prev-page* and *modified-mean-current-page*
 	!eval! (push *widget-infoscent-list* *widget-infoscent-stack*)
 
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -765,7 +762,7 @@
 	!eval! (push (list *best-widget-scent*) *widget-infoscent-list*) ;;; Apr 1 - To support *modified-mean-prev-page* and *modified-mean-current-page*
 	!eval! (push *widget-infoscent-list* *widget-infoscent-stack*)
 
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -1032,7 +1029,7 @@
 	!bind! =state (if (equal (name (curframe *cogtool-design*)) (first *CogTool-Explorer-target-frames*)) 'found 'find) ;;; needs modification to support multiple target frames
 
 	; update log file
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -1096,7 +1093,7 @@
 	!bind! =state (if (equal (name (curframe *cogtool-design*)) (first *CogTool-Explorer-target-frames*)) 'found 'find) ;;; needs modification to support multiple target frames
 
 	; update log file
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -1227,7 +1224,7 @@
 ==>
 	#-suppress-trace !output! #-suppress-trace (>>> Focus on another group =widget-name <<<)
 	
-	!eval! (with-open-file (*file* (concatenate 'string *log-file-directory*
+	!eval! (with-open-file (*file* (concatenate 'string "~/"
 		(substitute #\- #\? (subseq *task-description* 0 (min 9 (length *task-description*))))
 		"_C=" (write-to-string *go-back-cost*)
 		"_K=" (write-to-string *SNIF-ACT-k-value*) ".txt")
@@ -1281,7 +1278,7 @@
 ==>
 	+visual-location>
 		isa 			cogtool-visual-location
-		is-back-button          t
+		display-label "Back"
 
 	=goal>
 		state locate-back-button
@@ -1297,7 +1294,7 @@
 
 	=visual-location>
 		isa			cogtool-visual-location
-		is-back-button          t
+		display-label "Back"
 ==>
 	=visual-location>
 
@@ -1375,7 +1372,7 @@
 )
 
 (p go-back-to-previous-frame-direct
-	!eval! (and *allow-magic-go-backs* (not *use-back-button*))
+	!eval! (not *use-back-button*)
 
 	=goal>
 		isa			search-task

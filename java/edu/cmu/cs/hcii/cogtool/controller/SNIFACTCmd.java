@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -46,29 +46,6 @@
  * 
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
- * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Mozilla XULRunner 1.9.0.5
  * 
@@ -134,8 +111,6 @@ import edu.cmu.cs.hcii.cogtool.util.ThreadManager;
 
 public class SNIFACTCmd
 {
-    public static boolean isComputing = false; 
-
     /**
      * Support for performing the analysis work in a background thread.
      */
@@ -146,7 +121,7 @@ public class SNIFACTCmd
         protected TaskGroup taskGroup;
 
         protected SNIFACTExecContext context;
-        
+
         public SNIFACTAnalysisWorkThread(IPredictionAlgo predictionAlg,
                                          Project p,
                                          Design d,
@@ -175,9 +150,6 @@ public class SNIFACTCmd
         @Override
         public void doneCallback()
         {
-            // TODO this appears never to be called in practice, which is
-            //      odd; figure out what's really going on
-            
             // If an exception was thrown during the import, display error here
             if (RcvrExceptionHandler.recoverWorkThread(this, interaction))
             {
@@ -235,7 +207,6 @@ public class SNIFACTCmd
                                                          TaskGroup group,
                                                          SNIFACTParameters parms)
     {
-        isComputing = true;
         try {
             SNIFACTAnalysisWorkThread workThread =
                 new SNIFACTAnalysisWorkThread(SNIFACTPredictionAlgo.ONLY,

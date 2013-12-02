@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -46,29 +46,6 @@
  * 
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
- * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Mozilla XULRunner 1.9.0.5
  * 
@@ -172,7 +149,6 @@ import edu.cmu.cs.hcii.cogtool.model.URLCrawlEntry;
 import edu.cmu.cs.hcii.cogtool.model.WidgetAttributes;
 import edu.cmu.cs.hcii.cogtool.ui.DesignSelectionState;
 import edu.cmu.cs.hcii.cogtool.ui.Interaction.ITraceWindow;
-import edu.cmu.cs.hcii.cogtool.ui.ProjectContextSelectionState;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectInteraction;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectLID;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectSelectionState;
@@ -1120,8 +1096,7 @@ public class ProjectController extends DefaultController
 
     protected boolean computeSnifAct(Design design,
                                      AUndertaking task,
-                                     IUndoableEditSequence editSequence,
-                                     SNIFACTGroupParameters defaults)
+                                     IUndoableEditSequence editSequence)
     {
         // TODO: L10N required for error titles and messages.
         if (design == null) {
@@ -1202,23 +1177,12 @@ public class ProjectController extends DefaultController
             hasScript = (ta != null) && ta.hasScript();
         }
 
-        SNIFACTGroupParameters groupParms = null;
-        if (defaults == null) {
-            groupParms = 
-                interaction.requestSNIFACTParameters(hasScript,
+        SNIFACTGroupParameters groupParms =
+            interaction.requestSNIFACTParameters(hasScript,
                                                       sortedFrames,
                                                       parms,
                                                       dict.getAlgorithmsInUse(),
                                                       addGroupMode);
-        } else {
-            groupParms = new SNIFACTGroupParameters(defaults.taskName, 
-                                                    defaults.numRuns, 
-                                                    defaults.kValue,
-                                                    defaults.startFrame, 
-                                                    defaults.targetFrames, 
-                                                    defaults.algorithm, 
-                                                    ((addGroupMode != SNIFACTDialog.NONE) && defaults.addToGroup));
-        }
         if (groupParms == null) {
             return false;
         }
@@ -1306,9 +1270,7 @@ public class ProjectController extends DefaultController
         });
 
         snifActEditSeq.end();
-        if (editSequence != null) {
-           editSequence.addEdit(snifActEditSeq);
-        }
+        editSequence.addEdit(snifActEditSeq);
 
         return true;
     }
@@ -1348,7 +1310,7 @@ public class ProjectController extends DefaultController
                                                                        dict,
                                                                        prevDict,
                                                                        interaction,
-                                                                       undoMgr, null);
+                                                                       undoMgr);
 
                 if (success) {
                     DictionaryEditorController.openController(dict,
@@ -5470,21 +5432,11 @@ public class ProjectController extends DefaultController
                                        ComputeMessages computeMsgs,
                                        IUndoableEditSequence editSequence)
     {
-        if (CogToolPref.isTracingOverride == null && !CogToolPref.IS_TRACING.getBoolean()) {
-            Boolean answer = getInteraction().confirmNoTracing();
-            if (answer == null) {
-                // canceled
-                return false;
-            } else if (answer.booleanValue()) {
-                CogToolPref.IS_TRACING.setBoolean(true);
-            }
-        }    
         if (task.isTaskGroup()) {
             if (! NullSafe.equals(WidgetAttributes.NO_CONTEXT,
                                   task.getAttribute(WidgetAttributes.SNIFACT_CONTEXT_ATTR)))
             {
-         
-                return computeSnifAct(design, task, editSequence, null);
+                return computeSnifAct(design, task, editSequence);
             }
 
             Iterator<AUndertaking> allTasks =
@@ -5520,7 +5472,7 @@ public class ProjectController extends DefaultController
                 ta.determineActiveAlgorithm(project);
 
             if (activeAlg == SNIFACTPredictionAlgo.ONLY) {
-                return computeSnifAct(design, task, editSequence, null);
+                return computeSnifAct(design, task, editSequence);
             }
 
             if (computeMsgs.canComputeScript(ta,
@@ -5560,7 +5512,7 @@ public class ProjectController extends DefaultController
         }
         else {
             if (project.getDefaultAlgo() == SNIFACTPredictionAlgo.ONLY) {
-                return computeSnifAct(design, task, editSequence, null);
+                return computeSnifAct(design, task, editSequence);
             }
 
             interaction.setStatusMessage(cannotRecomputeNoDemo);
@@ -5574,25 +5526,24 @@ public class ProjectController extends DefaultController
         return new AListenerAction() {
             public boolean performAction(Object actionParms)
             {
-                return exportResultsToCSV();
+                return exportReesultsToCSV();
             }
         };
     }
 
-    public String exportFile = null;
-    
-    public boolean exportResultsToCSV() {
+    private boolean exportReesultsToCSV() {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd_HHmmss");
         Date now = new Date();
 
         String fileName = project.getName() + '_' + fmt.format(now);
         File dest = null;
-        if (interaction != null && exportFile == null) {
+        if (interaction != null && CogTool.exportCSVKludgeDir == null) {
             dest = interaction.selectCSVFileDest(fileName);
-        } else if (exportFile != null) {
-            dest = new File(exportFile);
+        } else {
+            dest =
+                new File(CogTool.exportCSVKludgeDir, fileName + ".csv");
         }
-        exportFile = null;
+
         if (dest == null) {
             return false;
         }
@@ -5742,9 +5693,6 @@ public class ProjectController extends DefaultController
             }
         }
     }
-    
-    public File importFile = null;
-    public boolean importFileComputes = false;
 
     protected IListenerAction createImportAction()
     {
@@ -5761,12 +5709,8 @@ public class ProjectController extends DefaultController
             public boolean performAction(Object prms)
             {
 
-                boolean computeScripts = CogToolPref.COMPSCR.getBoolean();
-                if (importFile == null) {
-                    importFile = interaction.selectXMLFile(true, null);
-                } else {
-                    computeScripts = importFileComputes;
-                }
+                File importFile = interaction.selectXMLFile(true, null);
+
 
                 if (importFile == null) {
                     return false;
@@ -5842,10 +5786,6 @@ public class ProjectController extends DefaultController
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                finally {
-                    importFile = null;
-                    importFileComputes = false;
-                }
 
                 for (AUndertaking u : newUndertakings) {
                     parent.addUndertaking(u);
@@ -5884,12 +5824,10 @@ public class ProjectController extends DefaultController
                 editSeq.end();
                 undoMgr.addEdit(editSeq);
                 
-                if(computeScripts){
+                if(CogToolPref.COMPSCR.getBoolean()){
                     //compute predictions for imported project
-                    ProjectContextSelectionState seln = new ProjectContextSelectionState(project);
-                    seln.addSelectedDesigns(project.getDesigns());
                     ui.selectAllTasks();
-                    recomputeScripts(seln);    
+                    recomputeScripts((ProjectSelectionState) prms);    
                     ui.deselectAllTasks();
                 }
 
@@ -6830,7 +6768,7 @@ public class ProjectController extends DefaultController
                 DemoScriptCmd.exportScriptToCSV(s, project, null, undoMgr);
             }
         }
-        exportResultsToCSV();
+        exportReesultsToCSV();
         exportDesignToXML(null);
     }
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.2, Copyright (c) 2005-2012 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -46,29 +46,6 @@
  * 
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
- * 
- * jopt-simpler
- * 
- * Copyright (c) 2004-2013 Paul R. Holser, Jr.
- * 
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Mozilla XULRunner 1.9.0.5
  * 
@@ -121,7 +98,6 @@ import edu.cmu.cs.hcii.cogtool.model.GroupNature;
 import edu.cmu.cs.hcii.cogtool.model.ISitedTermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.ITermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.LSASimilarity;
-import edu.cmu.cs.hcii.cogtool.model.GensimLSASimilarity;
 import edu.cmu.cs.hcii.cogtool.model.Project;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTGroupParameters;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTParameters;
@@ -550,21 +526,11 @@ public class ProjectInteraction extends DefaultInteraction
 
         public ITermSimilarity getAlgorithm()
         {
-            String useURL;
-            //String useURL =
-            //    DictionaryEditorUIModel.DEFAULT_ALGORITHM.equals(algString)
-            //       ? urlString
-            //       : promptResponse;
-            
-            if ( DictionaryEditorUIModel.DEFAULT_ALGORITHM.equals(algString) ) {
-                useURL = urlString;
-            }
-            else if ( DictionaryEditorUIModel.ALGORITHMS[DictionaryEditorUIModel.GENSIM_LSA_INDEX].equals(algString) ) {
-                useURL = urlString;
-            }
-            else 
-                useURL = promptResponse;
-            
+            String useURL =
+                DictionaryEditorUIModel.DEFAULT_ALGORITHM.equals(algString)
+                   ? urlString
+                   : promptResponse;
+
             return DictionaryEditorUIModel.getAlgorithm(algString,
                                                         useURL,
                                                         spaceString);
@@ -615,23 +581,8 @@ public class ProjectInteraction extends DefaultInteraction
 
                     responseBox.setEnabled((index == DictionaryEditorUIModel.GOOGLE_WORD_INDEX) ||
                                            (index == DictionaryEditorUIModel.GOOGLE_PHRASE_INDEX));
-                    spaceCombo.setEnabled((index == DictionaryEditorUIModel.LSA_INDEX) ||
-                                          (index == DictionaryEditorUIModel.GENSIM_LSA_INDEX));
-                    urlText.setEnabled((index == DictionaryEditorUIModel.LSA_INDEX) ||
-                                       (index == DictionaryEditorUIModel.GENSIM_LSA_INDEX));
-                   
-                    if (index == DictionaryEditorUIModel.GENSIM_LSA_INDEX){
-                        spaceCombo.setItems(GensimLSASimilarity.KNOWN_SPACES);
-                        spaceCombo.setText(GensimLSASimilarity.DEFAULT_SPACE);
-                        urlText.setText(GensimLSASimilarity.DEFAULT_LSA_URL);
-                        responseBox.setText("");
-                    }
-                    else {
-                        spaceCombo.setItems(LSASimilarity.KNOWN_SPACES);
-                        spaceCombo.setText(LSASimilarity.DEFAULT_SPACE);
-                        urlText.setText(LSASimilarity.DEFAULT_LSA_URL);
-                        responseBox.setText("");
-                    }
+                    spaceCombo.setEnabled(index == DictionaryEditorUIModel.LSA_INDEX);
+                    urlText.setEnabled(index == DictionaryEditorUIModel.LSA_INDEX);
                 }
             };
             algCombo =
@@ -651,47 +602,10 @@ public class ProjectInteraction extends DefaultInteraction
             lbl.setText(L10N.get("PM.LSASpace", "LSA Space") + ": ");
             lblLayout = new GridData(GridData.HORIZONTAL_ALIGN_END);
             lbl.setLayoutData(lblLayout);
-            
-            SelectionListener spaceListener = new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent evt)
-                {
-                    Combo c = (Combo) evt.widget;
-                    int algIndex = algCombo.getSelectionIndex();
-                    String alg = algCombo.getItem(algIndex);
-                    int index = c.getSelectionIndex();
-                    
-                    if (algIndex == DictionaryEditorUIModel.GENSIM_LSA_INDEX){
-                        if (index == 1){
-                            urlText.setText(GensimLSASimilarity.GENSIM_STRIPPED_LSA_URL);
-                        }
-                        else if (index == 2){
-                            urlText.setText(GensimLSASimilarity.GENSIM_SECTIONS_LSA_URL);
-                        }
-                        else if (index == 3){
-                            urlText.setText(GensimLSASimilarity.GENSIM_PARAGRAPHS_LSA_URL);
-                        }
-                        else if (index == 4){
-                            urlText.setText(GensimLSASimilarity.GENSIM_SIMPLE_LSA_URL);
-                        }
-                        else {
-                            urlText.setText(GensimLSASimilarity.DEFAULT_LSA_URL);
-                        }
-                    }
-                }
-            };
 
             spaceCombo =
                 new ComboWithEnableFix(dialog, SWT.DROP_DOWN | SWT.BORDER);
-            spaceCombo.addSelectionListener(spaceListener);
-            //spaceCombo.setItems(LSASimilarity.KNOWN_SPACES);
-            int algIndex = algCombo.getSelectionIndex();
-            if (algIndex == DictionaryEditorUIModel.GENSIM_LSA_INDEX){
-                spaceCombo.setItems(GensimLSASimilarity.KNOWN_SPACES);
-            }
-            else {
-                spaceCombo.setItems(LSASimilarity.KNOWN_SPACES);
-            }
+            spaceCombo.setItems(LSASimilarity.KNOWN_SPACES);
             spaceCombo.setText(spaceString);
 
             itemLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -834,12 +748,6 @@ public class ProjectInteraction extends DefaultInteraction
         }
         else if (defaultAlg instanceof LSASimilarity) {
             LSASimilarity algLSA = (LSASimilarity) defaultAlg;
-
-            defaultSpace = algLSA.getSpace();
-            defaultURL = algLSA.getURL();
-        }
-        else if (defaultAlg instanceof GensimLSASimilarity) {
-            GensimLSASimilarity algLSA = (GensimLSASimilarity) defaultAlg;
 
             defaultSpace = algLSA.getSpace();
             defaultURL = algLSA.getURL();
@@ -1441,5 +1349,4 @@ public class ProjectInteraction extends DefaultInteraction
 
         return null;
     }
-    
 }
