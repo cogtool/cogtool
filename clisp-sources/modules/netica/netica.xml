@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="netica"><title>Netica Interface</title>
+
+<para>This is an interface to the &netica-link; for working with
+ Bayesian belief networks and influence diagrams.</para>
+
+<para>The package <quote role="package">NETICA</quote> is
+ <link linkend="package-case">case-sensitive</link>, e.g., you would write
+ <code>(netica:GetNodeExpectedUtils_bn ...)</code>
+ when you need to call
+ <function role="netica">GetNodeExpectedUtils_bn</function>.</para>
+
+<para>An interface to all public &c-lang; functions is provided.
+ Additionally, some higher level functionality is available
+ (see <filename role="clisp-cvs">modules/netica/demo.lisp</filename>
+ for sample usage):</para>
+
+<variablelist>
+<varlistentry><term><code>(netica:start-netica &key-amp;
+   :license :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">NewNeticaEnviron_ns</function>
+   and <function role="netica">InitNetica_bn</function> and print some
+   statistics; initialize <varname>netica:*env*</varname>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:check-errors &key-amp;
+   :env :clear :severity)</code></term>
+ <listitem><simpara>Show and, optionally, clear
+   (<function role="netica">ClearError_ns</function>), the errors of the
+   given severity (<function role="netica">ErrorSeverity_ns</function>)
+   and above.
+   You should call this function after <emphasis>every</emphasis> call
+   to a Netica function.  Every wrapper function in this list calls it,
+   so you do &not-e; need to call it after a call to a wrapper function.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:error-message error)</code></term>
+ <listitem><para>Convert netica error to a &string-t; containing<simplelist>
+    <member><function role="netica">ErrorCategory_ns</function></member>
+    <member><function role="netica">ErrorSeverity_ns</function></member>
+    <member><function role="netica">ErrorNumber_ns</function></member>
+    <member><function role="netica">ErrorMessage_ns</function></member>
+</simplelist></para></listitem></varlistentry>
+<varlistentry><term><code>(netica:close-netica &key-amp;
+   :env :verbose)</code></term>
+ <listitem><simpara>Terminate the netica session.
+   Sets <varname>netica:*env*</varname> to &nil;.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:make-net &key-amp; :name
+   :comment :title :env :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">NewNet_bn</function>,
+   <function role="netica">SetNetTitle_bn</function> and
+   <function role="netica">SetNetComment_bn</function>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:net-info net &key-amp; :out)</code></term>
+ <listitem><para>Print some information about the net:<simplelist>
+    <member><function role="netica">GetNetName_bn</function></member>
+    <member><function role="netica">GetNetTitle_bn</function></member>
+    <member><function role="netica">GetNetComment_bn</function></member>
+    <member><function role="netica">GetNetFileName_bn</function></member>
+    <member><function role="netica">GetNetNodes_bn</function></member>
+</simplelist></para></listitem></varlistentry>
+<varlistentry><term><code>(netica:make-node &key-amp;
+   :name :net :kind :levels :states :num-states :title :comment :parents
+   :cpt :x :y :env :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">NewNode_bn</function>
+   with the given name and many other parameters.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:node-info node
+   &key-amp; :header :out)</code></term>
+ <listitem><simpara>Print some information about the node, preceded by
+   the header.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:get-beliefs node
+   &key-amp; :env :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">GetNodeBeliefs_bn</function>
+   on the node.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:enter-finding net node
+   state &key-amp; :env :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">EnterFinding_bn</function>
+   using <function role="netica">NodeNamed_bn</function>
+   and <function role="netica">StateNamed_bn</function>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:save-net net &key-amp;
+   :file :env :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">WriteNet_bn</function>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:read-net file &key-amp;
+   :env :verbose)</code></term>
+ <listitem><simpara>Call <function role="netica">ReadNet_bn</function>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(netica:with-open-dne-file (var
+   file &rest-amp; opts) &body-amp; body)</code></term>
+ <listitem><simpara>Call <function role="netica">NewStreamFile_ns</function>,
+   execute &body-r;, then <function role="netica">DeleteStream_ns</function>
+   - just like &with-open-stream;.</simpara></listitem></varlistentry>
+<varlistentry><term><varname>netica:*verbose*</varname></term>
+ <listitem><simpara>The log &stream-t; or &nil;; the default value for
+   the &verbose-k; argument (initially set to &nil;).
+</simpara></listitem></varlistentry>
+<varlistentry><term><varname>netica:*license*</varname></term>
+ <listitem><simpara>The license key provided by
+   <ulink url="http://norsys.com/">Norsys</ulink>; the default value
+   for the <literal>:LICENSE</literal> argument.
+</simpara></listitem></varlistentry>
+<varlistentry><term><varname>netica:*env*</varname></term>
+ <listitem><simpara>The Netica environment object; the default value
+   for the <literal>:ENV</literal> argument.
+</simpara></listitem></varlistentry>
+</variablelist>
+
+</section>

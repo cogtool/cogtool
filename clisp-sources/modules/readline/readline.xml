@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="readline-mod">
+ <title>Advanced Readline and History Functionality</title>
+
+<simpara>The <quote role="package">READLINE</quote> module exports most
+ of the &readline; functions using &ffi-pac;.</simpara>
+<simpara>This module is present even in the &base; &linkset; by default
+ on platforms where both &readline; and &ffi-pac; are available.</simpara>
+<simpara>When this module is present, &features-var;
+ contains the symbol <constant>:READLINE</constant>.</simpara>
+
+<variablelist><title>Lisp-level Functionality</title>
+<varlistentry><term><varname>READLINE:*READLINE-INPUT-STREAM*</varname></term>
+<listitem><simpara>A &stream-t; (see <xref linkend="stream-buffer"/>)
+  that receives user input using &readline; and the standard &clisp;
+  <link linkend="prompt">prompt</link>.
+</simpara></listitem></varlistentry></variablelist>
+
+</section>

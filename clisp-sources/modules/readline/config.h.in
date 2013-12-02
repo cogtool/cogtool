@@ -1,0 +1,461 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Define to 1 if you have the `add_history' function. */
+#undef HAVE_ADD_HISTORY
+
+/* Define to 1 if you have the `append_history' function. */
+#undef HAVE_APPEND_HISTORY
+
+/* Define to 1 if you have the `clear_history' function. */
+#undef HAVE_CLEAR_HISTORY
+
+/* Define to 1 if you have the declaration of `rl_already_prompted', and to 0
+   if you don't. */
+#undef HAVE_DECL_RL_ALREADY_PROMPTED
+
+/* Define to 1 if you have the declaration of `rl_dispatching', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_DISPATCHING
+
+/* Define to 1 if you have the declaration of `rl_done', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_DONE
+
+/* Define to 1 if you have the declaration of `rl_editing_mode', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_EDITING_MODE
+
+/* Define to 1 if you have the declaration of `rl_end', and to 0 if you don't.
+   */
+#undef HAVE_DECL_RL_END
+
+/* Define to 1 if you have the declaration of `rl_erase_empty_line', and to 0
+   if you don't. */
+#undef HAVE_DECL_RL_ERASE_EMPTY_LINE
+
+/* Define to 1 if you have the declaration of `rl_event_hook', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_EVENT_HOOK
+
+/* Define to 1 if you have the declaration of `rl_getc_function', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_GETC_FUNCTION
+
+/* Define to 1 if you have the declaration of `rl_gnu_readline_p', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_GNU_READLINE_P
+
+/* Define to 1 if you have the declaration of `rl_insert_mode', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_INSERT_MODE
+
+/* Define to 1 if you have the declaration of `rl_instream', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_INSTREAM
+
+/* Define to 1 if you have the declaration of `rl_last_func', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_LAST_FUNC
+
+/* Define to 1 if you have the declaration of `rl_library_version', and to 0
+   if you don't. */
+#undef HAVE_DECL_RL_LIBRARY_VERSION
+
+/* Define to 1 if you have the declaration of `rl_line_buffer', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_LINE_BUFFER
+
+/* Define to 1 if you have the declaration of `rl_mark', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_MARK
+
+/* Define to 1 if you have the declaration of `rl_num_chars_to_read', and to 0
+   if you don't. */
+#undef HAVE_DECL_RL_NUM_CHARS_TO_READ
+
+/* Define to 1 if you have the declaration of `rl_outstream', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_OUTSTREAM
+
+/* Define to 1 if you have the declaration of `rl_pending_input', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_PENDING_INPUT
+
+/* Define to 1 if you have the declaration of `rl_point', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_POINT
+
+/* Define to 1 if you have the declaration of `rl_pre_input_hook', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_PRE_INPUT_HOOK
+
+/* Define to 1 if you have the declaration of `rl_prompt', and to 0 if you
+   don't. */
+#undef HAVE_DECL_RL_PROMPT
+
+/* Define to 1 if you have the declaration of `rl_readline_name', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_READLINE_NAME
+
+/* Define to 1 if you have the declaration of `rl_readline_state', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_READLINE_STATE
+
+/* Define to 1 if you have the declaration of `rl_readline_version', and to 0
+   if you don't. */
+#undef HAVE_DECL_RL_READLINE_VERSION
+
+/* Define to 1 if you have the declaration of `rl_startup_hook', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_STARTUP_HOOK
+
+/* Define to 1 if you have the declaration of `rl_terminal_name', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_TERMINAL_NAME
+
+/* Define to 1 if you have the `history_is_stifled' function. */
+#undef HAVE_HISTORY_IS_STIFLED
+
+/* Define to 1 if you have the `history_search' function. */
+#undef HAVE_HISTORY_SEARCH
+
+/* Define to 1 if you have the `history_search_pos' function. */
+#undef HAVE_HISTORY_SEARCH_POS
+
+/* Define to 1 if you have the `history_search_prefix' function. */
+#undef HAVE_HISTORY_SEARCH_PREFIX
+
+/* Define to 1 if you have the `history_set_pos' function. */
+#undef HAVE_HISTORY_SET_POS
+
+/* Define to 1 if you have the `history_total_bytes' function. */
+#undef HAVE_HISTORY_TOTAL_BYTES
+
+/* Define to 1 if you have the `history_truncate_file' function. */
+#undef HAVE_HISTORY_TRUNCATE_FILE
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* have a working modern GNU readline */
+#undef HAVE_READLINE
+
+/* Define to 1 if you have the <readline/readline.h> header file. */
+#undef HAVE_READLINE_READLINE_H
+
+/* Define to 1 if you have the `read_history' function. */
+#undef HAVE_READ_HISTORY
+
+/* Define to 1 if you have the `read_history_range' function. */
+#undef HAVE_READ_HISTORY_RANGE
+
+/* Define to 1 if you have the `rl_add_defun' function. */
+#undef HAVE_RL_ADD_DEFUN
+
+/* Define to 1 if you have the `rl_add_funmap_entry' function. */
+#undef HAVE_RL_ADD_FUNMAP_ENTRY
+
+/* Define to 1 if you have the `rl_add_undo' function. */
+#undef HAVE_RL_ADD_UNDO
+
+/* Define to 1 if you have the `rl_begin_undo_group' function. */
+#undef HAVE_RL_BEGIN_UNDO_GROUP
+
+/* Define to 1 if you have the `rl_bind_key' function. */
+#undef HAVE_RL_BIND_KEY
+
+/* Define to 1 if you have the `rl_bind_keyseq' function. */
+#undef HAVE_RL_BIND_KEYSEQ
+
+/* Define to 1 if you have the `rl_bind_keyseq_if_unbound' function. */
+#undef HAVE_RL_BIND_KEYSEQ_IF_UNBOUND
+
+/* Define to 1 if you have the `rl_bind_keyseq_if_unbound_in_map' function. */
+#undef HAVE_RL_BIND_KEYSEQ_IF_UNBOUND_IN_MAP
+
+/* Define to 1 if you have the `rl_bind_keyseq_in_map' function. */
+#undef HAVE_RL_BIND_KEYSEQ_IN_MAP
+
+/* Define to 1 if you have the `rl_bind_key_if_unbound' function. */
+#undef HAVE_RL_BIND_KEY_IF_UNBOUND
+
+/* Define to 1 if you have the `rl_bind_key_if_unbound_in_map' function. */
+#undef HAVE_RL_BIND_KEY_IF_UNBOUND_IN_MAP
+
+/* Define to 1 if you have the `rl_bind_key_in_map' function. */
+#undef HAVE_RL_BIND_KEY_IN_MAP
+
+/* Define to 1 if you have the `rl_callback_handler_install' function. */
+#undef HAVE_RL_CALLBACK_HANDLER_INSTALL
+
+/* Define to 1 if you have the `rl_callback_handler_remove' function. */
+#undef HAVE_RL_CALLBACK_HANDLER_REMOVE
+
+/* Define to 1 if you have the `rl_callback_read_char' function. */
+#undef HAVE_RL_CALLBACK_READ_CHAR
+
+/* Define to 1 if you have the `rl_clear_message' function. */
+#undef HAVE_RL_CLEAR_MESSAGE
+
+/* Define to 1 if you have the `rl_clear_pending_input' function. */
+#undef HAVE_RL_CLEAR_PENDING_INPUT
+
+/* Define to 1 if you have the `rl_copy_keymap' function. */
+#undef HAVE_RL_COPY_KEYMAP
+
+/* Define to 1 if you have the `rl_copy_text' function. */
+#undef HAVE_RL_COPY_TEXT
+
+/* Define to 1 if you have the `rl_crlf' function. */
+#undef HAVE_RL_CRLF
+
+/* Define to 1 if you have the `rl_delete_text' function. */
+#undef HAVE_RL_DELETE_TEXT
+
+/* Define to 1 if you have the `rl_deprep_terminal' function. */
+#undef HAVE_RL_DEPREP_TERMINAL
+
+/* Define to 1 if you have the `rl_ding' function. */
+#undef HAVE_RL_DING
+
+/* Define to 1 if you have the `rl_discard_keymap' function. */
+#undef HAVE_RL_DISCARD_KEYMAP
+
+/* Define to 1 if you have the `rl_display_match_list' function. */
+#undef HAVE_RL_DISPLAY_MATCH_LIST
+
+/* Define to 1 if you have the `rl_do_undo' function. */
+#undef HAVE_RL_DO_UNDO
+
+/* Define to 1 if you have the `rl_end_undo_group' function. */
+#undef HAVE_RL_END_UNDO_GROUP
+
+/* Define to 1 if you have the `rl_execute_next' function. */
+#undef HAVE_RL_EXECUTE_NEXT
+
+/* Define to 1 if you have the `rl_expand_prompt' function. */
+#undef HAVE_RL_EXPAND_PROMPT
+
+/* Define to 1 if you have the `rl_extend_line_buffer' function. */
+#undef HAVE_RL_EXTEND_LINE_BUFFER
+
+/* Define to 1 if you have the `rl_filename_completion_function' function. */
+#undef HAVE_RL_FILENAME_COMPLETION_FUNCTION
+
+/* Define to 1 if you have the `rl_forced_update_display' function. */
+#undef HAVE_RL_FORCED_UPDATE_DISPLAY
+
+/* Define to 1 if you have the `rl_free_undo_list' function. */
+#undef HAVE_RL_FREE_UNDO_LIST
+
+/* Define to 1 if you have the `rl_function_dumper' function. */
+#undef HAVE_RL_FUNCTION_DUMPER
+
+/* Define to 1 if you have the `rl_function_of_keyseq' function. */
+#undef HAVE_RL_FUNCTION_OF_KEYSEQ
+
+/* Define to 1 if you have the `rl_funmap_names' function. */
+#undef HAVE_RL_FUNMAP_NAMES
+
+/* Define to 1 if you have the `rl_generic_bind' function. */
+#undef HAVE_RL_GENERIC_BIND
+
+/* Define to 1 if you have the `rl_getc' function. */
+#undef HAVE_RL_GETC
+
+/* Define to 1 if you have the `rl_get_keymap' function. */
+#undef HAVE_RL_GET_KEYMAP
+
+/* Define to 1 if you have the `rl_get_keymap_by_name' function. */
+#undef HAVE_RL_GET_KEYMAP_BY_NAME
+
+/* Define to 1 if you have the `rl_get_screen_size' function. */
+#undef HAVE_RL_GET_SCREEN_SIZE
+
+/* Define to 1 if you have the `rl_get_termcap' function. */
+#undef HAVE_RL_GET_TERMCAP
+
+/* Define to 1 if you have the `rl_initialize' function. */
+#undef HAVE_RL_INITIALIZE
+
+/* Define to 1 if you have the `rl_insert_text' function. */
+#undef HAVE_RL_INSERT_TEXT
+
+/* Define to 1 if you have the `rl_invoking_keyseqs' function. */
+#undef HAVE_RL_INVOKING_KEYSEQS
+
+/* Define to 1 if you have the `rl_invoking_keyseqs_in_map' function. */
+#undef HAVE_RL_INVOKING_KEYSEQS_IN_MAP
+
+/* Define to 1 if you have the `rl_kill_text' function. */
+#undef HAVE_RL_KILL_TEXT
+
+/* Define to 1 if you have the `rl_list_funmap_names' function. */
+#undef HAVE_RL_LIST_FUNMAP_NAMES
+
+/* Define to 1 if you have the `rl_macro_dumper' function. */
+#undef HAVE_RL_MACRO_DUMPER
+
+/* Define to 1 if you have the `rl_make_bare_keymap' function. */
+#undef HAVE_RL_MAKE_BARE_KEYMAP
+
+/* Define to 1 if you have the `rl_make_keymap' function. */
+#undef HAVE_RL_MAKE_KEYMAP
+
+/* Define to 1 if you have the `rl_message' function. */
+#undef HAVE_RL_MESSAGE
+
+/* Define to 1 if you have the `rl_modifying' function. */
+#undef HAVE_RL_MODIFYING
+
+/* Define to 1 if you have the `rl_named_function' function. */
+#undef HAVE_RL_NAMED_FUNCTION
+
+/* Define to 1 if you have the `rl_on_new_line' function. */
+#undef HAVE_RL_ON_NEW_LINE
+
+/* Define to 1 if you have the `rl_on_new_line_with_prompt' function. */
+#undef HAVE_RL_ON_NEW_LINE_WITH_PROMPT
+
+/* Define to 1 if you have the `rl_parse_and_bind' function. */
+#undef HAVE_RL_PARSE_AND_BIND
+
+/* Define to 1 if you have the `rl_prep_terminal' function. */
+#undef HAVE_RL_PREP_TERMINAL
+
+/* Define to 1 if you have the `rl_push_macro_input' function. */
+#undef HAVE_RL_PUSH_MACRO_INPUT
+
+/* Define to 1 if you have the `rl_read_init_file' function. */
+#undef HAVE_RL_READ_INIT_FILE
+
+/* Define to 1 if you have the `rl_read_key' function. */
+#undef HAVE_RL_READ_KEY
+
+/* Define to 1 if you have the `rl_redisplay' function. */
+#undef HAVE_RL_REDISPLAY
+
+/* Define to 1 if you have the `rl_replace_line' function. */
+#undef HAVE_RL_REPLACE_LINE
+
+/* Define to 1 if you have the `rl_reset_line_state' function. */
+#undef HAVE_RL_RESET_LINE_STATE
+
+/* Define to 1 if you have the `rl_reset_terminal' function. */
+#undef HAVE_RL_RESET_TERMINAL
+
+/* Define to 1 if you have the `rl_resize_terminal' function. */
+#undef HAVE_RL_RESIZE_TERMINAL
+
+/* Define to 1 if you have the `rl_restore_prompt' function. */
+#undef HAVE_RL_RESTORE_PROMPT
+
+/* Define to 1 if you have the `rl_save_prompt' function. */
+#undef HAVE_RL_SAVE_PROMPT
+
+/* Define to 1 if you have the `rl_set_keyboard_input_timeout' function. */
+#undef HAVE_RL_SET_KEYBOARD_INPUT_TIMEOUT
+
+/* Define to 1 if you have the `rl_set_keymap' function. */
+#undef HAVE_RL_SET_KEYMAP
+
+/* Define to 1 if you have the `rl_set_paren_blink_timeout' function. */
+#undef HAVE_RL_SET_PAREN_BLINK_TIMEOUT
+
+/* Define to 1 if you have the `rl_set_prompt' function. */
+#undef HAVE_RL_SET_PROMPT
+
+/* Define to 1 if you have the `rl_set_screen_size' function. */
+#undef HAVE_RL_SET_SCREEN_SIZE
+
+/* Define to 1 if you have the `rl_show_char' function. */
+#undef HAVE_RL_SHOW_CHAR
+
+/* Define to 1 if you have the `rl_stuff_char' function. */
+#undef HAVE_RL_STUFF_CHAR
+
+/* Define to 1 if you have the `rl_tty_set_default_bindings' function. */
+#undef HAVE_RL_TTY_SET_DEFAULT_BINDINGS
+
+/* Define to 1 if you have the `rl_unbind_command_in_map' function. */
+#undef HAVE_RL_UNBIND_COMMAND_IN_MAP
+
+/* Define to 1 if you have the `rl_unbind_function_in_map' function. */
+#undef HAVE_RL_UNBIND_FUNCTION_IN_MAP
+
+/* Define to 1 if you have the `rl_unbind_key' function. */
+#undef HAVE_RL_UNBIND_KEY
+
+/* Define to 1 if you have the `rl_unbind_key_in_map' function. */
+#undef HAVE_RL_UNBIND_KEY_IN_MAP
+
+/* Define to 1 if you have the `rl_variable_bind' function. */
+#undef HAVE_RL_VARIABLE_BIND
+
+/* Define to 1 if you have the `rl_variable_dumper' function. */
+#undef HAVE_RL_VARIABLE_DUMPER
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `stifle_history' function. */
+#undef HAVE_STIFLE_HISTORY
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `unstifle_history' function. */
+#undef HAVE_UNSTIFLE_HISTORY
+
+/* Define to 1 if you have the `using_history' function. */
+#undef HAVE_USING_HISTORY
+
+/* Define to 1 if you have the `where_history' function. */
+#undef HAVE_WHERE_HISTORY
+
+/* Define to 1 if you have the `write_history' function. */
+#undef HAVE_WRITE_HISTORY
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* declaration of filename_completion_function() needs const in the first
+   argument */
+#undef READLINE_CONST
+
+/* The readline built-in filename completion function, either
+   rl_filename_completion_function() or filename_completion_function() */
+#undef READLINE_FILE_COMPLETE
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS

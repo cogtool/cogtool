@@ -1,0 +1,47 @@
+This directory contains some code for testing and showing off CLX.
+
+MENU.LISP:
+
+  This file demonstrates a simple menu implementation described in
+  Kimbrough, Kerry, "Windows to the Future", Lisp Pointers, Oct-Nov, 1987.
+  Try calling 
+
+  (xlib::just-say-lisp "")
+  (xlib::pop-up "" '("chocolate" "strawberry" "asparagus"))
+
+HELLO.LISP:
+
+  Pops up a window displaying a string. Click on it to make it
+  go away. Try calling 
+
+  (xlib::hello-world "" :string "This space for rent.")
+
+
+BEZIER.LISP,
+ZOID.LISP:
+
+  Defines some extensions for drawing bezier splines and trapezoids,
+  respectively.
+
+  Bezier is a demo of how to use protocol extensions.  Since this demo
+  defines CLX stubs for the X_PolyBezier X request defined in the
+  "bezier" extension, you have to have the macros and bufmac files
+  loaded, which define macros needed to compile CLX stubs.  The macros
+  and bufmac files aren't normally loaded by load-clx, as they are only
+  needed to compile CLX stubs for protocol requests, and aren't need to
+  just use CLX.  You can load them by specifying :macros-p t to
+  load-clx.
+
+  Lucid users: Remember that CLX stubs for protocol requests in lucid
+  lisp have to be compiled with the production compiler, so this file
+  has to be compiled with the production compiler.
+
+BEZIERTEST.LISP:
+  Compile and load bezier.lisp, and try:
+
+  (xlib::bezier-test "" "/usr/X.V11R1/extensions/test/datafile")
+
+  The second argument is a file containing a picture described as 
+  a set of splines. Unfortunately, this is not currently part of the
+  CLX release.
+

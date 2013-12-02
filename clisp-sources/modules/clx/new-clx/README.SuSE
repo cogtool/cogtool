@@ -1,0 +1,35 @@
+
+#
+# (C) 1998, S.u.S.E. GmbH, Nürnberg
+#
+
+Call of CLX
+
+
+       Please call clisp with the option -F to use clx. The X Window System
+is required for the usage of clx.  Therefore the clisp version under
+/usr/lib/clisp/clx/ is used.
+For some examples of clx try out in the directory demos/
+
+         clisp -X -q -i sokoban
+
+and
+
+         clisp -X -q -i qix
+
+----------------------------------------------------------------------------
+
+Aufruf von CLX
+
+
+      Bitte rufen Sie clisp mit der Option -X auf. Clx erfordert ein
+installiertes X-Window-System.  Daher wird die entsprechende clisp-Version
+aus /usr/lib/clisp/clx/ benutzt.
+Sie finden zwei Beispiele für clx im Verzeichnis demos/
+
+         clisp -X -q -i sokoban
+
+und
+
+         clisp -X -q -i qix
+

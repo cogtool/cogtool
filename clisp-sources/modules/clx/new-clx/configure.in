@@ -1,0 +1,84 @@
+dnl -*- autoconf -*- script for new-clx
+dnl Gilbert Baumann, 1999-10-11
+dnl Sam Steingold 2002-2005
+
+AC_PREREQ(2.57)
+AC_INIT(clx/new-clx, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(clx.f)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([ * NEW CLX])
+AC_HEADER_TIME
+AC_CHECK_HEADERS([sys/socket.h netdb.h netinet/in.h])
+dnl find a path to X11 - set X_LIBS and X_INCLUDES
+CL_FIND_X
+
+if test "$have_x" != "yes"; then
+  AC_MSG_FAILURE([cannot find X Window System])
+fi
+
+AC_CACHE_CHECK(for XGetAtomNames, gb_cv_have_XGetAtomNames,
+  [ gb_LIBS_save=$LIBS
+    gb_CFLAGS_save=$CFLAGS
+    LIBS="$X_LIBS $LIBS"
+    CFLAGS="$CFLAGS $X_INCLUDES"
+    AC_TRY_LINK([#include <X11/Xlib.h>],[XGetAtomNames(0,0,0,0);],
+      gb_cv_have_XGetAtomNames=yes,
+      gb_cv_have_XGetAtomNames=no)
+    LIBS=$gb_LIBS_save
+    CFLAGS=$gb_CFLAGS_save])
+
+dnl Look for Xpm
+AC_CACHE_CHECK(for Xpm library, gb_cv_have_xpm,
+  [ gb_LIBS_save=$LIBS
+    gb_CFLAGS_save=$CFLAGS
+    LIBS="$X_LIBS -lXpm $LIBS"
+    CFLAGS="$CFLAGS $X_INCLUDES"
+    AC_TRY_LINK([#include <X11/xpm.h>],
+		[XpmReadFileToPixmap(0,0,0,0,0,0);],
+      gb_cv_have_xpm=yes,
+      gb_cv_have_xpm=no)
+    LIBS=$gb_LIBS_save
+    CFLAGS=$gb_CFLAGS_save])
+
+dnl Same thing with XShape
+AC_CACHE_CHECK(for X shape extension, gb_cv_have_xshape,
+  [ gb_LIBS_save=$LIBS
+    gb_CFLAGS_save=$CFLAGS
+    LIBS="$X_LIBS -lXext $LIBS"
+    CFLAGS="$CFLAGS $X_INCLUDES"
+    AC_TRY_LINK([#include <X11/Xlib.h>
+	         #include <X11/Xutil.h>
+	         #include <X11/extensions/shape.h>],
+	        [XShapeQueryExtension(0,0,0);],
+      gb_cv_have_xshape=yes,
+      gb_cv_have_xshape=no)
+    LIBS=$gb_LIBS_save
+    CFLAGS=$gb_CFLAGS_save])
+
+dnl Now define some output variables
+
+AC_SUBST(WANTS)		dnl defines WANTS as output variable
+
+dnl Setup X_LIBS as well as WANTS
+
+if test $gb_cv_have_xpm = "yes"; then
+    X_LIBS="$X_LIBS -lXpm";
+    WANTS="$WANTS -DWANT_XPM=1"
+else
+    WANTS="$WANTS -DWANT_XPM=0"
+fi
+
+if test $gb_cv_have_xshape = "yes"; then
+    X_LIBS="$X_LIBS -lXext";
+    WANTS="$WANTS -DWANT_XSHAPE=1"
+else
+    WANTS="$WANTS -DWANT_XSHAPE=0"
+fi
+
+dnl And dump what we found:
+AC_MSG_NOTICE([ * NEW CLX (output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([ * NEW CLX (done)])

@@ -1,0 +1,121 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.57)
+
+AC_INIT(ln.c)
+AC_CONFIG_HEADER(config.h)
+AC_PROG_MAKE_SET
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_GCC_TRADITIONAL
+AC_PROG_INSTALL
+AC_PROG_RANLIB
+AC_AIX
+AC_MINIX
+AC_ISC_POSIX
+
+AC_HEADER_DIRENT
+AC_FUNC_CLOSEDIR_VOID
+
+AC_TYPE_MODE_T
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_TYPE_UID_T
+AC_CHECK_TYPE(ino_t, unsigned long)
+
+AC_C_CONST
+AC_HEADER_STDC
+AC_HEADER_STAT
+
+AC_CHECK_HEADERS(string.h limits.h errno.h unistd.h sys/param.h)
+AC_REPLACE_FUNCS(stpcpy strdup)
+AC_CHECK_FUNCS(bcopy memcpy strerror realpath)
+
+AC_FUNC_VPRINTF
+AC_FUNC_ALLOCA
+
+AC_MSG_CHECKING([for d_ino member in directory struct])
+AC_CACHE_VAL(fu_cv_sys_d_ino_in_dirent,
+[AC_TRY_LINK([
+#include <sys/types.h>
+#ifdef HAVE_DIRENT_H
+# include <dirent.h>
+#else /* not HAVE_DIRENT_H */
+# define dirent direct
+# ifdef HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif /* HAVE_SYS_NDIR_H */
+# ifdef HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif /* HAVE_SYS_DIR_H */
+# ifdef HAVE_NDIR_H
+#  include <ndir.h>
+# endif /* HAVE_NDIR_H */
+#endif /* HAVE_DIRENT_H */
+],
+  [struct dirent dp; dp.d_ino = 0;],
+    fu_cv_sys_d_ino_in_dirent=yes,
+    fu_cv_sys_d_ino_in_dirent=no)])
+AC_MSG_RESULT($fu_cv_sys_d_ino_in_dirent)
+if test $fu_cv_sys_d_ino_in_dirent = yes; then
+  AC_DEFINE(D_INO_IN_DIRENT)
+fi
+
+AC_MSG_CHECKING(for ELOOP)
+AC_CACHE_VAL(cl_cv_decl_eloop,[
+if test $cross_compiling = no; then
+cat > conftest.c <<EOF
+#include "confdefs.h"
+#if defined(STDC_HEADERS) || defined(HAVE_STDLIB_H)
+#include <stdlib.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#include <errno.h>
+#include <stdio.h>
+#ifdef ELOOP
+main () { printf("ELOOP\n"); exit(0); }
+#else
+extern int errno;
+#define foo "conflink"
+#define foobar "conflink/somefile"
+main()
+{ /* If a system goes into an endless loop on this, it must be really broken. */
+  if (symlink(foo,foo)<0) exit(1);
+  if (unlink(foobar)>=0) { unlink(foo); exit(1); }
+  printf("%d\n",errno); unlink(foo); exit(0);
+}
+#endif
+EOF
+eval $ac_link
+cl_cv_decl_ELOOP=`./conftest`
+if test "$cl_cv_decl_ELOOP" = "ELOOP"; then
+  cl_cv_decl_eloop=yes
+else
+  cl_cv_decl_eloop="$cl_cv_decl_ELOOP"
+fi
+else
+AC_EGREP_CPP(yes,[
+#if defined(STDC_HEADERS) || defined(HAVE_STDLIB_H)
+#include <stdlib.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#include <errno.h>
+#include <stdio.h>
+#ifdef ELOOP
+yes
+#endif
+],
+cl_cv_decl_eloop=yes,
+cl_cv_decl_eloop=no)
+cl_cv_decl_ELOOP="ELOOP"
+fi
+rm -f conftest*
+])
+AC_MSG_RESULT($cl_cv_decl_eloop)
+AC_DEFINE_UNQUOTED(ELOOP_VALUE,$cl_cv_decl_ELOOP)
+
+AC_OUTPUT(Makefile)

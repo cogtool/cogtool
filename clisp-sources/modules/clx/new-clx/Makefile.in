@@ -1,0 +1,58 @@
+# Makefile for CLISP module set clx
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = -O
+INCLUDES= ../..
+CLISP = clisp -q -norc
+MODPREP = ../../modprep.fas
+LN = ln
+SHELL = /bin/sh
+
+DISTRIBFILES = link.sh Makefile clx-preload.lisp clx.lisp image.lisp resource.lisp clx.o
+distribdir =
+
+### Custom defs.
+CCMP2C = ../../ccmp2c
+RM = rm -f
+WANTS = @WANTS@
+X_INCLUDES = @X_INCLUDES@
+
+all : clx.fas image.fas resource.fas clx.o
+
+clx.fas clx.lib: clx.lisp clx-preload.lisp
+	$(CLISP) -i clx-preload.lisp -c clx.lisp
+
+image.fas: image.lisp clx.lib
+	$(CLISP) -i clx-preload.lisp -c image.lisp
+
+resource.fas: resource.lisp clx.lib
+	$(CLISP) -i clx-preload.lisp -c resource.lisp
+
+clx.e: clx.f
+	$(CCMP2C) clx.f > genclx.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(WANTS) genclx.c -o genclx
+	./genclx -l -o clx.e > clx.e
+	$(RM) genclx.c
+	$(RM) genclx
+
+clx.c: clx.e $(MODPREP)
+	cp clx.e clx.d
+	$(CLISP) $(MODPREP) clx.d clx.c
+
+clx.o: clx.c $(INCLUDES)/clisp.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(X_INCLUDES) -I$(INCLUDES) -c clx.c
+
+# Make a module
+clisp-module : clx.fas image.fas resource.fas clx.o
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+
+clean : force
+	$(RM) genclx.c genclx *.lib *.fas clx.e clx.d clx.c clx.o
+
+force:
+

@@ -1,0 +1,687 @@
+This file presents
+* a list of platforms CLISP is known to run on,
+* special hints for the following platforms:
+    NetBSD/sparc 1.4.1
+    PC 386 under FreeBSD 4.0
+    BSDI 1.0
+    PC 386 under GNU 0.2
+    Sun4 (Sparc) under Linux
+    PC 386 under SunOS 5.4
+    HP9000/8xx under HP-UX version 8, 9, 10
+    SINIX-N 5.43
+    IRIX 6.2
+    IRIX 6.2 and 6.3
+    IRIX 6.5
+    NeXT running NeXTstep 3.3
+    Apple PowerPC running MacOS X Server
+    AIX 3 and 4
+    AIX 5.1
+    DEC Alpha AXP running OSF/1 3.2
+    DEC Alpha AXP running OSF/1 4.0b
+    PC 386 under BeOS 5.0
+    IA-64 running Linux, emulated by HP NUE
+    AMD64 (x86_64) running FreeBSD
+    AFS (Andrew File System)
+* hints for porting to new platforms.
+
+
+List of platforms
+-----------------
+
+The Unix version of CLISP is known to run on a variety of machines
+and operating systems. The following is a list of successful compiles,
+in the format
+
+
+hardware              OS             compiled by
+date                  test-time      email address
+
+(Test-time is the time needed for "make check-recompile". Measure user time.)
+
+
+PC 486/33, 8 MB RAM   Linux 0.98     Bruno Haible
+17.11.1992                  415 s    <haible@ma2s2.mathematik.uni-karlsruhe.de>
+14.12.1992                  418 s
+31.12.1992 (gcc233)         384 s
+31.12.1992 (gcc233)         377 s
+2.1.1993  (gcc233,shm)      359 s
+2.1.1993  (gcc233,shm)      363 s
+5.1.1993  (gcc233,486)      367 s
+15.1.1993 (gcc233,486,shm)  356 s
+15.1.1993 (gcc233,486,shm)  362 s
+19.1.1993 (gcc233,486,shm)  360 s
+29.1.1993 (gcc233,486)      366 s
+10.2.1993 (gcc233,486,shm)  359 s
+4.3.1993  (gcc233,486,shm)  351 s
+
+PC 486/33, 8 MB RAM   Linux 0.99.7   Bruno Haible
+18.3.1993 (gcc233,486,mmap) 337 s    <haible@ma2s2.mathematik.uni-karlsruhe.de>
+5.5.1993  (gcc233,486,mmap) 346 s
+5.6.1993  (gcc240,486,mmap) 366 s
+17.7.1993 (gcc245,486,mmap) 368 s
+
+PC 486/33, 8 MB RAM   Linux 0.99.12  Bruno Haible
+22.9.1993 (gcc245,486,mmap) 464 s    <haible@ma2s2.mathematik.uni-karlsruhe.de>
+4.11.1993 (gcc252,486,mmap) 453 s
+1.1.1994 (gcc257,486,shm)   483 s
+
+PC 486/33, 8 MB RAM   Linux 1.1.19   Bruno Haible
+20.6.1994 (gcc257,mmap)     569 s    <haible@ma2s2.mathematik.uni-karlsruhe.de>
+27.6.1994 (gcc257,mmap)     515 s
+28.6.1994 (gcc257,mmap)     526 s
+20.7.1994 (gcc260,mmap)     565 s
+27.8.1994 (gcc260,mmap)     582 s
+
+PC 486/33, 8 MB RAM   Linux 1.1.51   Bruno Haible
+27.9.1994 (gcc260,gengc)    569 s
+12.1.1995 (gcc263,shm,immutable,gengc) on Linux 1.1.80
+                            628 s user + 1914 s system
+14.1.1995 (gcc263,shm,immutable,gengc) on Linux 1.1.83
+                            618 s user + 135 s system
+17.1.1995 (gcc263,shm,immutable,gengc,minimal) on Linux 1.1.83
+                            625 s user + 38 s system
+
+PC 486/33, 8 MB RAM   Linux 1.2.2    Bruno Haible
+4.4.1995 (gcc263,gengc)     578 s user + 42 s system
+4.4.1995 (gcc263,gengc,imm) 613 s user + 34 s system
+23.6.1995 (gcc263,gengc)    633 s user + 38 s system
+23.6.1995 (gcc270,gengc)    615 s user + 37 s system
+
+PC 486/33, 8 MB RAM   Linux 2.0.6    Bruno Haible
+21.7.1996 (gcc270,gengc)    727 s user + 26 s system
+8.8.1996 (g++270,gengc)     735 s user + 25 s system
+
+PC 486/33, 16 MB RAM  Linux 2.0.29   Bruno Haible
+29.6.1997 (gcc272,gengc)    797 s user + 32 s system
+29.6.1997 (dito,STACK=ebx)  691 s user + 28 s system
+14.7.1997 (SELFMADE_MMAP)   711 s user + 32 s system
+14.7.1997 (HAVE_MMAP)       692 s user + 29 s system
+6.8.1997                    652 s user + 29 s system
+7.9.1997 (aout)             623 s user + 24 s system
+7.9.1997 (aout)             614 s user + 25 s system
+7.9.1997 (elf)              657 s user + 25 s system
+
+PC 486/33, 16 MB RAM  Linux 2.0.33   Bruno Haible
+17.6.1998 (egcs103)           603 s user + 25 s system
+17.6.1998 (egcs103,HEAPCODES) 606 s user + 29 s system
+
+PC 486/50, 32 MB RAM  Linux 0.99.14  Marcus Daniels
+25.1.1994 (gcc258,shm)      331 s    <marcus@ee.pdx.edu>
+25.1.1994 (gcc258,486,shm)  319 s
+
+PC 586/100, 16 MB RAM Linux 1.3.79   Marcus Daniels
+23.5.1996 (gcc272l3 a.out)  130 s
+23.5.1996 (gcc272l3 ELF)    132 s
+
+PC 586/100, 16 MB RAM Linux 2.0 (Debian 1.1)  Marcus Daniels
+17.6.1996 (gcc272 ELF)      144 s
+27.7.1996 (gcc272 ELF)      143 s
+
+PC 586/166, 128 MB RAM Linux 2.0     Marcus Daniels
+20.6.1996 (gcc272l3)        125 s    <marcus@sysc.pdx.edu>
+
+PC 686/150, 128 MB RAM Linux 2.1.29  Marcus Daniels
+13.4.1997                    86 s    <marcus@sysc.pdx.edu>
+
+PC Athlon/500, 256 MB  Linux 2.2.13  Bruno Haible
+6.2.2000                     26.2 s  <haible@clisp.cons.org>
+
+Sun 3                 SunOS 4.1.1    Bruno Haible
+17.4.1993               2296 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+Sun386i               SunOS 4.0.2    Bruno Haible
+13.1.1993                            <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+Sun 4/70 (Sparc 2)    SunOS 4.1.1    Bruno Haible
+19.11.1992 (gcc23)       291 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+22.12.1992 (gcc23)       298 s
+28.12.1992 (gcc23)       291 s
+1.1.1993   (cc)          424 s
+1.2.1993   (gcc23)       268 s
+4.2.1993   (gcc23)       276 s
+28.3.1993  (gcc23)       276 s
+11.5.1993  (gcc23)       274 s
+2.11.1993  (cc -O0)      600 s
+2.11.1993  (cc -O1)      493 s
+3.11.1993  (cc -O2)      649 s
+3.11.1993  (cc -O3)      614 s
+3.11.1993  (cc)          582 s
+14.1.1994  (cc)          632 s
+21.7.1994  (gcc260,wide) 754 s
+
+Sun 4/75 (Sparc 2)    SunOS 4.1.3    Marcus Daniels
+25.1.1994 (gcc233)       492 s       <marcus@ee.pdx.edu>
+1.3.1996 (gcc258)        553 s
+22.3.1996 (gcc272)       561 s
+23.5.1996 (gcc272)       562 s
+17.6.1996 (gcc272)       572 s
+20.6.1996 (gcc272)       573 s
+28.7.1996 (gcc272)       585 s
+
+Sun 4c (Sparc 1)      SunOS 4.1.2    Martin Sjölin
+16.12.1992               679 s       <marsj@ida.liu.se>
+
+Sun 4m (Sparc 10)     SunOS 4.1.3    Bruno Haible
+16.1.1993 (gcc233)       208 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+17.1.1993 (gcc233,shm)   203 s
+20.1.1993 (gcc233,shm)   186 s
+26.6.1994 (gcc)          307 s
+
+Sun 4/75 (Sparc 2)    SunOS 4.1.3_U1 Bruno Haible
+8.12.1995 (gcc270)       503 s       <haible@ilog.fr>
+
+Sun 4m (Sun 4/600)    SunOS 4.1.3    Marcus Daniels
+25.1.1994 (gcc233,shm)   453 s       <marcus@ee.pdx.edu>
+
+Sun 4m (Sparc 10)     SunOS 5.1 (Solaris 2)
+21.3.1993                387 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+7.9.1993                 500 s
+
+Sun 4m (Sparc 10)     SunOS 5.3      Bruno Haible
+4.7.1994 (gcc245)        587 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+Sun 4m (Sparc 20)     SunOS 5.4 (Solaris 2.4)   Bruno Haible
+CPU TI,TMS390Z55, 64 MB RAM                     <haible@ilog.fr>
+5.8.1995 (SUNWspro 3.0.1)  225 s
+8.12.1995 (gcc270)         148 s
+
+Sun 4m                SunOS 5.4 (Solaris 2.4)   Marcus Daniels
+12.8.1995 (gcc263)         259 s     <marcus@sysc.pdx.edu>
+
+Sun 4m (Sparc 20)     SunOS 5.4 (Solaris 2.4)   Marcus Daniels
+1.3.1996 (gcc272)          177 s
+12.3.1996 (gcc263)         181 s
+20.3.1996 (gcc263)         173 s
+21.3.1996 (gcc272l3)       167 s
+22.3.1996 (gcc272l3)       177 s
+30.3.1996 (gcc272l3)       169 s
+2.5.1996 (gcc272l3)        172 s
+23.5.1996 (gcc272l3)       170 s
+17.6.1996 (gcc272l3)       171 s
+20.6.1996 (gcc272l3)       169 s
+
+Sun 4m (Sparc 10)     SunOS 5.5.1    Marcus Daniels
+27.7.1996 (gcc272l3)     278 s       <marcus@sysc.pdx.edu>
+28.7.1996 (gcc272l3)     291 s
+
+Sun 4u (UltraSparc1)  SunOS 5.5.1    Marcus Daniels
+13.4.1997                 86 s       <marcus@sysc.pdx.edu>
+
+Sun 4d                SunOS 5.[23]   Adam M. Costello
+2.12.1993 (gcc245)       313 s       <amc@ecl.wustl.edu>
+
+Sun 4m (2 cpus)       SunOS 5.3      Alva L. Couch
+23.2.1994 (gcc258)       203 s       <couch@cs.tufts.edu>
+
+PC 486/33, 32 MB RAM  SunOS 5.4      Marty Shannon
+1.5.1995 (gcc263,noasm)  669 s       <mshannon@i-2000.com>
+
+PC 586/200            SunOS 5.5.1    Marty Shannon
+15.4.1997                137 s       <mshannon@i-2000.com>
+
+i386                  Consensys 4.0  Bruno Haible
+18.12.1992             --- (*)       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+7.9.1993               --- (*)
+
+PC 486/33, 32 MB RAM  Consensys 4.2  Jean-Claude Beaudoin
+21.9.1993                            <jbeaudoi@sobeco.com>
+
+HP 9000/825           HP-UX 8        Bruno Haible
+27.6.1994               2498 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+HP 9000/835           HP-UX 8        Bruno Haible
+27.6.1994               1203 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+HP 9000/720           HP-UX 8.05     Bruno Haible
+1.1.1993                 309 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+27.6.1994                335 s
+4.7.1994                 360 s
+
+PC 486/33, 8 MB RAM   Coherent 4.0.1 Bruno Haible
+16.5.1993 (cc)           470 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+16.5.1993 (gcc140)       413 s
+
+PC 386/33, 16MB RAM   UHC UNIX SysV.4   Blake McBride
+20.3.1993 (UHC_1)       1125 s          <blake@netcom.com>
+20.3.1993 (UHC_2)       1182 s
+
+PC 486/33, 16 MB RAM  SINIX-Z V5.41  Manfred Weichel
+29.7.1993 (gcc245)       383 s       <manfred.weichel@mch.sni.de>
+11.7.1994 (gcc258)
+
+PC                    386BSD 0.1     Charles Hannum
+26.3.1993                            <mycroft@gnu.ai.mit.edu>
+
+PC 486/33, 8 MB RAM   NetBSD 1.0 Beta   Douglas Crosher
+30.8.1994 (gcc245)          582 s       <dtc@stan.xx.swin.oz.au>
+30.8.1994 (gcc245,mmap)     522 s       <dtc@scrooge.ee.swin.oz.au>
+30.8.1994 (gcc245,shm)      488 s
+2.9.1994  (gcc245,gengc)    502 s
+
+DECstation 5000       Ultrix V4.2A   Benlu Jiang
+5.5.1993                             <manager@csdeca.cs.missouri.edu>
+
+DECstation 5000       Ultrix V4.4    Bruno Haible
+20.12.1995               759 s       <haible@ilog.fr>
+
+SGI Mips              IRIX 4         Michael Stoll
+11.6.1993                315 s       <michael@rhein.iam.uni-bonn.de>
+
+SGI Mips              IRIX 5         Christian Moen
+31.12.1993 (gcc)                     <christim@ifi.uio.no>
+
+SGI Mips              IRIX 5         Martin Cracauer
+28.9.1994 (cc)                       <cracauer@wavehh.hanse.de>
+
+SGI Mips, 64 MB RAM   IRIX 5.2       Dorin Ungureanu
+134 MHz, CPU R4600, FPU R4610        <Dorin.Ungureanu@esat.kuleuven.ac.be>
+8.4.1995 (gcc)
+
+SGI Mips (Indy)       IRIX 5.2       Marcus Daniels
+134 MHZ IP22 Processor               <marcus@sysc.pdx.edu>
+12.8.1995 (gcc270)       250 s
+
+SGI Mips              IRIX 5.3       Bruno Haible
+8.12.1995 (cc)           232 s       <haible@ilog.fr>
+
+SGI Mips (Indy)       IRIX 5.3       Marcus Daniels
+100 MHZ IP22 Processor               <marcus@sysc.pdx.edu>
+12.8.1995 (gcc270)       435 s
+1.4.1996 (gcc272)        427 s
+
+SGI Mips (Indy)       IRIX 5.3       Marcus Daniels
+134 MHZ IP22 Processor               <marcus@sysc.pdx.edu>
+19.2.1996 (gcc272)       241 s
+1.3.1996 (gcc272)        253 s
+12.3.1996 (gcc272)       250 s
+20.3.1996 (gcc272)       248 s
+30.3.1996 (gcc272)       249 s
+1.4.1996 (gcc272f1)      248 s
+23.5.1996 (gcc272f1)     253 s
+17.6.1996 (gcc272f1)     260 s
+20.6.1996 (gcc272f1)     257 s
+27.7.1996 (gcc272f1)     266 s
+28.7.1996 (gcc272f1)     259 s
+
+SGI Mips              IRIX 6.2       Bruno Haible
+5.6.1997 (cc 7.0)                    <haible@ilog.fr>
+
+SGI Mips              IRIX64 6.2     Bruno Haible
+9.8.1996 (CC -O)         289 s       <haible@ilog.fr>
+
+SGI Mips              IRIX64         Boris
+10.5.1997 (gcc2722)                  <boris@cs.caltech.edu>
+
+RM400 Mips            SINIX-N V5.42  Michael Becker
+8.12.1994 (c89)                      <mb12@coconet.de>
+
+RM Mips               SINIX-N V5.43  Bruno Haible
+2.5.1997 (cc)                        <haible@ilog.fr>
+
+IBM Risc System 6000  AIX 3.2        Gabor Herr
+22.9.1993                            <herr@iti.informatik.th-darmstadt.de>
+
+DEC Alpha AXP         OSF/1 1.3      Bruno Haible
+3.12.1993                141 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+8.1.1994 (gcc257)        145 s
+
+DEC Alpha AXP         OSF/1 2.0      Bruno Haible
+2.8.1994 (gcc258)        159 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+DEC Alpha EV5         Linux 2.0.33   Bruno Haible
+7.5.1998 (gcc2723)        48 s       <haible@ilog.fr>
+
+PC 486/50, 16 MB RAM  Onsite SysV R 4.2   Sebastian Feldmann
+30.10.1993 (cc)          429 s            <snfeldma@teebox.franken.de>
+7.11.1993 (gcc233)       348 s
+7.11.1993 (gcc245)       345 s
+
+Amiga 3000            AMIX 2.1 SysVR4.0   Michel Loi
+22.12.1993 (gcc255)                       <Michel.Loi@lip.ens-lyon.fr>
+
+Amiga (68060/50)      Linux 2.0.36   Bruno Haible
+13.4.2000 (gcc2952)      613 s       <haible@ilog.fr>
+
+NeXT                  NeXTstep 3.1   Marcus Daniels
+30.10.1993 (cc)                      <marcus@ee.pdx.edu>
+
+NeXT (68040/25)       NeXTstep 3.2   Marcus Daniels
+18.1.1994                751 s       <marcus@ee.pdx.edu>
+(cc=gcc222)
+18.1.1994                627 s
+(cc=gcc-222+Mach-VM-singlemap)
+
+PC 486DX2-66, 24 MB RAM  NeXTstep 3.2     Michael Stoll
+5.7.1994 (cc)            359 s            <michael@rhein.iam.uni-bonn.de>
+20.4.1995 (cc)           355 s
+24.4.1995 (gcc258)       330 s
+
+Sequent PTX (386/16)  DYNIX/ptx V2.1.0    Marcus Daniels
+(gcc233, mmap)          2232 s            <marcus@ee.pdx.edu>
+
+Sequent PTX (586/100) DYNIX/ptx V4.1.3    Marcus Daniels
+(gcc272)                 169 s            <marcus@sysc.pdx.edu>
+
+PC                    UnixWare       Alexander Adam
+24.1.1994                            <adam@is.informatik.uni-stuttgart.de>
+
+PC (486)              SCO 3.2 v4.2   Bruno Haible
+19.4.1995 (gcc263)       547 s       <haible@ma2s2.mathematik.uni-karlsruhe.de>
+
+Data General M88000   DG/UX          Pat McClanahan
+3.2.1994                 539 s       <mcclanah@dlgeo.cr.usgs.gov>
+
+PC                    BSDI/386 1.1        Atsuo Ohki
+16.5.1994                                 <ohki@gssm.otsuka.tsukuba.ac.jp>
+
+Compaq Armada E500 PIII 128MB 700Mhz  Win2000  Cygwin GCC 2.95.3-5
+2002-07-13    Sam Steingold <sds@gnu.org>
+                      97.6 s user + 53.6 s system
+
+Apple iBook PPC G4    MacOS X 10.3.8  Bruno Haible  <bruno@clisp.org>
+2005-03               54.12 s user +  9.36 s system (without generational GC)
+                      46.41 s user + 13.85 s system (with generational GC)
+
+
+When you install CLISP on a machine not mentioned here, please send us a short
+note containing the information mentioned above. If you didn't succeed in
+building CLISP, please tell us the problems: we will try to make CLISP as
+portable as possible.
+
+
+Special hints for some platforms:
+---------------------------------
+
+
+On NetBSD/sparc 1.4.1:
+
+The default stack limit is 512 KB, which is not sufficient for building CLISP.
+Use the "ulimit -s" command to increase it.
+
+
+On PC 386 under FreeBSD 4.0:
+
+gcc 2.95.2 miscompiles the streamp() macro in (at least) io.d at optimization
+level -O2. Replace -O2 with -O in the CFLAGS in the makefile. This is fixed in
+gcc-3.3.1.
+
+
+On BSDI 1.0:
+
+Add -DNO_ASM to the CFLAGS in the makefile. Otherwise the assembly code in
+eval.d cannot be fed through the assembler.
+
+
+On a 386 PC under GNU 0.2 (the Hurd):
+
+Before starting the configuration, disable the "crash" server:
+  $ settrans -g /servers/crash
+Otherwise some of the configuration tests, which result in a SIGSEGV, cause
+the entire configuration to hang (waiting for a debugger to be manually
+attached).
+
+Choose "gcc -D__USE_GNU" as compiler.
+
+After configuring, change unixconf.h to contain the line
+  #undef HAVE_GETRUSAGE
+
+For executing "makemake", the default shell (bash-2.0) cannot be used (buggy).
+Install bash-2.01 or newer.
+
+
+On a Sun4 (Sparc) under Linux:
+
+After configuring, change unixconf.h to contain the lines
+  #undef HAVE_MMAP_DEVZERO
+  #undef HAVE_MMAP_DEVZERO_SUN4_29
+Otherwise, the poor Sparc1 will freeze up about half way through the compile
+of compiler.lisp. Looks like a kernel problem.
+
+
+On a 386 PC under SunOS 5.4 (Solaris 2.4):
+
+Use CC="gcc". You can't use "gcc -ansi" because (at least) the <sys/signal.h>
+(#included by <signal.h>) thinks "gcc -ansi" means *strict* ANSI, which
+prevents the `sigaction' stuff from being made available.
+
+If you want to use shared memory for generational garbage collection, you
+may need to add the following to your /etc/system file:
+
+forceload: sys/shmsys
+set shmsys:shminfo_shmseg = 256
+set shmsys:shminfo_shmmni = 256
+
+Avoid the shared libraries in /usr/ucblib. If this directory is in your
+LD_LIBRARY_PATH when you configure CLISP, not only will the build fail and
+require intervention, but once it is linked, shared libraries will appear
+in VM that CLISP expects to be free.
+
+
+On a HP9000/8xx under HP-UX version 8, 9, 10:
+
+If cc had no bugs:
+  Choose "cc -Aa -z -D_HPUX_SOURCE" or "c89 -z -D_HPUX_SOURCE" as compiler,
+  as described in paragraph 2 of the INSTALL file.
+  You need the -Aa flag resp. the c89 compiler because the normal "cc" does not
+  expand macros with arguments within constant expressions in preprocessor
+  commands like #if.
+  Without the -D_HPUX_SOURCE flag many include files are incomplete. When using
+  -D_POSIX_SOURCE instead, <errno.h> fails to define ELOOP.
+  The -z flag is harmless.
+Alas, cc and c89 initialize string arrays declared like
+    static char* table[] = { 0?"a":1?"b":"", ..., 0?"x":1?"y":"", };
+with NULL pointers!
+On HP-UX 10, the compilation also fails with error messages like
+    "Catenated input line too long" and "Macro param too large".
+So get and install GNU gcc. This works for sure.
+
+If you get an error message "initialisation file was not created by this
+version of LISP", remove the "-O2" from CFLAGS in the makefile, remove spvw.o
+and continue.
+
+The sh and ksh on HP-UX 10 have severe bugs that cause
+  1. Most invocations of lisp.run crash like this (from HP-UX make):
+       ./lisp.run ...
+       /bin/sh: 18546 Bus error
+     or like this (from GNU make):
+       ./lisp.run ...
+       *** Termination signal 11
+  2. A command such as  'grep -v "^ *$$"'  to be executed incorrectly.
+As a workaround, the Makefile has "SHELL = bash" instead of "SHELL = /bin/sh"
+on this platform. For this to work, you need to have GNU bash in your PATH,
+and you need to use GNU make instead of HP-UX make.
+
+With older versions of gcc, the testsuite causes a failure because of ISQRT.
+A workaround is to use gcc 2.95.2 or newer.
+
+
+On SINIX-N 5.43:
+
+Choose CC="cc -D_XPG_IV" instead of CC=cc. This avoids a problem with a wrong
+declaration of gettimeofday().
+
+
+On IRIX 6.2 in 64-bit mode:
+
+The C compiler 6.2 is unable to compile CLISP. If you don't have the C
+compiler 7.0 or newer, you have to use the C++ compiler 7.0 instead.
+Drawback: You can't compile with readline or FFI or module support. You
+may add "-DSAFETY=2" to the CFLAGS in the makefile (optimize but don't
+introduce assembly language parts). Do *not* add "-OPT:Olimit=6000" to the
+CFLAGS, as the compiler suggests when compiling eval.d, because then
+eval.d is apparently miscompiled. Remove the "-L/usr/lib -lX11" from the
+CFLAGS in the makefile, if your X11 libraries are 32-bit.
+
+
+On IRIX 6.2 and 6.3:
+
+The configuration of ffcall hangs during "checking for working mprotect".
+The running `conftest' process is unkillable. No workaround is known.
+The problem seems to be gone in IRIX 6.4.
+
+
+On IRIX 6.5:
+
+The /bin/sh has a problem with autoconf generated configure scripts. You
+have to first install GNU bash and point the CONFIG_SHELL environment
+variable to it:
+  $ CONFIG_SHELL=/bin/bash
+  $ export CONFIG_SHELL
+
+With the C compiler 7.2.1 we were not able to make CLISP work. So use
+GNU gcc instead.
+
+
+On NeXT running NeXTstep 3.3:
+
+NeXT's cc has problem with the inline assembler commands. Either add
+-DNO_ASM to the CFLAGS in the Makefile, or use gcc-2.7.2 or newer.
+
+If you get an error in the header file "ip.h" because the type `n_long' is
+undefined, add -Dn_long='unsigned long' to the CFLAGS in the Makefile.
+
+
+On Apple PowerPC running MacOS X Server:
+
+You can get C development tools from either
+Fink - <http://fink.sourceforge.net> (Free Software ported to Darwin)
+or Apple - <http://developer.apple.com/tools>.
+
+The standard "/bin/sh" shell has at least two bugs which make it
+unusable for the configuration scripts.  As a workaround, you have to
+set the environment variable CONFIG_SHELL to "/bin/bash", and start
+"$CONFIG_SHELL ./configure ..." instead of "./configure ...".
+
+The default stack size limit is 512 KB, which is too small for bootstrapping
+CLISP. Even 1 MB is too small. Try "ulimit -S -s 8192" before starting "make"
+or "limit stacksize 8192" is you are using a CSH-derivative.
+
+Remove all optimization options ("-O", "-O2") from the CC and CFLAGS variables
+in the Makefile. Apple's cc crashes when compiling eval.d with optimization.
+
+Dec2002 Developer tools with the gcc 3.3 update work OOTB, but
+older versions of GCC might require the `--traditional-cpp' option.
+If you get weird compilation errors (like #else mismatch), try it.
+
+MacOS X comes with an ancient, incompatible BSD readline version from Apple.
+To use the Fink version instead, invoke the top-level configure as
+./configure --with-libreadline-prefix=/sw ...
+
+MacOS X 10.3 builds OOTB with gcc 4, but 10.4 may report a segfault in
+closed_buffered() on startup (CLISP works fine but starts slower because
+of the segfault).  Add -DNO_GENERATIONAL_GC to CFLAGS if you want to
+avoid that (large jobs that use lots of memory benefit from generatinal
+GC, so the small startup slowdown may not matter for you).
+<http://article.gmane.org/gmane.lisp.clisp.general:10475>
+<http://article.gmane.org/gmane.lisp.clisp.general:10481>
+
+
+On AIX 3 and 4:
+
+You can't use "cc" as compiler since it wants more than 64 MB RAM to compile
+eval.d. You will use GNU gcc without regrets.
+You can't use "xlc" as compiler on AIX 4 since it miscompiled certain casts
+between integer types.
+Choose gcc as compiler, as described in paragraph 2 of the INSTALL file.
+
+The /bin/sh which is used during configuration may complain about
+the config.cache which is generated.  If this happens, start over
+with the variable CONFIG_SHELL exported as a reliable shell, like bash.
+
+
+On AIX 5.1:
+
+When using "xlc -D_ALL_SOURCE" as compiler, you cannot use optimizations.
+So remove any -O from the CFLAGS in the Makefile.
+
+
+On DEC Alpha AXP running OSF/1 3.2:
+
+The build process crashes during bootstrap, right after loading backquote.lisp.
+You'd better try with gcc.
+
+
+On DEC Alpha AXP running OSF/1 4.0b:
+
+cc has a preprocessor bug which occurs in spvw.d and eval.d. So get and
+install GNU gcc (version 2.5.5 or newer).
+The bug should be gone in OSF/1 4.0c. But on OSF/1 4.0d, the preprocessor
+has another bug which occurs in pathname.d. So get and install GNU gcc
+for real.
+
+
+On PC 386 under BeOS 5.0:
+
+gcc miscompiles something with the default flags. Changing the CFLAGS in
+the Makefile, replacing "-fomit-frame-pointer -O2 -fexpensive-optimizations"
+with "-O", avoids this.
+
+
+On IA-64 running Linux, emulated by HP NUE:
+
+Add -DNO_MULTIMAP_SHM -DNO_MULTIMAP_FILE -DNO_SINGLEMAP -DNO_TRIVIALMAP
+to the CFLAGS, or, equivalently, pass "--disable-mmap" to ./configure.
+
+
+On AMD64 (x86_64) running FreeBSD:
+
+Add -DNO_MULTIMAP_SHM -DNO_MULTIMAP_FILE -DNO_SINGLEMAP -DNO_TRIVIALMAP
+to the CFLAGS, or, equivalently, pass "--disable-mmap" to ./configure.
+
+
+On DEC Alpha running Linux:
+
+Add -DNO_MULTIMAP_SHM -DNO_MULTIMAP_FILE -DNO_SINGLEMAP -DNO_TRIVIALMAP
+to the CFLAGS, or, equivalently, pass "--disable-mmap" to ./configure.
+
+
+On platforms using AFS:
+
+You may get an "Invalid cross-device link" error.
+If you do, try running make as "make LN_HARD='cp -p' LN='cp -p'".
+
+
+Hints for porting to new platforms:
+-----------------------------------
+
+Choose a reliable C compiler. GNU gcc is a good bet. Generally, start the
+port with the least optimization settings regarding the compiler (-O0 in
+the CFLAGS) and the safest optimization settings regarding the CLISP source
+(-DSAFETY=3 in the CFLAGS).
+
+Some options or optimizations are enabled through macros, conditionally
+defined in lispbibl.d. You can check which macros get defined in lispbibl.d
+by looking into lispbibl.h, assuming you are using gcc. For example:
+    make lispbibl.h
+    grep TYPECODES lispbibl.h
+
+Has your machine a weird address space layout?
+On 64-bit machines, CLISP assumes that the code and data area as well as the
+area of malloc'ed memory have addresses in specific ranges, each at most 4 GB
+large. This allows CLISP to use the upper 32 bits as tags, for encoding the
+run time type of Lisp objects. In case this assumption does not hold, find a
+way to store 8 tag bits and an address in a 64 bit word, and modify lispbibl.d
+appropriately. No assumptions about the stack area are made.
+
+Has your operating system shared memory or memory mapping facilities?
+On 64-bit platforms, CLISP tries to use them to save the time for stripping
+off the tag bits (see above) before memory accesses. If you get an error
+message concerning shared memory, you should add -DNO_MULTIMAP_SHM to the
+CFLAGS and recompile. If you get an error message concerning mapped memory,
+you should add -DNO_MULTIMAP_FILE -DNO_SINGLEMAP to the CFLAGS and recompile.
+Doing so introduces a speed penalty of about 6%. If you still get an error
+message concerning mapped memory, you should add -DNO_TRIVIALMAP to the CFLAGS
+and recompile.
+
+If you get an error message mentioning "handle_fault", then generational GC
+is not working. Add -DNO_GENERATIONAL_GC to the CFLAGS and recompile.
+
+If you get an error message during the loading of the first 10 Lisp files,
+during the construction of the first .mem file, check the choice of
+setjmp/longjmp functions in lispbibl.d.
+
+If interpreted.mem was successfully generated, but lisp.run dumps core when
+loading .fas files, you should add -DSAFETY=3 to the CFLAGS and recompile.
+Find out which is the least SAFETY level that produces a working lisp.run and
+lispinit.mem, and tell me about it.
+

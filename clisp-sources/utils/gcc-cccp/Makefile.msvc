@@ -1,0 +1,34 @@
+# -*-Makefile-*- for the GNU C preprocessor
+
+CC = cl
+CFLAGS = -I. -DOUTPUT_LINE_COMMANDS -O2
+# -O2 -Zi -Z7
+
+# Choose which alloca() function to use.
+# The builtin alloca():
+ALLOCA =
+# The portable alloca() from alloca.c:
+#ALLOCA = alloca.obj
+
+cccp : cccp.obj cexp.obj version.obj obstack.obj $(ALLOCA)
+	$(CC) cccp.obj cexp.obj version.obj obstack.obj $(ALLOCA) /Fecccp
+	editbin /stack:3145728 cccp.exe
+# more stack is needed when cccp is used to preprocess the MSVC5 include files.
+
+cccp.obj : cccp.c config.h
+	$(CC) $(CFLAGS) -c cccp.c
+
+cexp.obj : cexp.c config.h
+	$(CC) $(CFLAGS) -c cexp.c
+
+version.obj : version.c
+	$(CC) $(CFLAGS) -c version.c
+
+obstack.obj : obstack.c obstack.h
+	$(CC) $(CFLAGS) -c obstack.c
+
+alloca.obj : alloca.c
+	$(CC) $(CFLAGS) -c alloca.c
+
+clean :
+	-del *.obj cccp.exe

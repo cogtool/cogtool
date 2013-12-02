@@ -1,0 +1,267 @@
+What is this? 
+=============
+
+Hadn't we CLX for CLISP for centuries? Yes, but this is a re-implementation
+of CLX written in C for speed. I started coding all this in December 1995. I
+was motivated by the idea, that hopefully Garnet will run with acceptable
+performance on my machine, when I would have finished this. And it was a
+success, I am able to run a usable Garnet on my old but more stable
+i486/33,16MB box. Using my new PPro/200,32MB it runs perfectly smooth. Does
+not run either on my Atari ST, nor on my CP/M-80 box due to lack of X11.
+
+    To use this package you will have to recompile CLISP; more precise:
+build a new link set. See the INSTALL file for instructions. If you could
+make use of an i386/Linux/ELF binary, you may want to grasp the binary
+distribution. [Maybe there will appear also an a.out version.]
+
+
+Benefits vs. CLX coded in Lisp
+==============================
+ 
+- it is faster
+
+  This mainly to two reasons. The CLISP compiler is not very good, when it
+  comes to do all these bit operations and pushing bytes back and forth as
+  in the CLX code. Second reason is, that i.e drawing a line do not produce
+  garbage using this CLX implementation in contrast to MIT-CLX.
+
+  I had actually some code for viewing a wire model of an 3D scene. [Yes, it
+  was a quake level "editor" (more a language than an "editor") -- Flame on
+  me for this total waste of time]. However using CLISP with this CLX,
+  allowed me to view the wire model somewhat smoothly. Using CMUCL is was
+  just too slow and I had declared all the types in the numeric portions of
+  the code proper. [all the usual matrix and vector stuff.] Sometime I will
+  have to justify that with some benchmarks.
+ 
+- it is virtually smaller
+
+  Currently I was able to blow up code size to somewhat near 120k, but it is
+  likely that it will shrink in the future. MIT-CLX needs approx 700k.
+  [Judging the .mem files] Well, this is not true, since this new CLX needs
+  libX and maybe some other. libX alone is about 600k on my box. But it is
+  shared nowadays, and you will want to have at least one xterm open to
+  launch CLISP.
+
+- I was able to run Garnet successfully, all the demos and gilt and lapidary.
+
+- WINDOW, PIXMAP, etc... are now CLOS classes. This is the right way to go,
+  and I wanted to be able to compile CLUE. But CLUE does not run, see below.
+
+- I plan to offer access to the SHAPE and to the multi buffer extension. The
+  most basic function for the SHAPE extension is already there. [look at the
+  sokoban code].
+
+
+Drawbacks
+=========
+
+- This CLX is not derived from MIT-CLX, it uses the C libX. This is the
+  reason why I concentrate on the symbols _exported_ from the XLIB
+  package. I could not offer all the internals, because those internal are
+  not there. See the comment on CLUE below.
+
+- CLUE will not run. But this is not my fault. CLUE just digs too much with
+  the internals of CLX. [It makes heavy use of symbols not exported from the
+  XLIB package.] Anyhow, I hit lots of bugs in the CLUE code, so elided CLUE
+  from my disk and better use Garnet now.
+
+- It is still beta. I plan to offer nearly 100% compatibility to
+  MIT-CLX. Every program just using the external symbols of XLIB, should run
+  without modifications in the future. The more bug reports I get from you
+  the faster it will leave the beta state and become stable and
+  complete. Let me repeat this: Send me bug reports!
+
+Functions which are incomplete:
+  PUT-IMAGE 
+    works only for images of depth 1.
+  DRAW-IMAGE-GLYPHS and DRAW-GLYPHS 
+    do not work with the :translate argument
+  GCONTEXT-FONT and (SETF GCONTEXT-FONT) 
+    do not have the pseudo-font-p argument
+  TEXT-EXTENTS 
+    with arguments not of type string
+  TEXT-WIDTH 
+    with arguments not of type string
+  DEFAULT-ERROR-HANDLER
+    currently there is no condition hierarchy, so default-error-handler uses the
+    traditional cerror to report the error.
+
+  - Many functions lack proper reporting of errors. [They just abort()]
+  
+Functions which are not defined at all:
+  - DRAW-IMAGE-GLYPH
+  - DRAW-GLYPH
+  - GET-IMAGE
+  - DISPLAY-RESOURCE-ID-BASE
+  - DISPLAY-RESOURCE-ID-MASK 
+  - DISPLAY-XID
+  - DISPLAY-TRACE
+  - QUEUE-EVENT
+  - CHANGE-KEYBOARD-CONTROL (anybody needs this anyway?)
+  - SET-MODIFIER-MAPPING 
+  - CHANGE-KEYBOARD-MAPPING
+  - KEYBOARD-MAPPING
+  - KEYSYM->KEYCODES
+  - ACCESS-HOSTS
+  - ADD-ACCESS-HOST
+  - REMOVE-ACCESS-HOST
+  - DEFAULT-KEYSYM-INDEX
+  - KEYSYM->CHARACTER (too weird)
+
+There is a useful preprocessor e2d, which should make writing modules
+easier, but it should be documented, it should be totally reimplemented
+from scratch and it should be distributed separately.
+
+
+Installation
+============
+
+Read the INSTALL file. (as usual)
+
+
+Availability
+============
+
+This CLX lives in:
+
+ftp://clisp.cons.org/pub/lisp/clisp/packages/nclx-1997-06-12.tar.gz
+
+There may be additional binary distributions. I'll call them
+  nclx-<date1>+clisp-<date2>.<platform>.bin.tar.gz
+
+I chose the 'n' in front of clx, because there live versions of MIT-CLX
+in the same directory. As you probably noticed I refuse to give this CLX
+another name. My understanding of the term CLX is that it refers to some
+semi-standard, so calling it different is not an option. But you may
+call it NCLX; Calling it GCLX [first letter, first letter of my name] would
+be most likely confused with GCL, so NCLX is the obvious way.
+
+
+Demos
+=====
+
+There are two little demos in this package. Qix and sokoban. They both live
+in the demos subdirectory. To run them simple move into demos/ directory and
+lauch CLISP. Example 
+
+[using source dist after successful built]
+
+% cd .../clisp-1996-07-22/src/clx-1996-10-11/demos
+% ../../base+clx/lisp.run -M ../../base+clx/lispinit.mem -q -i sokoban -i qix
+
+[.. or using the binary distribution:]
+
+% cd demos
+% ../lisp.run -M ../lispinit.mem -q -i sokoban -i qix
+
+[then it barks something like this:]
+
+;; Loading file /usr/gilbert/lisp/clisp-1996-07-22/src/clx-1996-10-11/demos/sokoban.lisp ...
+ Call (sokoban:sokoban).
+;; Loading of file /usr/gilbert/lisp/clisp-1996-07-22/src/clx-1996-10-11/demos/sokoban.lisp is finished.
+;; Loading file /usr/gilbert/lisp/clisp-1996-07-22/src/clx-1996-10-11/demos/qix.lisp ...
+ CLX-DEMOS:QIX :host :width :height :delay
+   The famous swirling vectors.
+;; Loading of file /usr/gilbert/lisp/clisp-1996-07-22/src/clx-1996-10-11/demos/qix.lisp is finished.
+> 
+
+Now you may try
+
+(clx-demos:qix) or (clx-demos:qix :delay 0).
+
+Or you just want to play a couple of rounds of sokoban:
+
+(sokoban:sokoban)
+
+[Sokoban works only with Xpm and XSHAPE extension.]
+
+You probably want to compile the files before trying.
+
+
+Glossary
+========
+
+For those, who are not familiar with CLX, Garnet, CLUE and stuff, I put here
+a few snipsets from the Lisp FAQ:
+
+CLX
+---
+   CLX provides basic Common Lisp/X functionality. It is a de facto standard
+   low-level interface to X, providing equivalent functionality to XLib, but
+   in Lisp. It is also a good source for comparing the foreign function calls
+   in various Lisps. Does *not* depend on CLOS.  Available free as part of the
+   X release in the contrib directory.  Also available by anonymous ftp from
+   ftp.x.org:/R5contrib/ as the files CLX.Manual.tar.Z and CLX.R5.02.tar.Z. 
+   [Note: The new version of CLX for X11R6 can be found (untarred) in
+      ftp://ftp.x.org/pub/R6.1/contrib/lib/CLX/ 
+   with documentation in
+      ftp://ftp.x.org/pub/R6.1/contrib/doc/CLX/ 
+   and includes some slight modifications for CLtL2 compatibility. You
+   can get it in tarred form from the CMU AI Repository, Lisp section.]
+   Primary Interface Author: Robert W. Scheifler <rws@zermatt.lcs.mit.edu>
+   Send bug reports to bug-clx@expo.lcs.mit.edu. 
+   The 232 page manual is available in /pub/R5untarred/mit/hardcopy/CLX 
+   (PostScript format) and /pub/R5untarred/mit/doc/CLX (Interleaf source).
+
+CLUE
+----
+   CLUE (Common Lisp User-Interface Environment) is from TI, and extends CLX
+   to provide a simple, object-oriented toolkit (like Xt) library that uses
+   CLOS. Provides basic window classes, some stream I/O facilities, and a few
+   other utilities. Still pretty low level (it's a toolkit, not widget
+   library).  Available free by anonymous ftp from
+   ftp://csc.ti.com/pub/clue.tar.Z
+   Written by Kerry Kimbrough. Send bug reports to clue-bugs@dsg.csc.ti.com.
+
+Garnet
+------
+   Garnet is a large and flexible GUI. Lots of high-level features.  Does
+   *not* depend on CLOS, but does depend on CLX. Garnet (version 2.0 and
+   after) is now in the public domain, and has no licensing restrictions,
+   so it is available to all foreign sites and for commercial uses.
+   Detailed instructions for obtaining it by anonymous ftp are available
+   by anonymous ftp as
+      a.gp.cs.cmu.edu:/usr/garnet/garnet/README [128.2.242.7] 
+   Garnet includes the Lapidiary interactive design tool, C32 constraint
+   editor, spreadsheet object, Gilt Interface Builder, automatic display
+   management, two widget sets (Motif look-and-feel and Garnet
+   look-and-feel), support for gesture recognition, and automatic
+   constraint maintenance, application data layout and PostScript
+   generation. Runs in virtually any Common Lisp environment, including
+   Allegro, Lucid, CMU, and Harlequin Common Lisps on Sun, DEC, HP,
+   Apollo, IBM 6000, and many other machines.  Garnet helps implement
+   highly-interactive, graphical, direct manipulation programs for X/11
+   in Common Lisp.  Typical applications include: drawing programs
+   similar to Macintosh MacDraw, user interfaces for expert systems and
+   other AI applications, box and arrow diagram editors, graphical
+   programming languages, game user interfaces, simulation and process
+   monitoring programs, user interface construction tools, CAD/CAM
+   programs, etc. Contact Brad Myers (bam@a.gp.cs.cmu.edu) for more
+   information. Bug reports should be sent to garnet-bugs@cs.cmu.edu.
+   Administrative questions should be sent to garnet@cs.cmu.edu or
+   garnet-request@cs.cmu.edu. Garnet is discussed on the newsgroup
+   comp.windows.garnet (which is gatewayed to garnet-users@cs.cmu.edu for
+   those without access to netnews).
+
+
+A word on copyright
+===================
+
+I am affraid that some of the files lack a proper copyright statement. So I
+state it here again: 
+
+All files in this distribution expect image.lisp are copyrighted
+
+ "Copyright (c) 1996 by Gilbert Baumann, distributed under GPL"
+ (GPL = The GNU Public Licence).
+
+image.lisp and parts of clx.lisp are copyrighted 
+ "Copyright (C) 1987 Texas Instruments Incorporated."
+
+Hope that is suffient and nobody will hinder me from improving, using,
+distributing, disturbing, hacking my own code. Hugh!
+
+-------
+Fri Oct 11 1996
+Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>
+

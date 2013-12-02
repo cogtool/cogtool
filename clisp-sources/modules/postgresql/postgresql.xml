@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="postgresql"><title>PostgreSQL Database Access</title>
+
+<para>This package offers an &ffi-pac;-based interface to
+ &postgresql-link;.</para>
+<para>The package <quote role="package">SQL</quote>
+ (nicknamed <quote role="package">POSTGRES</quote>
+ and <quote role="package">POSTGRESQL</quote>)
+ is <link linkend="package-case">case-sensitive</link>,
+ so you would write <code>(sql:PQconnectdb ...)</code>
+ when you need to call
+ <ulink url="&postgresql-doc;/libpq.html#LIBPQ-CONNECT"
+        ><function>PQconnectdb()</function></ulink>.</para>
+
+<simpara>When this module is present, &features-var;
+ contains the symbol <constant>:POSTGRESQL</constant>.</simpara>
+
+<para>See <filename role="clisp-cvs">modules/postgresql/test.tst</filename>
+ for sample usage.</para>
+
+<para>Additionally, some higher level functionality is available:</para>
+
+<variablelist>
+<varlistentry id="sql:pq-finish"><term><code>(sql:pq-finish
+   &conn-r;)</code></term>
+ <listitem><simpara><function>PQfinish</function> the &conn-r; and mark
+   it as invalid</simpara></listitem></varlistentry>
+<varlistentry id="sql:pq-clear"><term><code>(sql:pq-clear
+   &res-r;)</code></term>
+ <listitem><simpara><function>PQclear</function> the &res-r; and mark
+   it as invalid</simpara></listitem></varlistentry>
+<varlistentry><term><code>(sql:sql-error &conn-r; &res-r; &fmt-r;
+   &rest-amp; &args-r;)</code></term>
+ <listitem><simpara>finalize &conn-r; and &res-r; and &signal; an
+   appropriate &error-t;</simpara></listitem></varlistentry>
+<varlistentry id="sql:sql-connect"><term><code>(sql:sql-connect
+   &key-amp; host port options tty name login password)</code></term>
+ <listitem><simpara>call <function>PQsetdbLogin</function> and return
+   the &conn-r;</simpara></listitem></varlistentry>
+<varlistentry id="sql:with-sql-connection"><term><code>(sql:with-sql-connection
+   (&var-r; &rest-amp; &option-r;s &key-amp; log &allow-other-keys-amp;)
+   &body-amp; &body-r;)</code></term>
+ <listitem><procedure><step><simpara>bind <varname>*sql-log*</varname>
+     to the <replaceable>log</replaceable> argument</simpara></step>
+   <step><simpara>call <function>sql:sql-connect</function> on
+     &option-r;s and bind &var-r; to the result</simpara></step>
+   <step><simpara>execute &body-r;</simpara></step>
+   <step><simpara>call <function>sql:pq-finish</function> on
+     &var-r;</simpara></step></procedure></listitem></varlistentry>
+<varlistentry><term><code>(sql:sql-transaction &conn-r; &command-r;
+   &status-r; &optional-amp; (clear-p &t;))</code></term>
+ <listitem><simpara>execute the &command-r; via &conn-r;;
+   if the status does not match &status-r;, &err-sig;;
+   if <replaceable>clear-p</replaceable> is
+   non-&nil; <function>sql:pq-clear</function> the &res-r;;
+   otherwise return it</simpara></listitem></varlistentry>
+<varlistentry><term><code>(sql:with-sql-transaction (&res-r; &conn-r;
+   &command-r; status) &body-amp; &body-r;)</code></term>
+ <listitem><simpara>execure the &body-r; on the &res-r; of &command-r;,
+   then <function>sql:pq-clear</function> the &res-r;
+</simpara></listitem></varlistentry>
+<varlistentry id="sql:sql-login"><term><code>sql:*sql-login*</code></term>
+ <listitem><simpara>the default <replaceable>login</replaceable>
+   argument to <function>sql:sql-connect</function>
+   (initially set to <literal role="data">"postgres"</literal>)
+</simpara></listitem></varlistentry>
+<varlistentry id="sql:sql-password"><term><code>sql:*sql-password*</code></term>
+ <listitem><simpara>the default <replaceable>password</replaceable>
+   argument to <function>sql:sql-connect</function>
+   (initially set to <literal role="data">"postgres"</literal>)
+</simpara></listitem></varlistentry>
+<varlistentry id="sql:sql-log"><term><code>sql:*sql-log*</code></term>
+ <listitem><simpara>when non-&nil;, should be a &stream-t;;
+   <function>sql:sql-connect</function>
+   and <function>sql:sql-transaction</function>
+   will write to it (initially set to &nil;)
+</simpara></listitem></varlistentry></variablelist>
+
+<warning><para>Since <code>PQfinish</code> and <code>PQclear</code>
+  cannot be called on the same pointer twice, one needs to track their
+  validity (<function>sql:sql-connect</function>
+  and <function>sql:sql-transaction</function> take care of that).
+  See <xref linkend="ex-dffi-validity"/>.</para></warning>
+</section>

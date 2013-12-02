@@ -1,0 +1,20 @@
+#!/bin/bash
+
+JAVACMD="/System/Library/Frameworks/JavaVM.framework/Versions/1.5/Commands/java"
+
+if [[ ! -a $JAVACMD ]] ; then
+JAVACMD="java" ;
+fi
+
+D32ARG=""
+
+if $JAVACMD -help | grep -e '-d32' >/dev/null ; then
+D32ARG='-d32' ;
+fi
+
+RESDIR="`dirname \"$0\"`/../Resources"
+JAVAROOT="$RESDIR/Java"
+
+cd "$RESDIR"
+
+exec $JAVACMD $D32ARG -XstartOnFirstThread -classpath "$JAVAROOT/CogTool.jar:$JAVAROOT/MacSupport.jar:$JAVAROOT/WindowsImageTransfer.jar:$JAVAROOT/commons-collections-3.1.jar:$JAVAROOT/commons-lang-2.1.jar:$JAVAROOT/ecf.jar:$JAVAROOT/js.jar:$JAVAROOT/draw2d.jar:$JAVAROOT/swt.jar:$JAVAROOT/xercesImpl.jar:$JAVAROOT/xml-apis.jar:$JAVAROOT/MozillaGlue.jar:$JAVAROOT/MozillaInterfaces.jar:$JAVAROOT/jopt-simple.jar:$BASEDIR" -Djava.library.path="$JAVAROOT/dll" -Dcogtool.version="$BLDVER" -Dcogtool.revision="$BLDREV" -Dcogtool.build="$BLDTIM" -Xmx400000000 edu.cmu.cs.hcii.cogtool.CogTool $*

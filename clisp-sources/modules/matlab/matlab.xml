@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="matlab"><title>Matlab Interface</title>
+
+<para>This is an interface to the
+ <ulink role="matlab" url="apiref.shtml">Matlab C API</ulink>.
+ The package <quote role="package">MATLAB</quote> is
+ <link linkend="package-case">case-sensitive</link>, so you would write
+ <code>(matlab:engOpen ...)</code>
+ when you need to call <function role="matlab">engOpen</function>.
+</para>
+
+<para>Additionally, some higher level functionality is available
+ (see <filename role="clisp-cvs">modules/matlab/test.tst</filename>
+ for sample usage):</para>
+
+<variablelist>
+<varlistentry id="matlab-matfile-content">
+ <term><code>(matlab:matfile-content mf)</code></term>
+ <listitem><simpara>Return a &vector-t; of &string-t;s naming the
+   variables in file <replaceable>mf</replaceable>
+   (opened using <function role="matlab">matOpen</function>).
+</simpara></listitem></varlistentry>
+<varlistentry id="matlab-command">
+ <term><varname>matlab:*command*</varname></term>
+ <listitem><simpara>The default argument to
+   <function role="matlab">engOpen</function>.
+</simpara></listitem></varlistentry>
+<varlistentry id="matlab-engine-v">
+ <term><varname>matlab:*engine*</varname></term>
+ <listitem><simpara>The currrently open Matlab engine.
+</simpara></listitem></varlistentry>
+<varlistentry id="matlab-engine-f"><term><code>(matlab:engine)</code></term>
+ <listitem><simpara>Make sure <varname>*engine*</varname> is valid and
+   return it.</simpara></listitem></varlistentry>
+<varlistentry id="matlab-with-engine"><term><code>(matlab:with-engine
+   (&optional-amp; engine command) &body-amp; &body-r;)</code></term>
+ <listitem><simpara>Run the &body-r; wuth the <replaceable>engine</replaceable>
+   bound to a Matlab engine (default <varname>*engine*</varname>).
+   The engine is opened with <function role="matlab">engOpen</function>,
+   then closed with <function role="matlab">engClose</function>.
+</simpara></listitem></varlistentry>
+<varlistentry id="matlab-with-MATfile"><term><code>(matlab:with-MATfile
+   (file name &optional-amp; mode) &body-amp; &body-r;)</code></term>
+ <listitem><simpara><function role="matlab">matOpen</function> the
+   matlab file, do the &body-r;, <function role="matlab">matClose</function>
+   it.</simpara></listitem></varlistentry>
+<varlistentry id="copy-lisp-to-mxArray"><term><code>(matlab:copy-lisp-to-mxArray
+   lisp-array &optional-amp; matlab-matrix)</code></term>
+<listitem><simpara>Copy data from the 2-dimensional lisp array to the
+  Matlab matrix.</simpara></listitem></varlistentry>
+<varlistentry id="copy-lisp-to-matlab"><term><code>(matlab:copy-lisp-to-matlab
+   lisp-array matlab-variable &key-amp; engine)</code></term>
+<listitem><simpara>Copy the 2-dimensional lisp array to the Matlab
+  variable (a &string-t;) in the supplied engine (defaults to
+  <varname>*engine*</varname>).</simpara></listitem></varlistentry>
+<varlistentry id="copy-mxArray-to-lisp"><term><code>(matlab:copy-mxArray-to-lisp
+   matlab-matrix &optional-amp; lisp-array)</code></term>
+ <listitem><simpara>Copy the matlab matrix to the 2-dimensional lisp array
+   (created anew or re-used if supplied).</simpara></listitem></varlistentry>
+<varlistentry id="copy-matlab-to-lisp"><term><code>(matlab:copy-matlab-to-lisp
+   matlab-variable &optional-amp; lisp-array &key-amp; engine)</code></term>
+ <listitem><simpara>Copy data from the matlab variable to the
+   2-dimensional lisp array
+   (created anew or re-used if supplied).</simpara></listitem></varlistentry>
+<varlistentry id="matlab-invert-matrix"><term><code>(matlab:invert-matrix
+   lisp-array &key-amp; engine)</code></term>
+ <listitem><simpara>Invert the lisp matrix using the specified engine.
+</simpara></listitem></varlistentry>
+</variablelist>
+
+</section>

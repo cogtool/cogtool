@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="rawsock"><title>Raw Socket Access</title>
+
+<section id="rawsock-intro"><title>Introduction</title>
+
+<para>This is the raw socket interface, as described in
+ <filename role="unix">sys/socket.h</filename>.
+Sockets are represented by their &fixnum-t; &file-des;s.</para>
+
+<simpara>When this module is present, &features-var; contains the
+ symbol <constant>:RAWSOCK</constant>.</simpara>
+
+<warning id="rawsock-use-sockets"><title>Try &socket-stream; first!</title>
+ <simpara>For most uses of sockets, the facilities described in
+  <xref linkend="socket"/> are adequate and much more convenient than these.
+  You are encouraged to consider &socket-stream;s and ensure that they
+  are not adequate for your purposes before you use raw sockets.
+</simpara></warning>
+
+<warning id="rawsock-not-streams"><title>Do &not-e; use &make-stream;!</title>
+ <simpara>You can turn such a raw socket into a usual lisp &stream-t;
+  using &make-stream;, but you should be <emphasis>extremely</emphasis>
+  careful with such dubious actions!  See the &clisp-devel;
+  <ulink url="http://sourceforge.net/mailarchive/message.php?msg_id=7203955"
+         >mailing list archives</ulink> for more details.
+  Note that &make-stream; will duplicate the &file-des;
+  (using <function role="unix">dup</function>),
+  so you <emphasis>still</emphasis> have to &close; the original raw socket.
+</simpara></warning>
+</section>
+
+<section id="rawsock-func"><title>Single System Call Functions</title>
+
+<para>We implement access to
+ <simplelist columns="1">
+  <member><code>(<function role="unix">accept</function>
+    &sock-r; &addr-r;)</code></member>
+  <member><code>(<function role="unix">bind</function>
+    &sock-r; &addr-r;)</code></member>
+  <member><code>(<function role="unix">connect</function>
+    &sock-r; &addr-r;)</code></member>
+  <member><code>(<function role="unix">getaddrinfo</function> &key-amp;
+    node service protocol socktype family passive canonname numerichost
+    numericserv v4mapped all addrconfig)</code></member>
+  <member><code>(<function role="unix">getnameinfo</function> &addr-r;
+    &key-amp; nofqdn numerichost namereqd numericserv numericscope
+    dgram)</code></member>
+  <member><code>(<function role="unix">getpeername</function>
+    &sock-r; &addr-r;)</code></member>
+  <member><code>(<function role="unix">getsockname</function>
+    &sock-r; &addr-r;)</code></member>
+  <member><code>(<function role="unix">htonl</function> &n-r;)</code></member>
+  <member><code>(<function role="unix">htons</function> &n-r;)</code></member>
+  <member><code>(<function role="unix">ntohl</function> &n-r;)</code></member>
+  <member><code>(<function role="unix">ntohs</function> &n-r;)</code></member>
+  <member><code>(<function role="unix">recv</function>
+    &sock-r; &buf-r; &key-amp; start end peek oob waitall)</code></member>
+  <member><code>(<function role="unix">recvfrom</function> &sock-r;
+    &buf-r; &addr-r; &key-amp; start end peek oob waitall)</code></member>
+  <member><code>(<function role="unix">recvmsg</function>
+    &sock-r; &mesg-r; &key-amp; start end peek oob waitall)</code></member>
+  <member><code>(<function role="unix">send</function>
+    &sock-r; &buf-r; &key-amp; start end oob eor)</code></member>
+  <member><code>(<function role="unix">sendmsg</function>
+    &sock-r; &mesg-r; &key-amp; start end oob eor)</code></member>
+  <member><code>(<function role="unix">sendto</function>
+    &sock-r; &buf-r; &addr-r; &key-amp; start end oob eor)</code></member>
+  <member><code>(<function role="unix">sockatmark</function>
+    &sock-r;)</code></member>
+  <member><code>(<function role="unix">socket</function>
+    <replaceable>domain</replaceable> &type-r; &proto-r;)</code></member>
+  <member><code>(<function role="unix">socketpair</function>
+    <replaceable>domain</replaceable> &type-r; &proto-r;)</code></member>
+ </simplelist>using same-named lisp functions in package
+ <quote role="package">RAWSOCK</quote>.
+ Additionally,<simplelist columns="1">
+  <member><code>(<function>RAWSOCK:SOCK-CLOSE</function> &sock-r;)</code>
+   calls <function role="unix">close</function>.</member>
+  <member><code>(<function>RAWSOCK:SOCK-LISTEN</function> &sock-r;
+    &optional-amp; (<replaceable>backlog</replaceable> SOMAXCONN))</code>
+   calls <function role="unix">listen</function>.</member>
+</simplelist></para>
+</section>
+
+<section id="rawsock-args"><title>Common arguments</title>
+<variablelist id="rawsock-args-list">
+<varlistentry><term><type>void*</type> &buf-r;</term>
+ <listitem><simpara>A &ubyte-vec;.  The vector may be adjustable
+   and have a fill pointer.  Whenever a function accepts a &buf-r;
+   argument, it also accepts &start-k; and &end-k; keyword arguments
+   with the usual meaning and defaults.  You do not have to supply the
+   vector length because Lisp can determine it itself, but, if you want
+   to, you can use &end-k; argument for that.
+</simpara></listitem></varlistentry>
+<varlistentry><term><type>int</type> &sock-r;</term>
+ <listitem><simpara>An &integer-t; (returned by
+   <function role="unix">socketpair</function> or
+   <function role="unix">socket</function>).</simpara></listitem></varlistentry>
+<varlistentry><term><type>int</type> <replaceable>family</replaceable></term>
+ <term><type>int</type> <replaceable>domain</replaceable></term>
+ <listitem><simpara>A &nil; (stands for <constant>AF_UNSPEC</constant>),
+   &integer-t;, or a platform-specific keyword, e.g.,
+   <constant>:INET</constant> stands for <constant>AF_INET</constant>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><type>int</type> &type-r;</term>
+ <listitem><simpara>A &nil; (stands for 0); &integer-t;; or a
+   platform-specific keyword, e.g.,
+   <constant>:DGRAM</constant> stands for <constant>SOCK_DGRAM</constant>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><type>int</type> &proto-r;</term>
+ <listitem><simpara>A &nil; (stands for 0); &integer-t;; a
+   platform-specific keyword, e.g., <constant>:ETH_P_ARP</constant> stands
+   for <constant>ETH_P_ARP</constant>, <constant>:IPPROTO-ICMP</constant>
+   stands for <constant>IPPROTO_ICMP</constant>; or a &string-t; (passed
+   to <function role="unix">getprotobyname</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><type>int</type> <replaceable>flags</replaceable></term>
+ <listitem><simpara>This &c-lang; argument corresponds to keyword
+   arguments to the Lisp functions.  E.g., <function>rawsock:send</function>
+   accepts <constant>:OOB</constant> and <constant>EOR</constant> arguments,
+   while <function>rawsock:recv</function> accepts <constant>PEEK</constant>,
+   <constant>OOB</constant> and <constant>WAITALL</constant>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><type>struct sockaddr</type> &addr-r;</term>
+ <listitem><simpara>A &structure-object-t; <type>RAWSOCK:SOCKADDR</type>
+   returned by
+   <link linkend="make-sockaddr"><function>MAKE-SOCKADDR</function></link>.
+   You do not need to supply its length because Lisp can determine it itself.
+</simpara></listitem></varlistentry>
+<varlistentry><term><type>struct msghdr</type> &mesg-r;</term>
+ <listitem><para>A &structure-object-t; <type>RAWSOCK:MESSAGE</type>
+   with the following slots:
+   <variablelist>&varlist-table;
+    <varlistentry><term>addr</term><listitem><simpara>
+       a <link linkend="make-sockaddr"><type>SOCKADDR</type></link>.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term>iovec</term><listitem><simpara>
+       a <literal role="type">(&vector-t; &ubyte-vec;)</literal>
+       (&start-k; and &end-k; arguments are applied to this vector)
+    </simpara></listitem></varlistentry>
+    <varlistentry><term>control</term><listitem><simpara>
+       a &ubyte-vec;</simpara></listitem></varlistentry>
+    <varlistentry><term>flags</term><listitem><simpara>
+       a &list-t;</simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+</variablelist>
+
+<section id="rawsock-plat-dep-constants">
+ <title>Platform-dependent Keywords</title>
+<para>One can extract the list of acceptable platform-dependent
+ keywords for, e.g., socket domain, using the following code:
+<programlisting language="lisp">
+ (&block; &nil;
+   (&handler-bind; ((&type-error-t;
+                    (&lambda-m; (c)
+                      (&format; &t; "~&amp;error: ~A~%" c)
+                      (&return; (&cddr; (&third; (&type-error-expected-type; c)))))))
+     (rawsock:socket "bad" &nil; &nil;)))
+</programlisting></para></section>
+</section>
+
+<section id="rawsock-return"><title>Return Values</title>
+<para>The return values of the functions described in section
+ <xref linkend="rawsock-func"/> are derived from the return values of
+ the underlying system call: if, say, the &addr-r; argument is modified
+ by the system call, two values are returned (in addition to the
+ possible values coming from the return value of the system call):
+ the (modified) &addr-r; structure and its new size.
+ If the system call fails, an &err-sig;.</para>
+</section>
+
+<section id="rawsock-not-implemented"><title>Not Implemented</title>
+
+<para>We do not interface to <function role="unix">select</function>
+ or <function role="unix">poll</function> in this module,
+ they are already available through &so-status;.</para>
+
+<para>We do not interface to <function role="unix">shutdown</function>
+ in this module, it is already available through &sost-shut;.</para>
+
+<para>We do not interface to <function role="unix">gethostbyname</function>
+ or <function role="unix">gethostbyaddr</function> in this module,
+ they are already available through &resolve-host;.</para>
+
+</section>
+
+<section id="rawsock-high-level"><title>High-Level Functions</title>
+<variablelist id="rawsock-high-level-list"><title>Functions that do not
+  correspond to a single system call</title>
+<varlistentry><term><code>(<function>RAWSOCK:SOCK-READ</function>
+   &sock-r; &buf-r; &key-amp; start end)</code></term>
+ <term><code>(<function>RAWSOCK:SOCK-WRITE</function>
+   &sock-r; &buf-r; &key-amp; start end)</code></term>
+<listitem><simpara>Call one of
+ <function role="unix">read</function>/<function role="unix">readv</function> or
+ <function role="unix">write</function>/<function role="unix">writev</function>
+   (depending on whether &buf-r; is a &ubyte-vec; or
+   a <literal role="type">(&vector-t; &ubyte-vec;)</literal>).
+ Return the number of bytes read or written.</simpara>
+ <simpara>When <function role="unix">readv</function> and
+  <function role="unix">writev</function> and not available, they are
+  emulated by repeated calls to <function role="unix">read</function>
+  and <function role="unix">write</function>.</simpara>
+ <simpara>On &win32; we have to use <function role="unix">recv</function>
+  instead of <function role="unix">read</function>
+  and <function role="unix">send</function> instead of
+  <function role="unix">write</function> because &win32;
+  <function role="unix">read</function> and
+  <function role="unix">write</function> do not work on sockets, only
+  on regular files.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:PROTOCOL &optional-amp;
+   &proto-r;)</code></term>
+ <listitem><simpara>Call <function role="unix">getprotobyname</function>
+   when &proto-r; is a &string-t;,
+   or call <function role="unix">getprotobynumber</function> when
+   &proto-r; is an &integer-t;.
+   Return a <type>RAWSOCK:PROTOCOL</type> structure object.
+   When &proto-r; is &nil;, return a &list-t; of all known protocols using
+   <function role="unix">setprotoent</function>,
+   <function role="unix">getprotoent</function>, and
+   <function role="unix">endprotoent</function>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:NETWORK &optional-amp;
+   <replaceable>network</replaceable> &type-r;)</code></term>
+ <listitem><simpara>Call <function role="unix">getnetbyname</function>
+   when <replaceable>network</replaceable> is a &string-t;,
+   or call <function role="unix">getnetbynumber</function> when
+   <replaceable>network</replaceable> is an &integer-t;.
+   Return a <type>RAWSOCK:NETWORK</type> structure object.
+   When <replaceable>network</replaceable> is &nil;, return a &list-t;
+   of all known networks using <function role="unix">setnetent</function>,
+   <function role="unix">getnetent</function>, and
+   <function role="unix">endnetent</function>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:SOCKET-OPTION &sock-r; &name-r;
+   &key-amp; :LEVEL)</code></term>
+ <term><code>(&setf; (RAWSOCK:SOCKET-OPTION &sock-r; &name-r;
+   &key-amp; :LEVEL) &value-r;)</code></term>
+ <listitem><simpara>Call <function role="unix">getsockopt</function>
+   and <function role="unix">setsockopt</function>, returns and sets
+   individual (for specific option &name-r; and
+   <replaceable>level</replaceable>) and multiple (when &name-r; is
+   &nil; and/or <replaceable>level</replaceable> is &all-k;) options.
+   (See also &so-opt;.)</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:CONVERT-ADDRESS
+   <replaceable>family</replaceable> &addr-r;)</code></term>
+ <listitem><para>Convert between &string-t; and &integer-t; IP
+   &addr-r; representations using<simplelist columns="2">
+    <member><function role="unix">inet_addr</function></member>
+    <member><function role="unix">inet_ntoa</function></member>
+    <member><function role="unix">inet_ntop</function></member>
+    <member><function role="unix">inet_pton</function></member>
+</simplelist></para></listitem></varlistentry>
+<varlistentry id="make-sockaddr"><term><code>(RAWSOCK:MAKE-SOCKADDR
+   <replaceable>family</replaceable> &optional-amp; &data-r;)</code></term>
+ <listitem><simpara>Create a <type>sockaddr</type> object.
+   &data-r; should be a sequence of &ubyte-8; or an &integer-t;
+   (meaning <code>(&make-list; &data-r; :initial-element 0)</code>).
+   When omitted, the standard platform-specific size is used.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:SOCKADDR-FAMILY &addr-r;)</code></term>
+ <listitem><simpara>Return the numeric family of the
+   <type>sockaddr</type> object.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:SOCKADDR-DATA &addr-r;)</code></term>
+ <listitem><simpara>Return a &fresh; &vector-t; displaced to the
+   <structfield>data</structfield> field of the
+   &c-lang; <type>struct sockaddr</type> object.</simpara>
+  <warning><simpara>Modifying this &vector-t;'s content will modify the
+    &addr-r; argument data!</simpara></warning></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:OPEN-UNIX-SOCKET
+   &path-r; &optional-amp; &type-r;)</code></term>
+ <listitem><simpara>Open a &unix; socket special file.
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><code>(RAWSOCK:IPCSUM &buf-r; &key-amp; start end)</code>
+  - &ip;</term>
+ <term><code>(RAWSOCK:ICMPCSUM &buf-r; &key-amp; start end)</code>
+  - &icmp;</term>
+ <term><code>(RAWSOCK:TCPCSUM &buf-r; &key-amp; start end)</code>
+  - &tcp;</term>
+ <term><code>(RAWSOCK:UDPCSUM &buf-r; &key-amp; start end)</code>
+  - &udp;</term>
+ <listitem><simpara>Compute the appropriate protocol checksum and record
+   it in the appropriate location.  &buf-r; is assumed to be a suitable
+   packet for the protocol, with the appropriate header etc.
+   The typical packet you send is both &ip; and &tcp; and thus has two
+   checksums, so you would want to call <emphasis>two</emphasis> functions.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(RAWSOCK:CONFIGDEV &sock-r; &name-r; &addr-r;
+   &key-amp; <replaceable>promisc</replaceable>
+   <replaceable>noarp</replaceable>)</code></term>
+ <listitem><simpara>Set some socket options and IP &addr-r;
+   with <function role="unix">ioctl</function>.
+</simpara></listitem></varlistentry>
+</variablelist>
+</section>
+
+</section>

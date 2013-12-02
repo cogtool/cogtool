@@ -1,0 +1,57 @@
+dnl AUTOCONF configuration for postgresql
+dnl Copyright (C) 2003-2006  Sam Steingold <sds@gnu.org>
+dnl GNU GPL2
+
+AC_PREREQ(2.57)
+AC_INIT(postgresql, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(postgresql.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([* PostgreSQL (Tools)])
+AC_PROG_CC
+AC_PROG_CPP
+
+dnl Search for libpq and define LIBPQ, LTLIBPQ and INCPQ.
+AC_CONFIG_AUX_DIR(../../src/build-aux)
+AC_LIB_LINKFLAGS([pq])
+
+AC_MSG_NOTICE([* PostgreSQL (Headers)])
+AC_HEADER_STDC
+AC_HEADER_TIME
+AC_CHECK_HEADERS(postgres_ext.h postgresql/postgres_ext.h)
+if test "$ac_cv_header_postgres_ext_h" = "no" -a "$ac_cv_header_postgresql_postgres_ext_h" = "no"; then
+  AC_MSG_ERROR([cannot find PostgreSQL headers])
+fi
+
+AC_MSG_NOTICE([* PostgreSQL (Functions)])
+AC_LIB_APPENDTOVAR([LIBS], [$LTLIBPQ])
+AC_SEARCH_LIBS(PQconnectdb, pq)
+if test "$ac_cv_search_PQconnectdb" = "no"; then
+  AC_MSG_ERROR([cannot find PostgreSQL library])
+fi
+AC_CHECK_FUNCS(PQconnectStart PQconnectPoll PQconnectdb PQsetdbLogin dnl
+PQfinish PQconndefaults PQconninfoFree PQresetStart PQresetPoll PQreset dnl
+PQgetCancel PQfreeCancel PQcancel PQrequestCancel PQdb PQuser PQpass PQhost dnl
+PQport PQtty PQoptions PQstatus PQtransactionStatus PQparameterStatus dnl
+PQprotocolVersion PQserverVersion PQerrorMessage PQsocket PQbackendPID dnl
+PQclientEncoding PQsetClientEncoding PQgetssl PQinitSSL dnl
+PQsetErrorVerbosity PQtrace PQuntrace PQsetNoticeReceiver dnl
+PQsetNoticeProcessor PQexec PQexecParams PQprepare PQexecPrepared dnl
+PQsendQuery PQsendQueryParams PQsendPrepare PQsendQueryPrepared PQgetResult dnl
+PQisBusy PQconsumeInput PQnotifies PQputCopyData PQputCopyEnd PQgetCopyData dnl
+PQgetline PQputline PQgetlineAsync PQputnbytes PQendcopy PQsetnonblocking dnl
+PQisnonblocking PQflush PQfn PQresultStatus PQresStatus PQresultErrorMessage dnl
+PQresultErrorField PQntuples PQnfields PQbinaryTuples PQfname PQfnumber dnl
+PQftable PQftablecol PQfformat PQftype PQfsize PQfmod PQcmdStatus dnl
+PQoidStatus PQoidValue PQcmdTuples PQgetvalue PQgetlength PQgetisnull dnl
+PQclear PQfreemem PQmakeEmptyPGresult PQescapeString PQescapeBytea dnl
+PQunescapeBytea PQprint PQdisplayTuples PQprintTuples dnl
+lo_open lo_close lo_read lo_write lo_lseek lo_creat lo_tell lo_unlink dnl
+lo_import lo_export dnl
+PQmblen PQdsplen PQenv2encoding)
+
+AC_MSG_NOTICE([* PostgreSQL (Output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([* PostgreSQL (Done)])

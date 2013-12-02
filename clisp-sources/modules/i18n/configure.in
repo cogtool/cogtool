@@ -1,0 +1,24 @@
+dnl AUTOCONF configuration for I18N
+dnl Sam Steingold 2004
+
+AC_PREREQ(2.57)
+AC_INIT(i18n, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(i18n.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([ * I18N (Headers)])
+AC_HEADER_STDC
+
+AC_MSG_NOTICE([ * I18N (locale)])
+AC_CHECK_HEADERS(langinfo.h)
+AC_CHECK_FUNCS(nl_langinfo localeconv)
+AC_CHECK_MEMBERS([struct lconv.int_p_cs_precedes,
+struct lconv.int_n_cs_precedes, struct lconv.int_p_sep_by_space,
+struct lconv.int_n_sep_by_space, struct lconv.int_p_sign_posn,
+struct lconv.int_n_sign_posn],,,[#include <locale.h>])
+
+AC_MSG_NOTICE([ * I18N (Output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([ * I18N (Done)])

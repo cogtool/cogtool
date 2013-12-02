@@ -1,0 +1,837 @@
+# Dutch messages for CLISP
+# Copyright (C) 1992-2000 Bruno Haible, Michael Stoll, Marcus Daniels
+# Tijs van Bakel <smoke@casema.net>, 1999, 2000.
+#
+# Opmerkingen over de Nederlandse vertaling:
+#
+# Veel technische termen zijn, naar voorbeeld van de Duitse vertaling
+# onvertaald engels gebleven.  Dit geldt voor alle hoofdletterwoorden,
+# maar ook voor woorden als: stream, byte, string, unintern.  Dit om er
+# voor te zorgen dat de programmeur, die enkel engelse boeken over
+# Common Lisp heeft kunnen lezen, niet te veel afgeschrikt wordt.
+# Misschien moeten deze onvertaalde woorden worden voorzien van
+# aanhalingstekens ?
+#
+# Indien u bezwaren heeft op de manier waarop ik vertaald heb, hoor ik
+# dat heel graag.  Stuur even een e-mailtje naar: smoke@casema.net
+#
+# Merk op dat dit slechts de eerste vertaling naar het Nederlands is en
+# dat over veel onderwerpen langer nagedacht kan worden.  Laat het horen
+# als je ergens ideëen over hebt!
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: clisp 2000-03-06\n"
+"Report-Msgid-Bugs-To: clisp-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2006-01-23 16:48:22-0500\n"
+"PO-Revision-Date: 2000-03-03 15:02+01:00\n"
+"Last-Translator: Tijs van Bakel <smoke@casema.net>\n"
+"Language-Team: Dutch <nl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: spvw.d:482
+msgid "*** - Program stack overflow. RESET"
+msgstr "*** - Programma stapeloverloop. RESET"
+
+#: spvw.d:497
+msgid "*** - Lisp stack overflow. RESET"
+msgstr "*** - Lisp stapeloverloop. RESET"
+
+#: spvw.d:712
+#, fuzzy
+msgid "Unknown FSUBR signature: %d %d %d\n"
+msgstr "Onbekend argumenttype voor SUBR\n"
+
+#: spvw.d:820
+#, fuzzy
+msgid "Unknown SUBR signature: %d %d %d %d"
+msgstr "Onbekend argumenttype voor SUBR\n"
+
+#: spvw.d:1546
+#, fuzzy
+msgid "module '%s' requires package %s.\n"
+msgstr "module `%s' vereist package %s.\n"
+
+#: spvw.d:1556
+#, fuzzy
+msgid "module '%s' redefines symbol "
+msgstr "module `%s' vereist package %s.\n"
+
+#: spvw.d:1558
+#, fuzzy
+msgid " in the locked package "
+msgstr "een gewiste package."
+
+#: spvw.d:1560
+#, fuzzy
+msgid ""
+"\n"
+"old definition: "
+msgstr " met macrodefinitie"
+
+#: spvw.d:1597
+msgid "is an ANSI Common Lisp."
+msgstr ""
+
+#: spvw.d:1599
+msgid "Usage:  "
+msgstr ""
+
+#: spvw.d:1601
+msgid ""
+" [options] [lispfile [argument ...]]\n"
+" When 'lispfile' is given, it is loaded and '*ARGS*' is set\n"
+" to the list of argument strings. Otherwise, an interactive\n"
+" read-eval-print loop is entered.\n"
+msgstr ""
+
+#: spvw.d:1605
+msgid "Informative output:\n"
+msgstr ""
+
+#: spvw.d:1606
+msgid " -h, --help    - print this help and exit\n"
+msgstr ""
+
+#: spvw.d:1607
+msgid " --version     - print the version information\n"
+msgstr ""
+
+#: spvw.d:1608
+msgid " --license     - print the licensing information\n"
+msgstr ""
+
+#: spvw.d:1609
+msgid "Memory image selection:\n"
+msgstr ""
+
+#: spvw.d:1610
+msgid " -B lisplibdir - set the installation directory\n"
+msgstr ""
+
+#: spvw.d:1612
+msgid " -K linkingset - use this executable and memory image\n"
+msgstr ""
+
+#: spvw.d:1614
+msgid " -M memfile    - use this memory image\n"
+msgstr ""
+
+#: spvw.d:1615
+msgid " -m size       - memory size (size = xxxxxxxB or xxxxKB or xMB)\n"
+msgstr ""
+
+#: spvw.d:1617
+msgid " -t tmpdir     - temporary directory for memmap\n"
+msgstr ""
+
+#: spvw.d:1619
+msgid "Internationalization:\n"
+msgstr ""
+
+#: spvw.d:1620
+msgid " -L language   - set user language\n"
+msgstr ""
+
+#: spvw.d:1621
+msgid " -N nlsdir     - NLS catalog directory\n"
+msgstr ""
+
+#: spvw.d:1622
+msgid " -Edomain encoding - set encoding\n"
+msgstr ""
+
+#: spvw.d:1623
+msgid "Interoperability:\n"
+msgstr ""
+
+#: spvw.d:1624
+msgid ""
+" -q, --quiet, --silent, -v, --verbose - verbosity level:\n"
+"     affects banner, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"     and *LOAD-PRINT*/*COMPILE-PRINT*\n"
+msgstr ""
+
+#: spvw.d:1627
+msgid " -w            - wait for a keypress after program termination\n"
+msgstr ""
+
+#: spvw.d:1628
+msgid " -I            - be ILISP-friendly\n"
+msgstr ""
+
+#: spvw.d:1629
+msgid "Startup actions:\n"
+msgstr ""
+
+#: spvw.d:1630
+msgid " -ansi         - more ANSI CL compliance\n"
+msgstr ""
+
+#: spvw.d:1631
+msgid " -traditional  - traditional (undoes -ansi)\n"
+msgstr ""
+
+#: spvw.d:1632
+msgid " -modern       - start in a case-sensitive lowercase-preferring package\n"
+msgstr ""
+
+#: spvw.d:1633
+msgid " -p package    - start in the package\n"
+msgstr ""
+
+#: spvw.d:1634
+msgid " -C            - set *LOAD-COMPILING* to T\n"
+msgstr ""
+
+#: spvw.d:1635
+msgid " -norc         - do not load the user ~/.clisprc file\n"
+msgstr ""
+
+#: spvw.d:1636
+msgid " -i file       - load initfile (can be repeated)\n"
+msgstr ""
+
+#: spvw.d:1637
+msgid "Actions:\n"
+msgstr ""
+
+#: spvw.d:1638
+msgid " -c [-l] lispfile [-o outputfile] - compile lispfile\n"
+msgstr ""
+
+#: spvw.d:1639
+msgid " -x expressions - execute the expressions, then exit\n"
+msgstr ""
+
+#: spvw.d:1640
+msgid " lispfile [argument ...] - load lispfile, then exit\n"
+msgstr ""
+
+#: spvw.d:1641
+msgid "These actions put CLISP into a batch mode, which is overridden by\n"
+msgstr ""
+
+#: spvw.d:1642
+msgid " -on-error action - action can be one of debug, exit, abort, appease\n"
+msgstr ""
+
+#: spvw.d:1643
+msgid " -repl            - enter the interactive read-eval-print loop when done\n"
+msgstr ""
+
+#: spvw.d:1644
+msgid "Default action is an interactive read-eval-print loop.\n"
+msgstr ""
+
+#: spvw.d:1653
+msgid "%s: use '-h' for help"
+msgstr ""
+
+#: spvw.d:1656
+#, fuzzy
+msgid "invalid argument"
+msgstr "Ongeldig argument"
+
+#: spvw.d:2056
+msgid "Syntax for %s: nnnnnnn or nnnnKB or nMB"
+msgstr "Syntaxis voor %s: nnnnnnn of nnnnKB of nMB"
+
+#: spvw.d:2061
+msgid "%s out of range"
+msgstr "%s is buiten bereik"
+
+#: spvw.d:2066
+msgid "warning: %s out of range, using %u instead"
+msgstr ""
+
+#: spvw.d:2082
+msgid "memory size"
+msgstr "grootte geheugen"
+
+#: spvw.d:2098
+msgid "multiple -t"
+msgstr ""
+
+#: spvw.d:2118
+msgid "multiple -B"
+msgstr ""
+
+#: spvw.d:2153
+#, fuzzy
+msgid "-E requires an argument"
+msgstr "~S vereiste argumenten"
+
+#: spvw.d:2419
+msgid "-l without -c is invalid"
+msgstr ""
+
+#: spvw.d:2425
+#, fuzzy
+msgid "-x with -c is invalid"
+msgstr "~S op ~S is ongeldig"
+
+#: spvw.d:2430
+msgid "-x with lisp-file is invalid"
+msgstr ""
+
+#: spvw.d:2550
+#, fuzzy
+msgid "Return value of malloc() = %lx is not compatible with type code distribution."
+msgstr "Waarde van malloc() = %x stemt niet overeen met de typecodes."
+
+#: spvw.d:2557
+msgid "Only %d bytes available."
+msgstr "Nog maar %d bytes beschikbaar."
+
+#: spvw.d:2807
+msgid "Could not determine the end of the SP stack!"
+msgstr "Kan het einde van de SP stack niet bepalen!"
+
+#: spvw.d:3326
+#, fuzzy
+msgid "%s: Not enough memory for Lisp."
+msgstr "Niet genoeg geheugen voor Lisp."
+
+#: spvw_alloca.d:48
+msgid "*** - Virtual memory exhausted. RESET"
+msgstr "*** - Geen virtueel geheugen beschikbaar. RESET"
+
+#: spvw_alloca.d:50
+msgid "*** - Memory exhausted. RESET"
+msgstr "*** - Geen geheugen meer beschikbaar. RESET"
+
+#: spvw_mmap.d:66 spvw_mmap.d:197 spvw_mmap.d:357 spvw_multimap.d:161
+#, fuzzy
+msgid "Cannot map memory to address 0x%lx ."
+msgstr "Kan geheugen niet op adres 0x%x afbeelden."
+
+#: spvw_mmap.d:170
+#, fuzzy
+msgid "Cannot reserve address range at 0x%lx ."
+msgstr "Kan geheugen bereik op 0x%x niet reserveren."
+
+#: spvw_mmap.d:180
+#, fuzzy
+msgid "Cannot reserve address range 0x%lx-0x%lx ."
+msgstr "Kan geheugen bereik op 0x%x-0x%x niet reserveren."
+
+#: spvw_mmap.d:225
+msgid "CreateFileMapping() failed."
+msgstr "CreateFileMapping() mislukt."
+
+#: spvw_mmap.d:233
+msgid "MapViewOfFileEx(addr=0x%x,off=0x%x) failed."
+msgstr "MapViewOfFileEx(addr=0x%x,off=0x%x) mislukt."
+
+#: spvw_mmap.d:239
+msgid "MapViewOfFileEx() returned 0x%x instead of 0x%x."
+msgstr "MapViewOfFileEx() gaf 0x%x terug in plaats van 0x%x."
+
+#: spvw_mmap.d:254
+msgid "VirtualFree() failed."
+msgstr "VirtualFree() mislukt."
+
+#: spvw_mmap.d:267
+msgid "VirtualProtect() failed."
+msgstr "VirtualProtect() mislukt."
+
+#: spvw_mmap.d:337 spvw_multimap.d:115 spvw_multimap.d:190
+#, fuzzy
+msgid "Cannot open <%s>."
+msgstr "Kan %s niet openen."
+
+#: spvw_multimap.d:139
+#, fuzzy
+msgid "msync(0x%lx,0x%x,MS_INVALIDATE) failed."
+msgstr "msync(0x%x,0x%x,MS_INVALIDATE) mislukt."
+
+#: spvw_multimap.d:199
+#, fuzzy
+msgid "Cannot delete <%s>."
+msgstr "Kan %s niet verwijderen."
+
+#: spvw_multimap.d:217
+#, fuzzy
+msgid "** WARNING: ** Too little free disk space for <%s>."
+msgstr "** LET OP: ** Te weinig vrije schijfruimte voor %s."
+
+#: spvw_multimap.d:219
+#, fuzzy
+msgid "Please restart LISP with less memory (option -m)."
+msgstr "Herstart a.u.b. LISP met minder geheugen (optie -m)."
+
+#: spvw_multimap.d:228
+#, fuzzy
+msgid "Cannot make <%s> long enough."
+msgstr "Kan %s niet lang genoeg maken."
+
+#: spvw_multimap.d:242
+#, fuzzy
+msgid "Cannot fill <%s>."
+msgstr "Kan %s niet vullen."
+
+#: spvw_multimap.d:255 spvw_multimap.d:289
+#, fuzzy
+msgid "Cannot close <%s>."
+msgstr "Kan %s niet sluiten."
+
+#: spvw_multimap.d:327
+msgid "Recompile your operating system with SYSV IPC support."
+msgstr "Hercompileer uw besturingssysteem met ondersteuning van SYSV IPC."
+
+#: spvw_multimap.d:340
+#, fuzzy
+msgid "Cannot allocate private shared memory segment of size %d."
+msgstr "Kan privé shared-memory segment niet reserveren. "
+
+#: spvw_multimap.d:357
+#, fuzzy
+msgid "Cannot map shared memory to address 0x%lx."
+msgstr "Kan shared-memory niet afbeelden op adres 0x%x."
+
+#: spvw_multimap.d:375 spvw_multimap.d:381
+#, fuzzy
+msgid "%s: Cannot fill shared memory."
+msgstr "Kan shared-memory niet vullen."
+
+#: spvw_multimap.d:394
+msgid "Cannot remove shared memory segment."
+msgstr "Kan shared-memory segment niet verwijderen."
+
+#: spvw_fault.d:277
+#, fuzzy
+msgid "mprotect(0x%lx,%d,%d) failed."
+msgstr "mprotect() mislukt."
+
+#: spvw_sigsegv.d:23
+msgid "Permanently allocated: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:26
+msgid "Currently in use: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:29
+msgid "Free space: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:40
+#, fuzzy
+msgid "SIGSEGV cannot be cured. Fault address = 0x%lx."
+msgstr "SIGSEGV kan niet hersteld worden. Fout-adres = 0x%x."
+
+#: spvw_sigsegv.d:76
+msgid "Apollo 13 scenario: Stack overflow handling failed. On the next stack overflow we will crash!!!"
+msgstr "Apollo 13 scenario: Stapeloverloop afhandeling mislukt. Bij de volgende stapeloverloop gaan we plat!!!"
+
+#: spvw_garcol.d:1983
+#, fuzzy
+msgid "munmap() failed."
+msgstr "munmap() mislukt."
+
+#: spvw_allocate.d:50
+msgid "*** - No more room for LISP objects: RESET"
+msgstr "*** - Geen ruimte meer voor LISP objecten: RESET"
+
+#: spvw_allocate.d:251 spvw_allocate.d:311 spvw_allocate.d:396
+msgid "Trying to make room through a GC..."
+msgstr "Ik probeer ruimte te maken door een GC..."
+
+#: spvw_memfile.d:926 spvw_memfile.d:1683
+#, fuzzy
+msgid "%s: operating system error during load of initialization file `%s'"
+msgstr "besturingssysteem-fout bij het lezen van opstart bestand `%s'"
+
+#: spvw_memfile.d:1389
+#, fuzzy
+msgid "%s: Cannot map the initialization file `%s' into memory."
+msgstr "Kan het opstartbestand niet in het geheugen afbeelden."
+
+#: spvw_memfile.d:1688
+#, fuzzy
+msgid "%s: initialization file `%s' was not created by this version of CLISP runtime"
+msgstr "opstartbestand was niet gemaakt door deze versie van LISP"
+
+#: spvw_memfile.d:1692
+#, fuzzy
+msgid "%s: not enough memory for initialization"
+msgstr "onvoldoende geheugen om te starten"
+
+#: spvw_memfile.d:1761
+msgid "%s: 'image size' method failed, but found image header at %d\n"
+msgstr ""
+
+#: errunix.d:58
+msgid "Invalid multibyte or wide character"
+msgstr ""
+
+#: errunix.d:65
+msgid "Operation not permitted"
+msgstr "Geen toestemming hiervoor"
+
+#: errunix.d:71
+msgid "No such file or directory"
+msgstr "Bestand of map bestaat niet"
+
+#: errunix.d:77
+msgid "No such process"
+msgstr "Proces bestaat niet"
+
+#: errunix.d:83
+msgid "Interrupted system call"
+msgstr "Onderbroken systeemaanroep"
+
+#: errunix.d:89
+msgid "I/O error"
+msgstr "Invoer/uitvoer fout"
+
+#: errunix.d:95
+msgid "No such device or address"
+msgstr "Apparaat bestaat niet of station leeg"
+
+#: errunix.d:101
+msgid "Arg list too long"
+msgstr "Argumentenlijst is te lang"
+
+#: errunix.d:107
+msgid "Exec format error"
+msgstr "Geen uitvoerbaar bestand"
+
+#: errunix.d:113
+msgid "Bad file number"
+msgstr "Foutief bestandsnummer"
+
+#: errunix.d:119
+msgid "No child processes"
+msgstr "Geen kindprocessen"
+
+#: errunix.d:125
+msgid "No more processes"
+msgstr "Geen verdere processen"
+
+#: errunix.d:131
+msgid "Not enough memory"
+msgstr "Niet genoeg geheugen"
+
+#: errunix.d:137
+msgid "Permission denied"
+msgstr "Geen toestemming"
+
+#: errunix.d:143
+msgid "Bad address"
+msgstr "Foutief adres"
+
+#: errunix.d:149
+msgid "Block device required"
+msgstr "Alleen blokgestuurde apparaten toegestaan"
+
+#: errunix.d:155
+msgid "Device busy"
+msgstr "Apparaat bezig"
+
+#: errunix.d:161
+msgid "File exists"
+msgstr "Bestand bestaat al"
+
+#: errunix.d:167
+msgid "Cross-device link"
+msgstr "Koppelingen kunnen alleen op hetzelfde apparaat"
+
+#: errunix.d:173
+msgid "No such device"
+msgstr "Apparaat bestaat niet"
+
+#: errunix.d:179
+msgid "Not a directory"
+msgstr "Geen map"
+
+#: errunix.d:185
+msgid "Is a directory"
+msgstr "Is een map"
+
+#: errunix.d:191
+msgid "Invalid argument"
+msgstr "Ongeldig argument"
+
+#: errunix.d:197
+msgid "File table overflow"
+msgstr "Bestandstabel overloop"
+
+#: errunix.d:203
+msgid "Too many open files"
+msgstr "Te veel open bestanden"
+
+#: errunix.d:209
+msgid "Inappropriate ioctl for device"
+msgstr "Ongeschikte ioctl voor apparaat"
+
+#: errunix.d:215
+msgid "Text file busy"
+msgstr "Tekstbestand in gebruik"
+
+#: errunix.d:221
+msgid "File too large"
+msgstr "Bestand te groot"
+
+#: errunix.d:227
+msgid "No space left on device"
+msgstr "Geen vrije ruimte op apparaat"
+
+#: errunix.d:233
+msgid "Illegal seek"
+msgstr "Ongeldige zoekopdracht"
+
+#: errunix.d:239
+msgid "Read-only file system"
+msgstr "Bestandssysteem is alleen maar leesbaar"
+
+#: errunix.d:245
+msgid "Too many links"
+msgstr "Te veel koppelingen"
+
+#: errunix.d:251
+#, fuzzy
+msgid "Broken pipe, child process terminated or socket closed"
+msgstr "Pijp kapot, kindproces beëindigd"
+
+#: errunix.d:261
+msgid "Argument out of domain"
+msgstr "Argument buiten bereik"
+
+#: errunix.d:267
+msgid "Result too large"
+msgstr "Resultaat te groot"
+
+#: errunix.d:274
+msgid "Operation would block"
+msgstr "Bewerking zou blokkeren"
+
+#: errunix.d:280
+msgid "Operation now in progress"
+msgstr "Dit kan nog wel even duren"
+
+#: errunix.d:286
+msgid "Operation already in progress"
+msgstr "Bewerking is al aan de gang"
+
+#: errunix.d:293
+msgid "Too many levels of symbolic links"
+msgstr "Te veel niveaus van symbolische koppelingen"
+
+#: errunix.d:299
+msgid "File name too long"
+msgstr "Bestandsnaam te lang"
+
+#: errunix.d:305
+msgid "Directory not empty"
+msgstr "Map niet leeg"
+
+#: errunix.d:312
+msgid "Stale NFS file handle"
+msgstr "Verouderde bestandstoegang op NFS"
+
+#: errunix.d:318
+#, fuzzy
+msgid "Too many levels of remote in path"
+msgstr "Te veel niveaus verwijzingen naar andere computers"
+
+#: errunix.d:325
+msgid "Socket operation on non-socket"
+msgstr "Socket-bewerking op iets dat geen socket is"
+
+#: errunix.d:331
+msgid "Destination address required"
+msgstr "Bestemmingsadres vereist"
+
+#: errunix.d:337
+msgid "Message too long"
+msgstr "Bericht te lang"
+
+#: errunix.d:343
+msgid "Protocol wrong type for socket"
+msgstr "Verkeerd type protocol voor socket"
+
+#: errunix.d:349
+msgid "Option not supported by protocol"
+msgstr "Optie niet ondersteund door protocol"
+
+#: errunix.d:355
+msgid "Protocol not supported"
+msgstr "Protocol niet ondersteund"
+
+#: errunix.d:361
+msgid "Socket type not supported"
+msgstr "Type socket niet ondersteund"
+
+#: errunix.d:367
+msgid "Operation not supported on socket"
+msgstr "Bewerking op socket niet ondersteund"
+
+#: errunix.d:373
+msgid "Protocol family not supported"
+msgstr "Protocolfamilie niet ondersteund"
+
+#: errunix.d:379
+msgid "Address family not supported by protocol family"
+msgstr "Adresfamilie niet ondersteund door protocolfamilie"
+
+#: errunix.d:385
+msgid "Address already in use"
+msgstr "Adres is al in gebruik"
+
+#: errunix.d:391
+msgid "Cannot assign requested address"
+msgstr "Kan aangevraagd adres niet toekennen"
+
+#: errunix.d:397
+msgid "Network is down"
+msgstr "Netwerk is plat"
+
+#: errunix.d:403
+msgid "Network is unreachable"
+msgstr "Netwerk is niet bereikbaar"
+
+#: errunix.d:409
+msgid "Network dropped connection on reset"
+msgstr "Server is herstart, netwerkverbinding kwijt"
+
+#: errunix.d:415
+msgid "Software caused connection abort"
+msgstr "Moest deze verbinding verbreken"
+
+#: errunix.d:421
+msgid "Connection reset by peer"
+msgstr "Verbinding door andere kant verbroken"
+
+#: errunix.d:427
+msgid "No buffer space available"
+msgstr "Niet genoeg ruimte voor een buffer"
+
+#: errunix.d:433
+msgid "Socket is already connected"
+msgstr "Socket is al verbonden"
+
+#: errunix.d:439
+msgid "Socket is not connected"
+msgstr "Socket is niet verbonden"
+
+#: errunix.d:445
+msgid "Cannot send after socket shutdown"
+msgstr "Kan niet naar gesloten socket zenden"
+
+#: errunix.d:451
+msgid "Too many references: cannot splice"
+msgstr "Te veel verwijzingen; kan niet verbinden"
+
+#: errunix.d:457
+msgid "Connection timed out"
+msgstr "Tijdsoverschrijding bij verbinden"
+
+#: errunix.d:463
+msgid "Connection refused"
+msgstr "Verbinding geweigerd"
+
+#: errunix.d:468
+msgid "Remote peer released connection"
+msgstr "Andere kant heeft verbinding los gelaten"
+
+#: errunix.d:473
+msgid "Host is down"
+msgstr "Andere computer is plat"
+
+#: errunix.d:479
+msgid "Host is unreachable"
+msgstr "Andere computer is niet bereikbaar"
+
+#: errunix.d:484
+msgid "Networking error"
+msgstr "Netwerkfout"
+
+#: errunix.d:490
+msgid "Too many processes"
+msgstr "Te veel processen"
+
+#: errunix.d:496
+msgid "Too many users"
+msgstr "Te veel gebruikers"
+
+#: errunix.d:502
+msgid "Disk quota exceeded"
+msgstr "Schijfquotum overschreden"
+
+#: errunix.d:509
+msgid "Not a stream device"
+msgstr "Geen `stream' apparaat"
+
+#: errunix.d:515
+msgid "Timer expired"
+msgstr "Timer verlopen"
+
+#: errunix.d:521
+msgid "Out of stream resources"
+msgstr "Geen ruimte meer voor stream"
+
+#: errunix.d:527
+msgid "No message of desired type"
+msgstr "Geen bericht van gewenst type"
+
+#: errunix.d:533
+msgid "Not a data message"
+msgstr "Geen gegevens-bericht"
+
+#: errunix.d:540
+#, fuzzy
+msgid "Identifier removed"
+msgstr "`Identifier' verwijderd"
+
+#: errunix.d:547
+msgid "Resource deadlock would occur"
+msgstr "Patstelling voor hulpbronnen zou optreden"
+
+#: errunix.d:553
+msgid "No record locks available"
+msgstr "Geen record-vergrendelingen beschikbaar"
+
+#: errunix.d:560
+msgid "Machine is not on the network"
+msgstr "Machine bevindt zich niet op het netwerk"
+
+#: errunix.d:566 errunix.d:572
+msgid "Object is remote"
+msgstr "Object is op de andere computer"
+
+#: errunix.d:578
+msgid "Link has been severed"
+msgstr "Koppeling is doorgehakt"
+
+#: errunix.d:584
+msgid "Advertise error"
+msgstr "Advertise-fout"
+
+#: errunix.d:590
+msgid "Srmount error"
+msgstr "Srmount-fout"
+
+#: errunix.d:596
+msgid "Communication error on send"
+msgstr "Communicatiefout bij zenden"
+
+#: errunix.d:602
+msgid "Protocol error"
+msgstr "Protocol-fout"
+
+#: errunix.d:608
+#, fuzzy
+msgid "Multihop attempted"
+msgstr "Multihop geprobeerd"
+
+#: errunix.d:620
+msgid "Remote address changed"
+msgstr "Adres van andere computer is gewijzigd"
+
+#: errunix.d:627
+msgid "Function not implemented"
+msgstr "Functie niet geïmplementeerd"

@@ -1,0 +1,25 @@
+# configure.ac for FastCGI module
+
+AC_INIT(clisp-fastcgi-interface, 0.1, hin@alma.com)
+AC_CONFIG_SRCDIR(fastcgi.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+
+# Checks for libraries.
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([string.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_CHECK_FUNCS([strchr])
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

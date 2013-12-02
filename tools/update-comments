@@ -1,0 +1,67 @@
+#! /usr/bin/env python
+
+# Updates the copyright notices in CogTool source files. Rewrites all matching source
+# files so that their initial copyright notices are as in the file supplied as the
+# "notice" command line argument, which defaults to copyright.txt
+
+import os
+import os.path
+import re
+from optparse import OptionParser
+
+patterns = {
+  ".java": (re.compile("/\\*.*[\r\n]+.*CogTool Copyright Notice", re.IGNORECASE),                # hasCopyRight
+            re.compile("/\\*.*?\\*/", re.DOTALL),                                                 # wholeNotice
+            "/*******************************************************************************\n", # start
+            " ******************************************************************************/",   # end
+            " * ")                                                                                # prefix
+}
+
+def update(dir):
+  for f in os.listdir(dir):
+    if (f[:1] == "."):
+      continue
+    p = os.path.join(dir, f)
+    if (os.path.isdir(p)):
+      update(p)
+    else:
+      ext = os.path.splitext(f)[1]
+      if not ext in patterns:
+        continue
+      hasCopyRight, wholeNotice, start, end, prefix = patterns[ext]
+      strm = open(p, "r")
+      try:
+        contents = strm.read()
+      finally:
+        strm.close()
+      if not re.match(hasCopyRight, contents):
+        continue
+      if (not options.quiet):
+        print p
+      out = open(p, "w")
+      try:
+        out.write(start)
+        for line in noticeContents:
+          out.write(prefix)
+          out.write(line)
+        out.write(end)
+        out.write(re.sub(wholeNotice, "", contents, 1))
+      finally:
+        out.close()
+
+parser = OptionParser()
+parser.add_option("-n", "--notice", dest="notice", help="read copyright NOTICE from file", default="copyright.txt")
+parser.add_option("-r", "--root", dest="root", help="update copyrights under this ROOT directory", default=".")
+parser.add_option("-q", "--quiet", dest="quiet", help="be quiet and don't list files modified", default=False)
+(options, args) = parser.parse_args()
+
+strm = open(os.path.join(options.root, options.notice), "r")
+try:
+  noticeContents = strm.readlines()
+finally:
+  strm.close()
+
+update(os.path.join(options.root, "java"))
+update(os.path.join(options.root, "mac-support"))
+
+

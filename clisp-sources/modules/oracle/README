@@ -1,0 +1,223 @@
+
+        README for CLISP Oracle interface module
+        http://clisp.alma.com
+
+        John Hinsdale, Alma Mater Software, Inc.
+        hin@alma.com
+
+        $Id: README,v 1.6 2003/10/08 18:05:35 sds Exp $
+
+This is the README for a low-level, but complete and functional module
+for CLISP that allows one to use CLISP to program Oracle database
+applications. The interface is built on top of the Oracle Call
+Interface (OCI), which is Oracle's "C" language client library.  The
+remainder of this README is organized as follows:
+
+        (1) Features of the module
+        (2) Files in the distribution
+        (3) System Requirements
+        (4) Building the module
+        (5) Using the module
+        (6) Background and design goals
+        (7) How you can help
+        (8) About the author
+        (9) Acknowledgements
+
+Each section follows.
+
+        (1) FEATURES OF THE MODULE
+            ----------------------
+
+The module provides a rich set of features that can be used for Oracle
+applications both simple and sophisticated.  The highlights are:
+
+        - Source code available under the GNU General Public License
+
+        - Full access to most Oracle functionality, including all
+          functions accessible via SQL, and most Oracle data types
+          including LONG/LOB types.
+
+        - Complete error reporting, including pass-through of
+          Oracle error messages and identification of the
+          location of SQL parse errors
+
+        - Support for transactions (WITH-TRANSACTION macro)
+
+        - Auto-commit feature that commits database results to
+          simplify applications that are not transaction intensive.
+
+        - Automatic mapping of Oracle data types to and from
+          Lisp data types (string, fixnum, bignum, NULL, etc.)
+
+        - Convenient constructs for database inserts and updates
+
+        - Constructs for looping over SELECT query results:
+          a DO-ROWS macro, and a one-row lookahead buffer, useful
+          for formatting reports at "breaks" in data streams.
+
+        - Support for multiple, simultaneous connections to
+          the same database or different databases
+
+        - Connection caching, allowing re-used of previously
+          established database connections, to minimize overhead
+
+
+More details on these features can be got by doing
+(DESCRIBE 'ORACLE:<function>) on a particular function.
+
+        (2) FILES IN THE DISTRIBUTION
+            -------------------------
+
+The distribution consists of these files:
+
+README                  This file
+oracle.lisp             Lisp file defining the ORACLE package
+orafns.c                "C" interface to Oracle
+oiface.h                Wrapper functions and structure definitions
+oiface.c                Wrapper functions
+configure               auto-conf generated script build Makefile
+Makefile.in             Makefile directives to build the module
+link.sh                 Shell script to link module
+examples.lisp           Example functions
+
+
+        (3) SYSTEM REQUIREMENTS
+            -------------------
+Before you can use this module you need:
+
+        - A working Oracle client environment, including the
+          client OCI headers and libraries.  As a quick check,
+          make sure you have $ORACLE_HOME/rdbms/demo/oci.h
+
+        - An Oracle server to connect to, and a userID and
+          password on that server.
+
+        - Oracle expertise, incl. knowledge of SQL and use
+          of such tools as SQL*plus.
+
+It is beyond the scope of this module for me to teach you how to
+install and use Oracle itself.  If you are not at least at a level of
+proficiency where you can use SQL*Plus to connect to an Oracle
+database, then you need to learn and/or install Oracle on your own
+time (and that of your DBA :) before coming to the developers for
+help.
+
+
+        (4) BUILDING THE MODULE
+            -------------------
+
+It is recommended to build a separate Lisp containing the Oracle
+module in a build other than the default "src" subdirctory.  This is
+easily done by running CLISP's "configure" script with the --build
+option, as well as the option to include the Oracle module.  The build
+will be done in a separate area from any other CLISP builds of the
+same source base.  The command I use is:
+
+./configure                                     \
+       --with-readline                          \
+       --with-dynamic-ffi                       \
+       --with-dynamic-modules                   \
+       --with-module=syscalls                   \
+       --with-module=wildcard                   \
+       --with-module=regexp                     \
+       --with-module=bindings/glibc             \
+       --with-module=oracle                     \
+       --build oralisp
+
+If all goes well, this will build a complete Lisp in
+        /path/to/clisp/oralisp/full
+From that directory, you can run
+         ./lisp.run -M lispinit.mem
+
+You can test that you really have the Oracle-enabled Lisp by
+evaluating (describe 'oracle:connect)
+
+Test the module by editing "examples.lisp" to connect to your
+particular Oracle server, then loading that file to do some simple
+database operations.
+
+        (5) USING THE MODULE
+            ----------------
+
+The module implements a Lisp package "ORACLE" which exports the
+functions and macros below.  Each function and macro has a complete
+documentation string that can be viewed with DESCRIBE.  E.g.:
+(describe 'oracle:connect)
+
+CONNECT                 Connect to Oracle server
+DISCONNECT              Disconnect from Oracle server
+RUN-SQL                 Execute SQL statement
+DO-ROWS                 (Macro) Loop over SELECT result
+FETCH                   Retrieve one row of SELECT result
+FETCH-ALL               Retrieve all/some rows of SELECT result
+PEEK                    Look-ahead to next row of SELECT result
+COLUMNS                 Get name, type, size of SELECT columns
+SQLCOL-*                Accessor functions for COLUMNS items
+EOF                     Test if at end of SELECT result
+INSERT-ROW              Add a row to a table
+UPDATE-ROW              Update row(s) in a table
+ROW-COUNT               Get count of rows affected by SQL statement
+WITH-TRANSACTION        (Macro) Perform operations atomically
+COMMIT                  Commit pending changes
+ROLLBACK                Abandon pending changes
+AUTO-COMMIT             Enable or disable "auto-commit" mode
+
+
+        (6) BACKGROUND AND DESIGN GOALS
+            ---------------------------
+
+I decided to get back into Lisp after a 21-year hiatus since taking
+the introductory Scheme course at MIT in 1981 (when Gerry Sussman and
+Hal Abelson were still teaching it).  I was getting sick of Java and
+perl.  Since I make my living hacking Oracle databases, I wanted
+access to Oracle from the Lisp environment, which I chose CLISP due to
+it's ease of use, stability, availability under the GPL, and it's
+being the choice of some fairly respectable Lisp hackers.
+
+The design goals of the library are, in order:
+
+        - Simple and easy to use interface
+
+        - Well tested and free of bugs
+
+        - Well documented
+
+        - Efficiency
+
+
+        (7) HOW YOU CAN HELP
+            ----------------
+
+I would welcome those who can test this module on Unix platforms other
+than Linux, and would like someday to port it to Windows as well.  Of
+course, bug reports will be greatly appreciated.
+
+Please understand that this is my first attempt to program in Lisp in
+about twenty years, and that some of my code in "oracle.lisp" may be
+of dubious style.  I would welcome constructive comments on that code,
+perhaps as barter in return for whatever utility you may find in using
+this library.
+
+
+        (8) ABOUT THE AUTHOR
+            ----------------
+
+I am John Hinsdale <hin@alma.com>, a software consultant based in
+Tarrytown, NY USA.  I specialize in database applications, usually
+fronted by a Web server.  My background is in Computer Science (MIT
+1986, Columbia 1995).  I program in "C", Java, and mostly perl.  Lately
+I am getting back into Lisp.
+
+
+        (9) ACKNOWLEDGEMENTS
+            ----------------
+
+I would like to thank the creators and maintainers of CLISP: Bruno
+Haible and especially Sam Steingold for assistance on using CLISP's
+very well documented "C" interface.  I've received bug fixes and
+helpful comments on the CLISP mailing lists from Joerg-Cyril Hoehle
+and Dan Stanger.  Some of the techniques for interfacing with OCI and
+dealing with LONG/LOB type fetching and truncation were borrowed from
+Tim Bunce's DBD::Oracle library for perl.
+
+                *   *   *

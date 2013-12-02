@@ -1,0 +1,49 @@
+diff -ur clisp-all-edits/src/makemake.in clisp-conversion/src/makemake.in
+--- clisp-all-edits/src/makemake.in	Thu Feb 20 13:11:01 2003
++++ clisp-conversion/src/makemake.in	Thu Feb 20 14:24:09 2003
+@@ -1974,11 +1974,10 @@
+ else
+   NEED_CCPAUX=false
+ fi
+-XDECL_FILTER="| \$(ANSIDECL) | \$(VARBRACE)"
+-XDECL_DEPENDENCIES=" ansidecl${HEXE} varbrace${HEXE}"
++XDECL_FILTER="| \$(ANSIDECL)"
++XDECL_DEPENDENCIES=" ansidecl${HEXE}"
+ 
+ echol "ANSIDECL = ${HERE}ansidecl"
+-echol "VARBRACE = ${HERE}varbrace"
+ if [ $CC_NEED_CCPAUX = true ] ; then
+   CCPAUX='ccpaux'$HEXE
+   CCPAUX_FILTER=' | '$HERE'ccpaux'
+@@ -2099,7 +2098,6 @@
+   UTILS=$UTILS' ccpaux'
+ fi
+ UTILS=$UTILS' ansidecl'
+-UTILS=$UTILS' varbrace'
+ if [ $XCC_NEED_DEEMA = true -a $HOS != unix ] ; then
+   UTILS=$UTILS' deema'
+ fi
+@@ -2195,14 +2193,6 @@
+     echol
+     OBSOLETE=$OBSOLETE" ${util}.c"
+   fi
+-  if [ $util = varbrace ] ; then
+-    echol "${util}${HEXE} : ${UTILDIR_M}${util}.d ansidecl${HEXE}"
+-    echotabpipe "\$(CAT) ${UTILDIR_CC}${util}.d | \$(ANSIDECL) > ${util}.c"
+-    echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)" "${util}.c" "${util}"
+-    echotab "\$(RM) ${util}.c"
+-    echol
+-    OBSOLETE=$OBSOLETE" ${util}.c"
+-  fi
+ done
+ 
+ echol
+@@ -3594,7 +3584,7 @@
+   echotab "-\$(RM) MAGIC.add"
+ fi
+ echotab "-\$(RMRF) data"
+-echotab "-\$(RM) ansidecl${HEXE} varbrace${HEXE} ccpaux${HEXE} deema${HEXE} txt2c${HEXE} ccmp2c${HEXE} modprep${HEXE} clisp${HEXE}"
++echotab "-\$(RM) ansidecl${HEXE} ccpaux${HEXE} deema${HEXE} txt2c${HEXE} ccmp2c${HEXE} modprep${HEXE} clisp${HEXE}"
+ echol
+ cat <<!!
+ # clean6 lets us go back to "makemake > Makefile".

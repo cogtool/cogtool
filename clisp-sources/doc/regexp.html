@@ -1,0 +1,959 @@
+<HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Created on September, 3  2003 by texi2html 1.64 -->
+<!-- 
+Written by: Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Olaf Bachmann <obachman@mathematik.uni-kl.de>
+Send bugs and suggestions to <texi2html@mathematik.uni-kl.de>
+ 
+-->
+<HEAD>
+<TITLE>Untitled Document: </TITLE>
+
+<META NAME="description" CONTENT="Untitled Document: ">
+<META NAME="keywords" CONTENT="Untitled Document: ">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META NAME="Generator" CONTENT="texi2html 1.64">
+
+</HEAD>
+
+<BODY LANG="" BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#800080" ALINK="#FF0000">
+
+<A NAME="SEC1"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC2"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[ &lt;&lt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt;&gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<P>
+
+<H1> 1. Regular expressions </H1>
+<!--docid::SEC1::-->
+<P>
+
+Regular expressions are patterns used in selecting text.
+</P><P>
+
+In addition to a specifying string literals, regular expressions can
+represent classes of strings.  Strings thus represented are said to be
+matched by the corresponding regular expression.  If it is possible for
+a regular expression to match several strings in a line, then the
+left-most longest match is the one selected.
+</P><P>
+
+The following symbols are used in constructing regular expressions:
+</P><P>
+
+<DL COMPACT>
+
+<DT><CODE><VAR>c</VAR></CODE>
+<DD>Any character <VAR>c</VAR> not listed below, including <SAMP>`{'</SAMP>, <SAMP>`}'</SAMP>,
+<SAMP>`('</SAMP>, <SAMP>`)'</SAMP>, <SAMP>`&#60;'</SAMP> and <SAMP>`&#62;'</SAMP>, matches itself.
+<P>
+
+<DT><CODE>\<VAR>c</VAR></CODE>
+<DD>Any backslash-escaped character <VAR>c</VAR>, other than <SAMP>`{'</SAMP>,
+`<SAMP>`}'</SAMP>, <SAMP>`('</SAMP>, <SAMP>`)'</SAMP>, <SAMP>`&#60;'</SAMP>, <SAMP>`&#62;'</SAMP>, <SAMP>`b'</SAMP>, <SAMP>`B'</SAMP>,
+<SAMP>`w'</SAMP>, <SAMP>`W'</SAMP>, <SAMP>`+'</SAMP> and <SAMP>`?'</SAMP>, matches itself.
+<P>
+
+Note that <SAMP>`\'</SAMP> also has special meaning in the read syntax of Lisp
+strings, and must be quoted with <SAMP>`\'</SAMP>.  For
+example, the regular expression that matches the <SAMP>`\'</SAMP> character is
+<SAMP>`\\'</SAMP>.  To write a Lisp string that contains the characters
+<SAMP>`\\'</SAMP>, Lisp syntax requires you to quote each <SAMP>`\'</SAMP> with another
+<SAMP>`\'</SAMP>.  Therefore, the read syntax for a regular expression matching
+<SAMP>`\'</SAMP> is <CODE>"\\\\"</CODE>.</P><P>
+
+<DT><CODE>.</CODE>
+<DD>Matches any single character.
+<P>
+
+<DT><CODE>[<VAR>char-class</VAR>]</CODE>
+<DD>Matches any single character in <VAR>char-class</VAR>.  To include a <SAMP>`]'</SAMP>
+in <VAR>char-class</VAR>, it must be the first character.  A range of
+characters may be specified by separating the end characters of the
+range with a <SAMP>`-'</SAMP>, e.g., <SAMP>`a-z'</SAMP> specifies the lower case
+characters.  The following literal expressions can also be used in
+<VAR>char-class</VAR> to specify sets of characters:
+<P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>[:alnum:] [:cntrl:] [:lower:] [:space:]
+[:alpha:] [:digit:] [:print:] [:upper:]
+[:blank:] [:graph:] [:punct:] [:xdigit:]
+</pre></td></tr></table></P><P>
+
+If <SAMP>`-'</SAMP> appears as the first or last character of <VAR>char-class</VAR>,
+then it matches itself.  All other characters in <VAR>char-class</VAR> match
+themselves.
+</P><P>
+
+Patterns in
+<VAR>char-class</VAR>
+of the form:
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>[.<VAR>col-elm</VAR>.]
+[=<VAR>col-elm</VAR>=]
+</pre></td></tr></table></P><P>
+
+where <VAR>col-elm</VAR> is a <EM>collating element</EM> are interpreted
+according to <CODE>locale (5)</CODE> (not currently supported).  See
+<CODE>regex (3)</CODE> for an explanation of these constructs.
+</P><P>
+
+<DT><CODE>[^<VAR>char-class</VAR>]</CODE>
+<DD>Matches any single character, other than newline, not in
+<VAR>char-class</VAR>.  <VAR>char-class</VAR> is defined as above.
+<P>
+
+<DT><CODE>^</CODE>
+<DD>If <SAMP>`^'</SAMP> is the first character of a regular expression, then it
+anchors the regular expression to the beginning of a line.  Otherwise,
+it matches itself.
+<P>
+
+<DT><CODE>$</CODE>
+<DD>If <SAMP>`$'</SAMP> is the last character of a regular expression, it anchors
+the regular expression to the end of a line.  Otherwise, it matches
+itself.
+<P>
+
+<DT><CODE>\(<VAR>re</VAR>\)</CODE>
+<DD>Defines a (possibly null) subexpression <VAR>re</VAR>.
+Subexpressions may be nested.  A
+subsequent backreference of the form <SAMP>`\<VAR>n</VAR>'</SAMP>, where <VAR>n</VAR> is a
+number in the range [1,9], expands to the text matched by the <VAR>n</VAR>th
+subexpression. For example, the regular expression <SAMP>`\(a.c\)\1'</SAMP> matches
+the string <SAMP>`abcabc'</SAMP>, but not <SAMP>`abcadc'</SAMP>.
+Subexpressions are ordered relative to their left delimiter.
+<P>
+
+<DT><CODE>*</CODE>
+<DD>Matches the single character regular expression or subexpression
+immediately preceding it zero or more times.  If <SAMP>`*'</SAMP> is the first
+character of a regular expression or subexpression, then it matches
+itself.  The <SAMP>`*'</SAMP> operator sometimes yields unexpected results.  For
+example, the regular expression <SAMP>`b*'</SAMP> matches the beginning of the
+string <SAMP>`abbb'</SAMP>, as opposed to the substring <SAMP>`bbb'</SAMP>, since a
+null match is the only left-most match.
+<P>
+
+<DT><CODE>\{<VAR>n,m</VAR>\}</CODE>
+<DD><DT><CODE>\{<VAR>n,</VAR>\}</CODE>
+<DD><DT><CODE>\{<VAR>n</VAR>\}</CODE>
+<DD>Matches the single character regular expression or subexpression
+immediately preceding it at least <VAR>n</VAR> and at most <VAR>m</VAR> times.  If
+<VAR>m</VAR> is omitted, then it matches at least <VAR>n</VAR> times.  If the
+comma is also omitted, then it matches exactly <VAR>n</VAR> times.
+If any of these forms occurs first in a regular expression or subexpression,
+then it is interpreted literally (i.e., the regular expression <SAMP>`\{2\}'</SAMP>
+matches the string <SAMP>`{2}'</SAMP>, and so on).
+<P>
+
+<DT><CODE>\&#60;</CODE>
+<DD><DT><CODE>\&#62;</CODE>
+<DD>Anchors the single character regular expression or subexpression
+immediately following it to the beginning (in the case of <SAMP>`\&#60;'</SAMP>)
+or ending (in the case of <SAMP>`\&#62;'</SAMP>) of
+a <EM>word</EM>, i.e., in ASCII, a maximal string of alphanumeric characters,
+including the underscore (_).
+<P>
+
+</DL>
+<P>
+
+The following extended operators are preceded by a backslash <SAMP>`\'</SAMP> to
+distinguish them from traditional <CODE>ed</CODE> syntax.
+</P><P>
+
+<DL COMPACT>
+
+<DT><CODE>\`</CODE>
+<DD><DT><CODE>\'</CODE>
+<DD>Unconditionally matches the beginning <SAMP>`\`'</SAMP> or ending <SAMP>`\''</SAMP> of a line.
+<P>
+
+<DT><CODE>\?</CODE>
+<DD>Optionally matches the single character regular expression or subexpression
+immediately preceding it.  For example, the regular expression <SAMP>`a[bd]\?c'</SAMP>
+matches the strings <SAMP>`abc'</SAMP>, <SAMP>`adc'</SAMP> and <SAMP>`ac'</SAMP>.
+If <SAMP>`\?'</SAMP> occurs at the beginning
+of a regular expressions or subexpression, then it matches a literal <SAMP>`?'</SAMP>.
+<P>
+
+<DT><CODE>\+</CODE>
+<DD>Matches the single character regular expression or subexpression
+immediately preceding it one or more times.  So the regular expression
+<SAMP>`a+'</SAMP> is shorthand for <SAMP>`aa*'</SAMP>.  If <SAMP>`\+'</SAMP> occurs at the
+beginning of a regular expression or subexpression, then it matches a
+literal <SAMP>`+'</SAMP>.
+<P>
+
+<DT><CODE>\b</CODE>
+<DD>Matches the beginning or ending (null string) of a word.  Thus the regular
+expression <SAMP>`\bhello\b'</SAMP> is equivalent to <SAMP>`\&#60;hello\&#62;'</SAMP>.
+However, <SAMP>`\b\b'</SAMP>
+is a valid regular expression whereas <SAMP>`\&#60;\&#62;'</SAMP> is not.
+<P>
+
+<DT><CODE>\B</CODE>
+<DD>Matches (a null string) inside a word.
+<P>
+
+<DT><CODE>\w</CODE>
+<DD>Matches any character in a word.
+<P>
+
+<DT><CODE>\W</CODE>
+<DD>Matches any character not in a word.
+<P>
+
+</DL>
+<P>
+
+<A NAME="Regular Expressions"></A>
+<HR SIZE="6">
+<A NAME="SEC2"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC3"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[ &lt;&lt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt;&gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1> 2. Regular Expressions </H1>
+<!--docid::SEC2::-->
+<P>
+
+  A <EM>regular expression</EM> (<EM>regexp</EM>, for short) is a pattern that
+denotes a (possibly infinite) set of strings.  Searching for matches for
+a regexp is a very powerful operation.  This section explains how to write
+regexps; the following section says how to search for them.
+</P><P>
+
+<BLOCKQUOTE><TABLE BORDER=0 CELLSPACING=0> 
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="regexp.html#SEC3">2.1 Syntax of Regular Expressions</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Rules for writing regular expressions.</TD></TR>
+<TR><TD ALIGN="left" VALIGN="TOP"><A HREF="regexp.html#SEC4">3. Examples</A></TD><TD>&nbsp;&nbsp;</TD><TD ALIGN="left" VALIGN="TOP">Illustrates regular expression syntax.</TD></TR>
+</TABLE></BLOCKQUOTE>
+<P>
+
+<A NAME="Syntax of Regexps"></A>
+<HR SIZE="6">
+<A NAME="SEC3"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC2"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC4"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[ &lt;&lt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt;&gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 2.1 Syntax of Regular Expressions </H2>
+<!--docid::SEC3::-->
+<P>
+
+  Regular expressions have a syntax in which a few characters are special
+constructs and the rest are <EM>ordinary</EM>.  An ordinary character is a
+simple regular expression which matches that character and nothing else.
+The special characters are <SAMP>`$'</SAMP>, <SAMP>`^'</SAMP>, <SAMP>`.'</SAMP>, <SAMP>`*'</SAMP>,
+<SAMP>`['</SAMP>, <SAMP>`]'</SAMP> and <SAMP>`\'</SAMP>; no new special
+characters will be defined in the future.  Any other character appearing
+in a regular expression is ordinary, unless a <SAMP>`\'</SAMP> precedes it.
+</P><P>
+
+For example, <SAMP>`f'</SAMP> is not a special character, so it is ordinary, and
+therefore <SAMP>`f'</SAMP> is a regular expression that matches the string
+<SAMP>`f'</SAMP> and no other string.  (It does <EM>not</EM> match the string
+<SAMP>`ff'</SAMP>.)  Likewise, <SAMP>`o'</SAMP> is a regular expression that matches
+only <SAMP>`o'</SAMP>.</P><P>
+
+Any two regular expressions <VAR>a</VAR> and <VAR>b</VAR> can be concatenated.  The
+result is a regular expression which matches a string if <VAR>a</VAR> matches
+some amount of the beginning of that string and <VAR>b</VAR> matches the rest of
+the string.</P><P>
+
+As a simple example, we can concatenate the regular expressions <SAMP>`f'</SAMP>
+and <SAMP>`o'</SAMP> to get the regular expression <SAMP>`fo'</SAMP>, which matches only
+the string <SAMP>`fo'</SAMP>.  Still trivial.  To do something more powerful, you
+need to use one of the special characters.  Here is a list of them:
+</P><P>
+
+<DL COMPACT>
+<DT><KBD>. (Period)</KBD>
+<DD><A NAME="IDX1"></A>
+is a special character that matches any single character.
+Using concatenation, we can make regular expressions like <SAMP>`a.b'</SAMP>, which
+matches any three-character string that begins with <SAMP>`a'</SAMP> and ends with
+<SAMP>`b'</SAMP>.<P>
+
+<DT><KBD>*</KBD>
+<DD><A NAME="IDX2"></A>
+is not a construct by itself; it is a suffix operator that means to
+repeat the preceding regular expression as many times as possible.  In
+<SAMP>`fo*'</SAMP>, the <SAMP>`*'</SAMP> applies to the <SAMP>`o'</SAMP>, so <SAMP>`fo*'</SAMP> matches
+one <SAMP>`f'</SAMP> followed by any number of <SAMP>`o'</SAMP>s.  The case of zero
+<SAMP>`o'</SAMP>s is allowed: <SAMP>`fo*'</SAMP> does match <SAMP>`f'</SAMP>.<P>
+
+<SAMP>`*'</SAMP> always applies to the <EM>smallest</EM> possible preceding
+expression.  Thus, <SAMP>`fo*'</SAMP> has a repeating <SAMP>`o'</SAMP>, not a
+repeating <SAMP>`fo'</SAMP>.</P><P>
+
+The matcher processes a <SAMP>`*'</SAMP> construct by matching, immediately,
+as many repetitions as can be found.  Then it continues with the rest
+of the pattern.  If that fails, backtracking occurs, discarding some
+of the matches of the <SAMP>`*'</SAMP>-modified construct in case that makes
+it possible to match the rest of the pattern.  For example, in matching
+<SAMP>`ca*ar'</SAMP> against the string <SAMP>`caaar'</SAMP>, the <SAMP>`a*'</SAMP> first
+tries to match all three <SAMP>`a'</SAMP>s; but the rest of the pattern is
+<SAMP>`ar'</SAMP> and there is only <SAMP>`r'</SAMP> left to match, so this try fails.
+The next alternative is for <SAMP>`a*'</SAMP> to match only two <SAMP>`a'</SAMP>s.
+With this choice, the rest of the regexp matches successfully.</P><P>
+
+<DT><KBD>[ <small>...</small> ]</KBD>
+<DD><A NAME="IDX3"></A>
+<A NAME="IDX4"></A>
+<A NAME="IDX5"></A>
+<SAMP>`['</SAMP> begins a <EM>character set</EM>, which is terminated by a
+<SAMP>`]'</SAMP>.  In the simplest case, the characters between the two brackets
+form the set.  Thus, <SAMP>`[ad]'</SAMP> matches either one <SAMP>`a'</SAMP> or one
+<SAMP>`d'</SAMP>, and <SAMP>`[ad]*'</SAMP> matches any string composed of just <SAMP>`a'</SAMP>s
+and <SAMP>`d'</SAMP>s (including the empty string), from which it follows that
+<SAMP>`c[ad]*r'</SAMP> matches <SAMP>`cr'</SAMP>, <SAMP>`car'</SAMP>, <SAMP>`cdr'</SAMP>,
+<SAMP>`caddaar'</SAMP>, etc.<P>
+
+The usual regular expression special characters are not special inside a
+character set.  A completely different set of special characters exists
+inside character sets: <SAMP>`]'</SAMP>, <SAMP>`-'</SAMP> and <SAMP>`^'</SAMP>.</P><P>
+
+<SAMP>`-'</SAMP> is used for ranges of characters.  To write a range, write two
+characters with a <SAMP>`-'</SAMP> between them.  Thus, <SAMP>`[a-z]'</SAMP> matches any
+lower case letter.  Ranges may be intermixed freely with individual
+characters, as in <SAMP>`[a-z$%.]'</SAMP>, which matches any lower case letter
+or <SAMP>`$'</SAMP>, <SAMP>`%'</SAMP> or a period.</P><P>
+
+The following literal expressions can also be used in
+<VAR>char-class</VAR> to specify sets of characters:
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>[:alnum:] [:cntrl:] [:lower:] [:space:]
+[:alpha:] [:digit:] [:print:] [:upper:]
+[:blank:] [:graph:] [:punct:] [:xdigit:]
+</pre></td></tr></table></P><P>
+
+To include a <SAMP>`]'</SAMP> in a character set, make it the first character.
+For example, <SAMP>`[]a]'</SAMP> matches <SAMP>`]'</SAMP> or <SAMP>`a'</SAMP>.  To include a
+<SAMP>`-'</SAMP>, write <SAMP>`-'</SAMP> as the first character in the set, or put
+immediately after a range.  (You can replace one individual character
+<VAR>c</VAR> with the range <SAMP>`<VAR>c</VAR>-<VAR>c</VAR>'</SAMP> to make a place to put the
+<SAMP>`-'</SAMP>).  There is no way to write a set containing just <SAMP>`-'</SAMP> and
+<SAMP>`]'</SAMP>.
+</P><P>
+
+To include <SAMP>`^'</SAMP> in a set, put it anywhere but at the beginning of
+the set.
+</P><P>
+
+<DT><KBD>[^ <small>...</small> ]</KBD>
+<DD><A NAME="IDX6"></A>
+<SAMP>`[^'</SAMP> begins a <EM>complement character set</EM>, which matches any
+character except the ones specified.  Thus, <SAMP>`[^a-z0-9A-Z]'</SAMP>
+matches all characters <EM>except</EM> letters and digits.<P>
+
+<SAMP>`^'</SAMP> is not special in a character set unless it is the first
+character.  The character following the <SAMP>`^'</SAMP> is treated as if it
+were first (thus, <SAMP>`-'</SAMP> and <SAMP>`]'</SAMP> are not special there).
+</P><P>
+
+Note that a complement character set can match a newline, unless
+newline is mentioned as one of the characters not to match.
+</P><P>
+
+<DT><KBD>^</KBD>
+<DD><A NAME="IDX7"></A>
+<A NAME="IDX8"></A>
+is a special character that matches the empty string, but only at
+the beginning of a line in the text being matched.  Otherwise it fails
+to match anything.  Thus, <SAMP>`^foo'</SAMP> matches a <SAMP>`foo'</SAMP> which occurs
+at the beginning of a line.
+<P>
+
+When matching a string, <SAMP>`^'</SAMP> matches at the beginning of the string
+or after a newline character <SAMP>`\n'</SAMP>.
+</P><P>
+
+<DT><KBD>$</KBD>
+<DD><A NAME="IDX9"></A>
+is similar to <SAMP>`^'</SAMP> but matches only at the end of a line.  Thus,
+<SAMP>`x+$'</SAMP> matches a string of one <SAMP>`x'</SAMP> or more at the end of a line.
+<P>
+
+When matching a string, <SAMP>`$'</SAMP> matches at the end of the string
+or before a newline character <SAMP>`\n'</SAMP>.
+</P><P>
+
+<DT><KBD>\</KBD>
+<DD><A NAME="IDX10"></A>
+has two functions: it quotes the special characters (including
+<SAMP>`\'</SAMP>), and it introduces additional special constructs.
+<P>
+
+Because <SAMP>`\'</SAMP> quotes special characters, <SAMP>`\$'</SAMP> is a regular
+expression which matches only <SAMP>`$'</SAMP>, and <SAMP>`\['</SAMP> is a regular
+expression which matches only <SAMP>`['</SAMP>, and so on.
+</P><P>
+
+Note that <SAMP>`\'</SAMP> also has special meaning in the read syntax of Lisp
+strings, and must be quoted with <SAMP>`\'</SAMP>.  For
+example, the regular expression that matches the <SAMP>`\'</SAMP> character is
+<SAMP>`\\'</SAMP>.  To write a Lisp string that contains the characters
+<SAMP>`\\'</SAMP>, Lisp syntax requires you to quote each <SAMP>`\'</SAMP> with another
+<SAMP>`\'</SAMP>.  Therefore, the read syntax for a regular expression matching
+<SAMP>`\'</SAMP> is <CODE>"\\\\"</CODE>.</DL>
+<P>
+
+For the most part, <SAMP>`\'</SAMP> followed by any character matches only
+that character.  However, there are several exceptions: characters
+which, when preceded by <SAMP>`\'</SAMP>, are special constructs.  Such
+characters are always ordinary when encountered on their own.  Here
+is a table of <SAMP>`\'</SAMP> constructs:
+</P><P>
+
+<DL COMPACT>
+<DT><KBD>\+</KBD>
+<DD><A NAME="IDX11"></A>
+is a suffix operator similar to <SAMP>`*'</SAMP> except that the preceding
+expression must match at least once.  So, for example, <SAMP>`ca+r'</SAMP>
+matches the strings <SAMP>`car'</SAMP> and <SAMP>`caaaar'</SAMP> but not the string
+<SAMP>`cr'</SAMP>, whereas <SAMP>`ca*r'</SAMP> matches all three strings.
+<P>
+
+<DT><KBD>\?</KBD>
+<DD><A NAME="IDX12"></A>
+is a suffix operator similar to <SAMP>`*'</SAMP> except that the preceding
+expression can match either once or not at all.  For example,
+<SAMP>`ca?r'</SAMP> matches <SAMP>`car'</SAMP> or <SAMP>`cr'</SAMP>, but does not match anyhing
+else.
+<P>
+
+<DT><KBD>\|</KBD>
+<DD><A NAME="IDX13"></A>
+<A NAME="IDX14"></A>
+specifies an alternative.
+Two regular expressions <VAR>a</VAR> and <VAR>b</VAR> with <SAMP>`\|'</SAMP> in
+between form an expression that matches anything that either <VAR>a</VAR> or
+<VAR>b</VAR> matches.<P>
+
+Thus, <SAMP>`foo\|bar'</SAMP> matches either <SAMP>`foo'</SAMP> or <SAMP>`bar'</SAMP>
+but no other string.</P><P>
+
+<SAMP>`\|'</SAMP> applies to the largest possible surrounding expressions.  Only a
+surrounding <SAMP>`\( <small>...</small> \)'</SAMP> grouping can limit the grouping power of
+<SAMP>`\|'</SAMP>.</P><P>
+
+Full backtracking capability exists to handle multiple uses of <SAMP>`\|'</SAMP>.
+</P><P>
+
+<DT><KBD>\( <small>...</small> \)</KBD>
+<DD><A NAME="IDX15"></A>
+<A NAME="IDX16"></A>
+<A NAME="IDX17"></A>
+is a grouping construct that serves three purposes:
+<P>
+
+<OL>
+<LI>
+To enclose a set of <SAMP>`\|'</SAMP> alternatives for other operations.
+Thus, <SAMP>`\(foo\|bar\)x'</SAMP> matches either <SAMP>`foox'</SAMP> or <SAMP>`barx'</SAMP>.
+<P>
+
+<LI>
+To enclose an expression for a suffix operator such as <SAMP>`*'</SAMP> to act
+on.  Thus, <SAMP>`ba\(na\)*'</SAMP> matches <SAMP>`bananana'</SAMP>, etc., with any
+(zero or more) number of <SAMP>`na'</SAMP> strings.<P>
+
+<LI>
+To record a matched substring for future reference.
+</OL>
+<P>
+
+This last application is not a consequence of the idea of a
+parenthetical grouping; it is a separate feature which happens to be
+assigned as a second meaning to the same <SAMP>`\( <small>...</small> \)'</SAMP> construct
+because there is no conflict in practice between the two meanings.
+Here is an explanation of this feature:
+</P><P>
+
+<DT><KBD>\<VAR>digit</VAR></KBD>
+<DD>matches the same text which matched the <VAR>digit</VAR>th occurrence of a
+<SAMP>`\( <small>...</small> \)'</SAMP> construct.
+<P>
+
+In other words, after the end of a <SAMP>`\( <small>...</small> \)'</SAMP> construct.  the
+matcher remembers the beginning and end of the text matched by that
+construct.  Then, later on in the regular expression, you can use
+<SAMP>`\'</SAMP> followed by <VAR>digit</VAR> to match that same text, whatever it
+may have been.
+</P><P>
+
+The strings matching the first nine <SAMP>`\( <small>...</small> \)'</SAMP> constructs
+appearing in a regular expression are assigned numbers 1 through 9 in
+the order that the open parentheses appear in the regular expression.
+So you can use <SAMP>`\1'</SAMP> through <SAMP>`\9'</SAMP> to refer to the text matched
+by the corresponding <SAMP>`\( <small>...</small> \)'</SAMP> constructs.
+</P><P>
+
+For example, <SAMP>`\(.*\)\1'</SAMP> matches any newline-free string that is
+composed of two identical halves.  The <SAMP>`\(.*\)'</SAMP> matches the first
+half, which may be anything, but the <SAMP>`\1'</SAMP> that follows must match
+the same exact text.
+</P><P>
+
+<DT><KBD>\w</KBD>
+<DD><A NAME="IDX18"></A>
+matches any word-constituent character.
+<P>
+
+<DT><KBD>\W</KBD>
+<DD><A NAME="IDX19"></A>
+matches any character that is not a word-constituent.
+</DL>
+<P>
+
+  These regular expression constructs match the empty string--that is,
+they don't use up any characters--but whether they match depends on the
+context.
+</P><P>
+
+<DL COMPACT>
+<DT><KBD>\`</KBD>
+<DD><A NAME="IDX20"></A>
+matches the empty string, but only at the beginning
+of the buffer or string being matched against.
+<P>
+
+<DT><KBD>\'</KBD>
+<DD><A NAME="IDX21"></A>
+matches the empty string, but only at the end of
+the buffer or string being matched against.
+<P>
+
+<DT><KBD>\b</KBD>
+<DD><A NAME="IDX22"></A>
+matches the empty string, but only at the beginning or
+end of a word.  Thus, <SAMP>`\bfoo\b'</SAMP> matches any occurrence of
+<SAMP>`foo'</SAMP> as a separate word.  <SAMP>`\bballs?\b'</SAMP> matches
+<SAMP>`ball'</SAMP> or <SAMP>`balls'</SAMP> as a separate word.<P>
+
+<DT><KBD>\B</KBD>
+<DD><A NAME="IDX23"></A>
+matches the empty string, but <EM>not</EM> at the beginning or
+end of a word.
+<P>
+
+<DT><KBD>\&#60;</KBD>
+<DD><A NAME="IDX24"></A>
+matches the empty string, but only at the beginning of a word.
+<P>
+
+<DT><KBD>\&#62;</KBD>
+<DD><A NAME="IDX25"></A>
+matches the empty string, but only at the end of a word.
+</DL>
+<P>
+
+<A NAME="IDX26"></A>
+  Not every string is a valid regular expression.  For example, a string
+with unbalanced square brackets is invalid (with a few exceptions, such
+as <SAMP>`[]]'</SAMP>, and so is a string that ends with a single <SAMP>`\'</SAMP>.  If
+an invalid regular expression is passed to any of the search functions,
+an <CODE>invalid-regexp</CODE> error is signaled.
+</P><P>
+
+<A NAME="Regexp Examples"></A>
+<HR SIZE="6">
+<A NAME="SEC4"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC3"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC5"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[ &lt;&lt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt;&gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1> 3. Examples </H1>
+<!--docid::SEC4::-->
+<HR SIZE="6">
+<A NAME="SEC5"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC4"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC6"> &gt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[ &lt;&lt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt;&gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 3.1 Complex Regexp Example </H2>
+<!--docid::SEC5::-->
+<P>
+
+  Here is a complicated regexp, used by Emacs to recognize the end of a
+sentence together with any whitespace that follows.  It is the value of
+the variable <CODE>sentence-end</CODE>.
+</P><P>
+
+  First, we show the regexp as a string in C syntax to distinguish
+spaces from tab characters.  The string constant begins and ends with a
+double-quote.  <SAMP>`\"'</SAMP> stands for a double-quote as part of the
+string, <SAMP>`\\'</SAMP> for a backslash as part of the string, <SAMP>`\t'</SAMP> for a
+tab and <SAMP>`\n'</SAMP> for a newline.
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>"[.?!][]\"')}]*\\($\\| $\\|\t\\|  \\)[ \t\n]*"
+</pre></td></tr></table></P><P>
+
+  In contrast, in Lisp, you have to type the tab as Ctrl-V Ctrl-I, producing
+the following:
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>sentence-end
+=>
+"[.?!][]\"')}]*\\($\\| $\\|  \\|  \\)[
+]*"
+</pre></td></tr></table></P><P>
+
+In this output, tab and newline appear as themselves.
+</P><P>
+
+  This regular expression contains four parts in succession and can be
+deciphered as follows:
+</P><P>
+
+<DL COMPACT>
+<DT><CODE>[.?!]</CODE>
+<DD>The first part of the pattern consists of three characters, a period, a
+question mark and an exclamation mark, within square brackets.  The
+match must begin with one of these three characters.
+<P>
+
+<DT><CODE>[]\"')}]*</CODE>
+<DD>The second part of the pattern matches any closing braces and quotation
+marks, zero or more of them, that may follow the period, question mark
+or exclamation mark.  The <CODE>\"</CODE> is C or Lisp syntax for a double-quote in
+a string.  The <SAMP>`*'</SAMP> at the end indicates that the immediately
+preceding regular expression (a character set, in this case) may be
+repeated zero or more times.
+<P>
+
+<DT><CODE>\\($\\| \\|\t\\|  \\)</CODE>
+<DD>The third part of the pattern matches the whitespace that follows the
+end of a sentence: the end of a line, or a tab, or two spaces.  The
+double backslashes mark the parentheses and vertical bars as regular
+expression syntax; the parentheses mark the group and the vertical bars
+separate alternatives.  The dollar sign is used to match the end of a
+line.
+<P>
+
+<DT><CODE>[ \t\n]*</CODE>
+<DD>Finally, the last part of the pattern matches any additional whitespace
+beyond the minimum needed to end a sentence.
+</DL>
+<P>
+
+<A NAME="Common Regexps"></A>
+<HR SIZE="6">
+<A NAME="SEC6"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC5"> &lt; </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[ &lt;&lt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1"> Up </A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[ &gt;&gt; ]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT"> &nbsp; <TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H2> 3.2 Common Regular Expressions Used in Editing </H2>
+<!--docid::SEC6::-->
+<P>
+
+  This section describes some common regular expressions
+used for certain purposes in editing:
+</P><P>
+
+Page delimiter:
+This is the regexp describing line-beginnings that separate pages.  A good
+value is <CODE>(string #\Page)</CODE>.
+</P><P>
+
+Paragraph separator:
+This is the regular expression for recognizing the beginning of a line
+that separates paragraphs.  A good value is (in C syntax) <CODE>"^[
+\t\f]*$"</CODE>, which is a line that consists entirely of spaces, tabs, and
+form feeds.
+</P><P>
+
+Paragraph start:
+This is the regular expression for recognizing the beginning of a line
+that starts <EM>or</EM> separates paragraphs.  A good value is (in C syntax)
+<CODE>"^[ \t\n\f]"</CODE>, which matches a line starting with a space, tab,
+newline, or form feed.
+</P><P>
+
+Sentence end:
+This is the regular expression describing the end of a sentence.  (All
+paragraph boundaries also end sentences, regardless.)  A good value
+is (in C syntax, again):
+</P><P>
+
+<TABLE><tr><td>&nbsp;</td><td class=example><pre>"[.?!][]\"')}]*\\($\\|\t\\| \\)[ \t\n]*"
+</pre></td></tr></table></P><P>
+
+This means a period, question mark or exclamation mark, followed by a
+closing brace, followed by tabs, spaces or new lines.
+</P><P>
+
+<HR SIZE="6">
+<A NAME="SEC_Contents"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1>Table of Contents</H1>
+<UL>
+<A NAME="TOC1" HREF="regexp.html#SEC1">1. Regular expressions</A>
+<BR>
+<A NAME="TOC2" HREF="regexp.html#SEC2">2. Regular Expressions</A>
+<BR>
+<UL>
+<A NAME="TOC3" HREF="regexp.html#SEC3">2.1 Syntax of Regular Expressions</A>
+<BR>
+</UL>
+<A NAME="TOC4" HREF="regexp.html#SEC4">3. Examples</A>
+<BR>
+<UL>
+<A NAME="TOC5" HREF="regexp.html#SEC5">3.1 Complex Regexp Example</A>
+<BR>
+<A NAME="TOC6" HREF="regexp.html#SEC6">3.2 Common Regular Expressions Used in Editing</A>
+<BR>
+</UL>
+</UL>
+<HR SIZE=1>
+<A NAME="SEC_OVERVIEW"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1>Short Table of Contents</H1>
+<BLOCKQUOTE>
+<A NAME="TOC1" HREF="regexp.html#SEC1">1. Regular expressions</A>
+<BR>
+<A NAME="TOC2" HREF="regexp.html#SEC2">2. Regular Expressions</A>
+<BR>
+<A NAME="TOC4" HREF="regexp.html#SEC4">3. Examples</A>
+<BR>
+
+</BLOCKQUOTE>
+<HR SIZE=1>
+<A NAME="SEC_About"></A>
+<TABLE CELLPADDING=1 CELLSPACING=1 BORDER=0>
+<TR><TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC1">Top</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_Contents">Contents</A>]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[Index]</TD>
+<TD VALIGN="MIDDLE" ALIGN="LEFT">[<A HREF="regexp.html#SEC_About"> ? </A>]</TD>
+</TR></TABLE>
+<H1>About this document</H1>
+This document was generated by <I>Sam Steingold</I> on <I>September, 3  2003</I>
+using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
+"><I>texi2html</I></A>
+<P></P>  
+The buttons in the navigation panels have the following meaning:
+<P></P>
+<table border = "1">
+<TR>
+<TH> Button </TH>
+<TH> Name </TH>
+<TH> Go to </TH>
+<TH> From 1.2.3 go to</TH>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [ &lt; ] </TD>
+<TD ALIGN="CENTER">
+Back
+</TD>
+<TD>
+previous section in reading order
+</TD>
+<TD>
+1.2.2
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [ &gt; ] </TD>
+<TD ALIGN="CENTER">
+Forward
+</TD>
+<TD>
+next section in reading order
+</TD>
+<TD>
+1.2.4
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [ &lt;&lt; ] </TD>
+<TD ALIGN="CENTER">
+FastBack
+</TD>
+<TD>
+previous or up-and-previous section 
+</TD>
+<TD>
+1.1
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [ Up ] </TD>
+<TD ALIGN="CENTER">
+Up
+</TD>
+<TD>
+up section
+</TD>
+<TD>
+1.2
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [ &gt;&gt; ] </TD>
+<TD ALIGN="CENTER">
+FastForward
+</TD>
+<TD>
+next or up-and-next section
+</TD>
+<TD>
+1.3
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [Top] </TD>
+<TD ALIGN="CENTER">
+Top
+</TD>
+<TD>
+cover (top) of document
+</TD>
+<TD>
+ &nbsp; 
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [Contents] </TD>
+<TD ALIGN="CENTER">
+Contents
+</TD>
+<TD>
+table of contents
+</TD>
+<TD>
+ &nbsp; 
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [Index] </TD>
+<TD ALIGN="CENTER">
+Index
+</TD>
+<TD>
+concept index
+</TD>
+<TD>
+ &nbsp; 
+</TD>
+</TR>
+<TR>
+<TD ALIGN="CENTER">
+ [ ? ] </TD>
+<TD ALIGN="CENTER">
+About
+</TD>
+<TD>
+this page
+</TD>
+<TD>
+ &nbsp; 
+</TD>
+</TR>
+</TABLE>
+<P></P>
+where the <STRONG> Example </STRONG> assumes that the current position 
+is at <STRONG> Subsubsection One-Two-Three </STRONG> of a document of 
+the following structure:
+<UL>
+<LI> 1. Section One  </LI>
+<UL>
+<LI>1.1 Subsection One-One</LI>
+<UL>
+<LI> ... </LI>
+</UL>
+<LI>1.2 Subsection One-Two</LI>
+<UL>
+<LI>1.2.1 Subsubsection One-Two-One
+</LI><LI>1.2.2 Subsubsection One-Two-Two
+</LI><LI>1.2.3 Subsubsection One-Two-Three &nbsp; &nbsp; <STRONG>
+&lt;== Current Position </STRONG>
+</LI><LI>1.2.4 Subsubsection One-Two-Four
+</LI></UL>
+<LI>1.3 Subsection One-Three</LI>
+<UL>
+<LI> ... </LI>
+</UL>
+<LI>1.4 Subsection One-Four</LI>
+</UL>
+</UL>
+
+<HR SIZE=1>
+<BR>  
+<FONT SIZE="-1">
+This document was generated
+by <I>Sam Steingold</I> on <I>September, 3  2003</I>
+using <A HREF="http://www.mathematik.uni-kl.de/~obachman/Texi2html
+"><I>texi2html</I></A>
+
+</BODY>
+</HTML>

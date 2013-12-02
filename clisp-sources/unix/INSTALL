@@ -1,0 +1,236 @@
+Installation on Unix:
+---------------------
+
+This file describes the standard installation procedure.
+Please do read this entire file before starting
+- or, if you are impatient, start with step 12.
+Special hints for some platforms can be found in file unix/PLATFORMS.
+
+1. (Optional)
+   Choose which C compiler to use for building CLISP.
+   This is normally not necessary; if GNU C is available under the
+   name "gcc", it will be used.
+
+   For example, if you were wanting to use gcc with full warnings, then
+   type, if you are using csh:
+
+         setenv CC "gcc -Wall"
+
+   or if you are using bash or ksh:
+
+         export CC="gcc -Wall"
+
+   or if you are using sh:
+
+         CC="gcc -Wall"
+         export CC
+
+2. (Recommended)
+   Install a few libraries on which CLISP relies:
+   * GNU libsigsegv
+      + Highly recommended: needed for generational garbage collection
+        and for stack overflow detection in interpreted Lisp code.
+      <ftp://ftp.gnu.org/pub/gnu/libsigsegv/>
+      <http://sourceforge.net/projects/libsigsegv/>
+   * GNU libiconv
+      + Not needed on systems with glibc 2.2 or newer, or MacOS X 10.3 or
+        newer, but recommended on all other systems.
+      <ftp://ftp.gnu.org/pub/gnu/libiconv/>
+      <http://sourceforge.net/projects/libiconv/>
+   * GNU readline
+      + Recommended: needed if you want terminal command line editing.
+      <ftp://ftp.gnu.org/pub/gnu/readline/>
+      <http://cnswww.cns.cwru.edu/~chet/readline/rltop.html>
+      Note that readline-5.0 is broken; if you want to use it, you need
+      the patches named bash30-002, bash30-005, bash30-006, bash30-009,
+      bash30-011, available from <ftp://ftp.gnu.org/pub/gnu/bash/>.
+   * GNU gettext
+      + Not needed on systems with glibc 2.2 or newer, but recommended on all
+        other systems: needed if you want clisp with native language support.
+      <ftp://ftp.gnu.org/pub/gnu/gettext/>
+      <http://www.gnu.org/software/gettext/>
+
+   When you install your libraries in a non-standard location, you will
+   need to tell the location to the top-level configure, e.g.:
+   ./configure --with-libreadline-prefix=/sw               \
+               --with-libsigsegv-prefix=/usr/local         \
+               --with-libiconv-prefix=/home/user/my/prefix \
+               --build my-build-directory
+
+3. Choose the name of a directory in which to build CLISP.
+   (This allows you to build CLISP with different compilers on the same
+   machine or for different architectures in the same filesystem, sharing
+   the same source.)
+   For example, depending on the chosen compiler, let's use build-with-gcc.
+   Then execute
+
+         ./configure build-with-gcc
+
+   This will prepare a directory build-with-gcc/ and figure out many
+   system and compiler dependent parameters needed by CLISP.
+
+   (Note: Some `make's - for example the HP-UX make - have problems
+   with symbolic links. You may avoid these by calling
+
+         ./configure
+
+   without argument. Then CLISP will be built in the src/ directory
+   itself.)
+
+   Note that the argument to configure can be an absolute pathname.
+   For example, the following command will also work.
+
+         ./configure /tmp/with-gcc-wall
+
+4. The previous step printed a recommendation how to continue. Follow
+   the recommendation: Go to this directory
+
+         cd with-gcc-wall
+
+   and build the makefile that controls compilation:
+
+         ./makemake > Makefile
+
+   If you wish to compile the sources so that you can debug them,
+   then type instead:
+
+         ./makemake debug > Makefile
+
+   The makemake command also accepts a couple of --with-PACKAGE options.
+   To get a list of the supported options, try
+
+         ./makemake --help
+
+5. If you wish to build CLISP with add-on modules, edit Makefile and change
+   the line defining the MODULES variable.
+   The list of modules included with the distribution is available via
+         ./configure --list-modules
+
+6. Type
+
+         make config.lisp
+
+   and edit the contents of config.lisp appropriately for your site,
+   especially the definitions of short-site-name and long-site-name.
+
+   If you have unpacked some add-on modules (see the main INSTALL file for
+   a list), you may choose to build clisp with them. Just add the module
+   directories to the line defining MODULES in the makefile.
+
+   For platform specific adjustment of the makefile, take a look at the
+   PLATFORMS file.
+
+7. Type
+
+         make
+
+   to build CLISP.
+   If you are an expert in building CLISP, you may alternatively do this
+   in eight steps:
+         make init                prepares all symbolic links and utilities
+         make allc                makes all *.c files
+         make lisp.run            makes the executable
+         make interpreted.mem     a memory image with everything uncompiled
+         make halfcompiled.mem    a memory image with compiler.fas and
+                                  the rest uncompiled
+         make lispinit.mem        makes all *.fas files and
+                                  a memory image with everything compiled
+         make manual              makes the documentation
+         make modular             makes the base module set (only needed
+                                  if --with-dynamic-ffi was specified)
+
+   If something goes wrong, check and optionally modify the contents of
+   the file unixconf.h and retry this step. Yes, there are many warnings,
+   we know. Most of them are harmless.
+
+   If you need to switch to a different compiler, execute a
+         make distclean
+         cd ..
+   and go back to step 1.
+
+8. (Optionally)
+   Three more tests for CLISP. Let the compiler (now compiled!) recompile
+   itself:
+
+         make check-recompile
+
+   Check whether CLISP passes the XCL/CLISP test suite:
+
+         make check-tests
+
+   Check whether CLISP passes the Minejima/SACLA test suite:
+
+         make check-sacla-tests
+
+   Check whether CLISP passes the Dietz/GCL test suite:
+
+         make check-ansi-tests
+
+   Or run all four tests with one shot:
+
+         make check
+
+   If you build with some modules, you can test those of them that come
+   with a test suite with:
+
+         make mod-check
+
+   Note that the modules may use external libraries, and test failures
+   may indicate bugs in those libraries rather than in CLISP.
+   See the specific test suite for detail.
+
+9. Edit the `prefix' variable in the makefile (you could also have specified
+   it as command line option --prefix=... to `configure' in step 3), then type
+
+         make install
+
+   If `prefix' is /usr/local, then this will install the CLISP binaries
+   into /usr/local/bin and /usr/local/lib (creating a directory
+   /usr/local/lib/clisp) and the manual page into /usr/local/man/man1.
+   You may need superuser privileges for this step when installing into
+   public directories.
+   If you built with modules (e.g., ./configure --with-module=rawsock)
+   there will be two "linking sets" in /usr/local/lib/clisp/ - "base"
+   and "full" (see <http://clisp.cons.org/impnotes.html#modules>).
+   You can chose which linking set to run by using "-K" option of clisp
+   (see <http://clisp.cons.org/clisp.html#opt-link-set>)
+   Note that some modules (i18n, regexp and syscalls at this time)
+   are included in the "base" linking set by default,
+   see BASE_MODULES in build-dir/Makefile.
+
+10. If you want other people to benefit from your work, you can make a binary
+   distribution of CLISP for your platform which we will distribute.
+   To do this, make sure you have executed step 7 above,
+   adjust the definition of ROFF_MAN in the makefile,
+   then type
+
+         make distrib
+
+   to create a binary distribution in a clisp-*.tar.gz file.
+   Tell us about your success, and make that file available to us.
+
+   If you want to distribute the binaries, recall that you have to accompany
+   them with full source; see the files COPYING and GNU-GPL.
+
+11. The last thing to do:
+
+         cd ..
+
+12. If you are lazy and have too few spare neurons to remember this long
+    process, just use the shortcut, like I do:
+
+         ./configure --with-module=rawsock --build build-dir
+
+    this covers the build process through step 8 (except mod-check).
+    You will need to become root to do the install.
+
+
+Authors:
+--------
+
+        Bruno Haible
+        Michael Stoll
+        Sam Steingold
+
+Email: clisp-list@lists.sourceforge.net
+

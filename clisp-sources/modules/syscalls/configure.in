@@ -1,0 +1,74 @@
+dnl AUTOCONF configuration for syscalls
+dnl Copyright (C) 2003-2005  Sam Steingold <sds@gnu.org>
+dnl GNU GPL2
+
+AC_PREREQ(2.57)
+AC_INIT(syscalls, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(posix.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([ * System Calls (Tools)])
+AC_PROG_CC
+AC_PROG_CPP
+
+AC_MSG_NOTICE([ * System Calls (Headers)])
+AC_HEADER_STDC
+AC_HEADER_TIME
+CL_UTSNAME
+AC_CHECK_HEADERS(errno.h fcntl.h netdb.h sys/resource.h utime.h wchar.h dnl
+pwd.h sys/time.h sys/unistd.h time.h unistd.h syslog.h signal.h dnl
+grp.h crypt.h utmpx.h stdlib.h shlobj.h netinet/in.h arpa/inet.h)
+if test "$ac_cv_header_shlobj_h" = yes ; then
+   LIBS=${LIBS}' -luser32 -lole32 -loleaut32 -luuid';
+fi
+AC_CHECK_SIZEOF(off_t)
+AC_CHECK_SIZEOF(gid_t)
+AC_CHECK_SIZEOF(uid_t)
+if test "$ac_cv_header_utmpx_h" = "yes"; then
+ AC_CHECK_MEMBERS([struct utmpx.ut_host],,,[#include <utmpx.h>])
+fi
+CL_STAT
+
+AC_MSG_NOTICE([ * System Calls (Functions)])
+CL_RLIMIT
+CL_SOCKET dnl for getservbyport et al
+AC_CHECK_FUNCS(clock confstr fcntl gethostent sysconf uname dnl
+getlogin getpwent getpwnam getpwuid endpwent setpwent dnl
+getservbyport getservbyname getservent setservent endservent dnl
+openlog setlogmask syslog closelog strftime strptime mktime dnl
+getpgid setpgrp getsid setpgid setsid kill dnl
+getgrgid getgrnam getgrent endgrent setgrent dnl
+endutxent getutxent getutxid getutxline pututxline setutxent dnl
+mkfifo mkdir creat mkstemp tempnam mkdtemp dnl
+getegid geteuid getgid getuid setegid seteuid setgid setuid dnl
+fchmod fchown fstat link stat symlink utime mknod chmod umask fsync sync)
+AC_FUNC_CHOWN
+AC_SEARCH_LIBS(erf, m)
+AC_CHECK_FUNCS(erf erfc lgamma fstatvfs statvfs getpriority setpriority)
+AC_CHECK_DECLS(lgamma_r,,,[#include <math.h>])
+AC_CHECK_DECLS(signgam,,,[#include <math.h>])
+AC_SEARCH_LIBS(crypt, crypt)
+AC_CHECK_FUNCS(crypt encrypt setkey GlobalMemoryStatusEx)
+CL_LSTAT
+CL_RUSAGE
+if test "$ac_cv_func_setpgrp" = "yes"; then
+dnl BSD versions of setpgrp() are identical to setpgid()
+AC_CACHE_CHECK([whether setpgrp() is POSIX],ac_cv_func_setpgrp_posix,[
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#include <sys/types.h>
+],[[pid_t pid = setpgrp();]])],
+ac_cv_func_setpgrp_posix=yes,ac_cv_func_setpgrp_posix=no)])
+if test "$ac_cv_func_setpgrp_posix" = "yes"; then
+AC_DEFINE(HAVE_SETPGRP_POSIX,1,
+[Define to 1 if setpgrp() does not accept arguments])
+fi
+fi
+
+AC_MSG_NOTICE([ * System Calls (output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([ * System Calls (done)])

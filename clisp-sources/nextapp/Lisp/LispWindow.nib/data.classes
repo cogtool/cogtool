@@ -1,0 +1,53 @@
+LispServer = {
+    ACTIONS = {
+	setCoordinator:;
+	notifyLisp:;
+	windowDidResize:;
+	userBreak:;
+	windowWillMiniaturize:;
+	windowDidBecomeMain:;
+	killLisp:;
+	windowWillClose:;
+	windowDidResignMain:;
+    };
+    OUTLETS = {
+	commandScroll;
+	coordinator;
+	lispText;
+	statusText;
+	stopButton;
+    };
+    SUPERCLASS = Object;
+};
+FirstResponder = {
+    ACTIONS = {
+    };
+    SUPERCLASS = Object;
+};
+LispText = {
+    ACTIONS = {
+	setEnteredColor:;
+	cancelCompletion:;
+	doNothing:;
+	setMachineColor:;
+	setUserColor:;
+	completionSelected:;
+	setHighlightColor:;
+    };
+    OUTLETS = {
+	completionBrowser;
+	server;
+	completionPanel;
+    };
+    SUPERCLASS = Text;
+};
+CommandScroll = {
+    ACTIONS = {
+	userBreak:;
+    };
+    OUTLETS = {
+	delegate;
+	docView;
+    };
+    SUPERCLASS = ScrollView;
+};

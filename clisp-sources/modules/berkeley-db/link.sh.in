@@ -1,0 +1,9 @@
+NEW_MODULES='bdb'
+make clisp-module \
+     CC="${CC}" CPPFLAGS="${CPPFLAGS}" CFLAGS="${CFLAGS}" \
+     INCLUDES="$absolute_linkkitdir"
+NEW_FILES=''
+for f in ${NEW_MODULES}; do NEW_FILES=${NEW_FILES}" ${f}.o"; done
+NEW_LIBS="${NEW_FILES} @LIBS@"
+TO_LOAD='dbi'
+TO_PRELOAD="preload.lisp"

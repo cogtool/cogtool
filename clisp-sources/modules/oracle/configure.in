@@ -1,0 +1,32 @@
+#
+# configure.ac - Input to autoconf for Oracle module
+#
+# This was originally created with autoscan
+#
+# $Id: configure.in,v 1.2 2005/08/04 22:02:38 sds Exp $
+#
+
+# Process this file with autoconf to produce a configure script.
+AC_INIT(oracle-clisp, 0.1, hin@alma.com)
+AC_CONFIG_SRCDIR(oracle.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+
+# Checks for libraries.
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stdlib.h string.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_CHECK_FUNCS([strdup])
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

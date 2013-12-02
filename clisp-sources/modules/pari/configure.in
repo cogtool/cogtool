@@ -1,0 +1,36 @@
+dnl AUTOCONF configuration for PARI
+dnl Copyright (C) 2004-2005 Sam Steingold <sds@gnu.org>
+dnl GNU GPL2
+
+AC_PREREQ(2.57)
+AC_INIT(pari, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(pari.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([* PARI (Tools)])
+AC_PROG_CC
+AC_PROG_CPP
+AC_HEADER_STDC
+
+dnl Search for libpari and define LIBPARI, LTLIBPARI and INCPARI.
+AC_CONFIG_AUX_DIR(../../src/build-aux)
+AC_LIB_LINKFLAGS([pari])
+
+AC_MSG_NOTICE([* PARI (Headers)])
+AC_CHECK_HEADERS(pari/pari.h, break)
+if test "$ac_cv_header_pari_pari_h" = "no";
+then AC_MSG_ERROR([cannot find PARI headers])
+fi
+
+AC_MSG_NOTICE([ * PARI (Functions)])
+AC_LIB_APPENDTOVAR([LIBS], [$LTLIBPARI])
+AC_SEARCH_LIBS(pari_kernel_init)
+if test "$ac_cv_search_pari_kernel_init" = "no";
+then AC_MSG_ERROR([cannot find PARI library])
+fi
+
+AC_MSG_NOTICE([* PARI (Output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([* PARI (Done)])

@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="berkeley-db"><title>Berkeley DB access</title>
+
+<para>This interface to <ulink role="bdb" url="index.html">Berkeley DB
+  from Sleepycat Software</ulink> exports most
+ functions in the official &c-lang; API.
+ Supported versions:<simplelist type="horiz" columns="1">
+  <member><ulink role="bdb" url="ref/upgrade.4.2/toc.html">4.2</ulink></member>
+  <member><ulink role="bdb" url="ref/upgrade.4.3/toc.html">4.3</ulink></member>
+  <member><ulink role="bdb" url="ref/upgrade.4.4/toc.html">4.4</ulink></member>
+</simplelist></para>
+
+<simpara>When this module is present, &features-var; contains the
+ symbol <constant>:BERKELEY-DB</constant>.</simpara>
+
+<simpara>See <filename role="clisp-cvs">modules/berkeley-db/test.tst</filename>
+ for sample usage.</simpara>
+
+<section id="bdb-objects"><title>Berkeley-DB Objects</title>
+
+<para>Thie module exports the following opaque &structure-object-t; types:
+ <variablelist>
+ <varlistentry><term><type>BDB:DBE</type></term>
+  <listitem><simpara>environment handle</simpara></listitem></varlistentry>
+ <varlistentry><term><type>BDB:DB</type></term>
+  <listitem><simpara>database handle</simpara></listitem></varlistentry>
+ <varlistentry><term><type>BDB:DBC</type></term>
+  <listitem><simpara>cursor handle</simpara></listitem></varlistentry>
+ <varlistentry><term><type>BDB:TXN</type></term>
+  <listitem><simpara>transaction handle</simpara></listitem></varlistentry>
+ <varlistentry><term><type>BDB:LOGC</type></term>
+  <listitem><simpara>log cursor handle</simpara></listitem></varlistentry>
+ <varlistentry><term><type>BDB:MPOOLFILE</type></term>
+  <listitem><simpara>memory pool file handle</simpara></listitem></varlistentry>
+ <varlistentry><term><type>BDB:DBLOCK</type></term>
+  <listitem><simpara>lock handle</simpara></listitem></varlistentry>
+</variablelist>
+ They contain the internal handle (a &foreign-pointer-t;), the &list-t;
+ of parents, and the &list-t; of dependents.</para></section>
+
+
+<section id="bdb-close"><title>Closing handles</title>
+
+<para>&close; will close (or commit, in the case of a
+ <link linkend="bdb-transaction">transaction</link>, or
+ put, in the case of a <link linkend="bdb-lock">lock</link>)
+ the Berkeley-DB handle objects.  &gc;or will also call &close;.
+ Closing an object will &close; all its dependents and remove the object
+ itself from the dependents lists of its parents (but see
+ <link linkend="bdb-lock"><function>BDB:LOCK-CLOSE</function></link>).</para>
+</section>
+
+
+<section id="bdb-db-environment"><title>Database Environment</title>
+
+<variablelist>
+ <varlistentry><term><code>(BDB:DB-VERSION &optional-amp;
+    subsystems-too)</code></term>
+  <listitem><para>Return version information as multiple values:<orderedlist>
+     <listitem><simpara>descriptive &string-t;
+       (from <function role="bdb">db_version</function>)</simpara></listitem>
+     <listitem><simpara>major version number (&fixnum-t;)</simpara></listitem>
+     <listitem><simpara>minor version number (&fixnum-t;)</simpara></listitem>
+     <listitem><simpara>patch number (&fixnum-t;)</simpara></listitem>
+    </orderedlist>When the optional argument is non-&nil;, returns the
+    &alist; of the subsystem versions as the 5th value.
+ </para></listitem></varlistentry>
+ <varlistentry id="dbe-create"><term><code>(BDB:DBE-CREATE &key-amp;
+    PASSWORD ENCRYPT HOST CLIENT-TIMEOUT SERVER-TIMEOUT)</code></term>
+  <listitem><simpara>Create an environment handle
+    (<function role="bdb">db_env_create</function>),
+    possibly connecting to a remote host
+    (<function role="bdb">DB_ENV-&gt;set_rpc_server</function>)
+    and possibly using encryption with password
+    (<function role="bdb">DB_ENV-&gt;set_encrypt</function>).
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(BDB:DBE-CLOSE dbe)</code></term>
+  <listitem><simpara>Close an environment
+    (<function role="bdb">DB_ENV-&gt;close</function>).
+    You can also call &close;.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(BDB:DBE-MESSAGES dbe)</code></term>
+  <listitem><simpara>Return the verbose messages accumulated so far
+    (requires Berkeley-DB 4.3 or better).</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(BDB:DBREMOVE dbe file
+    database &key-amp; TRANSACTION AUTO-COMMIT)</code></term>
+  <listitem><simpara>Remove a database
+    (<function role="bdb">DB_ENV-&gt;dbremove</function>).
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(BDB:DBREMOVE dbe file
+    database newname &key-amp; TRANSACTION AUTO-COMMIT)</code></term>
+  <listitem><simpara>Rename a database
+    (<function role="bdb">DB_ENV-&gt;dbrename</function>).
+ </simpara></listitem></varlistentry>
+ <varlistentry id="dbe-open"><term><code>(BDB:DBE-OPEN dbe &key-amp;
+    FLAGS HOME JOIN INIT-CDB INIT-LOCK INIT-LOG INIT-MPOOL INIT-TXN
+    RECOVER RECOVER-FATAL USE-ENVIRON USE-ENVIRON-ROOT CREATE
+    LOCKDOWN PRIVATE SYSTEM-MEM THREAD MODE)</code></term>
+  <listitem><simpara>Open an environment
+    (<function role="bdb">DB_ENV-&gt;open</function>).
+    <constant>:FLAGS</constant> may be the value of a previous call
+    to <code>(&dbe-get-options; dbe :OPEN)</code>.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(BDB:DBE-REMOVE dbe &key-amp;
+    HOME FORCE USE-ENVIRON USE-ENVIRON-ROOT)</code></term>
+  <listitem><simpara>Destroy an environment
+    (<function role="bdb">DB_ENV-&gt;remove</function>).
+ </simpara></listitem></varlistentry>
+ <varlistentry id="with-dbe"><term><code>(BDB:WITH-DBE (var &key-amp;
+    &create-r; &options-r;) &body-amp; body)</code></term>
+  <listitem><simpara>Create an environment, execute &body-r;, close it.
+    &create-r; is a list of options to be passed to &dbe-create;,
+    &options-r; is a list of options to be passed to &dbe-set-options;.
+ </simpara></listitem></varlistentry>
+</variablelist>
+</section>
+
+
+<section id="bdb-environment-config"><title>Environment Configuration</title>
+
+<variablelist>
+<varlistentry id="dbe-set-options"><term><code>(BDB:DBE-SET-OPTIONS dbe
+   &key-amp; MSGFILE ERRFILE ERRPFX PASSWORD ENCRYPT LOCK-TIMEOUT TXN-TIMEOUT
+   SHM-KEY TAS-SPINS TX-TIMESTAMP TX-MAX DATA-DIR TMP-DIR LG-BSIZE LG-DIR
+   LG-MAX LG-REGIONMAX LK-CONFLICTS LK-DETECT LK-MAX-LOCKERS LK-MAX-LOCKS
+   LK-MAX-OBJECTS AUTO-COMMIT CDB-ALLDB DIRECT-DB DSYNC-LOG LOG-AUTOREMOVE
+   LOG-INMEMORY DIRECT-LOG NOLOCKING NOMMAP NOPANIC OVERWRITE PANIC-ENVIRONMENT
+   REGION-INIT TXN-NOSYNC TXN-WRITE-NOSYNC YIELDCPU VERB-CHKPOINT VERB-DEADLOCK
+   VERB-RECOVERY VERB-REPLICATION VERB-WAITSFOR VERBOSE)</code></term>
+ <listitem><para>Set some environment options using <simplelist columns="3">
+    <member><function role="bdb">DB_ENV-&gt;set_flags</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_verbose</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_tmp_dir</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_data_dir</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_tx_max</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_tx_timestamp</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_tas_spins</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_shm_key</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_timeout</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_encrypt</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_errfile</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_msgfile</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_errpfx</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lg_bsize</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lg_dir</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lg_max</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lg_regionmax</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lk_conflicts</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lk_detect</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lk_max_lockers</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lk_max_locks</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_lk_max_objects</function></member>
+</simplelist></para></listitem></varlistentry>
+<varlistentry id="dbe-get-options"><term><code>(BDB:DBE-GET-OPTIONS dbe
+   &optional-amp; &what-r;)</code></term>
+ <listitem><para>Retrieve some environment options.
+   <variablelist><title>Values of &what-r;</title>
+    <varlistentry><term>missing</term><term>&nil;</term>
+     <listitem><simpara>all options as a &list-t;
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:TX-TIMESTAMP</constant></term>
+     <listitem><simpara>Recover to the time specified by timestamp
+       rather than to the most current possible date
+       (<function role="bdb">DB_ENV-&gt;get_tx_timestamp</function>)
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:TX-MAX</constant></term>
+     <listitem><simpara>the number of active transactions
+       (<function role="bdb">DB_ENV-&gt;set_tx_max</function>)
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:DATA-DIR</constant></term>
+     <listitem><simpara>list of data directories
+       (<function role="bdb">DB_ENV-&gt;get_data_dir</function>)
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:TMP-DIR</constant></term>
+     <listitem><simpara>temporary directory
+       (<function role="bdb">DB_ENV-&gt;get_tmp_dir</function>).
+       May be &nil;.</simpara></listitem></varlistentry>
+    <varlistentry><term>&verbose-k;</term>
+     <listitem><simpara>the &list-t; of verbosity settings
+       (<function role="bdb">DB_ENV-&gt;get_verbose</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:AUTO-COMMIT</constant></term>
+     <term><constant>:CDB-ALLDB</constant></term>
+     <term><constant>:DIRECT-DB</constant></term>
+     <term><constant>:DSYNC-LOG</constant></term>
+     <term><constant>:LOG-AUTOREMOVE</constant></term>
+     <term><constant>:LOG-INMEMORY</constant></term>
+     <term><constant>:DIRECT-LOG</constant></term>
+     <term><constant>:NOLOCKING</constant></term>
+     <term><constant>:NOMMAP</constant></term>
+     <term><constant>:NOPANIC</constant></term>
+     <term><constant>:OVERWRITE</constant></term>
+     <term><constant>:PANIC-ENVIRONMENT</constant></term>
+     <term><constant>:REGION-INIT</constant></term>
+     <term><constant>:TXN-NOSYNC</constant></term>
+     <term><constant>:TXN-WRITE-NOSYNC</constant></term>
+     <term><constant>:YIELDCPU</constant></term>
+     <term><constant>:VERB-CHKPOINT</constant></term>
+     <term><constant>:VERB-DEADLOCK</constant></term>
+     <term><constant>:VERB-RECOVERY</constant></term>
+     <term><constant>:VERB-REPLICATION</constant></term>
+     <term><constant>:VERB-WAITSFOR</constant></term>
+     <listitem><simpara>a &boolean-t; indicator of whether this
+       option is set or not
+       (<function role="bdb">DB_ENV-&gt;get_verbose</function> and
+       <function role="bdb">DB_ENV-&gt;get_flags</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LG-BSIZE</constant></term>
+     <listitem><simpara>log buffer size
+       (<function role="bdb">DB_ENV-&gt;get_lg_bsize</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LG-DIR</constant></term>
+     <listitem><simpara>logging directory
+       (<function role="bdb">DB_ENV-&gt;get_lg_dir</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LG-MAX</constant></term>
+     <listitem><simpara>log file size
+       (<function role="bdb">DB_ENV-&gt;get_lg_max</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LG-REGIONMAX</constant></term>
+     <listitem><simpara>logging region size
+       (<function role="bdb">DB_ENV-&gt;get_lg_regionmax</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LK-CONFLICTS</constant></term>
+     <listitem><simpara>lock conflicts matrix
+       (<function role="bdb">DB_ENV-&gt;get_lk_conflicts</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LK-DETECT</constant></term>
+     <listitem><simpara>automatic deadlock detection
+       (<function role="bdb">DB_ENV-&gt;get_lk_detect</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LK-MAX-LOCKERS</constant></term>
+     <listitem><simpara>maximum number of lockers
+       (<function role="bdb">DB_ENV-&gt;get_lk_max_lockers</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LK-MAX-LOCKS</constant></term>
+     <listitem><simpara>maximum number of locks
+       (<function role="bdb">DB_ENV-&gt;get_lk_max_locks</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LK-MAX-OBJECTS</constant></term>
+     <listitem><simpara>maximum number of lock objects
+       (<function role="bdb">DB_ENV-&gt;get_lk_max_objects</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:TAS-SPINS</constant></term>
+     <listitem><simpara>the number of test-and-set spins
+       (<function role="bdb">DB_ENV-&gt;get_tas_spins</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:SHM-KEY</constant></term>
+     <listitem><simpara>base segment ID for shared memory regions
+       (<function role="bdb">DB_ENV-&gt;get_shm_key</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LOCK-TIMEOUT</constant></term>
+     <term><constant>:TXN-TIMEOUT</constant></term>
+     <listitem><simpara>timeout values for locks or transactions in the
+       database environment
+       (<function role="bdb">DB_ENV-&gt;get_timeout</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:ENCRYPT</constant></term>
+     <listitem><simpara>encryption flags
+       (<function role="bdb">DB_ENV-&gt;get_encrypt_flags</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:ERRFILE</constant></term>
+     <listitem><simpara>&file-des; or &nil;
+       (<function role="bdb">DB_ENV-&gt;get_errfile</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:MSGFILE</constant></term>
+     <listitem><simpara>&file-des; or &nil;
+       (<function role="bdb">DB_ENV-&gt;get_msgfile</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:ERRPFX</constant></term>
+     <listitem><simpara>&string-t; or &nil;
+       (<function role="bdb">DB_ENV-&gt;get_errpfx</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:DB-XIDDATASIZE</constant></term>
+     <listitem><simpara>the &length; of the globally unique
+       &ubyte-vec; which must be passed to
+       <function role="bdb">DB_TXN-&gt;prepare</function>.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:HOME</constant></term>
+     <listitem><simpara>the home directory when open
+       (<function role="bdb">DB_ENV-&gt;get_home</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:OPEN</constant></term>
+     <listitem><simpara>the &list-t; of flags passed to &dbe-open;
+       (<function role="bdb">DB_ENV-&gt;get_open_flags</function>).
+    </simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+</variablelist></section>
+
+
+<section id="bdb-operations"><title>Database Operations</title>
+<!--
+ DB->associate	Associate a secondary index
+ DB->err	Error message with error string
+ DB->errx	Error message
+ -->
+<variablelist>
+<varlistentry id="db-create"><term><code>(BDB:DB-CREATE dbe &key-amp;
+   XA)</code></term>
+ <listitem><simpara>Create a database handle
+   (<function role="bdb">db_create</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-CLOSE db &key-amp; NOSYNC)</code></term>
+ <listitem><simpara>Close a database
+   (<function role="bdb">DB-&gt;close</function>).
+   You can also call &close;.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-DEL dbe key &key-amp;
+   TRANSACTION AUTO-COMMIT)</code></term>
+ <listitem><simpara>Delete items from a database
+   (<function role="bdb">DB-&gt;del</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-FD db)</code></term>
+ <listitem><simpara>Return a file descriptor from a database
+   (<function role="bdb">DB-&gt;fd</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-GET db key &key-amp; ACTION AUTO-COMMIT
+   DEGREE-2 DIRTY-READ MULTIPLE RMW TRANSACTION (ERROR &t;))</code></term>
+ <listitem><para>Get items from a database
+   (<function role="bdb">DB-&gt;get</function>).
+   If &error-k; is &nil; and the record is not found, no &err-sig;,
+   instead <constant>:NOTFOUND</constant> is returned.
+   <constant>:ACTION</constant> should be one of
+   <simplelist columns="2"><member><constant>:CONSUME</constant></member>
+    <member><constant>:CONSUME-WAIT</constant></member>
+    <member><constant>:GET-BOTH</constant></member>
+    <member><constant>:SET-RECNO</constant></member></simplelist>
+</para></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-PUT db key val
+   &key-amp; AUTO-COMMIT ACTION TRANSACTION)</code></term>
+<listitem><para>Store items into a database
+  (<function role="bdb">DB-&gt;put</function>).
+  <constant>:ACTION</constant> should be one of
+  <simplelist columns="3"><member><constant>:APPEND</constant></member>
+   <member><constant>:NODUPDATA</constant></member>
+   <member><constant>:NOOVERWRITE</constant></member></simplelist>
+</para></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-STAT db &key-amp; FAST-STAT
+   TRANSACTION)</code></term>
+ <listitem><simpara>Return database statistics
+   (<function role="bdb">DB-&gt;get_byteswapped</function>,
+   <function role="bdb">DB-&gt;get_type</function>,
+   <function role="bdb">DB-&gt;stat</function>).
+</simpara></listitem></varlistentry>
+<varlistentry id="db-open"><term><code>(BDB:DB-OPEN db file &key-amp;
+   DATABASE TYPE MODE FLAGS CREATE DIRTY-READ EXCL NOMMAP RDONLY
+   THREAD TRUNCATE AUTO-COMMIT TRANSACTION)</code></term>
+ <listitem><para>Open a database (<function role="bdb">DB-&gt;open</function>).
+   <constant>:TYPE</constant> should be one of
+   <simplelist columns="2"><member><constant>:BTREE</constant></member>
+    <member><constant>:HASH</constant></member>
+    <member><constant>:QUEUE</constant></member>
+    <member><constant>:RECNO</constant></member>
+    <member><constant>:UNKNOWN</constant> (default)</member></simplelist>
+   <constant>:FLAGS</constant> may be the value of a previous call
+   to <code>(&db-get-options; db :OPEN)</code>
+</para></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-SYNC db)</code></term>
+ <listitem><simpara>Flush a database to stable storage
+   (<function role="bdb">DB-&gt;sync</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-TRUNCATE db &key-amp;
+   TRANSACTION AUTO-COMMIT)</code></term>
+ <listitem><simpara>Empty a database
+   (<function role="bdb">DB-&gt;truncate</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-UPGRADE db file
+   &key-amp; DUPSORT)</code></term>
+ <listitem><simpara>Upgrade a database
+   (<function role="bdb">DB-&gt;upgrade</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-RENAME db file database newname)</code></term>
+ <listitem><simpara>Rename a database
+   (<function role="bdb">DB-&gt;rename</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-REMOVE db file database)</code></term>
+ <listitem><simpara>Remove a database
+   (<function role="bdb">DB-&gt;remove</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-JOIN db cursor-sequence
+   &key-amp; JOIN-NOSORT)</code></term>
+ <listitem><simpara>Create a specialized join cursor for use in
+   performing equality or natural joins on secondary indices
+   (<function role="bdb">DB-&gt;join</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-KEY-RANGE db key
+   &key-amp; TRANSACTION)</code></term>
+ <listitem><simpara>return an estimate of the proportion of keys that
+   are less than, equal to, and greater than the specified key
+   (<function role="bdb">DB-&gt;key_range</function>).
+   The underlying database must be of type Btree.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DB-VERIFY db file &key-amp;
+   DATABASE SALVAGE AGGRESSIVE PRINTABLE NOORDERCHK)</code></term>
+ <listitem><simpara>Verify/salvage a database
+   (<function role="bdb">DB-&gt;verify</function>).
+   <constant>:SALVAGE</constant>, if supplied, should be the output
+   file name.  <constant>:DATABASE</constant>, if supplied,
+   will force <constant>DB_ORDERCHKONLY</constant>.
+</simpara></listitem></varlistentry>
+<varlistentry id="with-db"><term><code>(BDB:WITH-DB (var dbe file
+   &key-amp; &create-r; &options-r; &open-r;) &body-amp; body)</code></term>
+ <listitem><simpara>Open the database, execute &body-r;, close it.
+   &create-r; is a list of options to be passed to &db-create;,
+   &options-r; is a list of options to be passed to &db-set-options;,
+   &open-r; is a list of options to be passed to &db-open;.
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+
+<section id="bdb-db-config"><title>Database Configuration</title>
+<!--
+ DB->set_alloc	Set local space allocation functions
+ DB->set_dup_compare	Set a duplicate comparison function
+ DB->set_errcall	Set error message callback
+ DB->set_errpfx	Set error message prefix
+ DB->set_feedback	Set feedback callback
+ DB->set_paniccall	Set panic callback
+ DB->set_append_recno	Set record append callback
+ DB->set_bt_compare	Set a Btree comparison function
+ DB->set_bt_prefix	Set a Btree prefix comparison function
+ DB->set_h_hash	Set a hashing function
+ -->
+<variablelist>
+<varlistentry id="db-set-options"><term><code>(BDB:DB-SET-OPTIONS db
+   &key-amp; ERRFILE MSGFILE ERRPFX PASSWORD ENCRYPTION NCACHE CACHESIZE CACHE
+   LORDER PAGESIZE BT-MINKEY H-FFACTOR H-NELEM Q-EXTENTSIZE
+   RE-DELIM RE-LEN RE-PAD RE-SOURCE
+   CHKSUM ENCRYPT TXN-NOT-DURABLE DUP DUPSORT INORDER RECNUM REVSPLITOFF
+   RENUMBER SNAPSHOT)</code></term>
+ <listitem><para>Set some database options using <simplelist columns="3">
+    <member><function role="bdb">DB_ENV-&gt;set_errfile</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_msgfile</function></member>
+    <member><function role="bdb">DB_ENV-&gt;set_errpfx</function></member>
+    <member><function role="bdb">DB-&gt;set_encrypt</function></member>
+    <member><function role="bdb">DB-&gt;set_cachesize</function></member>
+    <member><function role="bdb">DB-&gt;set_lorder</function></member>
+    <member><function role="bdb">DB-&gt;set_pagesize</function></member>
+    <member><function role="bdb">DB-&gt;set_bt_minkey</function></member>
+    <member><function role="bdb">DB-&gt;set_h_ffactor</function></member>
+    <member><function role="bdb">DB-&gt;set_h_nelem</function></member>
+    <member><function role="bdb">DB-&gt;set_q_extentsize</function></member>
+    <member><function role="bdb">DB-&gt;set_re_delim</function></member>
+    <member><function role="bdb">DB-&gt;set_re_len</function></member>
+    <member><function role="bdb">DB-&gt;set_re_pad</function></member>
+    <member><function role="bdb">DB-&gt;set_re_source</function></member>
+    <member><function role="bdb">DB-&gt;set_flags</function></member>
+   </simplelist></para></listitem></varlistentry>
+<varlistentry id="db-get-options"><term><code>(BDB:DB-GET-OPTIONS db
+   &optional-amp; &what-r;)</code></term>
+ <listitem><para>Retrieve some database options.
+   <variablelist><title>Values of &what-r;</title>
+    <varlistentry><term>missing</term><term>&nil;</term>
+     <listitem><simpara>all options as a &list-t;
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:FLAGS</constant></term>
+     <listitem><simpara>all flags
+       (<function role="bdb">DB_ENV-&gt;get_flags</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:CHKSUM</constant></term>
+     <term><constant>:ENCRYPT</constant></term>
+     <term><constant>:TXN-NOT-DURABLE</constant></term>
+     <term><constant>:DUP</constant></term>
+     <term><constant>:DUPSORT</constant></term>
+     <term><constant>:INORDER</constant></term>
+     <term><constant>:RECNUM</constant></term>
+     <term><constant>:REVSPLITOFF</constant></term>
+     <term><constant>:RENUMBER</constant></term>
+     <term><constant>:SNAPSHOT</constant></term>
+     <listitem><simpara>a &boolean-t; indicator of whether this
+       option is set or not
+       (<function role="bdb">DB_ENV-&gt;get_verbose</function> and
+       <function role="bdb">DB_ENV-&gt;get_flags</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:CACHE</constant></term>
+     <listitem><simpara>database cache information
+       (<function role="bdb">DB-&gt;get_cachesize</function>).
+    </simpara></listitem></varlistentry>
+   <varlistentry><term><constant>:ENCRYPTION</constant></term>
+     <listitem><simpara>encryption flags
+       (<function role="bdb">DB_ENV-&gt;get_encrypt_flags</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:ERRFILE</constant></term>
+     <listitem><simpara>&file-des; or &nil;
+       (<function role="bdb">DB_ENV-&gt;get_errfile</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:MSGFILE</constant></term>
+     <listitem><simpara>&file-des; or &nil;
+       (<function role="bdb">DB_ENV-&gt;get_msgfile</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:ERRPFX</constant></term>
+     <listitem><simpara>&string-t; or &nil;
+       (<function role="bdb">DB_ENV-&gt;get_errpfx</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:PAGESIZE</constant></term>
+     <listitem><simpara>database page size
+       (<function role="bdb">DB-&gt;get_pagesize</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:BT-MINKEY</constant></term>
+     <listitem><simpara>the minimum number of key/data pairs intended to
+       be stored on any single <constant>:BTREE</constant> leaf page
+       underlying source file
+       (<function role="bdb">DB-&gt;get_bt_minkey</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:H-FFACTOR</constant></term>
+     <listitem><simpara>the desired density within
+       the <constant>:HASH</constant> table
+       (<function role="bdb">DB-&gt;get_h_ffactor</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:H-NELEM</constant></term>
+     <listitem><simpara>an estimate of the final size of
+       the <constant>:HASH</constant> table
+       (<function role="bdb">DB-&gt;get_h_nelem</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:Q-EXTENTSIZE</constant></term>
+     <listitem><simpara>the size of the extents used to hold pages in
+       a <constant>:QUEUE</constant> database
+       (<function role="bdb">DB-&gt;get_q_extentsize</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:RE-DELIM</constant></term>
+     <listitem><simpara>the record delimiter
+       for <constant>:RECNO</constant> databases
+       (<function role="bdb">DB-&gt;get_re_delim</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:RE-LEN</constant></term>
+     <listitem><simpara>database record length
+       (<function role="bdb">DB-&gt;get_re_len</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:RE-PAD</constant></term>
+     <listitem><simpara>database record pad byte
+       (<function role="bdb">DB-&gt;get_re_pad</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:RE-SOURCE</constant></term>
+     <listitem><simpara>the underlying source file
+       for <constant>:RECNO</constant> databases
+       (<function role="bdb">DB-&gt;get_re_source</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:LORDER</constant></term>
+     <listitem><simpara>database byte order
+       (<function role="bdb">DB-&gt;get_lorder</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:DBNAME</constant></term>
+     <listitem><simpara>the file name and database name
+       (<function role="bdb">DB-&gt;get_dbname</function>)
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:TRANSACTIONAL</constant></term>
+     <listitem><simpara>the indicator whether the database is transactional
+       (<function role="bdb">DB-&gt;get_transactional</function>).
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:OPEN</constant></term>
+     <listitem><simpara>the flags passed to &db-open;
+       (<function role="bdb">DB-&gt;get_open_flags</function>).
+    </simpara></listitem></varlistentry>
+  </variablelist></para>
+  <warning><para>Once you call a method for one type of access method,
+    the handle can only be used for that type.
+    The methods <function role="bdb">DB-&gt;get_re_delim</function>
+    and <function role="bdb">DB-&gt;get_re_source</function> are for
+    a <constant>:RECNO</constant> database so
+    you <emphasis>cannot</emphasis> call them
+    (by passing <constant>:RE-DELIM</constant>
+    or <constant>:RE-SOURCE</constant> to this function)
+    and then use the database handle to open a database of different type
+    (e.g., <constant>:QUEUE</constant>).</para></warning>
+</listitem></varlistentry>
+</variablelist></section>
+
+
+<section id="bdb-cursor"><title>Database Cursor Operations</title>
+
+<variablelist>
+<varlistentry id="make-dbc"><term><code>(BDB:MAKE-DBC db &key-amp;
+   DEGREE-2 DIRTY-READ WRITECURSOR TRANSACTION)</code></term>
+ <listitem><simpara>Create a cursor handle
+   (<function role="bdb">DB-&gt;cursor</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DBC-CLOSE cursor)</code></term>
+ <listitem><simpara>Close the cursor handle
+   (<function role="bdb">DBCursor-&gt;close</function>).
+   You can also call &close;.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DBC-COUNT cursor)</code></term>
+ <listitem><simpara>Return count of duplicates
+   (<function role="bdb">DBCursor-&gt;count</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DBC-DEL cursor)</code></term>
+ <listitem><simpara>Delete by cursor
+   (<function role="bdb">DBCursor-&gt;del</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DBC-DUP cursor &key-amp; POSITION)</code></term>
+ <listitem><simpara>Duplicate a cursor
+   (<function role="bdb">DBCursor-&gt;dup</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DBC-GET cursor key data action
+   &key-amp; DEGREE-2 DIRTY-READ MULTIPLE (ERROR &t;))</code></term>
+ <listitem><para>Retrieve by cursor
+   (<function role="bdb">DBCursor-&gt;get</function>).
+   If &error-k; is &nil; and the record is not found, no &err-sig;,
+   <constant>:NOTFOUND</constant> or <constant>:KEYEMPTY</constant>
+   is returned instead, as appropriate.
+   <replaceable>action</replaceable> should be one of
+   <simplelist columns="4"><member><constant>:CURRENT</constant></member>
+    <member><constant>:FIRST</constant></member>
+    <member><constant>:GET-BOTH</constant></member>
+    <member><constant>:GET-BOTH-RANGE</constant></member>
+    <member><constant>:GET-RECNO</constant></member>
+    <member><constant>:JOIN-ITEM</constant></member>
+    <member><constant>:LAST</constant></member>
+    <member><constant>:NEXT</constant></member>
+    <member><constant>:NEXT-DUP</constant></member>
+    <member><constant>:NEXT-NODUP</constant></member>
+    <member><constant>:PREV</constant></member>
+    <member><constant>:PREV-NODUP</constant></member>
+    <member><constant>:SET</constant></member>
+    <member><constant>:SET-RANGE</constant></member>
+    <member><constant>:SET-RECNO</constant></member></simplelist>
+</para></listitem></varlistentry>
+<varlistentry><term><code>(BDB:DBC-PUT cursor key data
+   flag)</code></term>
+ <listitem><simpara>Store by cursor
+   (<function role="bdb">DBCursor-&gt;put</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:WITH-DBC (var &rest-amp;
+   &options-r;) &body-amp; &body-r;))</code></term>
+ <listitem><simpara>Open a cursor, execute &body-r;, close it.
+   &options-r; are passed to &make-dbc;.
+</simpara></listitem></varlistentry></variablelist></section>
+
+
+<section id="bdb-lock"><title>Lock Subsystem</title>
+
+<variablelist>
+<varlistentry><term><code>(BDB:LOCK-DETECT dbe action)</code></term>
+ <listitem><simpara>Perform deadlock detection
+   (<function role="bdb">DB_ENV-&gt;lock_detect</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOCK-ID dbe)</code></term>
+ <listitem><simpara>Acquire a locker ID
+  (<function role="bdb">DB_ENV-&gt;lock_id</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOCK-ID-FREE dbe id)</code></term>
+ <listitem><simpara>Release a locker ID
+   (<function role="bdb">DB_ENV-&gt;lock_id_free</function>).
+   All associated locks should be released first.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOCK-GET dbe object locker
+   mode &key-amp; NOWAIT)</code></term>
+ <listitem><simpara>Acquire a lock
+   (<function role="bdb">DB_ENV-&gt;lock_get</function>).
+   The <type>BDB:DBLOCK</type> object returned by this function will
+   &not-e; be released when the environment is closed.
+   This permits long-lived locks.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOCK-PUT dbe lock)</code></term>
+ <listitem><simpara>Release a lock
+   (<function role="bdb">DB_ENV-&gt;lock_put</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOCK-CLOSE lock)</code></term>
+ <listitem><simpara>Release a lock
+   (<function role="bdb">DB_ENV-&gt;lock_put</function>) using the
+   environment with which it has been acquired.
+   This is used to &finalize; <type>BDB:DBLOCK</type> objects.</simpara>
+  <warning><simpara>If that environment has already been closed, you are
+    in big trouble (segfault), so you better release your locks or do not
+    drop them.</simpara></warning></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOCK-STAT dbe &key-amp;
+   STAT-CLEAR)</code></term>
+ <listitem><simpara>Return lock subsystem statistics
+   (<function role="bdb">DB_ENV-&gt;lock_stat</function>).
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+
+<section id="bdb-log"><title>Log Subsystem</title>
+
+<variablelist>
+<varlistentry><term><code>(BDB:LOG-ARCHIVE dbe
+   &key-amp; ARCH-ABS ARCH-DATA ARCH-LOG ARCH-REMOVE)</code></term>
+ <listitem><simpara>Return a list of log or database filenames
+   (<function role="bdb">DB_ENV-&gt;log_archive</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOG-FILE dbe lsn)</code></term>
+ <listitem><simpara>Return the name of the file containing the record
+   named by <replaceable>lsn</replaceable>
+   (<function role="bdb">DB_ENV-&gt;log_file</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOG-FLUSH dbe lsn)</code></term>
+ <listitem><simpara>Flush log records to disk
+   (<function role="bdb">DB_ENV-&gt;log_flush</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOG-PUT dbe data
+   &key-amp; :FLUSH)</code></term>
+ <listitem><simpara>Write a log record
+   (<function role="bdb">DB_ENV-&gt;log_put</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOG-STAT dbe
+   &key-amp; STAT-CLEAR)</code></term>
+ <listitem><simpara>Logging subsystem statistics
+   (<function role="bdb">DB_ENV-&gt;log_stat</function>).
+</simpara></listitem></varlistentry>
+</variablelist>
+
+<section id="bdb-log-cursor"><title>Log Cursor Operations</title>
+<variablelist>
+<varlistentry><term><code>(BDB:LOG-CURSOR dbe)</code></term>
+ <listitem><simpara>Create a log cursor handle
+   (<function role="bdb">DB_ENV-&gt;log_cursor</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOGC-CLOSE logc)</code></term>
+ <listitem><simpara>Close a log cursor handle
+   (<function role="bdb">DB_LOGC-&gt;close</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:LOGC-GET logc action
+   &key-amp; TYPE ERROR)</code></term>
+ <listitem><para>Retrieve a log record
+   (<function role="bdb">DB_LOGC-&gt;get</function>).
+   If &error-k; is &nil; and the record is not found, no &err-sig;,
+   <constant>:NOTFOUND</constant> is returned instead.
+   <variablelist><title>Valid <replaceable>action</replaceable>s</title>
+    <varlistentry><term><constant>:CURRENT</constant></term>
+     <term><constant>:FIRST</constant></term>
+     <term><constant>:LAST</constant></term>
+     <term><constant>:NEXT</constant></term>
+     <term><constant>:PREV</constant></term>
+     <listitem><simpara>Retrieve the appropriate record.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><type>DB:LSN</type></term>
+     <listitem><simpara>Retrieve the specified record, as
+       with <constant>DB_SET</constant>.
+   </simpara></listitem></varlistentry></variablelist>
+   Returns two values: the datum of type specified by the &type-k;
+   argument and the <type>DB:LSN</type> value of the record retrieved
+   (when <replaceable>action</replaceable> is a <type>DB:LSN</type>, it
+   is returned unchanged).
+</para></listitem></varlistentry>
+</variablelist></section>
+
+<section id="bdb-log-seq"><title>Log Sequence Numbers</title>
+<para>Use &equalp; to check similarity of <type>BDB:LSN</type> objects.</para>
+<variablelist>
+<varlistentry><term><code>(BDB:LOG-COMPARE lsn1 lsn2)</code></term>
+ <listitem><simpara>Compare two Log Sequence Numbers
+   (<function role="bdb">log_compare</function>).
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+</section>
+
+
+<section id="bdb-mem-pool"><title>Memory Pool Subsystem</title>
+ <simpara>not implemented yet, patches are welcome</simpara>
+<!--
+ DB_ENV->set_cachesize	Set the environment cache size
+ DB_ENV->set_mp_mmapsize	Set maximum mapped-in database file size
+ DB_ENV->memp_register	Register input/output functions for a file in a memory pool
+ DB_ENV->memp_stat	Return memory pool statistics
+ DB_ENV->memp_sync	Flush pages from a memory pool
+ DB_ENV->memp_trickle	Trickle flush pages from a memory pool
+
+Memory Pool Files
+ DB_ENV->memp_fcreate	Open a file in a memory pool
+ DB_MPOOLFILE->close	Close a file in a memory pool
+ DB_MPOOLFILE->get	Get page from a file in a memory pool
+ DB_MPOOLFILE->open	Open a file in a memory pool
+ DB_MPOOLFILE->put	Return a page to a memory pool
+ DB_MPOOLFILE->set	Set memory pool page status
+ DB_MPOOLFILE->sync	Flush pages from a file in a memory pool
+ DB_MPOOLFILE->set_clear_len	Set file page bytes to be cleared
+ DB_MPOOLFILE->set_fileid	Set file unique identifier
+ DB_MPOOLFILE->set_ftype	Set file type
+ DB_MPOOLFILE->set_lsn_offset	Set file log-sequence-number offset
+ DB_MPOOLFILE->set_pgcookie	Set file cookie for pgin/pgout
+ -->
+<!--variablelist>
+<varlistentry><term><code>()</code></term>
+ <listitem><simpara></simpara></listitem></varlistentry>
+</variablelist-->
+</section>
+
+
+<section id="bdb-replication"><title>Replication</title>
+ <simpara>not implemented yet, patches are welcome</simpara>
+<!--
+ DB_ENV->set_rep_transport	Configure replication transport
+ DB_ENV->rep_elect	Hold a replication election
+ DB_ENV->set_rep_limit	Limit data sent in response to a single message
+ DB_ENV->rep_process_message	Process a replication message
+ DB_ENV->rep_start	Configure an environment for replication
+ DB_ENV->rep_stat	Replication statistics
+  -->
+<!--variablelist>
+<varlistentry><term><code>()</code></term>
+ <listitem><simpara></simpara></listitem></varlistentry>
+</variablelist-->
+</section>
+
+
+<section id="bdb-sequences"><title>Sequences</title>
+ <simpara>not implemented yet, patches are welcome</simpara>
+<!--
+Sequences and Related Methods	Description
+db_sequence_create	Create a sequence handle
+DB_SEQUENCE->close	Close a sequence
+DB_SEQUENCE->get	Get the next sequence element(s)
+DB_SEQUENCE->get_dbp	Return a handle for the underlying sequence database
+DB_SEQUENCE->get_key	Return the key for a sequence
+DB_SEQUENCE->init_value	Set the initial value of a sequence
+DB_SEQUENCE->open	Open a sequence
+DB_SEQUENCE->remove	Remove a sequence
+DB_SEQUENCE->stat	Return sequence statistics
+Sequences Configuration
+DB_SEQUENCE->set_cachesize	Set the cache size of a sequence
+DB_SEQUENCE->set_flags	Set the flags for a sequence
+DB_SEQUENCE->set_range	Set the range for a sequence
+  -->
+<!--variablelist>
+<varlistentry><term><code>()</code></term>
+ <listitem><simpara></simpara></listitem></varlistentry>
+</variablelist-->
+</section>
+
+
+<section id="bdb-transaction"><title>Transaction Subsystem</title>
+
+<variablelist>
+<varlistentry><term><code>(BDB:TXN-BEGIN dbe &key-amp;
+   DEGREE-2 PARENT DIRTY-READ NOSYNC NOWAIT SYNC)</code></term>
+ <listitem><simpara>Begin a transaction
+   (<function role="bdb">DB_ENV-&gt;txn_begin</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-ABORT txn)</code></term>
+ <listitem><simpara>Abort a transaction
+   (<function role="bdb">DB_TXN-&gt;abort</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-COMMIT txn &key-amp;
+   NOSYNC SYNC)</code></term>
+ <listitem><simpara>Commit a transaction
+   (<function role="bdb">DB_TXN-&gt;commit</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-DISCARD txn)</code></term>
+ <listitem><simpara>Discard a transaction
+   (<function role="bdb">DB_TXN-&gt;discard</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-ID txn)</code></term>
+ <listitem><simpara>Return the transaction's ID
+   (<function role="bdb">DB_TXN-&gt;id</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-CHECKPOINT dbe
+   &key-amp; KBYTE MIN FORCE)</code></term>
+ <listitem><simpara>Checkpoint the transaction subsystem
+   (<function role="bdb">DB_ENV-&gt;txn_checkpoint</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-PREPARE txn id)</code></term>
+ <listitem><simpara>Initiate the beginning of a two-phase commit
+   (<function role="bdb">DB_TXN-&gt;prepare</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-RECOVER dbe &key-amp;
+   FIRST NEXT)</code></term>
+ <listitem><simpara>Return a list of prepared but not yet resolved
+   transactions (<function role="bdb">DB_ENV-&gt;txn_recover</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-SET-TIMEOUT txn
+   timeout which)</code></term>
+ <listitem><simpara>Set timeout values for locks or transactions for the
+   specified transaction
+   (<function role="bdb">DB_TXN-&gt;set_timeout</function>).
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(BDB:TXN-STAT dbe &key-amp;
+   STAT-CLEAR)</code></term>
+ <listitem><simpara>Transaction subsystem statistics
+   (<function role="bdb">DB_ENV-&gt;txn_stat</function>).
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+</section>

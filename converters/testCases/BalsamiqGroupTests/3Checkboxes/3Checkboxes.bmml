@@ -1,0 +1,23 @@
+<mockup version="1.0" skin="sketch" measuredW="178" measuredH="280">
+  <controls>
+    <control controlID="3" controlTypeID="__group__" x="74" y="60" w="-1" h="-1" measuredW="94" measuredH="210" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::CheckBox" x="0" y="0" w="94" h="70" measuredW="34" measuredH="18" zOrder="0" locked="false" isInGroup="3">
+          <controlProperties>
+            <text>1</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::CheckBox" x="0" y="70" w="94" h="70" measuredW="33" measuredH="18" zOrder="1" locked="false" isInGroup="3">
+          <controlProperties>
+            <text>2</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::CheckBox" x="0" y="140" w="94" h="70" measuredW="33" measuredH="18" zOrder="2" locked="false" isInGroup="3">
+          <controlProperties>
+            <text>3</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>

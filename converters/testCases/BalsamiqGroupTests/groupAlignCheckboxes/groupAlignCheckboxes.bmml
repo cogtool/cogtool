@@ -1,0 +1,35 @@
+<mockup version="1.0" skin="sketch" measuredW="550" measuredH="346">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Button" x="432" y="183" w="-1" h="-1" measuredW="108" measuredH="28" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Center%20Front</text>
+        <href>previous.bmml</href>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="430" y="271" w="-1" h="-1" measuredW="102" measuredH="28" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Center%20Back</text>
+        <href>next.bmml</href>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="__group__" x="235" y="115" w="-1" h="-1" measuredW="88" measuredH="61" zOrder="2" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::CheckBox" x="5" y="0" w="83" h="18" measuredW="83" measuredH="18" zOrder="0" locked="false" isInGroup="4">
+          <controlProperties>
+            <text>Checkbox</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::CheckBox" x="0" y="43" w="83" h="18" measuredW="83" measuredH="18" zOrder="1" locked="false" isInGroup="4">
+          <controlProperties>
+            <text>Checkbox</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::CheckBox" x="237" y="318" w="-1" h="-1" measuredW="90" measuredH="18" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Checkbox3</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

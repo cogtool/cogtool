@@ -1,0 +1,8 @@
+CC='gcc'
+CPPFLAGS='-falign-functions=4'
+CFLAGS='-falign-functions=4 -W -Wswitch -Wcomment -Wpointer-arith -Wimplicit -Wreturn-type -Wmissing-declarations -Wno-sign-compare -O2 -fexpensive-optimizations -DUNIX_BINARY_DISTRIB -DUNICODE -DNO_GETTEXT -DNO_SIGSEGV -I.'
+CLFLAGS='-x none'
+LIBS='regexi.o regex.o  calls.o  gettext.o  lisp.a libcharset.a -lncurses  -liconv '
+X_LIBS=''
+RANLIB='ranlib'
+FILES='lisp.a libnoreadline.a libcharset.a  gettext.o calls.o regexi.o regex.o regexp.dvi'

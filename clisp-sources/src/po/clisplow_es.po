@@ -1,0 +1,1556 @@
+# #-#-#-#-#  es1.po (GNU clisp 1996-03-31)  #-#-#-#-#
+# Mensajes en español para GNU CLISP.
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# Carlos Linares López <clinares@delicias.dia.fi.upm.es>, 1997.
+#
+# Han contribuido a esta traducción:
+#
+# cll - Carlos Linares López 	(Traducción)
+# sv  - Santiago Vila Doncel	(Revisión)
+# lsg - Leonardo Sarasúa García	(Traducción y Revisión)
+#
+# Agradecimientos especiales a:
+#
+# Bruno Haible
+# Marcus Daniels
+# 					(Programadores de CLisp)
+#
+# Enrique Melero
+# 				    (Coordinador de Spanish GNU)
+#
+# Por haber atendido siempre mis preguntas y por mostrar tanto interés
+# en esta traducción.
+#
+# Asimismo, quisiera expresar mi agradecimiento a las siguientes
+# personas, por responder pacientemente todas mis preguntas: Joerg
+# Hoehle (traductor de la versión francesa) y Juan Jordana.
+#
+# Por último, a toda la lista de Spanish GNU Translation Team
+# (es@li.org) por sus sugerencias.
+#
+# NOTAS.
+#
+# * Los mensajes en los que se han realizado anotaciones de interés,
+# bien porque haya alguna duda, bien porque contenga notas importantes
+# relativas a las traducciones tienen la palabra `Duda:' al principio de
+# su comentario.
+#
+# * Por favor, si alguien realiza alguna modificación a este archivo que
+# ponga sus iniciales al final del comentario explicando el cambio y el
+# motivo. Si su nombre no está en esta cabecera que lo añada poniendo
+# las iniciales.
+#
+# * Todas las líneas que comienzan con #~ son mensajes obsoletos que no
+# hace falta revisar. En cualquier caso, intentaré normalmente
+# eliminarlas.
+#
+# $Id: es.po,v 1.20 2006/01/02 17:09:36 sds Exp $
+# $Log: es.po,v $
+# Revision 1.20  2006/01/02 17:09:36  sds
+# regenerated for 2.37 (2006-01-02)
+#
+# Revision 1.19  2005/12/04 22:37:32  sds
+# regenerated for clisp 2.36 release
+#
+# Revision 1.18  2005/08/29 18:18:56  sds
+# regenerated
+#
+# Revision 1.17  2005/08/28 16:27:17  sds
+# regenerated
+#
+# Revision 1.16  2005/07/20 23:58:29  sds
+# clisp 2.34 (2005-07-20)
+#
+# Revision 1.15  2005/07/13 19:11:34  sds
+# regenerated for 2.33.84
+#
+# Revision 1.14  2005/07/06 17:05:52  sds
+# regenerated
+#
+# Revision 1.13  2005/06/27 15:30:42  sds
+# regenerated
+#
+# Revision 1.12  2005/03/17 23:14:48  sds
+# regenerated
+#
+# Revision 1.11  2005/02/16 22:30:56  haible
+# Regenerated.
+#
+# Revision 1.10  2004/12/10 16:11:18  sds
+# GNU CLISP 2.33.80 (2004-11-27)
+#
+# Revision 1.9  2004/03/31 12:48:41  haible
+# Update after change of format string convention: '~' -> '~S', '$' -> '~C'.
+#
+# Revision 1.8  2004/03/31 12:07:14  haible
+# msgmerged.
+#
+# Revision 1.7  2004/03/31 11:52:39  haible
+# Update for removal of leading and trailing newlines.
+#
+# Revision 1.6  2004/03/30 20:38:21  haible
+# msgmerged.
+#
+# Revision 1.5  2004/03/17 20:47:07  sds
+# regenerated for 2.33
+#
+# Revision 1.4  2004/03/14 17:27:54  sds
+# regenerated for 2.32.94
+#
+# Revision 1.3  2004/03/12 19:22:47  sds
+# regenerated for 2.32.93
+#
+# Revision 1.2  2002/09/13 15:00:36  sds
+# regenerated for 2.30
+#
+# Revision 1.1  2002/05/18 14:27:46  sds
+# kill src/gettext; POs are now in src/po
+#
+# Revision 1.12  1998/09/07 18:21:38  clinares
+# Traducción de todos los mensajes para la versión del 29-8-1998. Estos
+# cambios, sin embargo, serán publicados en alguna nueva versión de
+# septiembre de este mismo año.
+#
+# Revision 1.9  1997/09/18 13:36:38  clinares
+# He incluído nuevas modificaciones de Leo Sarasúa.
+#
+# Entre las más representativas está el hecho de haber modificado
+# `trama' por `marco' y `# macro carácter' por `macro carácter
+# secundario'. Nuevamente gracias, Leo, ...
+#
+# Revision 1.8  1997/09/05 17:23:30  clinares
+# He introducido todas las modificaciones propuestas por Santiago Vila a
+# la versión 1.6. Además, las he adaptado para el nuevo .pot que se
+# empleó en la versión 1.7.
+#
+# Entre los cambios más importantes está: `command' es `orden', no
+# `comando'; `warning' es, preferiblemente, `atención' y, en otro caso,
+# propongo que sea `advertencia', en vez de `aviso'.
+#
+# Revision 1.7  1997/09/03 17:51:44  clinares
+# He modificado la traducción de las directivas ~P, puesto que nunca se
+# escribirán versiones en español de ellas, ya que el estándar Common
+# Lisp - The Language es muy específico: solo en inglés. Ni en alemán,
+# ni francés, ni español, ...
+#
+# Además, he adaptado los cambios del POT de la versión 1.6
+# (POT-Creation-Date: 1997-05-04) a la última versión que existe
+# actualmente (POT-Creation-Date: 1997-09-02). Para ello, he traducido 9
+# mensajes nuevos, he corregido los mensajes difusos y he borrado todos
+# los obsoletos.
+#
+# Revision 1.6  1997/08/30 14:04:08  clinares
+# El 100% de los mensajes están traducidos :)
+# En total, 9 meses de trabajo (es decir, aha sido un parto!! :)
+#
+# Revision 1.5  1997/08/27 00:48:46  clinares
+# Esta es la traducción que resulta de programar todos los cambios
+# propuestos por lsg (Leonardo Sarasúa García). En total, aalrededor de
+# 800 líneas!!, ahí es nada :)
+#
+# Muchísimas gracias, Leo. Te debo la cerveza más grande del mundo, ...
+#
+# ------------------------------------------------------------------
+# msgfmt --statistics -c -v -o /dev/null /home/clinares/GNU/clisp.po
+# 1406 mensajes traducidos.
+# ------------------------------------------------------------------
+#
+# #-#-#-#-#  es2.po (GNU clisp 1996-03-31)  #-#-#-#-#
+# Mensajes en español para GNU CLISP.
+# Copyright (C) 1996 Free Software Foundation, Inc.
+# Carlos Linares López <clinares@delicias.dia.fi.upm.es>, 1997.
+#
+# Han contribuido a esta traducción:
+#
+# cll - Carlos Linares López 	(Traducción)
+# sv  - Santiago Vila Doncel	(Revisión)
+# lsg - Leonardo Sarasúa García	(Traducción y Revisión)
+#
+# Agradecimientos especiales a:
+#
+# Bruno Haible
+# Marcus Daniels
+# 					(Programadores de CLisp)
+#
+# Enrique Melero
+# 				    (Coordinador de Spanish GNU)
+#
+# Por haber atendido siempre mis preguntas y por mostrar tanto interés
+# en esta traducción.
+#
+# Asimismo, quisiera expresar mi agradecimiento a las siguientes
+# personas, por responder pacientemente todas mis preguntas: Joerg
+# Hoehle (traductor de la versión francesa) y Juan Jordana.
+#
+# Por último, a toda la lista de Spanish GNU Translation Team
+# (es@li.org) por sus sugerencias.
+#
+# NOTAS.
+#
+# * Los mensajes en los que se han realizado anotaciones de interés,
+# bien porque haya alguna duda, bien porque contenga notas importantes
+# relativas a las traducciones tienen la palabra `Duda:' al principio de
+# su comentario.
+#
+# * Por favor, si alguien realiza alguna modificación a este archivo que
+# ponga sus iniciales al final del comentario explicando el cambio y el
+# motivo. Si su nombre no está en esta cabecera que lo añada poniendo
+# las iniciales.
+#
+# * Todas las líneas que comienzan con #~S son mensajes obsoletos que no
+# hace falta revisar. En cualquier caso, intentaré normalmente
+# eliminarlas.
+#
+# $Id: es.po,v 1.20 2006/01/02 17:09:36 sds Exp $
+# $Log: es.po,v $
+# Revision 1.20  2006/01/02 17:09:36  sds
+# regenerated for 2.37 (2006-01-02)
+#
+# Revision 1.19  2005/12/04 22:37:32  sds
+# regenerated for clisp 2.36 release
+#
+# Revision 1.18  2005/08/29 18:18:56  sds
+# regenerated
+#
+# Revision 1.17  2005/08/28 16:27:17  sds
+# regenerated
+#
+# Revision 1.16  2005/07/20 23:58:29  sds
+# clisp 2.34 (2005-07-20)
+#
+# Revision 1.15  2005/07/13 19:11:34  sds
+# regenerated for 2.33.84
+#
+# Revision 1.14  2005/07/06 17:05:52  sds
+# regenerated
+#
+# Revision 1.13  2005/06/27 15:30:42  sds
+# regenerated
+#
+# Revision 1.12  2005/03/17 23:14:48  sds
+# regenerated
+#
+# Revision 1.11  2005/02/16 22:30:56  haible
+# Regenerated.
+#
+# Revision 1.10  2004/12/10 16:11:18  sds
+# GNU CLISP 2.33.80 (2004-11-27)
+#
+# Revision 1.9  2004/03/31 12:48:41  haible
+# Update after change of format string convention: '~' -> '~S', '$' -> '~C'.
+#
+# Revision 1.8  2004/03/31 12:07:14  haible
+# msgmerged.
+#
+# Revision 1.7  2004/03/31 11:52:39  haible
+# Update for removal of leading and trailing newlines.
+#
+# Revision 1.6  2004/03/30 20:38:21  haible
+# msgmerged.
+#
+# Revision 1.5  2004/03/17 20:47:07  sds
+# regenerated for 2.33
+#
+# Revision 1.4  2004/03/14 17:27:54  sds
+# regenerated for 2.32.94
+#
+# Revision 1.3  2004/03/12 19:22:47  sds
+# regenerated for 2.32.93
+#
+# Revision 1.2  2002/09/13 15:00:36  sds
+# regenerated for 2.30
+#
+# Revision 1.1  2002/05/18 14:27:46  sds
+# kill src/gettext; POs are now in src/po
+#
+# Revision 1.12  1998/09/07 18:21:38  clinares
+# Traducción de todos los mensajes para la versión del 29-8-1998. Estos
+# cambios, sin embargo, serán publicados en alguna nueva versión de
+# septiembre de este mismo año.
+#
+# Revision 1.9  1997/09/18 13:36:38  clinares
+# He incluído nuevas modificaciones de Leo Sarasúa.
+#
+# Entre las más representativas está el hecho de haber modificado
+# `trama' por `marco' y `# macro carácter' por `macro carácter
+# secundario'. Nuevamente gracias, Leo, ...
+#
+# Revision 1.8  1997/09/05 17:23:30  clinares
+# He introducido todas las modificaciones propuestas por Santiago Vila a
+# la versión 1.6. Además, las he adaptado para el nuevo .pot que se
+# empleó en la versión 1.7.
+#
+# Entre los cambios más importantes está: `command' es `orden', no
+# `comando'; `warning' es, preferiblemente, `atención' y, en otro caso,
+# propongo que sea `advertencia', en vez de `aviso'.
+#
+# Revision 1.7  1997/09/03 17:51:44  clinares
+# He modificado la traducción de las directivas ~SP, puesto que nunca se
+# escribirán versiones en español de ellas, ya que el estándar Common
+# Lisp - The Language es muy específico: solo en inglés. Ni en alemán,
+# ni francés, ni español, ...
+#
+# Además, he adaptado los cambios del POT de la versión 1.6
+# (POT-Creation-Date: 1997-05-04) a la última versión que existe
+# actualmente (POT-Creation-Date: 1997-09-02). Para ello, he traducido 9
+# mensajes nuevos, he corregido los mensajes difusos y he borrado todos
+# los obsoletos.
+#
+# Revision 1.6  1997/08/30 14:04:08  clinares
+# El 100% de los mensajes están traducidos :)
+# En total, 9 meses de trabajo (es decir, aha sido un parto!! :)
+#
+# Revision 1.5  1997/08/27 00:48:46  clinares
+# Esta es la traducción que resulta de programar todos los cambios
+# propuestos por lsg (Leonardo Sarasúa García). En total, aalrededor de
+# 800 líneas!!, ahí es nada :)
+#
+# Muchísimas gracias, Leo. Te debo la cerveza más grande del mundo, ...
+#
+# ------------------------------------------------------------------
+# msgfmt --statistics -c -v -o /dev/null /home/clinares/GNU/clisp.po
+# 1406 mensajes traducidos.
+# ------------------------------------------------------------------
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GNU clisp 1996-03-31\n"
+"Report-Msgid-Bugs-To: clisp-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2006-01-23 16:48:22-0500\n"
+"PO-Revision-Date: 1997-08-11 18:16 MET DST\n"
+"Last-Translator: Carlos Linares López <clinares@delicias.dia.fi.upm.es>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+# "*** - desbordamiento de la pila del programa - REINICIALIZANDO" - lsg
+#
+# En mi opinión, RESET debe traducirse como un imperativo - cll
+#
+#: spvw.d:482
+msgid "*** - Program stack overflow. RESET"
+msgstr "*** - Desbordamiento de la pila del programa. REINICIE"
+
+# ¡ Toma puntilloso que soy! Lisp debería escribirse con mayúscula.
+# "*** - desbordamiento de la pila de Lisp - REINICIALIZANDO" - lsg
+#
+# No, no, nada de REINICIALIZANDO. Debe ser un imperativo: REINICIE.
+# Por ejemplo, si durante una sesión con CLisp haces:
+#
+# > (defun foo (a) (foo (1- a)))
+# FOO
+# > (foo 2)
+#
+# *** - Desbordamiento de la pila de Lisp. REINICIE
+# >
+#
+# ..., pero el intérprete se queda esperando a que tú sigas tecleando,
+# es decir, él solo no se pone a reiniciar nada, ...
+#
+# Por otra parte, tienes toda la razón, Lisp debe ir con mayúsculas :) - cll
+#
+#: spvw.d:497
+msgid "*** - Lisp stack overflow. RESET"
+msgstr "*** - Desbordamiento de la pila de Lisp. REINICIE"
+
+# ß¿Tipo de argumento?? sv
+#
+# Claro, "tipo de argumento", es decir, "según sea el argumento". De
+# todos modos, este mensaje está pendiente de remodelación. Ya he puesto
+# un mensaje en la lista de clisp y en cuanto me respondan tal vez lo
+# modifique. - cll
+#
+# En la lista de CLisp, Bruno Haible explicaba así qué es "FSUBR" y
+# "SUBR":
+#
+# -----------------------
+# This is very ancient Lisp terminology (1960ies). FSUBR means "special form".
+# SUBR means "built-in/system function".
+# -----------------------
+#
+# Por su parte, Joerg Hoehle explicaba: (atención al segundo párrafo)
+#
+# -----------------------
+# They related to very old implementations of Lisp.  IIRC, SUBR
+# (resp. FSUBR) served to recognize built-in functions (resp. special
+# forms or macros) in the symbol-function slot of symbols, for example
+# as (FSUBR <address>) so the Lisp interpreter knew it had to call an
+# internal procedure and would not evaluate the arguments, whereas
+# we all know (LAMBDA (#) ...).
+#
+# The term of "signature" is used like in finance or crime: a kind of
+# characteristic of the function, and you know that when two signatures
+# differ, the functions must differ (if they are the same, the functions
+# need not be the same).  In CLISP, the signature of a function
+# comprises / encodes the parameter list (number of required / optional
+# parameters, &rest present and &key symbols).
+# -----------------------
+#
+# A tenor de lo que se dice en la última de las frases, considero que la
+# traducción actual (inspirada en la francesa) está bien, ¿sugerencias? - cll
+#
+#: spvw.d:712
+#, fuzzy
+msgid "Unknown FSUBR signature: %d %d %d\n"
+msgstr "Tipo de argumento desconocido para SUBR\n"
+
+# ß¿Tipo de argumento?? sv
+#
+# Claro, "tipo de argumento", es decir, "según sea el argumento". De
+# todos modos, este mensaje está pendiente de remodelación. Ya he puesto
+# un mensaje en la lista de clisp y en cuanto me respondan tal vez lo
+# modifique. - cll
+#
+# En la lista de CLisp, Bruno Haible explicaba así qué es "FSUBR" y
+# "SUBR":
+#
+# -----------------------
+# This is very ancient Lisp terminology (1960ies). FSUBR means "special form".
+# SUBR means "built-in/system function".
+# -----------------------
+#
+# Por su parte, Joerg Hoehle explicaba: (atención al segundo párrafo)
+#
+# -----------------------
+# They related to very old implementations of Lisp.  IIRC, SUBR
+# (resp. FSUBR) served to recognize built-in functions (resp. special
+# forms or macros) in the symbol-function slot of symbols, for example
+# as (FSUBR <address>) so the Lisp interpreter knew it had to call an
+# internal procedure and would not evaluate the arguments, whereas
+# we all know (LAMBDA (#) ...).
+#
+# The term of "signature" is used like in finance or crime: a kind of
+# characteristic of the function, and you know that when two signatures
+# differ, the functions must differ (if they are the same, the functions
+# need not be the same).  In CLISP, the signature of a function
+# comprises / encodes the parameter list (number of required / optional
+# parameters, &rest present and &key symbols).
+# -----------------------
+#
+# A tenor de lo que se dice en la última de las frases, considero que la
+# traducción actual (inspirada en la francesa) está bien, ¿sugerencias? - cll
+#
+#: spvw.d:820
+#, fuzzy
+msgid "Unknown SUBR signature: %d %d %d %d"
+msgstr "Tipo de argumento desconocido para SUBR\n"
+
+#
+# "el módulo `%s' necesita el paquete %s.\n"
+#
+# Me parece más natural en español, aunque gramaticalmente no estaba
+# mal. - lsg
+#
+# Pues si, tienes toda la razón del mundo - cll
+#
+#: spvw.d:1546
+#, fuzzy
+msgid "module '%s' requires package %s.\n"
+msgstr "el módulo `%s' necesita el paquete %s.\n"
+
+#
+# "el módulo `%s' necesita el paquete %s.\n"
+#
+# Me parece más natural en español, aunque gramaticalmente no estaba
+# mal. - lsg
+#
+# Pues si, tienes toda la razón del mundo - cll
+#
+#: spvw.d:1556
+#, fuzzy
+msgid "module '%s' redefines symbol "
+msgstr "el módulo `%s' necesita el paquete %s.\n"
+
+#: spvw.d:1558
+#, fuzzy
+msgid " in the locked package "
+msgstr "un paquete borrado."
+
+# Sugerencia: definición de macro. sv
+#
+# Hmmm, ..., lo de macro definición es bastante típico en informática
+# (ya sabes, ...) Sin embargo, en Lisp se suele decir definición de
+# macro, tal y como tú propones, ..., pues vale, ¡sugerencia
+# completamente aceptada! cll
+#
+#: spvw.d:1560
+#, fuzzy
+msgid ""
+"\n"
+"old definition: "
+msgstr " con definición de macro"
+
+#: spvw.d:1597
+msgid "is an ANSI Common Lisp."
+msgstr ""
+
+#: spvw.d:1599
+msgid "Usage:  "
+msgstr ""
+
+#: spvw.d:1601
+msgid ""
+" [options] [lispfile [argument ...]]\n"
+" When 'lispfile' is given, it is loaded and '*ARGS*' is set\n"
+" to the list of argument strings. Otherwise, an interactive\n"
+" read-eval-print loop is entered.\n"
+msgstr ""
+
+#: spvw.d:1605
+msgid "Informative output:\n"
+msgstr ""
+
+#: spvw.d:1606
+msgid " -h, --help    - print this help and exit\n"
+msgstr ""
+
+#: spvw.d:1607
+msgid " --version     - print the version information\n"
+msgstr ""
+
+#: spvw.d:1608
+msgid " --license     - print the licensing information\n"
+msgstr ""
+
+#: spvw.d:1609
+msgid "Memory image selection:\n"
+msgstr ""
+
+#: spvw.d:1610
+msgid " -B lisplibdir - set the installation directory\n"
+msgstr ""
+
+#: spvw.d:1612
+msgid " -K linkingset - use this executable and memory image\n"
+msgstr ""
+
+#: spvw.d:1614
+msgid " -M memfile    - use this memory image\n"
+msgstr ""
+
+#: spvw.d:1615
+msgid " -m size       - memory size (size = xxxxxxxB or xxxxKB or xMB)\n"
+msgstr ""
+
+#: spvw.d:1617
+msgid " -t tmpdir     - temporary directory for memmap\n"
+msgstr ""
+
+#: spvw.d:1619
+msgid "Internationalization:\n"
+msgstr ""
+
+#: spvw.d:1620
+msgid " -L language   - set user language\n"
+msgstr ""
+
+#: spvw.d:1621
+msgid " -N nlsdir     - NLS catalog directory\n"
+msgstr ""
+
+#: spvw.d:1622
+msgid " -Edomain encoding - set encoding\n"
+msgstr ""
+
+#: spvw.d:1623
+msgid "Interoperability:\n"
+msgstr ""
+
+#: spvw.d:1624
+msgid ""
+" -q, --quiet, --silent, -v, --verbose - verbosity level:\n"
+"     affects banner, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"     and *LOAD-PRINT*/*COMPILE-PRINT*\n"
+msgstr ""
+
+#: spvw.d:1627
+msgid " -w            - wait for a keypress after program termination\n"
+msgstr ""
+
+#: spvw.d:1628
+msgid " -I            - be ILISP-friendly\n"
+msgstr ""
+
+#: spvw.d:1629
+msgid "Startup actions:\n"
+msgstr ""
+
+#: spvw.d:1630
+msgid " -ansi         - more ANSI CL compliance\n"
+msgstr ""
+
+#: spvw.d:1631
+msgid " -traditional  - traditional (undoes -ansi)\n"
+msgstr ""
+
+#: spvw.d:1632
+msgid " -modern       - start in a case-sensitive lowercase-preferring package\n"
+msgstr ""
+
+#: spvw.d:1633
+msgid " -p package    - start in the package\n"
+msgstr ""
+
+#: spvw.d:1634
+msgid " -C            - set *LOAD-COMPILING* to T\n"
+msgstr ""
+
+#: spvw.d:1635
+msgid " -norc         - do not load the user ~/.clisprc file\n"
+msgstr ""
+
+#: spvw.d:1636
+msgid " -i file       - load initfile (can be repeated)\n"
+msgstr ""
+
+#: spvw.d:1637
+msgid "Actions:\n"
+msgstr ""
+
+#: spvw.d:1638
+msgid " -c [-l] lispfile [-o outputfile] - compile lispfile\n"
+msgstr ""
+
+#: spvw.d:1639
+msgid " -x expressions - execute the expressions, then exit\n"
+msgstr ""
+
+#: spvw.d:1640
+msgid " lispfile [argument ...] - load lispfile, then exit\n"
+msgstr ""
+
+#: spvw.d:1641
+msgid "These actions put CLISP into a batch mode, which is overridden by\n"
+msgstr ""
+
+#: spvw.d:1642
+msgid " -on-error action - action can be one of debug, exit, abort, appease\n"
+msgstr ""
+
+#: spvw.d:1643
+msgid " -repl            - enter the interactive read-eval-print loop when done\n"
+msgstr ""
+
+#: spvw.d:1644
+msgid "Default action is an interactive read-eval-print loop.\n"
+msgstr ""
+
+#: spvw.d:1653
+msgid "%s: use '-h' for help"
+msgstr ""
+
+# ¿Por qué no inválido? La palabra existe.
+# Un día os tengo que enviar un trozo de "1984" de Orwell,
+# que habla de "neolengua", el único idioma del mundo que tiene
+# cada vez menos palabras, en vez de más... sv
+#
+# a¡Por supuestísimo!!! Tienes toda la razón del mundo. De hecho, si
+# echas un ojo al resto de los mensajes verás que yo siempre he
+# traducido "invalid" por "inválido" salvo en tres ocasiones: en dos
+# preferí la expresión "no es correcto" y en la otra lo dejé como "no es
+# válido" en vez de "no válido" que, además, suena horrible.
+#
+# A propósito del trozo de "1984", venga, ya estoy esperando :) - cll
+#
+#: spvw.d:1656
+#, fuzzy
+msgid "invalid argument"
+msgstr "Argumento inválido"
+
+#: spvw.d:2056
+msgid "Syntax for %s: nnnnnnn or nnnnKB or nMB"
+msgstr "Sintaxis de %s: nnnnnnn or nnnnKB or nMB"
+
+#
+# "%s fuera de intervalo\n"
+# No me gusta del todo. A lo mejor:
+# "%s fuera de limites\n" - lsg
+#
+# Al final me he decidido por:
+#
+# "%s se ha salido del rango\n"
+#
+# ¿No te mola más? - cll
+#
+#: spvw.d:2061
+msgid "%s out of range"
+msgstr "%s se ha salido del rango"
+
+#: spvw.d:2066
+msgid "warning: %s out of range, using %u instead"
+msgstr ""
+
+#: spvw.d:2082
+msgid "memory size"
+msgstr "tamaño de memoria"
+
+#: spvw.d:2098
+msgid "multiple -t"
+msgstr ""
+
+#: spvw.d:2118
+msgid "multiple -B"
+msgstr ""
+
+#: spvw.d:2153
+#, fuzzy
+msgid "-E requires an argument"
+msgstr "~S argumentos obligatorios"
+
+#: spvw.d:2419
+msgid "-l without -c is invalid"
+msgstr ""
+
+# Duda: En este mensaje, el primer "~S" se sustituye por el nombre de una
+# función y el segundo "~S" sobre el nombre de un flujo (stream). Por
+# eso, este mensaje quedaría, mas o menos, de la manera:
+#
+# <función> no es posible sobre el flujo <flujo>
+#
+# ¿os gusta o lo encontrais raro?
+#
+#: spvw.d:2425
+#, fuzzy
+msgid "-x with -c is invalid"
+msgstr "~S no es posible sobre el flujo ~S"
+
+#: spvw.d:2430
+msgid "-x with lisp-file is invalid"
+msgstr ""
+
+#: spvw.d:2550
+#, fuzzy
+msgid "Return value of malloc() = %lx is not compatible with type code distribution."
+msgstr "El valor devuelto por malloc() = %x no es compatible con la distribución del código de tipo."
+
+# solo es con acento.
+# "sólo %d bytes disponibles\n" - lsg
+#
+# aMadre mía!! Tienes toda la razón del mundo - cll :)
+#
+#: spvw.d:2557
+msgid "Only %d bytes available."
+msgstr "Sólo quedan %d bytes disponibles."
+
+# Duda: Imagino que SP es el "Stack Pointer". Pero entonces, ¿a qu
+# viene decir "SP stack"? ¿Se referirán con ello a la pila del sistema?
+# - cll
+#
+#: spvw.d:2807
+msgid "Could not determine the end of the SP stack!"
+msgstr "No fue posible determinar el final de la pila SP!"
+
+#: spvw.d:3326
+#, fuzzy
+msgid "%s: Not enough memory for Lisp."
+msgstr "No hay memoria suficiente para Lisp."
+
+# "*** - Memoria virtual agotada. REINICIALIZACION " - lsg
+#
+# Yo creo que el mensaje debe acabar en un imperativo: REINICIALIZAR - cll
+#
+#: spvw_alloca.d:48
+msgid "*** - Virtual memory exhausted. RESET"
+msgstr "*** - Memoria virtual agotada. REINICIE"
+
+# "*** - Memoria agotada. REINICIALIZACION " - lsg
+#
+# Más de lo mismo - cll
+#
+#: spvw_alloca.d:50
+msgid "*** - Memory exhausted. RESET"
+msgstr "*** - Memoria agotada. REINICIE"
+
+# No me gusta demasiado lo de mapear, pero qué se le va a hacer, salvo
+# añadir el acento que faltaba. ;-)
+#
+# "no se puede mapear la memoria a la dirección 0x%x ." - lsg
+#
+# Al final, siguiendo las recomendaciones de la lista "spanglish.txt",
+# he preferido traducir `map' por `asignar'.
+#
+# Y desde luego, respecto del acento tienes toda la razón del mundo - cll
+#
+#: spvw_mmap.d:66 spvw_mmap.d:197 spvw_mmap.d:357 spvw_multimap.d:161
+#, fuzzy
+msgid "Cannot map memory to address 0x%lx ."
+msgstr "No se puede asignar la memoria a la dirección 0x%x ."
+
+# No me gusta demasiado lo de mapear, pero qué se le va a hacer, salvo
+# añadir el acento que faltaba. ;-)
+#
+# "no se puede mapear la memoria a la dirección 0x%x ." - lsg
+#
+# Al final, siguiendo las recomendaciones de la lista "spanglish.txt",
+# he preferido traducir `map' por `asignar'.
+#
+# Y desde luego, respecto del acento tienes toda la razón del mundo - cll
+#
+#: spvw_mmap.d:170
+#, fuzzy
+msgid "Cannot reserve address range at 0x%lx ."
+msgstr "No se puede reservar el rango de direcciones a 0x%x ."
+
+# No me gusta demasiado lo de mapear, pero qué se le va a hacer, salvo
+# añadir el acento que faltaba. ;-)
+#
+# "no se puede mapear la memoria a la dirección 0x%x ." - lsg
+#
+# Al final, siguiendo las recomendaciones de la lista "spanglish.txt",
+# he preferido traducir `map' por `asignar'.
+#
+# Y desde luego, respecto del acento tienes toda la razón del mundo - cll
+#
+#: spvw_mmap.d:180
+#, fuzzy
+msgid "Cannot reserve address range 0x%lx-0x%lx ."
+msgstr "No se puede reservar el rango de direcciones 0x%x-0x%x ."
+
+#: spvw_mmap.d:225
+msgid "CreateFileMapping() failed."
+msgstr "CreateFileMapping() falló."
+
+#: spvw_mmap.d:233
+msgid "MapViewOfFileEx(addr=0x%x,off=0x%x) failed."
+msgstr "MapViewOfFileEx(dirección=0x%x,segmento=0x%x) falló."
+
+#: spvw_mmap.d:239
+msgid "MapViewOfFileEx() returned 0x%x instead of 0x%x."
+msgstr "MapViewOfFileEx() devolvió 0x%x en vez de 0x%x."
+
+#: spvw_mmap.d:254
+msgid "VirtualFree() failed."
+msgstr "VirtualFree() falló."
+
+#: spvw_mmap.d:267
+msgid "VirtualProtect() failed."
+msgstr "VirtualProtect() falló."
+
+#: spvw_mmap.d:337 spvw_multimap.d:115 spvw_multimap.d:190
+#, fuzzy
+msgid "Cannot open <%s>."
+msgstr "No se puede abrir %s."
+
+# "msync(0x%x,0x%x,MS_INVALIDATE) fracasó." - lsg
+#
+# O "falló" en vez de "fracasó". ¿Qué te parece? - cll
+#
+#: spvw_multimap.d:139
+#, fuzzy
+msgid "msync(0x%lx,0x%x,MS_INVALIDATE) failed."
+msgstr "msync(0x%x,0x%x,MS_INVALIDATE) falló."
+
+#: spvw_multimap.d:199
+#, fuzzy
+msgid "Cannot delete <%s>."
+msgstr "No se puede borrar %s ."
+
+# He seguido la propuesta de Santiago Vila. A partir de ahora, y siempre
+# que sea posible, el término "warning" se traducirá por "atención". En
+# aquellos casos en que esto no es posible, lo he indicado
+# explícitamente con un comentario indicando el motivo. - cll
+#
+#: spvw_multimap.d:217
+#, fuzzy
+msgid "** WARNING: ** Too little free disk space for <%s>."
+msgstr "** ATENCIÓN: ** Hay muy poco espacio libre en disco para %s ."
+
+#: spvw_multimap.d:219
+#, fuzzy
+msgid "Please restart LISP with less memory (option -m)."
+msgstr "Por favor, vuelva a ejecutar LISP con menos memoria (opción -m)."
+
+#: spvw_multimap.d:228
+#, fuzzy
+msgid "Cannot make <%s> long enough."
+msgstr "No es posible agrandar %s lo suficiente."
+
+#: spvw_multimap.d:242
+#, fuzzy
+msgid "Cannot fill <%s>."
+msgstr "No se puede rellenar %s ."
+
+#: spvw_multimap.d:255 spvw_multimap.d:289
+#, fuzzy
+msgid "Cannot close <%s>."
+msgstr "No se puede cerrar %s ."
+
+#
+# Muy buena tu sugerencia, Leo. Se queda tal y como tu propones - lsg
+#
+# ¿Apoyo o soporte? sv
+#
+# Bueno, si, tienes razón. De hecho ésta era una de esas traducciones
+# "raras". El problema es que no estaba seguro de que el término
+# "soporte" fuese aceptado. Pero si es así, pues perfecto - cll
+#
+#: spvw_multimap.d:327
+msgid "Recompile your operating system with SYSV IPC support."
+msgstr "Recompile su sistema operativo con soporte para SYSV IPC."
+
+#
+# "no se puede asignar un segmento privado en la memoria compartida" - lsg
+#
+#: spvw_multimap.d:340
+#, fuzzy
+msgid "Cannot allocate private shared memory segment of size %d."
+msgstr "No se puede asignar un segmento privado en la memoria compartida."
+
+#: spvw_multimap.d:357
+#, fuzzy
+msgid "Cannot map shared memory to address 0x%lx."
+msgstr "No se puede asignar la memoria compartida a la direccion 0x%x."
+
+#: spvw_multimap.d:375 spvw_multimap.d:381
+#, fuzzy
+msgid "%s: Cannot fill shared memory."
+msgstr "No se puede rellenar la memoria compartida."
+
+#
+# En este y en otros tantos mensajes, he seguido tu consejo, Leo. He
+# traducido `remove' por `desechar' en todos los sitios. - cll
+#
+#: spvw_multimap.d:394
+msgid "Cannot remove shared memory segment."
+msgstr "No se puede desechar el segmento de memoria compartida."
+
+#: spvw_fault.d:277
+#, fuzzy
+msgid "mprotect(0x%lx,%d,%d) failed."
+msgstr "mprotect() falló."
+
+#: spvw_sigsegv.d:23
+msgid "Permanently allocated: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:26
+msgid "Currently in use: %lu bytes."
+msgstr ""
+
+#: spvw_sigsegv.d:29
+msgid "Free space: %lu bytes."
+msgstr ""
+
+# "SIGSEGV no puede ser subsanado. Dirección del error =3D 0x%x.\n" - lsg
+#
+# Si, me gusta más tu traducción. Yo había puesto:
+#
+# "No se puede evitar SIGSEGV. Dirección de fallo = 0x%x.\n"
+#
+# Pero el caso es que un SIGSEGV no tiene porque evitarse puesto que es
+# una señal que, para cuando sale este mensaje, ya se ha recibido. El
+# problema ---realmente--- es que no fue posible "subsanar" la
+# señal. Muy bien - cll
+#
+# De todas formas, prefiero ponerlo al revés ("No se puede subsanar" en
+# vez de "... no puede ser subsanado"). Por otra parte, en vez de
+# "error" prefiero "fallo" puesto que eso es exactamente de lo que se
+# trata. No de un error por algo que alguien hizo mal, sino de un fallo
+# del sistema, ... - cll
+#
+#: spvw_sigsegv.d:40
+#, fuzzy
+msgid "SIGSEGV cannot be cured. Fault address = 0x%lx."
+msgstr "No se puede subsanar SIGSEGV. Dirección de fallo = 0x%x."
+
+#: spvw_sigsegv.d:76
+msgid "Apollo 13 scenario: Stack overflow handling failed. On the next stack overflow we will crash!!!"
+msgstr "Escenario Apollo 13: Falló la manipulación del desbordamiento de pila. a¡ Nos estrellaremos en el siguiente desbordamiento de pila !!!"
+
+#: spvw_garcol.d:1983
+#, fuzzy
+msgid "munmap() failed."
+msgstr "munmap() falló."
+
+#
+# "*** - no queda espacio para almacenar objetos LISP - REINICIALIZANDO" - lsg
+#
+# Yo sigo en mis trece, ... Debe ser un imperativo: REINICIE - cll
+#
+#: spvw_allocate.d:50
+msgid "*** - No more room for LISP objects: RESET"
+msgstr "*** - No queda espacio para almacenar más objetos LISP: REINICIE"
+
+#: spvw_allocate.d:251 spvw_allocate.d:311 spvw_allocate.d:396
+msgid "Trying to make room through a GC..."
+msgstr "Intentando obtener más espacio a través de un GC ..."
+
+#
+# "error del sistema operativo al cargar el fichero de inicialización `%s'\n" - lsg
+#
+# Así dicho parece que la culpa ha sido la carga del fichero de
+# inicialización, cuando en realidad, el mensaje dice "durante". El
+# error puede haber sido algo distinto de la carga. Por ejemplo, la
+# carga puede ser correcta pero puede no cargarse en memoria (se me
+# ocurre así de pronto), o cualquier otra cosa. Por eso prefiero la
+# traducción:
+#
+# "error del sistema operativo durante la carga del fichero de inicialización `%s'\n"
+#
+# - cll
+#
+#: spvw_memfile.d:926 spvw_memfile.d:1683
+#, fuzzy
+msgid "%s: operating system error during load of initialization file `%s'"
+msgstr "error del sistema operativo durante la carga del fichero de inicialización `%s'\n"
+
+#: spvw_memfile.d:1389
+#, fuzzy
+msgid "%s: Cannot map the initialization file `%s' into memory."
+msgstr "No puedo escribir el fichero de inicialización en memoria."
+
+#: spvw_memfile.d:1688
+#, fuzzy
+msgid "%s: initialization file `%s' was not created by this version of CLISP runtime"
+msgstr "el fichero de inicialización no fue creado con esta versión de LISP"
+
+#: spvw_memfile.d:1692
+#, fuzzy
+msgid "%s: not enough memory for initialization"
+msgstr "no hay memoria suficiente para la inicialización"
+
+#: spvw_memfile.d:1761
+msgid "%s: 'image size' method failed, but found image header at %d\n"
+msgstr ""
+
+#: errunix.d:58
+msgid "Invalid multibyte or wide character"
+msgstr ""
+
+#: errunix.d:65
+msgid "Operation not permitted"
+msgstr "Operación no permitida"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+# "No existe ese archivo o directorio" - lsg
+#
+# Pues si, me gusta más la traducción de Leo, que la de Enrique, salvo
+# que, tal y como tu mismo apuntas, Leo, se debe decir "fichero" y no
+# "archivo" - cll
+#
+#: errunix.d:71
+msgid "No such file or directory"
+msgstr "No existe ese fichero o directorio"
+
+#: errunix.d:77
+msgid "No such process"
+msgstr "No existe tal proceso"
+
+#: errunix.d:83
+msgid "Interrupted system call"
+msgstr "Llamada al sistema interrumpida"
+
+# Sugerencia: E/S. sv
+#
+# Vaya, tu sugerencia es tan informática que me impresiona que se me
+# haya escapado. cll
+#
+#: errunix.d:89
+msgid "I/O error"
+msgstr "Error de E/S"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:95
+msgid "No such device or address"
+msgstr "Dispositivo no configurado"
+
+#: errunix.d:101
+msgid "Arg list too long"
+msgstr "Lista de argumentos demasiado larga"
+
+#: errunix.d:107
+msgid "Exec format error"
+msgstr "Formato de programa no ejecutable"
+
+#: errunix.d:113
+msgid "Bad file number"
+msgstr "Número de fichero incorrecto"
+
+# Sugerencia: No hay ningún proceso hijo. sv
+#
+# Bueno, Enrique tradujo este mensaje como "Ningún proceso hijo" en libc
+# asi que, si te parece bien, lo pondré como él puesto que lo suyo es
+# una traducción ya aceptada y que además, resulta de mezclar lo que yo
+# he puesto y de tu sugerencia. cll
+#
+#: errunix.d:119
+msgid "No child processes"
+msgstr "Ningún proceso hijo"
+
+#: errunix.d:125
+msgid "No more processes"
+msgstr "No hay más procesos"
+
+#: errunix.d:131
+msgid "Not enough memory"
+msgstr "No hay memoria suficiente"
+
+#: errunix.d:137
+msgid "Permission denied"
+msgstr "Permiso denegado"
+
+#: errunix.d:143
+msgid "Bad address"
+msgstr "Dirección incorrecta"
+
+# Pongo esto un poco más en español.
+# Antes decía "Dispositivo de bloque requerido".
+# Por cierto, en otros sitios hemos puesto "dispositivo de bloques".
+# ¿cómo es? sv
+#: errunix.d:149
+msgid "Block device required"
+msgstr "Se requiere un dispositivo de bloque"
+
+#: errunix.d:155
+msgid "Device busy"
+msgstr "Dispositivo ocupado"
+
+#: errunix.d:161
+msgid "File exists"
+msgstr "El fichero ya existe"
+
+#: errunix.d:167
+msgid "Cross-device link"
+msgstr "Enlace cruzado entre dispositivos"
+
+#: errunix.d:173
+msgid "No such device"
+msgstr "No existe tal dispositivo"
+
+#: errunix.d:179
+msgid "Not a directory"
+msgstr "No es un directorio"
+
+#: errunix.d:185
+msgid "Is a directory"
+msgstr "Es un directorio"
+
+# ¿Por qué no inválido? La palabra existe.
+# Un día os tengo que enviar un trozo de "1984" de Orwell,
+# que habla de "neolengua", el único idioma del mundo que tiene
+# cada vez menos palabras, en vez de más... sv
+#
+# a¡Por supuestísimo!!! Tienes toda la razón del mundo. De hecho, si
+# echas un ojo al resto de los mensajes verás que yo siempre he
+# traducido "invalid" por "inválido" salvo en tres ocasiones: en dos
+# preferí la expresión "no es correcto" y en la otra lo dejé como "no es
+# válido" en vez de "no válido" que, además, suena horrible.
+#
+# A propósito del trozo de "1984", venga, ya estoy esperando :) - cll
+#
+#: errunix.d:191
+msgid "Invalid argument"
+msgstr "Argumento inválido"
+
+#: errunix.d:197
+msgid "File table overflow"
+msgstr "Desbordamiento de la tabla de ficheros"
+
+#: errunix.d:203
+msgid "Too many open files"
+msgstr "Demasiados ficheros abiertos"
+
+#: errunix.d:209
+msgid "Inappropriate ioctl for device"
+msgstr "El dispositivo no acepta la llamada `ioctl'"
+
+#: errunix.d:215
+msgid "Text file busy"
+msgstr "Fichero de texto en uso"
+
+#: errunix.d:221
+msgid "File too large"
+msgstr "Fichero demasiado grande"
+
+#: errunix.d:227
+msgid "No space left on device"
+msgstr "No queda espacio en el dispositivo"
+
+#: errunix.d:233
+msgid "Illegal seek"
+msgstr "Desplazamiento inválido"
+
+#: errunix.d:239
+msgid "Read-only file system"
+msgstr "Sistema de ficheros de sólo lectura"
+
+#: errunix.d:245
+msgid "Too many links"
+msgstr "Demasiados enlaces"
+
+#: errunix.d:251
+msgid "Broken pipe, child process terminated or socket closed"
+msgstr ""
+
+#: errunix.d:261
+msgid "Argument out of domain"
+msgstr "Argumento fuera del dominio"
+
+#
+# "El resultado es demasiado grande" - lsg
+#
+# Si, ya he cambiado `largo' por `grande' en todos los mensajes. Un
+# fallo realmente infantil :( - cll
+#
+#: errunix.d:267
+msgid "Result too large"
+msgstr "El resultado es demasiado grande"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:274
+msgid "Operation would block"
+msgstr "La operación se bloquearía"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:280
+msgid "Operation now in progress"
+msgstr "Operación en curso"
+
+# Already sería "ya". aún sería still.
+# Sugerencia: La operación ya se está realizando. sv
+#
+# Más aún, echando un ojo a la traducción de Enrique Melero en el glibc,
+# me he encontrado con el mismo mensaje y el dice: "La operación ya se
+# está llevando a cabo". Me gusta bastante. cll
+#
+#: errunix.d:286
+msgid "Operation already in progress"
+msgstr "La operación ya se está llevando a cabo"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:293
+msgid "Too many levels of symbolic links"
+msgstr "Demasiados niveles de enlaces simbólicos"
+
+#: errunix.d:299
+msgid "File name too long"
+msgstr "Nombre de fichero demasiado largo"
+
+#: errunix.d:305
+msgid "Directory not empty"
+msgstr "El directorio no está vacío"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:312
+msgid "Stale NFS file handle"
+msgstr "Fichero NFS bloqueado"
+
+# Duda: Aquí he seguido el consejo de Enrique Melero.
+#
+# En la versión 1.5 he decidido cambiar el término `camino' por
+# `trayectoria', tal y como recomiendan los traductores del libro Lisp,
+# (3ra edición) de Winston y Horn en el "Vocabulario bilingüe de
+# términos técnicos", en la página 650.
+#
+#: errunix.d:318
+msgid "Too many levels of remote in path"
+msgstr "Demasiados niveles de profundidad en la trayectoria"
+
+#: errunix.d:325
+msgid "Socket operation on non-socket"
+msgstr "Operación de `sockets' sobre un \"no-socket\""
+
+#: errunix.d:331
+msgid "Destination address required"
+msgstr "Se necesita la dirección del destino"
+
+#: errunix.d:337
+msgid "Message too long"
+msgstr "Mensaje demasiado largo"
+
+#: errunix.d:343
+msgid "Protocol wrong type for socket"
+msgstr "Tipo de protocolo incorrecto para el `socket'"
+
+#: errunix.d:349
+msgid "Option not supported by protocol"
+msgstr "Opción no soportada por el protocolo"
+
+#: errunix.d:355
+msgid "Protocol not supported"
+msgstr "Protocolo no soportado"
+
+#: errunix.d:361
+msgid "Socket type not supported"
+msgstr "Tipo de `socket' no soportado"
+
+# Pongo `socket' en vez de socket. sv
+#: errunix.d:367
+msgid "Operation not supported on socket"
+msgstr "Acción no permitida en un `socket'"
+
+#: errunix.d:373
+msgid "Protocol family not supported"
+msgstr "Familia de protocolos no soportada"
+
+#: errunix.d:379
+msgid "Address family not supported by protocol family"
+msgstr "Familia de direcciones no soportada por el protocolo"
+
+#: errunix.d:385
+msgid "Address already in use"
+msgstr "Dirección en uso"
+
+# Sugerencia: No se puede asignar. sv
+#
+# ¡Vale!, "No puede asignarse ..." es demasiado, ..., ¿impersonal? cll
+#: errunix.d:391
+msgid "Cannot assign requested address"
+msgstr "No se puede asignar la dirección requerida"
+
+# Sugerencia: no está operativa. sv
+#
+# ¡Sí, señor! así es, de hecho, como debe decirse, ... cll
+#
+#: errunix.d:397
+msgid "Network is down"
+msgstr "La red no está operativa"
+
+#: errunix.d:403
+msgid "Network is unreachable"
+msgstr "No es posible conectarse con la red"
+
+#: errunix.d:409
+msgid "Network dropped connection on reset"
+msgstr "Se ha perdido la conexión con la red debido a una reinicialización"
+
+# Voy a ser un poco puntilloso: desconexión implica que ya se había
+# conseguido la conexión.  Sin embargo, connection abort puede querer
+# decir que se ha interrumpido el "intento" de conexión. Por tanto, mi
+# sugerencia es: "El software ha provocado la interrupción de la
+# conexión", que en mi opinion tiene la misma ambigüedad que el
+# inglés. - lsg
+#
+# Vale, si, me gusta a saco - cll
+#
+#: errunix.d:415
+msgid "Software caused connection abort"
+msgstr "El software ha provocado la interrupción de la conexión"
+
+#: errunix.d:421
+msgid "Connection reset by peer"
+msgstr "Conexión reinicializada por el otro extremo"
+
+#
+# Duda: ¿Y buffer? ¿Como traduzco buffer?
+#
+# Yo he visto a menudo 'memoria tampón', que es el término usado por los
+# franceses. - lsg
+#
+# Tienes toda la razón, ... Sin embargo, en este caso, la traducción
+# francesa es:
+#
+# "Pas d'espace disponible pour un buffer"
+#
+# Además, como en spanglish.txt pone:
+#
+# "buffer - memoria intermedia, tampón, buffer"
+#
+# pues he utilizado `buffer' tal cual, ... - cll
+#
+#: errunix.d:427
+msgid "No buffer space available"
+msgstr "No queda espacio en el buffer"
+
+# Lo de socket, si te parece. sv
+#
+# Te digo lo mismo que te dije antes. Cuando hay finalizado con la
+# traducción me pondré a cambiar todas estas cosas con macros. cll
+#
+#: errunix.d:433
+msgid "Socket is already connected"
+msgstr "El `socket' ya está conectado"
+
+#: errunix.d:439
+msgid "Socket is not connected"
+msgstr "El `socket' no está conectado"
+
+# Añado comitas a `socket'. Es una especie de convenio que seguimos
+# cuando no nos queda más remedio que poner la palabra inglesa.
+# Así al menos reconocemos que es una palabra extraña. sv
+#: errunix.d:445
+msgid "Cannot send after socket shutdown"
+msgstr "No se puede enviar después de la ruptura del `socket'"
+
+#: errunix.d:451
+msgid "Too many references: cannot splice"
+msgstr ""
+
+# Duda: ¿ Se excedió el tiempo para la conexión ?
+#: errunix.d:457
+msgid "Connection timed out"
+msgstr "Se excedió el tiempo para la conexión"
+
+#: errunix.d:463
+msgid "Connection refused"
+msgstr "Conexión rechazada"
+
+# Voy a ser un poco puntilloso: desconexión implica que ya se había
+# conseguido la conexión.  Sin embargo, connection abort puede querer
+# decir que se ha interrumpido el "intento" de conexión. Por tanto, mi
+# sugerencia es: "El software ha provocado la interrupción de la
+# conexión", que en mi opinion tiene la misma ambigüedad que el
+# inglés. - lsg
+#
+# Vale, si, me gusta a saco - cll
+#
+#: errunix.d:468
+#, fuzzy
+msgid "Remote peer released connection"
+msgstr "El software ha provocado la interrupción de la conexión"
+
+# Estas dos darán que hablar, pero otro día las discutiremos... sv
+#
+# Al decir tú eso, he leído la traducción de este término en libc
+# (traducido por Enrique Melero) y, madre mía, me he quedado
+# "flipao". Aquello fue una discusión encarnizada, ...
+#
+# Para mas inri, yo no estoy de acuerdo con ninguno de los dos :) Verás,
+# un host puede estar "caído" (que así es como se suele decir aunque es,
+# evidentemente, incorrecto) y por ello no tiene por qué no estar
+# operativo (en libc lo habeis traducido como "el `host' no est
+# operativo"). De hecho, puede estar operando pero, por algún problema
+# de la red o de tu propia transmisión, resultar inalcanzable, ... En
+# fin, por este motivo prefiero "El `host' no está disponible"
+#
+# Por otra parte, no estoy muy de acuerdo con Enrique, ..., a mí lo de
+# poner host no me gusta. Ciertamente, un `host' no tiene por qué ser un
+# servidor, necesariamente, pero es el caso más común. En cualquier
+# caso, todo el mundo comprende perfectamente que el `host' es un
+# servidor. cll
+#
+#: errunix.d:473
+msgid "Host is down"
+msgstr "El servidor no está disponible"
+
+# Aquí, pues idem de idem, ... :) cll
+#
+#: errunix.d:479
+msgid "Host is unreachable"
+msgstr "No se puede conectar con el servidor"
+
+# Sugerencia: no está operativa. sv
+#
+# ¡Sí, señor! así es, de hecho, como debe decirse, ... cll
+#
+#: errunix.d:484
+#, fuzzy
+msgid "Networking error"
+msgstr "La red no está operativa"
+
+#: errunix.d:490
+msgid "Too many processes"
+msgstr "Demasiados procesos"
+
+#: errunix.d:496
+msgid "Too many users"
+msgstr "Demasiados usuarios"
+
+#: errunix.d:502
+msgid "Disk quota exceeded"
+msgstr "Cuota de disco excedida"
+
+#: errunix.d:509
+msgid "Not a stream device"
+msgstr "No es un dispositivo de flujo"
+
+#: errunix.d:515
+msgid "Timer expired"
+msgstr "El temporizador expiró"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:521
+msgid "Out of stream resources"
+msgstr "Alcanzado el límite de recursos de `streams'"
+
+#: errunix.d:527
+msgid "No message of desired type"
+msgstr "No hay mensajes del tipo deseado"
+
+#: errunix.d:533
+msgid "Not a data message"
+msgstr "No es un mensaje de datos"
+
+#: errunix.d:540
+msgid "Identifier removed"
+msgstr "Identificador desechado"
+
+# Duda: Eso del `inter-bloqueo' ¿estará bien?
+#
+#: errunix.d:547
+msgid "Resource deadlock would occur"
+msgstr "Podría ocurrir un interbloqueo entre recursos"
+
+# Duda: Aunque Bruno Haible me ha asegurado que la etiqueta
+# sys_errlist[ENOLCK] del glibc.po en español contiene la traduccion que
+# yo debiera usar, me he decidido por las indicaciones de Santiago Vila
+# en su respuesta a mi mail y he puesto, simplemente: "No quedan
+# registros de bloqueo disponibles"
+#
+#: errunix.d:553
+msgid "No record locks available"
+msgstr "No quedan registros de bloqueo disponibles"
+
+#: errunix.d:560
+msgid "Machine is not on the network"
+msgstr "La máquina no está en la red"
+
+#: errunix.d:566 errunix.d:572
+msgid "Object is remote"
+msgstr "El objeto es remoto"
+
+#: errunix.d:578
+msgid "Link has been severed"
+msgstr "El enlace ha sido destruído"
+
+#: errunix.d:584
+msgid "Advertise error"
+msgstr "Error de anuncio"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:590
+msgid "Srmount error"
+msgstr "Error de `srmount'"
+
+#: errunix.d:596
+msgid "Communication error on send"
+msgstr "Error de comunicaciones en el envío"
+
+#: errunix.d:602
+msgid "Protocol error"
+msgstr "Error de protocolo"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:608
+msgid "Multihop attempted"
+msgstr "Se ha intentado un multihop"
+
+# La traducción de este mensaje ha sido tomada de libc-1.98.es.po
+# (traducción realizada por Enrique Melero).
+#
+#: errunix.d:620
+msgid "Remote address changed"
+msgstr "La dirección remota ha cambiado"
+
+#: errunix.d:627
+msgid "Function not implemented"
+msgstr "Función no implementada"

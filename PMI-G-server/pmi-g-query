@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2010 Carnegie Mellon University
+
+from __future__ import with_statement
+
+import cgi, cgitb, urllib, re, time, MySQLdb
+
+CONFIG_FILE   = "/etc/pmi-g.config.py"
+BASE_URL      = "http://research.google.com/university/search/service"
+PARAMS        = "start=0&rsz=small"
+CACHE_SIZE    = 100000
+CACHE_DELTA   = 100
+
+# Database created with:
+#   CREATE TABLE CachedValues (words VARCHAR(1000) PRIMARY KEY, occurrences INT UNSIGNED NOT NULL, updated TIMESTAMP NOT NULL);
+#   CREATE TABLE Throttle (id TINYINT UNSIGNED PRIMARY KEY, nextQuery TIMESTAMP NOT NULL);
+#   INSERT INTO Throttle VALUES(0, now());
+
+# if there's a python problem spit out the details in the HTTP response
+cgitb.enable()
+
+def respond(val=""):
+    """Constructs and returns an HTTP response containing the given value, and ends the CGI script."""
+    print "Content-type: text/plain"
+    print
+    print val
+    exit()
+
+# get the client id, password and DB info for using this script from the config file
+# the config file should have the format
+#    CLID        = <the client id supplied by Google>
+#    SCRIPT_PWD  = <the password we assign for using this script>
+#    DATABASE    = <the name of the MySQL database>
+#    DBUSER      = <the user name for accessing the database>
+#    DBPASSWORD  = <the password for accessing the database>
+with open(CONFIG_FILE, "r") as f:
+    exec f
+
+form = cgi.FieldStorage()
+auth = form.getfirst("auth")
+if (auth != SCRIPT_PWD):
+    respond()
+terms = form.getfirst("q")
+if (terms == None):
+    respond()
+terms = urllib.quote_plus(terms)
+
+try:
+    conn = MySQLdb.connect(db=DATABASE, user=DBUSER, passwd=DBPASSWORD)
+    cursor = conn.cursor()
+    cursor.execute("SELECT occurrences FROM CachedValues WHERE words=%s", (terms,))
+    row = cursor.fetchone()
+    if (row != None):
+        cursor.execute("UPDATE CachedValues SET updated=now() WHERE words=%s", (terms,));
+        respond(row[0])
+
+    # Have to query Google
+
+    # prune the cache if necessary
+    try:
+        cursor.execute("LOCK TABLES CachedValues WRITE")
+        cursor.execute("SELECT count(words) FROM CachedValues")
+        row = cursor.fetchone()
+        if (row[0] > (CACHE_SIZE + CACHE_DELTA)):
+            n = row[0]
+            while (n > CACHE_SIZE):
+                cursor.execute("SELECT min(updated) from CachedValues")
+                row = cursor.fetchone()
+                cursor.execute("DELETE FROM CachedValues WHERE updated=%s", (row[0],))
+                n -= 1
+    finally:
+        cursor.execute("UNLOCK TABLES")
+
+    # We are required to throttle our queries against Google to no more than one per second
+    try:
+        cursor.execute("LOCK TABLES Throttle WRITE")
+        cursor.execute("SELECT now()-nextQuery FROM Throttle")
+        row = cursor.fetchone()
+        if (row[0] <= 0):
+            time.sleep(1)
+        googletext = urllib.urlopen(BASE_URL + "?clid=" + CLID + "&" + PARAMS + "&q=" + terms).read()
+        cursor.execute("UPDATE Throttle SET nextQuery=addtime(now(), '1') WHERE id=0")    
+    finally:
+        cursor.execute("UNLOCK TABLES")
+    match = re.search("<M>(\d+)</M>", googletext)
+    if (match == None):
+        respond()
+    result = match.group(1)
+    cursor.execute("INSERT INTO CachedValues VALUES(%s, %s, now())", (terms, result))
+    respond(result)
+
+finally:
+    cursor.close()
+    conn.close()
+
+

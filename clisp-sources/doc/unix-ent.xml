@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- *** Entities for docbook/xml, related to UNIX *** -->
+<!--
+ Copyright (C) 2002-2005 by Sam Steingold
+ This is Free Software, covered by the GNU GPL (v2 or later)
+ See http://www.gnu.org/copyleft/gpl.html
+ -->
+
+<!ENTITY unix '<ulink
+               url="http://www.UNIX-systems.org/online.html"><emphasis
+               role="strong">UNIX</emphasis></ulink>'>
+
+<!ENTITY X '<ulink url="http://www.x.org/">X Window System</ulink>'>
+
+<!ENTITY env-var '<ulink role="unix" url="basedefs/xbd_chap08.html">environment variable</ulink>'>
+<!ENTITY file-des '<ulink role="unix" url="basedefs/xbd_chap03.html#tag_03_165">file descriptor</ulink>'>
+<!ENTITY locale '<replaceable><ulink role="unix" url="basedefs/xbd_chap07.html">LOCALE</ulink></replaceable>'>
+<!ENTITY reg-exp '<ulink role="unix" url="basedefs/xbd_chap09.html">regular expression</ulink>'>
+<!ENTITY sh-lang '<ulink role="unix" url="utilities/xcu_chap02.html">Shell Command Language</ulink>'>
+<!ENTITY path-match '<ulink role="unix" url="utilities/xcu_chap02.html#tag_02_13">Pathname Matching</ulink>'>
+<!ENTITY iconv '<function role="unix">iconv</function>'>
+<!ENTITY free '<function role="unix">free</function>'>
+<!ENTITY malloc '<function role="unix">malloc</function>'>
+<!ENTITY sh '<ulink role="unix" url="utilities/sh.html"><command>/bin/sh</command></ulink>'>

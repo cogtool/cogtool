@@ -1,0 +1,12 @@
+Coordinator = {
+    OUTLETS = {
+	infoPanel;
+    };
+    SUPERCLASS = Object;
+};
+FirstResponder = {
+    ACTIONS = {
+	orderFrontNXColorPanel:;
+    };
+    SUPERCLASS = Object;
+};

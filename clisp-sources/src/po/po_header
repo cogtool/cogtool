@@ -1,0 +1,51 @@
+#!/bin/sh
+# Usage: po_header lang
+# This file uses GNU ls option `--full-time'
+
+if [ $# != 1 ] ; then
+  echo "Usage: $0 lang" 1>&2
+  exit 1
+fi
+
+lang="$1"
+
+case "$lang" in
+  t)  lang="xx"
+      language="Template"
+      authors="Bruno Haible, Michael Stoll, Marcus Daniels, Sam Steingold"
+      ;;
+  en) language="English"
+      authors="Bruno Haible, Marcus Daniels, Sam Steingold"
+      ;;
+  *) echo "Language $lang is not built-in." 1>&2
+     exit 1
+     ;;
+esac
+
+version=`. ../../version.sh ; echo $VERSION_NUMBER`
+date_now=`date +'%Y-%m-%d %T%z'`
+year=`date +'%Y'`;
+if test $lang = xx; then
+  date_pot="$date_now"
+else
+  date_pot=`LC_ALL=C ls -l --time-style=+"%Y-%m-%d %T%z" clisp.pot | head -1 | awk '{ print $6" "$7 }'`
+fi
+
+cat << EOF
+# ${language} messages for CLISP
+# Copyright (C) 1992-${year} ${authors}
+# This file is distributed under the same license as the GNU CLISP package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: clisp ${version}\n"
+"Report-Msgid-Bugs-To: clisp-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: ${date_pot}\n"
+"PO-Revision-Date: ${date_now}\n"
+"Last-Translator: Automatically generated <${LOGNAME}@`hostname`>\n"
+"Language-Team: ${language} <${lang}@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+EOF
+

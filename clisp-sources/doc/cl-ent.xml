@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- *** Entities for docbook/xml, related to Common Lisp *** -->
+<!--
+ Copyright (C) 2000-2005 by Sam Steingold
+ This is Free Software, covered by the GNU GPL (v2 or later)
+ See http://www.gnu.org/copyleft/gpl.html
+ -->
+
+<!-- *** general references about Common Lisp *** -->
+<!ENTITY clhs 'http://www.lisp.org/HyperSpec'>
+<!ENTITY clrfi 'http://clrfi.alu.org/clrfi'>
+<!ENTITY mop-home 'http://www.lisp.org/mop'>
+<!ENTITY cl '<ulink url="http://www.lisp.org"><command>Common Lisp</command></ulink>'>
+<!ENTITY clos '<ulink url="&clhs;/Body/chap-7.html"><command>CLOS</command></ulink>'>
+<!ENTITY clcs '<ulink url="&clhs;/Body/chap-9.html"><command>CLCS</command></ulink>'>
+<!ENTITY clx '<ulink url="http://www.cliki.net/CLX"><command>CLX</command></ulink>'>
+<!ENTITY ilu '<ulink url="http://www2.parc.com/istl/projects/ILU/"><acronym>ILU<alt>Inter-Language Unification</alt></acronym></ulink>'>
+
+<!ENTITY ansi-cl '<citation><link linkend="ansi-cl">ANSI CL standard</link></citation>'>
+<!ENTITY ansi-cl-bib
+  '<biblioentry id="ansi-cl">
+   <abbrev>ANSI CL</abbrev>
+   <pubdate>1994</pubdate>
+   <title>ANSI Common Lisp standard X3.226-1994 -
+       <ulink url="http://www.ncits.org/tc_home/j13sd4.htm">Information
+       Technology - Programming Language - Common Lisp</ulink></title>
+  </biblioentry>'>
+
+<!ENTITY hyperspec '<citation><link linkend="CLHS">Common Lisp HyperSpec</link></citation>'>
+<!ENTITY hyperspec-bib
+  '<biblioentry id="CLHS">
+   <abbrev>CLHS</abbrev>
+   <title><ulink url="&clhs;/FrontMatter/">Common Lisp HyperSpec</ulink></title>
+  </biblioentry>'>
+
+<!ENTITY cltl1 '<xref linkend="CLtL1"/>'>
+<!ENTITY cltl1-bib
+  '<biblioentry id="CLtL1">
+   <abbrev>CLtL1</abbrev>
+   <authorgroup><author>
+     <firstname>Guy L.</firstname>
+     <surname>Steele</surname>
+     <lineage>Jr.</lineage>
+   </author></authorgroup>
+   <title>Common Lisp: the Language (1st Edition)</title>
+   <pubdate>1984</pubdate> <pagenums>465 pages</pagenums>
+   <isbn>0-932376-41-X</isbn>
+   <publisher><publishername>Digital Press</publishername></publisher>
+  </biblioentry>'>
+
+<!ENTITY cltl2 '<xref linkend="CLtL2"/>'>
+<!ENTITY cltl2-bib
+  '<biblioentry id="CLtL2">
+   <abbrev>CLtL2</abbrev>
+   <authorgroup><author>
+     <firstname>Guy L.</firstname>
+     <surname>Steele</surname>
+     <lineage>Jr.</lineage>
+   </author></authorgroup>
+   <title><ulink url="http://www.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/html/cltl/cltl2.html">Common Lisp: the Language (2nd Edition)</ulink></title>
+   <pubdate>1990</pubdate> <pagenums>1032 pages</pagenums>
+   <isbn>1-555-58041-6</isbn>
+   <publisher><publishername>Digital Press</publishername></publisher>
+  </biblioentry>'>
+
+<!ENTITY amop '<xref linkend="amop"/>'>
+<!ENTITY amop-bib
+  '<biblioentry id="amop">
+   <abbrev>AMOP</abbrev>
+   <authorgroup>
+    <author><firstname>Gregor</firstname><surname>Kiczales</surname></author>
+    <author><firstname>Jim</firstname><surname>des Rivieres</surname></author>
+    <author><firstname>Daniel G.</firstname><surname>Bobrow</surname></author>
+   </authorgroup>
+   <citetitle><ulink url="&mop-home;">The Art of the Metaobject
+     Protocol</ulink></citetitle>
+   <pubdate>1991</pubdate> <pagenums>335 pages</pagenums>
+   <isbn>0-262-61074-4</isbn>
+   <publisher><publishername><ulink url="http://www-mitpress.mit.edu">MIT
+      Press</ulink></publishername></publisher>
+  </biblioentry>'>
+
+<!ENTITY pg-ansi-cl-bib
+ '<biblioentry id="pg-ansi-cl"><abbrev>PG-ANSI-CL</abbrev>
+   <author><firstname>Paul</firstname><surname>Graham</surname></author>
+   <title><ulink url="http://paulgraham.com/acl.html">ANSI
+     Common Lisp</ulink></title>
+   <publishername>Prentice Hall</publishername><pubdate>1995</pubdate>
+   <pagenums>432 pages</pagenums><isbn>0-133-70875-6</isbn></biblioentry>'>
+<!ENTITY pg-on-lisp-bib
+ '<biblioentry id="pg-on-lisp"><abbrev>PG-On-Lisp</abbrev>
+   <author><firstname>Paul</firstname><surname>Graham</surname></author>
+   <title><ulink url="http://paulgraham.com/onlisp.html">On Lisp</ulink></title>
+   <publishername>Prentice Hall</publishername><pubdate>1993</pubdate>
+   <pagenums>413 pages</pagenums><isbn>0-130-30552-9</isbn></biblioentry>'>
+
+
+<!ENTITY gray-streams '<ulink url="ftp://parcftp.xerox.com/pub/cl/cleanup/mail/stream-definition-by-user.mail">STREAM-DEFINITION-BY-USER:GENERIC-FUNCTIONS</ulink>'>
+
+<!-- *** links related to open-source software *** -->
+<!ENTITY fsf '<ulink url="http://www.fsf.org">Free Software Foundation (FSF)</ulink>'>
+<!ENTITY eff '<ulink url="http://www.eff.org">Electronic Frontier Foundation</ulink>'>
+<!ENTITY gnu '<ulink url="http://www.gnu.org">GNU</ulink>'>
+<!ENTITY ggettext '&gnu; <ulink url="http://www.gnu.org/software/gettext/gettext.html">gettext</ulink>'>
+<!ENTITY glibc '&gnu; <ulink url="http://www.gnu.org/software/libc/">libc</ulink>'>
+<!ENTITY libiconv '&gnu; <ulink url="http://www.gnu.org/software/libiconv/">libiconv</ulink>'>
+<!ENTITY libsigsegv '&gnu; <ulink url="http://libsigsegv.sourceforge.net/">libsigsegv</ulink>'>
+<!ENTITY readline '&gnu; <ulink url="http://cnswww.cns.cwru.edu/~chet/readline/rltop.html">readline</ulink>'>
+<!ENTITY autoconf '&gnu; <ulink url="http://www.gnu.org/software/autoconf/">autoconf</ulink>'>
+<!ENTITY asdf '<ulink url="http://www.cliki.net/asdf"><function>asdf</function></ulink>'>
+<!ENTITY defsystem '<ulink url="http://www.cliki.net/defsystem"><function>defsystem</function></ulink>'>
+<!ENTITY gpl '<ulink url="http://www.gnu.org/copyleft/gpl.html">GPL</ulink>'>
+<!ENTITY lgpl '<ulink url="http://www.gnu.org/copyleft/lgpl.html">LGPL</ulink>'>
+<!ENTITY gfdl '<ulink url="http://www.gnu.org/copyleft/fdl.html">GFDL</ulink>'>
+
+<!-- *** implementations *** -->
+<!ENTITY abcl '<ulink url="http://armedbear-j.sourceforge.net/"><command>ABCL</command></ulink>'>
+<!ENTITY ccl '<ulink url="http://corman.net/lisp"><command>CormanLisp</command></ulink>'>
+<!ENTITY clisp '<ulink url="http://clisp.cons.org"><command>CLISP</command></ulink>'>
+<!ENTITY cmucl '<ulink url="http://www.cons.org/cmucl/"><command>CMU CL</command></ulink>'>
+<!ENTITY gcl '<ulink url="http://www.gnu.org/software/gcl/"><command>GCL</command></ulink>'>
+<!ENTITY openmcl '<ulink url="http://openmcl.clozure.com/"><command>OpenMCL</command></ulink>'>
+<!ENTITY sbcl '<ulink url="http://sbcl.sourceforge.net/"><command>SBCL</command></ulink>'>
+<!ENTITY acl '<ulink url="http://www.franz.com"><command>Allegro CL</command></ulink>'>
+<!ENTITY lispworks '<ulink url="http://www.xanalys.com/software_tools/products/index.html"><command>LispWorks</command></ulink>'>
+
+<!-- *** Editors *** -->
+<!ENTITY emacs '<ulink url="http://www.gnu.org/software/emacs/">Emacs</ulink>'>
+<!ENTITY xemacs '<ulink url="http://www.xemacs.org">XEmacs</ulink>'>
+<!ENTITY ilisp '<ulink url="http://sourceforge.net/projects/ilisp/">ILISP</ulink>'>
+<!ENTITY slime '<ulink url="http://common-lisp.net/project/slime/">SLIME</ulink>'>
+<!ENTITY phemlock '<ulink url="http://common-lisp.net/project/phemlock/">Portable Hemlock</ulink>'>
+
+<!-- *** platforms *** -->
+<!ENTITY acorn '<ulink url="http://www.acorn.com/"><emphasis role="strong">Acorn</emphasis></ulink>'>
+<!ENTITY amiga '<ulink url="http://www.amiga.org/"><emphasis role="strong">Amiga</emphasis></ulink>'>
+<!ENTITY ascii '<ulink url="http://www.cplusplus.com/doc/papers/ascii.html"><emphasis role="strong">ASCII</emphasis></ulink>'>
+<!ENTITY beos '<ulink url="http://www.bebits.com/app/2680"><emphasis role="strong">BeOS</emphasis></ulink>'>
+<!ENTITY cygwin '<ulink url="http://cygwin.com/"><emphasis role="strong">Cygwin</emphasis></ulink>'>
+<!ENTITY dos '<ulink url="http://www.freedos.org/"><emphasis role="strong">DOS</emphasis></ulink>'>
+<!ENTITY gnome '<ulink url="http://www.gnome.org/"><emphasis role="strong">Gnome</emphasis></ulink>'>
+<!ENTITY hurd '<ulink url="http://www.gnu.org/software/hurd/"><emphasis role="strong">Hurd</emphasis></ulink>'>
+<!ENTITY kde '<ulink url="http://www.kde.org/"><emphasis role="strong">KDE</emphasis></ulink>'>
+<!ENTITY linux '<ulink url="http://www.linux.org/"><emphasis role="strong">Linux</emphasis></ulink>'>
+<!ENTITY macosx '<ulink url="http://www.apple.com/macosx/"><emphasis role="strong">Mac OS X</emphasis></ulink>'>
+<!ENTITY mingw '<ulink url="http://www.mingw.org/"><emphasis role="strong">MinGW</emphasis></ulink>'>
+<!ENTITY nextstep '<ulink url="http://www.next.com/"><emphasis role="strong">NeXTstep</emphasis></ulink>'>
+<!ENTITY os2 '<ulink url="http://www.os2.org/"><emphasis role="strong">OS/2</emphasis></ulink>'>
+<!ENTITY unicode '<ulink url="http://www.unicode.org/"><emphasis role="strong">UNICODE</emphasis></ulink>'>
+<!ENTITY win32 '<ulink url="http://winehq.com/"><emphasis role="strong">Win32</emphasis></ulink>'>
+
+<!-- *** etc *** -->
+<!ENTITY http '<ulink url="http://www.w3.org/Protocols/"><command>HTTP</command></ulink>'>
+<!ENTITY ip '<ulink url="791" role="rfc"><command>IP</command></ulink>'>
+<!ENTITY icmp '<ulink url="792" role="rfc"><command>ICMP</command></ulink>'>
+<!ENTITY tcp '<ulink url="793" role="rfc"><command>TCP</command></ulink>'>
+<!ENTITY udp '<ulink url="768" role="rfc"><command>UDP</command></ulink>'>
+<!ENTITY netiquette '<ulink url="1855" role="rfc">Netiquette</ulink>'>
+<!ENTITY gcc '<ulink url="http://gcc.gnu.org/"><command>gcc</command></ulink>'>
+<!ENTITY gdb '<ulink url="http://sources.redhat.com/gdb/"><command>gdb</command></ulink>'>
+<!ENTITY apache '<ulink url="http://www.apache.org/">Apache</ulink>'>
+<!ENTITY gzip '<ulink url="http://www.gzip.org/"><command>gzip</command></ulink>'>
+<!ENTITY c-lang '<ulink url="http://www.eskimo.com/~scs/C-faq/top.html"><command>C</command></ulink>'>
+<!ENTITY cpp '<ulink url="http://gcc.gnu.org/onlinedocs/cpp/"><command>cpp</command></ulink>'>
+<!ENTITY java '<ulink url="http://java.sun.com"><command>Java</command></ulink>'>
+<!ENTITY perl '<ulink url="http://www.perl.com"><command>Perl</command></ulink>'>
+<!ENTITY python '<ulink url="http://python.org/"><command>Python</command></ulink>'>
+<!ENTITY ieee-bfp '<ulink url="http://grouper.ieee.org/groups/754/">IEEE 754</ulink>'>
+<!ENTITY docbook '<ulink url="http://www.docbook.org/">DocBook</ulink>'>
+<!ENTITY html '<ulink url="http://www.w3.org/MarkUp/">HTML</ulink>'>
+<!ENTITY xml '<ulink url="http://www.w3.org/XML/">XML</ulink>'>
+<!ENTITY mime '<ulink url="2045" role="rfc">MIME</ulink>'>
+
+<!-- *** CLHS - Common Lisp HyperSpec *** -->
+
+<!-- *** misc *** -->
+<!ENTITY lambda-expr '<ulink url="&clhs;/Body/sec_3-1-3.html">lambda expression</ulink>'>
+<!ENTITY repl '<ulink url="&clhs;/Body/sec_25-1-1.html">read-eval-print loop</ulink>'>
+<!ENTITY iter-form '<ulink url="&clhs;/Body/glo_i.html#iteration_form">iteration form</ulink>'>
+<!ENTITY alist '<ulink url="&clhs;/Body/glo_a.html#association_list">alist</ulink>'>
+<!ENTITY type-eq '<ulink url="&clhs;/Body/glo_t.html#type_equivalent">type equivalent</ulink>'>
+<!ENTITY symbol-macro '<ulink url="&clhs;/Body/mac_define-symbol-macro.html"><classname>SYMBOL-MACRO</classname></ulink>'>
+<!ENTITY eos '<ulink url="&clhs;/Body/glo_e.html#end_of_file"><literal>end-of-stream</literal></ulink>'>
+<!ENTITY input-s '<ulink url="&clhs;/Body/glo_i.html#input">input</ulink>'>
+<!ENTITY in-s '&input-s; &stream-t;'>
+<!ENTITY output-s '<ulink url="&clhs;/Body/glo_o.html#output">output</ulink>'>
+<!ENTITY out-s '&output-s; &stream-t;'>
+<!ENTITY bidir-s '<ulink url="&clhs;/Body/glo_b.html#bidirectional">bidirectional</ulink>'>
+<!ENTITY bidi-s '&bidir-s; &stream-t;'>
+<!ENTITY fresh '<ulink url="&clhs;/Body/glo_f.html#fresh">fresh</ulink>'>
+<!ENTITY consing '<ulink url="&clhs;/Body/glo_c.html#cons">consing[3]</ulink>'>
+<!ENTITY recog-subt '<ulink url="&clhs;/Body/glo_r.html#recognizable_subtype">recognizable subtype</ulink>'>
+<!ENTITY place '<ulink url="&clhs;/Body/glo_p.html#place">place</ulink>'>
+<!ENTITY pri-esc '<ulink url="&clhs;/Body/glo_p.html#printer_escaping">printer escaping</ulink>'>
+<!ENTITY mul-val '<ulink url="&clhs;/Body/glo_m.html#multiple_values">multiple values</ulink>'>
+<!ENTITY pri-val '<ulink url="&clhs;/Body/glo_p.html#primary_value">primary value</ulink>'>
+<!ENTITY finally '<ulink url="&clhs;/Body/sec_6-1-7-2.html"><literal>FINALLY</literal></ulink>'>
+<!ENTITY cont-err '<ulink url="&clhs;/Body/glo_c.html#continuable">continuable</ulink> &error-t;'>
+<!ENTITY funname '<ulink url="&clhs;/Body/glo_f.html#function_name">function name</ulink>'>
+<!ENTITY ext-obj '<ulink url="&clhs;/Body/sec_3-2-4-1.html">externalizable object</ulink>'>
+<!ENTITY spelalist '<ulink url="&clhs;/Body/sec_3-4-3.html">specialized lambda list</ulink>'>
+<!ENTITY comp-unit '<ulink url="&clhs;/Body/glo_c.html#compilation_unit">compilation unit</ulink>'>
+<!ENTITY declaration-specifier-glo '<ulink url="&clhs;/Body/glo_d.html#declaration_specifier">declaration specifier</ulink>'>
+<!ENTITY proper-list-glo '<ulink url="&clhs;/Body/glo_p.html#proper_list">proper list</ulink>'>
+<!ENTITY proper-name-glo '<ulink url="&clhs;/Body/glo_p.html#proper_name">proper name</ulink>'>
+<!ENTITY exec-time '<ulink url="&clhs;/Body/glo_e.html#execution_time">execution time</ulink>'>
+<!ENTITY compile-time '<ulink url="&clhs;/Body/glo_c.html#compile_time">compile time</ulink>'>
+<!ENTITY top-level-form '<ulink url="&clhs;/Body/sec_3-2-3-1.html">top-level form</ulink>'>
+<!ENTITY dec-time '<ulink url="&clhs;/Body/sec_25-1-4-1.html">decoded time</ulink>'>
+<!ENTITY uni-time '<ulink url="&clhs;/Body/sec_25-1-4-2.html">universal time</ulink>'>
+<!ENTITY int-time '<ulink url="&clhs;/Body/sec_25-1-4-3.html">internal time</ulink>'>
+<!ENTITY seconds '<ulink url="&clhs;/Body/sec_25-1-4-4.html">seconds</ulink>'>
+<!ENTITY TZ '<ulink url="&clhs;/Body/glo_t.html#time_zone">time zone</ulink>'>
+<!ENTITY feature-expr '<ulink url="&clhs;/Body/sec_24-1-2-1.html">feature exression</ulink>'>
+<!ENTITY graphic '<ulink url="&clhs;/Body/glo_g.html#graphic">graphic</ulink>'>
+<!ENTITY printing '<ulink url="&clhs;/Body/glo_p.html#printing">printing</ulink>'>
+
+<!-- *** variables, bindings etc *** -->
+<!ENTITY environment '<ulink url="&clhs;/Body/sec_3-1-1.html">environment</ulink>'>
+<!ENTITY glo-env '<ulink url="&clhs;/Body/sec_3-1-1-1.html">global environment</ulink>'>
+<!ENTITY dyn-env '<ulink url="&clhs;/Body/sec_3-1-1-2.html">dynamic environment</ulink>'>
+<!ENTITY lex-env '<ulink url="&clhs;/Body/sec_3-1-1-3.html">lexical environment</ulink>'>
+<!ENTITY env-r '<replaceable><ulink url="&clhs;/sec_3-1-1-4.html">environment</ulink></replaceable>'>
+<!ENTITY variable '<ulink url="&clhs;/Body/sec_3-1-2-1-1.html">variable</ulink>'>
+<!ENTITY lex-var '<ulink url="&clhs;/Body/sec_3-1-2-1-1-1.html">lexical variable</ulink>'>
+<!ENTITY dyn-var '<ulink url="&clhs;/Body/sec_3-1-2-1-1-2.html">dynamic variable</ulink>'>
+<!ENTITY constant '<ulink url="&clhs;/Body/sec_3-1-2-1-1-3.html">constant variable</ulink>'>
+
+<!-- *** packages *** -->
+<!ENTITY cl-pac '<ulink url="&clhs;/Body/sec_11-1-2-1.html"><quote role="package">COMMON-LISP</quote></ulink>'>
+<!ENTITY clu-pac '<ulink url="&clhs;/Body/sec_11-1-2-2.html"><quote role="package">COMMON-LISP-USER</quote></ulink>'>
+<!ENTITY kwd-pac '<ulink url="&clhs;/Body/sec_11-1-2-3.html"><quote role="package">KEYWORD</quote></ulink>'>
+
+<!-- *** reader *** -->
+<!ENTITY whitespace '<ulink url="&clhs;/Body/sec_2-1-4-7.html">whitespace</ulink>'>
+<!ENTITY sharp-back '<ulink url="&clhs;/Body/sec_2-4-8-1"><literal role="data">#\</literal></ulink>'>
+<!ENTITY sharp-prime '<ulink url="&clhs;/Body/sec_2-4-8-2"><literal role="data">#&#39;</literal></ulink>'>
+<!ENTITY sharp-A '<ulink url="&clhs;/Body/sec_2-4-8-12"><literal role="data">#<replaceable>rank</replaceable>A</literal></ulink>'>
+<!ENTITY sharp-S '<ulink url="&clhs;/Body/sec_2-4-8-13"><literal role="data">#S</literal></ulink>'>
+<!ENTITY sharp-P '<ulink url="&clhs;/Body/sec_2-4-8-14"><literal role="data">#P</literal></ulink>'>
+<!ENTITY sharp-eq '<ulink url="&clhs;/Body/sec_2-4-8-15"><literal role="data">#n=</literal></ulink>'>
+<!ENTITY sharp-sharp '<ulink url="&clhs;/Body/sec_2-4-8-16"><literal role="data">#n#</literal></ulink>'>
+<!ENTITY sharp-plus '<ulink url="&clhs;/Body/sec_2-4-8-17"><literal role="data">#+</literal></ulink>'>
+<!ENTITY sharp-minus '<ulink url="&clhs;/Body/sec_2-4-8-18"><literal role="data">#-</literal></ulink>'>
+<!ENTITY sharp-lt '<ulink url="&clhs;/Body/sec_2-4-8-20"><literal role="data">#&lt;</literal></ulink>'>
+
+<!-- *** format instructions *** -->
+<!ENTITY format-a '<ulink url="&clhs;/Body/sec_22-3-4-1.html"><literal>~A</literal></ulink>'>
+<!ENTITY format-amp '<ulink url="&clhs;/Body/sec_22-3-1-3.html"><literal>~&amp;</literal></ulink>'>
+<!ENTITY format-b '<ulink url="&clhs;/Body/sec_22-3-2-3.html"><literal>~B</literal></ulink>'>
+<!ENTITY format-c '<ulink url="&clhs;/Body/sec_22-3-1-1.html"><literal>~:@C</literal></ulink>'>
+<!ENTITY format-d '<ulink url="&clhs;/Body/sec_22-3-2-2.html"><literal>~D</literal></ulink>'>
+<!ENTITY format-dollar '<ulink url="&clhs;/Body/sec_22-3-3-4.html"><literal>~$</literal></ulink>'>
+<!ENTITY format-e '<ulink url="&clhs;/Body/sec_22-3-3-2.html"><literal>~E</literal></ulink>'>
+<!ENTITY format-f '<ulink url="&clhs;/Body/sec_22-3-3-1.html"><literal>~F</literal></ulink>'>
+<!ENTITY format-g '<ulink url="&clhs;/Body/sec_22-3-3-3.html"><literal>~G</literal></ulink>'>
+<!ENTITY format-o '<ulink url="&clhs;/Body/sec_22-3-2-4.html"><literal>~O</literal></ulink>'>
+<!ENTITY format-percent '<ulink url="&clhs;/Body/sec_22-3-1-2.html"><literal>~&#37;</literal></ulink>'>
+<!ENTITY format-r '<ulink url="&clhs;/Body/sec_22-3-2-1.html"><literal>~R</literal></ulink>'>
+<!ENTITY format-rs '<ulink url="&clhs;/Body/sec_22-3-2-1.html"><literal>~:R</literal></ulink>'>
+<!ENTITY format-s '<ulink url="&clhs;/Body/sec_22-3-4-2.html"><literal>~S</literal></ulink>'>
+<!ENTITY format-slash '<ulink url="&clhs;/Body/sec_22-3-5-4.html"><literal>~/</literal></ulink>'>
+<!ENTITY format-t '<ulink url="&clhs;/Body/sec_22-3-6-1.html"><literal>~T</literal></ulink>'>
+<!ENTITY format-w '<ulink url="&clhs;/Body/sec_22-3-4-3.html"><literal>~W</literal></ulink>'>
+<!ENTITY format-x '<ulink url="&clhs;/Body/sec_22-3-2-5.html"><literal>~X</literal></ulink>'>
+
+<!-- ** this file is generated by "clocc/src/cllib/clhs.lisp". ** -->
+<!-- (clhs-write-entities "/usr/local/src/clocc/etc/clhs-ent.xml") -->
+<!ENTITY % clhs-entities SYSTEM "clhs-ent.xml">
+%clhs-entities;

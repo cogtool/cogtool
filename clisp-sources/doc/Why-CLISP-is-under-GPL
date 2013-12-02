@@ -1,0 +1,489 @@
+From rms@gnu.ai.mit.edu Mon Oct 19 00:06:25 1992
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu ([128.52.46.33]) by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA23967; Mon, 19 Oct 92 00:06:23 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA25733@mole.gnu.ai.mit.edu>; Sun, 18 Oct 92 18:59:05 -0400
+Date: Sun, 18 Oct 92 18:59:05 -0400
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9210182259.AA25733@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+Subject: Common Lisp and Readline
+Status: RO
+
+I hate to have to play this role with a fellow hacker, but...
+
+If you don't change to using the GPL, then you'll have to stop using
+readline.  Readline's terms say that the whole program has to be under
+the GPL, and just having the user do the link doesn't change this.  If
+the program is designed to run with readline as a part, then readline
+is a part of it.
+
+An ordinary user can decide to link readline with a program and run
+it.  That's different--this user is not doing distribution, and thus
+the GPL does not restrict what he can do.
+
+From haible Fri Oct 30 18:54:38 1992
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA28745; Fri, 30 Oct 92 18:54:37 +0100
+Date: Fri, 30 Oct 92 18:54:37 +0100
+From: haible (Bruno Haible)
+Message-Id: <9210301754.AA28745@ma2s2.mathematik.uni-karlsruhe.de>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de, rms@gnu.ai.mit.edu
+Subject: Re: Common Lisp and Readline
+Status: RO
+
+
+> I hate to have to play this role with a fellow hacker, but...
+
+I'm sorry too, as I am very indebted to the GNU project.
+
+> Readline's terms say that the whole program has to be under
+> the GPL, and just having the user do the link doesn't change this.
+
+I don't agree. My lisp.a is not a "work based on libreadline.a". What I
+distribute is a "mere aggregation" of lisp.a and libreadline.a - the latter
+with source.
+
+> If the program is designed to run with readline as a part, then readline
+> is a part of it.
+
+I could provide a libnoreadline.a and let the user choose to link lisp.a
+with either GNU's libreadline.a or my libnoreadline.a . Would that convince
+you that lisp.a "can be reasonably considered independent and separate work" ?
+
+Bruno Haible
+
+From rms@gnu.ai.mit.edu Fri Oct 30 22:19:16 1992
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu ([128.52.46.33]) by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA28939; Fri, 30 Oct 92 22:19:14 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA04907@mole.gnu.ai.mit.edu>; Fri, 30 Oct 92 16:09:54 -0500
+Date: Fri, 30 Oct 92 16:09:54 -0500
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9210302109.AA04907@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+In-Reply-To: <9210301754.AA28745@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Common Lisp and Readline
+Status: RO
+
+    > Readline's terms say that the whole program has to be under
+    > the GPL, and just having the user do the link doesn't change this.
+
+    I don't agree. My lisp.a is not a "work based on libreadline.a". What I
+    distribute is a "mere aggregation" of lisp.a and libreadline.a - the latter
+    with source.
+
+    I could provide a libnoreadline.a and let the user choose to link lisp.a
+    with either GNU's libreadline.a or my libnoreadline.a . Would that convince
+    you that lisp.a "can be reasonably considered independent and separate work" ?
+
+No, and I doubt it would convince a judge either.
+
+I'll have to insist that you stop using readline unless you make the
+program free.
+
+
+From haible Sat Oct 31 01:08:00 1992
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA29062; Sat, 31 Oct 92 01:08:00 +0100
+Date: Sat, 31 Oct 92 01:08:00 +0100
+From: haible (Bruno Haible)
+Message-Id: <9210310008.AA29062@ma2s2.mathematik.uni-karlsruhe.de>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de, rms@gnu.ai.mit.edu
+Subject: Re: Common Lisp and Readline
+Status: RO
+
+
+> I'll have to insist that you stop using readline unless you make the
+> program free.
+
+I built a libnoreadline.a that can be linked together with lisp.a,
+replacing libreadline.a .
+
+I will reorganize the distribution into 2 independent parts:
+* clisp.lzh       containing lisp.a and libnoreadline.a,
+* readline.tar.Z  containing libreadline.a and its source.
+
+The first one is enough to build a CLISP executable. It contains
+no GNU parts.
+
+> I doubt it would convince a judge either.
+
+The only thing CLISP will have to do with the readline library
+is that *THE USER* *MAY OPTIONALLY* link CLISP with the readline library.
+
+No judge will admit that this gives you the right to determine the copyright
+of CLISP.
+
+>From your own words:
+> An ordinary user can decide to link readline with a program and run
+> it.  That's different--this user is not doing distribution, and thus
+> the GPL does not restrict what he can do.
+
+
+If you still insist on me being wrong, then please tell me what part
+of the GNU GPL I am breaking. Or update the GNU GPL.
+
+Bruno Haible
+
+From haible Sat Oct 31 01:08:26 1992
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA29068; Sat, 31 Oct 92 01:08:25 +0100
+Date: Sat, 31 Oct 92 01:08:25 +0100
+From: haible (Bruno Haible)
+Message-Id: <9210310008.AA29068@ma2s2.mathematik.uni-karlsruhe.de>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de, rms@gnu.ai.mit.edu
+Subject: Readline & GPL
+Status: RO
+
+
+If someone was to turn the readline library into a shared library
+(a library that is needed at runtime by the executable, but not
+contained in the executable):
+Would that mean that any executable that uses a readline
+shared lib would have to be accompanied with full source? Or would it, in the
+contrary, mean that such an executable may use the readline lib without
+"containing" it and without being affected by such copyright issues?
+
+Bruno Haible
+
+From rms@gnu.ai.mit.edu Sat Oct 31 01:11:59 1992
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu ([128.52.46.33]) by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA29075; Sat, 31 Oct 92 01:11:56 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA06772@mole.gnu.ai.mit.edu>; Fri, 30 Oct 92 19:02:38 -0500
+Date: Fri, 30 Oct 92 19:02:38 -0500
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9210310002.AA06772@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+In-Reply-To: <9210310008.AA29068@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Readline & GPL
+Status: RO
+
+    If someone was to turn the readline library into a shared library
+    (a library that is needed at runtime by the executable, but not
+    contained in the executable):
+    Would that mean that any executable that uses a readline
+    shared lib would have to be accompanied with full source?
+
+Yes.
+
+From rms@gnu.ai.mit.edu Sat Oct 31 01:29:01 1992
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu ([128.52.46.33]) by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA29083; Sat, 31 Oct 92 01:28:59 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA06922@mole.gnu.ai.mit.edu>; Fri, 30 Oct 92 19:19:36 -0500
+Date: Fri, 30 Oct 92 19:19:36 -0500
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9210310019.AA06922@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+In-Reply-To: <9210310008.AA29062@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Common Lisp and Readline
+Status: RO
+
+    I built a libnoreadline.a that can be linked together with lisp.a,
+    replacing libreadline.a .
+
+    I will reorganize the distribution into 2 independent parts:
+    * clisp.lzh       containing lisp.a and libnoreadline.a,
+    * readline.tar.Z  containing libreadline.a and its source.
+
+    The first one is enough to build a CLISP executable. It contains
+    no GNU parts.
+
+True.  If that were the whole situation--if readline did not exist--
+then I would have no grounds to object.
+
+However, the sum total of what you are doing is still tantamount to
+distributing one program which contains readline but is not under the
+GPL.
+
+This is a problem I cannot ignore.  If you can get away with this then
+any company can get away with it.  The result would be to negate for
+practical purposes the GPL's requirement that improvements be free.
+And that would deprive GNU software of a major source of improvements.
+
+Is that what you want?
+
+
+
+From rms@gnu.ai.mit.edu Fri Nov  6 11:02:40 1992
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu ([128.52.46.33]) by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA13962; Fri, 6 Nov 92 11:02:36 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA09628@mole.gnu.ai.mit.edu>; Fri, 6 Nov 92 04:52:01 -0500
+Date: Fri, 6 Nov 92 04:52:01 -0500
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9211060952.AA09628@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+In-Reply-To: <9210310008.AA29062@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Common Lisp and Readline
+Status: RO
+
+If you do succeed in circumventing the GPL for readline, you would be
+blazing a path for every commercial company that wants to do it.
+Would you really like that result?
+
+Wouldn't it be best to eliminate this dispute by using the GPL for
+Common Lisp?  Totally aside from readline, the Lisp system would be
+more useful that way.  For example, maybe it could be a useful part of
+GNU.
+
+
+
+From haible Fri Nov  6 16:13:07 1992
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA14116; Fri, 6 Nov 92 16:13:06 +0100
+Date: Fri, 6 Nov 92 16:13:06 +0100
+From: haible (Bruno Haible)
+Message-Id: <9211061513.AA14116@ma2s2.mathematik.uni-karlsruhe.de>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de, rms@gnu.ai.mit.edu
+Subject: Common Lisp, Readline and GPL
+Status: RO
+
+
+
+>     I will reorganize the distribution into 2 independent parts:
+>     * clisp.lzh       containing lisp.a and libnoreadline.a,
+>     * readline.tar.Z  containing libreadline.a and its source.
+>
+>     The first one is enough to build a CLISP executable. It contains
+>     no GNU parts.
+>
+> However, the sum total of what you are doing is still tantamount to
+> distributing one program which contains readline but is not under the
+> GPL.
+
+Not totally. The sum of what I AND THE USER are doing is tantamount to
+building a program which contains readline but is not under the GPL.
+But
+  * the user isn't distributing anything,
+  * I am not responsible for the user's deeds,
+  * I am not distributing "one program", so GPL doesn't apply to me either.
+
+
+> If that were the whole situation--if readline did not exist--
+> then I would have no grounds to object.
+
+So the only reason why you may object is that my lisp.a has an INTERFACE
+that allows it to be linked to libreadline.a . As far as I know, only
+the readline CODE is copyrighted, not its INTERFACE. (Would you object
+because my libnoreadline.a has a similar interface?)
+
+
+> This is a problem I cannot ignore.  If you can get away with this then
+> any company can get away with it.
+> ...
+> And that would deprive GNU software of a major source of improvements.
+> Is that what you want?
+
+No, of course! But I would like to see the problem analyzed in depth.
+
+Problem 1: If someone (like me) lets the user do the final link phase.
+
+Problem 2: If the final link phase is done by the OS automatically at run time
+           (shared libraries).
+
+You should update GPL for these cases.
+
+
+> If you do succeed in circumventing the GPL for readline, you would be
+> blazing a path for every commercial company that wants to do it.
+
+But the problems remain there even if I put CLISP under GPL.
+
+
+From haible Fri Nov  6 16:13:19 1992
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA14123; Fri, 6 Nov 92 16:13:18 +0100
+Date: Fri, 6 Nov 92 16:13:18 +0100
+From: haible (Bruno Haible)
+Message-Id: <9211061513.AA14123@ma2s2.mathematik.uni-karlsruhe.de>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de, rms@gnu.ai.mit.edu
+Subject: Common Lisp, Readline and GPL
+Status: RO
+
+
+> Wouldn't it be best to eliminate this dispute by using the GPL for
+> Common Lisp?
+
+Would be best for me, true.
+
+> Totally aside from readline, the Lisp system would be
+> more useful that way.
+
+This and the following are convincing me:
+
+* Up to 1991 the decision whether using GPL or not, was simply a matter of
+  philosophy or copyright policy.
+  The success of Linux, however, demonstrates how a speed and quality of
+  development was achieved which would have been impossible without access
+  for everyone to the source of everything.
+
+* Finding co-developers for other Lisp packages or testers for other
+  hardware/OS platforms might be easier if I release full source.
+
+So be prepared to seeing CLISP's source before Christmas.
+
+Yours,
+          B. Haible
+
+From rms@gnu.ai.mit.edu Fri Nov  6 21:31:33 1992
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu ([128.52.46.33]) by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA15204; Fri, 6 Nov 92 21:31:28 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA10933@mole.gnu.ai.mit.edu>; Fri, 6 Nov 92 15:20:48 -0500
+Date: Fri, 6 Nov 92 15:20:48 -0500
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9211062020.AA10933@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+Cc: rms@gnu.ai.mit.edu
+In-Reply-To: <9211061513.AA14116@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Common Lisp, Readline and GPL
+Status: RO
+
+      * the user isn't distributing anything,
+      * I am not responsible for the user's deeds,
+      * I am not distributing "one program", so GPL doesn't apply to me either.
+
+The FSF position would be that this is still one program, which has
+only been disguised as two.  The reason it is still one program is
+that the one part clearly shows the intention for incorporation of the
+other part.
+
+
+I say this based on discussions I had with our lawyer long ago.  The
+issue first arose when NeXT proposed to distribute a modified GCC in
+two parts and let the user link them.  Jobs asked me whether this was
+lawful.  It seemed to me at the time that it was, following reasoning
+like what you are using; but since the result was very undesirable for
+free software, I said I would have to ask the lawyer.
+
+What the lawyer said surprised me; he said that judges would consider
+such schemes to be "subterfuges" and would be very harsh toward
+them.  He said a judge would ask whether it is "really" one program,
+rather than how it is labeled.
+
+So I went back to Jobs and said we believed his plan was not allowed
+by the GPL.
+
+The direct result of this is that we now have an Objective C front
+end.  They had wanted to distribute the Objective C parser as a
+separate proprietary package to link with the GCC back end, but since
+I didn't agree this was allowed, they made it free.
+
+
+So I don't think the GPL actually requires a correction for this.
+But perhaps it would be a good idea to add a note explaining this.
+
+
+From haible Sun Nov  8 16:31:52 1992
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA18675; Sun, 8 Nov 92 16:31:51 +0100
+Date: Sun, 8 Nov 92 16:31:51 +0100
+From: haible (Bruno Haible)
+Message-Id: <9211081531.AA18675@ma2s2.mathematik.uni-karlsruhe.de>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de, rms@gnu.ai.mit.edu
+Subject: Re: Common Lisp, Readline and GPL
+Status: RO
+
+
+Thanks you for the explanation of the lawyers' point of view.
+
+> What the lawyer said surprised me; he said that judges would consider
+> such schemes to be "subterfuges" and would be very harsh toward
+> them.  He said a judge would ask whether it is "really" one program,
+> rather than how it is labeled.
+
+I accept this.
+
+> They had wanted to distribute the Objective C parser as a
+> separate proprietary package to link with the GCC back end, but since
+> I didn't agree this was allowed, they made it free.
+
+The situation for CLISP is a bit different: CLISP was running without the
+readline library for over one year before I began using readline() in
+September 1992. That was also the reason why I was able to build a drop-in
+replacement (libnoreadline.a) within only one hour.
+
+The readline library is not an essential or integral part of CLISP - it makes
+the user interface nicer, and that's all.
+
+
+From rms@gnu.ai.mit.edu Mon Oct 11 18:57:43 1993
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA06403; Mon, 11 Oct 93 18:57:38 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA09632@mole.gnu.ai.mit.edu>; Mon, 11 Oct 93 13:56:03 -0400
+Date: Mon, 11 Oct 93 13:56:03 -0400
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9310111756.AA09632@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+In-Reply-To: <9310111623.AA06248@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Re: compiling with gcc without linking with libggc.a
+Status: RO
+
+    But libgmp.a should remain under GPL.
+
+I'm interested in hearing why you think so.
+Someone else is arguing that it should be under the LGPL;
+I haven't made up my mind yet.
+
+From haible Tue Oct 12 13:28:37 1993
+Return-Path: <haible>
+Received: by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA07494; Tue, 12 Oct 93 13:28:36 +0100
+Date: Tue, 12 Oct 93 13:28:36 +0100
+From: haible (Bruno Haible)
+Message-Id: <9310121228.AA07494@ma2s2.mathematik.uni-karlsruhe.de>
+To: rms@gnu.ai.mit.edu
+Subject: Re: libgmp.a
+Status: RO
+
+>     But libgmp.a should remain under GPL.
+> I'm interested in hearing why you think so.
+
+Because one can build a multi-precision calculator (like `bc') as a wrapper
+to libgmp.a. Capability of handling arbitrary size numbers is still an
+essential advantage (and marketing issue) for computer algebra systems and
+Lisp implementations.
+
+I had to put CLISP under GPL because libreadline.a was something I wanted
+to use and I didn't want to write myself. libgmp.a is similar in this
+respect, and it may therefore help putting some new packages under GPL.
+
+Building libgmp.a was just too hard work. Other people shouldn't get it for
+free.
+
+Bruno Haible
+
+From rms@gnu.ai.mit.edu Tue Oct 12 18:28:27 1993
+Return-Path: <rms@gnu.ai.mit.edu>
+Received: from mole.gnu.ai.mit.edu by ma2s2.mathematik.uni-karlsruhe.de (4.1/SMI-4.0)
+	id AA08120; Tue, 12 Oct 93 18:28:25 +0100
+Received: by mole.gnu.ai.mit.edu (5.65/4.0)
+	id <AA14488@mole.gnu.ai.mit.edu>; Tue, 12 Oct 93 13:26:57 -0400
+Date: Tue, 12 Oct 93 13:26:57 -0400
+From: rms@gnu.ai.mit.edu (Richard Stallman)
+Message-Id: <9310121726.AA14488@mole.gnu.ai.mit.edu>
+To: haible@ma2s2.mathematik.uni-karlsruhe.de
+In-Reply-To: <9310121228.AA07494@ma2s2.mathematik.uni-karlsruhe.de> (haible@ma2s2.mathematik.uni-karlsruhe.de)
+Subject: Re: libgmp.a
+Status: RO
+
+Thanks for reminding me about this example.
+I agree it is a strong argument.
+

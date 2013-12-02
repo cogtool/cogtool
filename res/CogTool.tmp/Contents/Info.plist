@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>cogtoolstart</string>
+	<key>CFBundleGetInfoString</key>
+	<string>CogTool VERSTRING, Copyright (2008) Carnegie Mellon University, All rights reserved.</string>
+	<key>CFBundleIconFile</key>
+	<string>CogTool.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>edu.cmu.cs.hcii.cogtool</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>CogTool</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>VERSTRING</string>
+	<key>CFBundleSignature</key>
+	<string>CgTl</string>
+	<key>CFBundleVersion</key>
+	<string>VERSTRING</string>
+	<key>Java</key>
+	<dict>
+		<key>ClassPath</key>
+		<string>$JAVAROOT/DISTJARSTR:$JAVAROOT/CogTool.jar</string>
+		<key>JVMVersion</key>
+		<string>1.5*</string>
+		<key>MainClass</key>
+		<string>edu.cmu.cs.hcii.cogtool.CogTool</string>
+		<key>VMOptions</key>
+		<!-- WARNING: this is currently ignored; the JVM options really used are in cogtoolstart -->
+		<string>-d32 -Djava.library.path=$JAVAROOT/dll -Dcogtool.version=VERSION -Dcogtool.revision=REVISION -Dcogtool.build=BUILDTIME -Dorg.eclipse.swt.internal.carbon.noFocusRing -Dorg.eclipse.swt.internal.carbon.smallFonts -XstartOnFirstThread -Xmx400000000</string>
+		<key>WorkingDirectory</key>
+		<string>$APP_PACKAGE/Contents/Resources/</string>
+	</dict>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>BLDREV</key>
+		<string>REVISION</string>
+		<key>BLDTIM</key>
+		<string>BUILDTIME</string>
+		<key>BLDVER</key>
+		<string>VERSION</string>
+	</dict>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.3</string>
+	<key>LSRequiresCarbon</key>
+	<string>1</string>
+</dict>
+</plist>

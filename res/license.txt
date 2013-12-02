@@ -1,0 +1,51 @@
+  CogTool 1.0, Copyright (c) 2005 Carnegie Mellon University
+  This software is distributed under the terms of the FSF Lesser Gnu Public License 
+  (see LGPL.txt).
+ 
+  CogTool is free software; you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation; either version 2.1 of the License, or
+  (at your option) any later version.
+ 
+  CogTool is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+ 
+  You should have received a copy of the GNU Lesser General Public License
+  along with CogTool; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+  
+  CogTool makes use of several third-party components, with the following notices:
+
+  Eclipse SWT 3.1
+  Eclipse GEF Draw2D 3.1
+
+  Unless otherwise indicated, all Content made available by the Eclipse Foundation is
+  provided to you under the terms and conditions of the Eclipse Public License Version 1.0
+  ("EPL"). A copy of the EPL is provided with this Content and is also available at
+  http://www.eclipse.org/legal/epl-v10.html.
+
+  clisp 2.35
+
+  Copyright (c) 1992-2004 Bruno Haible and Michael Stoll
+  This software is distributed under the terms of the FSF Gnu Public License.
+  See COPYRIGHT file in clisp installation folder for more information.
+  
+  ACT-R 5.1
+
+  Copyright (c) 1998-2005 Dan Bothell, Mike Byrne, Christian Lebiere & John R Anderson
+  This software is distributed under the terms of the FSF Lesser Gnu Public License 
+  (see LGPL.txt).
+
+  Apache Batik 1.6
+  Apache Jakarta Commons-Collections 3.1, -Concurrent 1.3.2, -Lang 2.1, and -Logging 1.0.2
+
+  This product contains software developed by the Apache Software Foundation
+  (http://www.apache.org/)
+
+  Hibernate 3.0.5
+
+  This software is distributed under the terms of the FSF Lesser Gnu Public License 
+  (see LGPL.txt).

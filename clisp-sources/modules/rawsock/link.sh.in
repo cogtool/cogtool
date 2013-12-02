@@ -1,0 +1,9 @@
+files='rawsock.o'
+make clisp-module \
+     CC="${CC}" CPPFLAGS="${CPPFLAGS}" CFLAGS="${CFLAGS}" \
+     INCLUDES="$absolute_linkkitdir"
+NEW_FILES="${files}"
+NEW_LIBS="${files} @LIBS@"
+NEW_MODULES="rawsock"
+TO_LOAD='sock'
+TO_PRELOAD='preload.lisp'

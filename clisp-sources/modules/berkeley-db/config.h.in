@@ -1,0 +1,109 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Define to 1 if DB_ENV->set_errcall() accepts DBE */
+#undef HAVE_DBE_SET_ERRCALL_ACCEPT_DBE
+
+/* Define to 1 if `get_home' is member of `DB_ENV'. */
+#undef HAVE_DB_ENV_GET_HOME
+
+/* Define to 1 if `mutex_get_align' is member of `DB_ENV'. */
+#undef HAVE_DB_ENV_MUTEX_GET_ALIGN
+
+/* Define to 1 if `mutex_get_tas_spins' is member of `DB_ENV'. */
+#undef HAVE_DB_ENV_MUTEX_GET_TAS_SPINS
+
+/* Define to 1 if `mutex_set_align' is member of `DB_ENV'. */
+#undef HAVE_DB_ENV_MUTEX_SET_ALIGN
+
+/* Define to 1 if `mutex_set_tas_spins' is member of `DB_ENV'. */
+#undef HAVE_DB_ENV_MUTEX_SET_TAS_SPINS
+
+/* Define to 1 if `set_msgcall' is member of `DB_ENV'. */
+#undef HAVE_DB_ENV_SET_MSGCALL
+
+/* Define to 1 if DB->get_transactional() accepts just 1 argument */
+#undef HAVE_DB_GET_TRANSACTIONAL_1ARG
+
+/* Define to 1 if you have the <db.h> header file. */
+#undef HAVE_DB_H
+
+/* Define to 1 if `st_lock_nowait' is member of `DB_LOCK_STAT'. */
+#undef HAVE_DB_LOCK_STAT_ST_LOCK_NOWAIT
+
+/* Define to 1 if `st_lock_wait' is member of `DB_LOCK_STAT'. */
+#undef HAVE_DB_LOCK_STAT_ST_LOCK_WAIT
+
+/* Define to 1 if `st_nconflicts' is member of `DB_LOCK_STAT'. */
+#undef HAVE_DB_LOCK_STAT_ST_NCONFLICTS
+
+/* Define to 1 if `st_nnowaits' is member of `DB_LOCK_STAT'. */
+#undef HAVE_DB_LOCK_STAT_ST_NNOWAITS
+
+/* Define to 1 if DB->stat() accepts TXNid */
+#undef HAVE_DB_STAT_ACCEPT_TXN
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `localtime' function. */
+#undef HAVE_LOCALTIME
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strftime' function. */
+#undef HAVE_STRFTIME
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <time.h> header file. */
+#undef HAVE_TIME_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* The size of a `db_recno_t', as computed by sizeof. */
+#undef SIZEOF_DB_RECNO_T
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME

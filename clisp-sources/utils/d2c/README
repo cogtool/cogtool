@@ -1,0 +1,5 @@
+This is a temoprary directory where I'll check in scripts used during
+the conversion of the .d files to ANSI C99. Scripts in here may be
+useful to developers who have uncommitted changes made to .d files.
+
+-Peter (peter@javamonkey.com)

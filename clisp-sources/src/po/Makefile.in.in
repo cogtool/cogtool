@@ -1,0 +1,144 @@
+# -*- Makefile -*- for internationalized message files for CLISP.
+#
+# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1996 Marcus Daniels.
+# Copyright (C) 1997 Bruno Haible.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+# USA.
+
+#### Start of system configuration section. ####
+
+# Directories used by "make":
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+
+# Directories used by "make install":
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datadir = @datadir@
+localedir = $(datadir)/locale
+
+# Programs used by "make":
+
+# Not needed, since these catalogs are already pre-built.
+#GMSGFMT = @GMSGFMT@
+
+@SET_MAKE@
+
+# Programs used by "make install":
+
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+
+#### End of system configuration section. ####
+
+PACKAGE = @PACKAGE@
+
+SHELL = /bin/sh
+
+.SUFFIXES:
+.SUFFIXES: .po .gmo
+
+# List of catalogs to build and install (extension .gmo)
+CATALOGS = @CATALOGS@
+
+
+all: all-@USE_NLS@
+
+all-yes: $(CATALOGS)
+all-no:
+
+check: all
+
+# Installing the catalogs.
+
+install: install-exec install-data
+
+install-exec: force
+
+install-data: install-data-@USE_NLS@
+
+install-data-no: all force
+
+install-data-yes: all force
+	@catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  cat=`basename $$cat`; \
+	  destdir=$(localedir); \
+	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
+	  dir="$$destdir/$$lang/LC_MESSAGES"; \
+	  datadir=`echo "$$destdir" | sed -e 's,/[^/]*$$,,'`; \
+	  test -d "$$datadir" || mkdir "$$datadir" ; \
+	  test -d "$$destdir" || mkdir "$$destdir" ; \
+	  test -d "$$destdir/$$lang" || mkdir "$$destdir/$$lang" ; \
+	  test -d "$$dir" || mkdir "$$dir" ; \
+	  if test -r $$cat; then \
+	    echo "installing $$cat as $$dir/$(PACKAGE).mo"; \
+	    $(INSTALL_DATA) $$cat "$$dir/$(PACKAGE).mo"; \
+	    echo "installing clisplow_$$cat as $$dir/clisplow.mo"; \
+	    $(INSTALL_DATA) clisplow_$$cat "$$dir/clisplow.mo"; \
+	  else \
+	    echo "installing $(srcdir)/$$cat as $$dir/$(PACKAGE).mo"; \
+	    $(INSTALL_DATA) $(srcdir)/$$cat "$$dir/$(PACKAGE).mo"; \
+	    echo "installing $(srcdir)/clisplow_$$cat as $$dir/clisplow.mo"; \
+	    $(INSTALL_DATA) $(srcdir)/clisplow_$$cat "$$dir/clisplow.mo"; \
+	  fi; \
+	done
+
+# Define this as empty until I found a useful application.
+installcheck:
+
+installdirs: force
+	@catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  cat=`basename $$cat`; \
+	  destdir=$(localedir); \
+	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
+	  dir="$$destdir/$$lang/LC_MESSAGES"; \
+	  datadir=`echo "$$destdir" | sed -e 's,/[^/]*,,'`; \
+	  test -d "$$datadir" || mkdir "$$datadir" ; \
+	  test -d "$$destdir" || mkdir "$$destdir" ; \
+	  test -d "$$destdir/$$lang" || mkdir "$$destdir/$$lang" ; \
+	  test -d "$$dir" || mkdir "$$dir" ; \
+	done
+
+uninstall:
+	catalogs='$(CATALOGS)'; \
+	for cat in $$catalogs; do \
+	  cat=`basename $$cat`; \
+	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
+	  rm -f "$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE).mo"; \
+	  rm -f "$(localedir)/$$lang/LC_MESSAGES/clisplow.mo"; \
+	done
+
+mostlyclean:
+	rm -f core core.* *.pox $(PACKAGE).po *.old.po
+
+clean: mostlyclean
+
+distclean: clean
+	rm -f Makefile POTFILES
+
+maintainer-clean: distclean
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+	rm -f *.gmo
+
+
+force:
+

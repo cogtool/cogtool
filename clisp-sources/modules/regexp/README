@@ -1,0 +1,28 @@
+This directory contains a CLISP add-on module for regular expression matching
+and searching.
+The library routines regex.[ch] come from the GNU findutils-4.1.
+
+To install it,
+
+1. If you are not building clisp in the src/ directory:
+       mkdir regexp
+       cd regexp
+       ln ../../src/regexp/* .
+
+2. run
+       ./configure
+       cd ..
+
+3. build clisp
+       make
+
+4. compile regexp.lisp
+       base/lisp.run -M base/lispinit.mem -c regexp/regexp.lisp
+
+5. make a new linking set
+       clisp-link add-module-set regexp base base+regexp
+
+6. try it
+       base+regexp/lisp.run -M base+regexp/lispinit.mem
+       (use-package "REGEXP")
+

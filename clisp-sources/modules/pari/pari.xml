@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="pari"><title>Computer Algebra System PARI</title>
+
+<para>This package offers an &ffi-pac;-based interface to &pari-link;.</para>
+<para>The package <quote role="package">PARI</quote>
+ is <link linkend="package-case">case-sensitive</link>.</para>
+
+<simpara>When this module is present, &features-var; contains the
+ symbol <constant>:PARI</constant>.</simpara>
+
+<para>PARI objects are printed and read using a
+ special <literal role="data">#Z""</literal> syntax.</para>
+
+</section>

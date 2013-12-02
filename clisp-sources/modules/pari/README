@@ -1,0 +1,3 @@
+To install the pari-bindings, do the following:
+
+$ /configure --with-module=pari --with-libpari-prefix=/usr/local/ --build build-pari

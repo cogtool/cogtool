@@ -1,0 +1,373 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `lo_close' function. */
+#undef HAVE_LO_CLOSE
+
+/* Define to 1 if you have the `lo_creat' function. */
+#undef HAVE_LO_CREAT
+
+/* Define to 1 if you have the `lo_export' function. */
+#undef HAVE_LO_EXPORT
+
+/* Define to 1 if you have the `lo_import' function. */
+#undef HAVE_LO_IMPORT
+
+/* Define to 1 if you have the `lo_lseek' function. */
+#undef HAVE_LO_LSEEK
+
+/* Define to 1 if you have the `lo_open' function. */
+#undef HAVE_LO_OPEN
+
+/* Define to 1 if you have the `lo_read' function. */
+#undef HAVE_LO_READ
+
+/* Define to 1 if you have the `lo_tell' function. */
+#undef HAVE_LO_TELL
+
+/* Define to 1 if you have the `lo_unlink' function. */
+#undef HAVE_LO_UNLINK
+
+/* Define to 1 if you have the `lo_write' function. */
+#undef HAVE_LO_WRITE
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <postgresql/postgres_ext.h> header file. */
+#undef HAVE_POSTGRESQL_POSTGRES_EXT_H
+
+/* Define to 1 if you have the <postgres_ext.h> header file. */
+#undef HAVE_POSTGRES_EXT_H
+
+/* Define to 1 if you have the `PQbackendPID' function. */
+#undef HAVE_PQBACKENDPID
+
+/* Define to 1 if you have the `PQbinaryTuples' function. */
+#undef HAVE_PQBINARYTUPLES
+
+/* Define to 1 if you have the `PQcancel' function. */
+#undef HAVE_PQCANCEL
+
+/* Define to 1 if you have the `PQclear' function. */
+#undef HAVE_PQCLEAR
+
+/* Define to 1 if you have the `PQclientEncoding' function. */
+#undef HAVE_PQCLIENTENCODING
+
+/* Define to 1 if you have the `PQcmdStatus' function. */
+#undef HAVE_PQCMDSTATUS
+
+/* Define to 1 if you have the `PQcmdTuples' function. */
+#undef HAVE_PQCMDTUPLES
+
+/* Define to 1 if you have the `PQconndefaults' function. */
+#undef HAVE_PQCONNDEFAULTS
+
+/* Define to 1 if you have the `PQconnectdb' function. */
+#undef HAVE_PQCONNECTDB
+
+/* Define to 1 if you have the `PQconnectPoll' function. */
+#undef HAVE_PQCONNECTPOLL
+
+/* Define to 1 if you have the `PQconnectStart' function. */
+#undef HAVE_PQCONNECTSTART
+
+/* Define to 1 if you have the `PQconninfoFree' function. */
+#undef HAVE_PQCONNINFOFREE
+
+/* Define to 1 if you have the `PQconsumeInput' function. */
+#undef HAVE_PQCONSUMEINPUT
+
+/* Define to 1 if you have the `PQdb' function. */
+#undef HAVE_PQDB
+
+/* Define to 1 if you have the `PQdisplayTuples' function. */
+#undef HAVE_PQDISPLAYTUPLES
+
+/* Define to 1 if you have the `PQdsplen' function. */
+#undef HAVE_PQDSPLEN
+
+/* Define to 1 if you have the `PQendcopy' function. */
+#undef HAVE_PQENDCOPY
+
+/* Define to 1 if you have the `PQenv2encoding' function. */
+#undef HAVE_PQENV2ENCODING
+
+/* Define to 1 if you have the `PQerrorMessage' function. */
+#undef HAVE_PQERRORMESSAGE
+
+/* Define to 1 if you have the `PQescapeBytea' function. */
+#undef HAVE_PQESCAPEBYTEA
+
+/* Define to 1 if you have the `PQescapeString' function. */
+#undef HAVE_PQESCAPESTRING
+
+/* Define to 1 if you have the `PQexec' function. */
+#undef HAVE_PQEXEC
+
+/* Define to 1 if you have the `PQexecParams' function. */
+#undef HAVE_PQEXECPARAMS
+
+/* Define to 1 if you have the `PQexecPrepared' function. */
+#undef HAVE_PQEXECPREPARED
+
+/* Define to 1 if you have the `PQfformat' function. */
+#undef HAVE_PQFFORMAT
+
+/* Define to 1 if you have the `PQfinish' function. */
+#undef HAVE_PQFINISH
+
+/* Define to 1 if you have the `PQflush' function. */
+#undef HAVE_PQFLUSH
+
+/* Define to 1 if you have the `PQfmod' function. */
+#undef HAVE_PQFMOD
+
+/* Define to 1 if you have the `PQfn' function. */
+#undef HAVE_PQFN
+
+/* Define to 1 if you have the `PQfname' function. */
+#undef HAVE_PQFNAME
+
+/* Define to 1 if you have the `PQfnumber' function. */
+#undef HAVE_PQFNUMBER
+
+/* Define to 1 if you have the `PQfreeCancel' function. */
+#undef HAVE_PQFREECANCEL
+
+/* Define to 1 if you have the `PQfreemem' function. */
+#undef HAVE_PQFREEMEM
+
+/* Define to 1 if you have the `PQfsize' function. */
+#undef HAVE_PQFSIZE
+
+/* Define to 1 if you have the `PQftable' function. */
+#undef HAVE_PQFTABLE
+
+/* Define to 1 if you have the `PQftablecol' function. */
+#undef HAVE_PQFTABLECOL
+
+/* Define to 1 if you have the `PQftype' function. */
+#undef HAVE_PQFTYPE
+
+/* Define to 1 if you have the `PQgetCancel' function. */
+#undef HAVE_PQGETCANCEL
+
+/* Define to 1 if you have the `PQgetCopyData' function. */
+#undef HAVE_PQGETCOPYDATA
+
+/* Define to 1 if you have the `PQgetisnull' function. */
+#undef HAVE_PQGETISNULL
+
+/* Define to 1 if you have the `PQgetlength' function. */
+#undef HAVE_PQGETLENGTH
+
+/* Define to 1 if you have the `PQgetline' function. */
+#undef HAVE_PQGETLINE
+
+/* Define to 1 if you have the `PQgetlineAsync' function. */
+#undef HAVE_PQGETLINEASYNC
+
+/* Define to 1 if you have the `PQgetResult' function. */
+#undef HAVE_PQGETRESULT
+
+/* Define to 1 if you have the `PQgetssl' function. */
+#undef HAVE_PQGETSSL
+
+/* Define to 1 if you have the `PQgetvalue' function. */
+#undef HAVE_PQGETVALUE
+
+/* Define to 1 if you have the `PQhost' function. */
+#undef HAVE_PQHOST
+
+/* Define to 1 if you have the `PQinitSSL' function. */
+#undef HAVE_PQINITSSL
+
+/* Define to 1 if you have the `PQisBusy' function. */
+#undef HAVE_PQISBUSY
+
+/* Define to 1 if you have the `PQisnonblocking' function. */
+#undef HAVE_PQISNONBLOCKING
+
+/* Define to 1 if you have the `PQmakeEmptyPGresult' function. */
+#undef HAVE_PQMAKEEMPTYPGRESULT
+
+/* Define to 1 if you have the `PQmblen' function. */
+#undef HAVE_PQMBLEN
+
+/* Define to 1 if you have the `PQnfields' function. */
+#undef HAVE_PQNFIELDS
+
+/* Define to 1 if you have the `PQnotifies' function. */
+#undef HAVE_PQNOTIFIES
+
+/* Define to 1 if you have the `PQntuples' function. */
+#undef HAVE_PQNTUPLES
+
+/* Define to 1 if you have the `PQoidStatus' function. */
+#undef HAVE_PQOIDSTATUS
+
+/* Define to 1 if you have the `PQoidValue' function. */
+#undef HAVE_PQOIDVALUE
+
+/* Define to 1 if you have the `PQoptions' function. */
+#undef HAVE_PQOPTIONS
+
+/* Define to 1 if you have the `PQparameterStatus' function. */
+#undef HAVE_PQPARAMETERSTATUS
+
+/* Define to 1 if you have the `PQpass' function. */
+#undef HAVE_PQPASS
+
+/* Define to 1 if you have the `PQport' function. */
+#undef HAVE_PQPORT
+
+/* Define to 1 if you have the `PQprepare' function. */
+#undef HAVE_PQPREPARE
+
+/* Define to 1 if you have the `PQprint' function. */
+#undef HAVE_PQPRINT
+
+/* Define to 1 if you have the `PQprintTuples' function. */
+#undef HAVE_PQPRINTTUPLES
+
+/* Define to 1 if you have the `PQprotocolVersion' function. */
+#undef HAVE_PQPROTOCOLVERSION
+
+/* Define to 1 if you have the `PQputCopyData' function. */
+#undef HAVE_PQPUTCOPYDATA
+
+/* Define to 1 if you have the `PQputCopyEnd' function. */
+#undef HAVE_PQPUTCOPYEND
+
+/* Define to 1 if you have the `PQputline' function. */
+#undef HAVE_PQPUTLINE
+
+/* Define to 1 if you have the `PQputnbytes' function. */
+#undef HAVE_PQPUTNBYTES
+
+/* Define to 1 if you have the `PQrequestCancel' function. */
+#undef HAVE_PQREQUESTCANCEL
+
+/* Define to 1 if you have the `PQreset' function. */
+#undef HAVE_PQRESET
+
+/* Define to 1 if you have the `PQresetPoll' function. */
+#undef HAVE_PQRESETPOLL
+
+/* Define to 1 if you have the `PQresetStart' function. */
+#undef HAVE_PQRESETSTART
+
+/* Define to 1 if you have the `PQresStatus' function. */
+#undef HAVE_PQRESSTATUS
+
+/* Define to 1 if you have the `PQresultErrorField' function. */
+#undef HAVE_PQRESULTERRORFIELD
+
+/* Define to 1 if you have the `PQresultErrorMessage' function. */
+#undef HAVE_PQRESULTERRORMESSAGE
+
+/* Define to 1 if you have the `PQresultStatus' function. */
+#undef HAVE_PQRESULTSTATUS
+
+/* Define to 1 if you have the `PQsendPrepare' function. */
+#undef HAVE_PQSENDPREPARE
+
+/* Define to 1 if you have the `PQsendQuery' function. */
+#undef HAVE_PQSENDQUERY
+
+/* Define to 1 if you have the `PQsendQueryParams' function. */
+#undef HAVE_PQSENDQUERYPARAMS
+
+/* Define to 1 if you have the `PQsendQueryPrepared' function. */
+#undef HAVE_PQSENDQUERYPREPARED
+
+/* Define to 1 if you have the `PQserverVersion' function. */
+#undef HAVE_PQSERVERVERSION
+
+/* Define to 1 if you have the `PQsetClientEncoding' function. */
+#undef HAVE_PQSETCLIENTENCODING
+
+/* Define to 1 if you have the `PQsetdbLogin' function. */
+#undef HAVE_PQSETDBLOGIN
+
+/* Define to 1 if you have the `PQsetErrorVerbosity' function. */
+#undef HAVE_PQSETERRORVERBOSITY
+
+/* Define to 1 if you have the `PQsetnonblocking' function. */
+#undef HAVE_PQSETNONBLOCKING
+
+/* Define to 1 if you have the `PQsetNoticeProcessor' function. */
+#undef HAVE_PQSETNOTICEPROCESSOR
+
+/* Define to 1 if you have the `PQsetNoticeReceiver' function. */
+#undef HAVE_PQSETNOTICERECEIVER
+
+/* Define to 1 if you have the `PQsocket' function. */
+#undef HAVE_PQSOCKET
+
+/* Define to 1 if you have the `PQstatus' function. */
+#undef HAVE_PQSTATUS
+
+/* Define to 1 if you have the `PQtrace' function. */
+#undef HAVE_PQTRACE
+
+/* Define to 1 if you have the `PQtransactionStatus' function. */
+#undef HAVE_PQTRANSACTIONSTATUS
+
+/* Define to 1 if you have the `PQtty' function. */
+#undef HAVE_PQTTY
+
+/* Define to 1 if you have the `PQunescapeBytea' function. */
+#undef HAVE_PQUNESCAPEBYTEA
+
+/* Define to 1 if you have the `PQuntrace' function. */
+#undef HAVE_PQUNTRACE
+
+/* Define to 1 if you have the `PQuser' function. */
+#undef HAVE_PQUSER
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME

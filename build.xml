@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="CogTool" default="package">
+
+        <defaultexcludes echo="true"/>
+
+	<property name="exeversion" value="1.3.0.0" />
+	<property name="version" value="1.3trunk" />
+	<property name="versionclean" value="1_3trunk" />
+
+	<property name="jlevel" value="1.5" />
+        <property name="build.compiler" value="javac${jlevel}" />
+
+	<property name="srcroot" value="${basedir}/java" />
+	<property name="macsrcroot" value="${basedir}/mac-support" />
+	<property name="libdir" value="${basedir}/lib" />
+	<property name="swtdir" value="${libdir}/windows" />
+	<property name="macswtdir" value="${libdir}/macintosh" />
+	<property name="resdir" value="${basedir}/res" />
+	<property name="distdir" value="${basedir}/dist" />
+	<property name="builddir" value="${basedir}/build" />
+	<property name="java_runtime_res" value="edu/cmu/cs/hcii/cogtool/resources" />
+	<property name="clisp" value="${basedir}/lisp" />
+	<property name="launch4j.dir" location="${libdir}/build-only/launch4j" />
+	<property name="java.library.path" value="${java.library.path};${swtdir}" />
+	<!-- revision property is set in the call to svnversion -->
+
+	<!-- Classpath: setup once, used everywhere. -->
+	<path id="classpath">
+		<fileset dir="${libdir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${libdir}/build-only">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${swtdir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${builddir}" />
+	</path>
+
+	<path id="mac-classpath">
+		<fileset dir="${libdir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${libdir}/build-only">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${macswtdir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${builddir}" />
+	</path>
+
+	<!-- Deletes all generated output for a clean rebuild. -->
+	<target name="clean" description="Deletes all generated output for a clean rebuild.">
+		<delete includeemptydirs="true">
+			<fileset dir="${distdir}" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${builddir}" includes="**/*" />
+		</delete>
+	</target>
+
+	<!-- Compiles java source with javac. -->
+	<target name="compile" description="Compiles java source with javac.">
+		<javac srcdir="${srcroot}" destdir="${builddir}" debug="on" fork="true" source="${jlevel}" target="${jlevel}">
+			<classpath refid="classpath" />
+			<include name="**/*.java" />
+		</javac>
+
+		<javac srcdir="${macsrcroot}" destdir="${builddir}" debug="on" fork="true" source="${jlevel}" target="${jlevel}">
+			<classpath refid="mac-classpath" />
+			<include name="**/*.java" />
+		</javac>
+
+		<!-- Copy the resources dir into the build dir -->
+		
+		<copy todir="${builddir}/${java_runtime_res}" overwrite="true">
+			<fileset dir="java/${java_runtime_res}"/>
+		</copy>
+		
+	</target>
+
+	<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar:${launch4j.dir}/lib/xstream.jar" />
+
+	<!-- Packages build output and resources into runable packages., -->
+	<target name="package" depends="clean,compile" description="Packages build output and resources into runable packages.">
+
+		<tstamp>
+			<format property="buildtime" pattern="MM/dd/yyyy-hh:mm" />
+		</tstamp>
+
+		<!-- Setup property for manifest classpath entries. -->
+		<pathconvert property="manifest.classpath" pathsep=" ">
+			<path refid="classpath" />
+			<mapper>
+				<chainedmapper>
+					<flattenmapper />
+					<globmapper from="*" to="./lib/*" />
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
+
+		<!-- Create a double-clickable app jar with classpath entries. -->
+		<jar destfile="${distdir}/CogTool.jar" compress="true" index="false">
+			<manifest>
+				<attribute name="Class-Path" value="${manifest.classpath}" />
+				<attribute name="Main-Class" value="edu.cmu.cs.hcii.cogtool.CogTool" />
+			</manifest>
+			<fileset dir="${builddir}" />
+		</jar>
+
+		<!-- Create a Mac "app" bundle by copying the tmp bundle. -->
+		<copy todir="${distdir}/CogTool.app" overwrite="true">
+			<fileset dir="${resdir}/CogTool.tmp"/>
+		</copy>
+
+		<!-- Copy the local cogtoolstart and swt jars to the Mac bundle. -->
+        <copy file="${libdir}/macintosh/cogtoolstart" tofile="${distdir}/CogTool.app/Contents/MacOS/cogtoolstart" />
+        <chmod perm="a+x" file="${distdir}/CogTool.app/Contents/MacOS/cogtoolstart" />
+
+        <copy file="${libdir}/macintosh/export-csv-kludge" tofile="${distdir}/CogTool.app/Contents/MacOS/export-csv-kludge" />
+        <chmod perm="a+x" file="${distdir}/CogTool.app/Contents/MacOS/export-csv-kludge" />
+
+		<copy todir="${distdir}/CogTool.app/Contents/Resources/Java/dll/">
+			<fileset dir="${macswtdir}">
+				<include name="*.jnilib" />
+			</fileset>
+		</copy>
+		<copy todir="${distdir}/CogTool.app/Contents/Resources/Java/">
+			<fileset dir="${macswtdir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+
+		<!-- Copy the rest of the libdir to the Mac bundle. -->
+		<copy todir="${distdir}/CogTool.app/Contents/Resources/Java/">
+			<fileset dir="${libdir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+
+		<!-- Setup the Classpath plist value. -->
+		<fileset dir="${distdir}/CogTool.app/Contents/Resources/Java" id="distjars">
+			<include name="*.jar" />
+		</fileset>
+
+		<pathconvert pathsep=":$JAVAROOT/" property="distjarstr" refid="distjars">
+			<mapper type="flatten" />
+		</pathconvert>
+
+		<condition property="svnversion" value="/usr/local/bin/svnversion" else="svnversion">
+			<and>
+				<os family="mac" />
+				<os family="unix" />
+			</and>
+		</condition>
+
+		<exec executable="${svnversion}" vmlauncher="true" resolveexecutable="true" outputproperty="revision">
+			<arg file="${basedir}" />
+		</exec>
+
+		<echo message="${revision}" />
+
+		<replace file="${distdir}/CogTool.app/Contents/Info.plist" token="DISTJARSTR" value="${distjarstr}" />
+		<replace file="${distdir}/CogTool.app/Contents/Info.plist" token="VERSION" value="${version}" />
+		<replace file="${distdir}/CogTool.app/Contents/Info.plist" token="REVISION" value="${revision}" />
+		<replace file="${distdir}/CogTool.app/Contents/Info.plist" token="BUILDTIME" value="${buildtime}" />
+		<replace file="${distdir}/CogTool.app/Contents/Info.plist" token="VERSTRING" value="${version}" />
+
+		<!-- Copy the app jar to the Mac bundle. -->
+		<copy file="${distdir}/CogTool.jar" todir="${distdir}/CogTool.app/Contents/Resources/Java/" />
+
+		<!-- Copy the clisp dist to the Mac bundle. -->
+		<copy todir="${distdir}/CogTool.app/Contents/Resources/clisp-mac-intel/">
+			<fileset dir="${basedir}/clisp-mac-intel">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<!-- Chmod the clisp executable. -->
+		<chmod file="${distdir}/CogTool.app/Contents/Resources/clisp-mac-intel/lisp.run" perm="a+x" />
+
+		<!-- Copy the Mac XUL implementation into the bundle. -->
+		<copy todir="${distdir}/CogTool.app/Contents/Resources/XUL-mac/">
+		        <fileset dir="${basedir}/XUL-mac"/>
+		</copy>
+
+		<!-- Chmod the XUL stuff. -->
+		<chmod dir="${distdir}/CogTool.app/Contents/Resources/XUL-mac" includes="XUL,xulrunner*,*.*lib,*.sh" perm="a+x"/>
+
+		<!-- Prepare .tgz for Mac OS X download. -->
+		<tar destfile="${distdir}/CogToolMac-${versionclean}-r${revision}.tgz" compression="gzip" longfile="warn">
+			<tarfileset dir="${distdir}/" mode="755">
+				<include name="CogTool.app/**" />
+			</tarfileset>
+		</tar>
+
+		<!-- Build a Windows launcher .exe via launch4j. -->
+		<condition property="os.windows">
+			<os family="windows" />
+		</condition>
+		<antcall target="package-windows" />
+
+	</target>
+
+	<target name="package-windows" if="os.windows">
+		<!-- Insert Build Date, etc. -->
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="VERSION" value="${version}" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="REVISION" value="${revision}" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="BUILDTIME" value="${buildtime}" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="VERSTRING" value="${version}" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="EXEVERS" value="${exeversion}" />
+		<replace file="${basedir}/res/cogtool.nsi" token="VERSTRING" value="${version}" />
+		<replace file="${basedir}/res/cogtool.nsi" token="EXEVERS" value="${exeversion}" />
+		<replace file="${basedir}/res/cogtool.nsi" token="SETUPFILE" value="..\dist\CogTool-${versionclean}-setup.exe" />
+
+		<!-- Build a Windows launcher .exe via launch4j. -->
+		<launch4j configFile="${basedir}/res/launch4j.cfg.xml" />
+
+		<!-- Build a Windows installer .exe w/ jar & clisp. -->
+		<exec executable="makensis.exe" vmlauncher="false" resolveexecutable="true">
+			<arg value="/XSetCompressor /FINAL /SOLID lzma" />
+			<arg file="${basedir}/res/cogtool.nsi" />
+		</exec>
+
+		<!-- Remove Build Date, etc. -->
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="${version}" value="VERSION" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="${revision}" value="REVISION" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="${buildtime}" value="BUILDTIME" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="${version}" value="VERSTRING" />
+		<replace file="${basedir}/res/launch4j.cfg.xml" token="${exeversion}" value="EXEVERS" />
+		<replace file="${basedir}/res/cogtool.nsi" token="${version}" value="VERSTRING" />
+		<replace file="${basedir}/res/cogtool.nsi" token="${exeversion}" value="EXEVERS" />
+		<replace file="${basedir}/res/cogtool.nsi" token="..\dist\CogTool-${versionclean}-r${revision}-setup.exe" value="SETUPFILE" />
+
+	</target>
+
+</project>

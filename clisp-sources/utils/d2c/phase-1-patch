@@ -1,0 +1,243 @@
+--- clisp-conversion2/acorn/swap-ext.pl	Fri Mar 31 16:17:50 2000
++++ clisp-conversion/acorn/swap-ext.pl	Sat Feb 15 16:35:56 2003
+@@ -4,26 +4,18 @@
+ # 1.  .1 .c .d .h .i .o .s single letter extensions are swapped
+ # 2.  .dvi .fas .lisp .man .mem .txt .html .in .sed multi letter extensions are
+ #     swapped
+-# 3.  comment5 recognizes filenames ending in .d but not filenames beginning
+-#     with d.
+-#     change "$(COMMENT5) d.eval > TMPPIPE1" into "$(COMMENT5) eval.d TMPPIPE1"
+-# 4.  Undo 1. for comment5 commands not piping output, but generating file
+-#     directly. change "(COMMENT5) d.ansidecl"
+-#     into "(COMMENT5) ansidecl.d"
+-# 5.  Undo 1. for files generated from UnixLib linked utils, such as ansidecl
++# 3.  Undo 1. for files generated from UnixLib linked utils, such as ansidecl
+ #     change "(.d|>) c.eval" into "(.d|>) eval.c"
+-# 6.  Undo 2. for arguments to clisp
+-# 7.  Undo 2. for arguments to clisp
+-# 8.  change "../" into "^."
+-# 9.  changed "README.*" into "README_*"
++# 4.  Undo 2. for arguments to clisp
++# 5.  Undo 2. for arguments to clisp
++# 6.  change "../" into "^."
++# 7.  changed "README.*" into "README_*"
+ 
+ while (<>) {
+    unless (/cdir/) {
+       s/(\b\w+)\.([1cdhios])(\s)/$2\.$1$3/g;
+       s/(\b[\w-]+)\.(dvi|fas|lisp|man|mem|txt|html|in|sed)(\s)/$2\.$1$3/g;
+    }
+-   s/(\(COMMENT5\)) d\.(\w+) > /$1 $2\.d /g;
+-   s/(\(COMMENT5\)) d\.(\w+)/$1 $2\.d/g;
+    s/(\.d|>) c\.(\w+)/$1 $2\.c/g;
+    s/-c lisp\.(\w+)(\s)/-c $1\.lisp$2/g;
+    s/-c stage\.lisp\.(\w+)(\s)/-c stage\.$1\.lisp$2/g;
+--- clisp-conversion2/amiga/BMakefile	Mon Oct 23 05:57:24 2000
++++ clisp-conversion/amiga/BMakefile	Sat Feb 15 16:39:42 2003
+@@ -107,7 +107,6 @@
+ RM=delete
+ AR=ar
+ RANLIB=ranlib
+-COMMENT  = lisp:utils/comment5
+ CVTMSGS  = lisp:utils/cvtmsgs
+ ANSIDECL = lisp:utils/ansidecl
+ PRESTACK = 20000
+@@ -226,13 +225,7 @@
+ # Make all include files
+ $(C_INC_ALL) $(C_DIST): $(R)$*.d
+ 	stack $(PRESTACK)
+-#	Named pipes make it slower!
+-#	run $(COMMENT) $(R)$*.d >FIFO:prepclisp/mwek
+-#	$(ANSIDECL) <FIFO:prepclisp/r >$@
+-#	run $(COMMENT) $(R)$*.d >PIPE:prepclisp
+-#	$(ANSIDECL) <PIPE:prepclisp/r >$@
+-	$(COMMENT) $(R)$*.d $(FSTMPDIR)$*.cd
+-	$(CVTMSGS) <$(FSTMPDIR)$*.cd >$(FSTMPDIR)$*.dc
++	$(CVTMSGS) <$(FSTMPDIR)$*.d >$(FSTMPDIR)$*.dc
+ 	$(RM) $(FSTMPDIR)$*.cd
+ 	$(ANSIDECL) <$(FSTMPDIR)$*.dc >$@
+ 	$(RM) $(FSTMPDIR)$*.dc
+@@ -250,8 +243,7 @@
+ $(OBJECTS_C) testd.o testn.o: $(R)$*.d
+ 	@date
+ 	stack $(PRESTACK)
+-	$(COMMENT) $(R)$*.d $(FSTMPDIR)$*.cd
+-	$(CVTMSGS) <$(FSTMPDIR)$*.cd >$(FSTMPDIR)$*.dc
++	$(CVTMSGS) <$(FSTMPDIR)$*.d >$(FSTMPDIR)$*.dc
+ 	$(RM) $(FSTMPDIR)$*.cd
+ 	$(ANSIDECL) <$(FSTMPDIR)$*.dc >$(TMPDIR)$*.c
+ 	$(RM) $(FSTMPDIR)$*.dc
+--- clisp-conversion2/amiga/GMakefile	Mon Oct 23 05:57:24 2000
++++ clisp-conversion/amiga/GMakefile	Sat Feb 15 16:39:37 2003
+@@ -104,7 +104,6 @@
+ RM=delete
+ AR=ar
+ RANLIB=ranlib
+-COMMENT  = lisp:utils/comment5
+ CVTMSGS  = lisp:utils/cvtmsgs
+ ANSIDECL = lisp:utils/ansidecl
+ PRESTACK = 20000
+@@ -219,13 +218,7 @@
+ # Make all include files
+ $(C_INC_ALL) $(C_DIST): %.c: $(R)%.d
+ 	stack $(PRESTACK)
+-#	Named pipes make it slower!
+-#	run $(COMMENT) $(R)$*.d >FIFO:prepclisp/mwek
+-#	$(ANSIDECL) <FIFO:prepclisp/r >$@
+-#	run $(COMMENT) $(R)$*.d >PIPE:prepclisp
+-#	$(ANSIDECL) <PIPE:prepclisp/r >$@
+-	$(COMMENT) $(R)$*.d $(FSTMPDIR)$*.cd
+-	$(CVTMSGS) <$(FSTMPDIR)$*.cd >$(FSTMPDIR)$*.dc
++	$(CVTMSGS) <$(FSTMPDIR)$*.d >$(FSTMPDIR)$*.dc
+ 	$(RM) $(FSTMPDIR)$*.cd
+ 	$(ANSIDECL) <$(FSTMPDIR)$*.dc >$@
+ 	$(RM) $(FSTMPDIR)$*.dc
+@@ -243,8 +236,7 @@
+ $(OBJECTS_C) testd.o testn.o: %.o: $(R)%.d
+ 	@date
+ 	stack $(PRESTACK)
+-	$(COMMENT) $(R)$*.d $(FSTMPDIR)$*.cd
+-	$(CVTMSGS) <$(FSTMPDIR)$*.cd >$(FSTMPDIR)$*.dc
++	$(CVTMSGS) <$(FSTMPDIR)$*.d >$(FSTMPDIR)$*.dc
+ 	$(RM) $(FSTMPDIR)$*.cd
+ 	$(ANSIDECL) <$(FSTMPDIR)$*.dc >$(TMPDIR)$*.c
+ 	$(RM) $(FSTMPDIR)$*.dc
+--- clisp-conversion2/amiga/INSTALL	Mon Oct 23 05:57:24 2000
++++ clisp-conversion/amiga/INSTALL	Sat Feb 15 16:40:27 2003
+@@ -21,7 +21,7 @@
+ 3. Make directory trees
+ 
+    Leave source in src/ (only *.d, *.h and *.lisp files are needed) and
+-   utilities in utils/ (only comment5, ansidecl and cvtmsgs are needed).
++   utilities in utils/ (only ansidecl and cvtmsgs are needed).
+    Choose the version you want to build (see README.Amiga or README) and
+    create directories like make.typ2/ at the same level as src/.
+ 
+--- clisp-conversion2/src/makemake.in	Sat Feb 15 17:51:44 2003
++++ clisp-conversion/src/makemake.in	Sat Feb 15 12:58:42 2003
+@@ -1962,7 +1962,6 @@
+   echol "SHELL = /bin/sh"
+   echol
+ fi
+-echol "COMMENT5 = ${HERE}comment5"
+ 
+ if [ -n "$XCC_SUNPRO" ] ; then
+   XASM_NEED_CCPAUX=true
+@@ -2099,7 +2098,6 @@
+ if [ $NEED_CCPAUX = true ] ; then
+   UTILS=$UTILS' ccpaux'
+ fi
+-UTILS=$UTILS' comment5'
+ UTILS=$UTILS' ansidecl'
+ UTILS=$UTILS' varbrace'
+ if [ $XCC_NEED_DEEMA = true -a $HOS != unix ] ; then
+@@ -2188,40 +2186,18 @@
+     echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)" "${SRCTOPDIR}os2/${util}.c" "${util}"
+     echol
+   fi
+-  if [ $util = comment5 ] ; then
+-    if [ $CC_NEED_CCPAUX = true ] ; then
+-      echol "${util}${HEXE} : ${UTILDIR_M}${util}.c ${CCPAUX}"
+-      echotab "${HERE}ccpaux${HEXE} < ${UTILDIR_}${util}.c > ${util}.c"
+-      echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)" "${util}.c" "${util}"
+-      echotab "\$(RM) ${util}.c"
+-      echol
+-      OBSOLETE=$OBSOLETE" ${util}.c"
+-    else
+-      echol "${util}${HEXE} : ${UTILDIR_M}${util}.c"
+-      if [ ${HSYS} = "win32gcc" ]; then
+-        # **HACK**: avoid -mno-cygwin so that comment5.exe
+-        #           understands symbolic links
+-        echotab_to_HEXE "gcc \$(CFLAGS) \$(CLFLAGS)" "${UTILDIR_CC}${util}.c" "${util}"
+-      else
+-        echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)" "${UTILDIR_CC}${util}.c" "${util}"
+-      fi
+-      echol
+-    fi
+-  fi
+   if [ $util = ansidecl ] ; then
+     flags="${ANSIDECLFLAGS}"
+-    echol "${util}${HEXE} : ${UTILDIR_M}${util}.d comment5${HEXE}"
+-    echotab "\$(LN_S) ${UTILDIR_}${util}.d ${util}.d"
+-    echotab "\$(COMMENT5) ${util}.d ${util}.c"
+-    echotab "\$(RM) ${util}.d"
++    echol "${util}${HEXE} : ${UTILDIR_M}${util}.d"
++    echotab "\$(LN_S) ${UTILDIR_}${util}.d ${util}.c"
+     echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)${flags}" "${util}.c" "${util}"
+     echotab "\$(RM) ${util}.c"
+     echol
+     OBSOLETE=$OBSOLETE" ${util}.c"
+   fi
+   if [ $util = varbrace ] ; then
+-    echol "${util}${HEXE} : ${UTILDIR_M}${util}.d comment5${HEXE} ansidecl${HEXE}"
+-    echotabpipe "\$(COMMENT5) ${UTILDIR_CC}${util}.d | \$(ANSIDECL) > ${util}.c"
++    echol "${util}${HEXE} : ${UTILDIR_M}${util}.d ansidecl${HEXE}"
++    echotabpipe "\$(CAT) ${UTILDIR_CC}${util}.d | \$(ANSIDECL) > ${util}.c"
+     echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)" "${util}.c" "${util}"
+     echotab "\$(RM) ${util}.c"
+     echol
+@@ -2281,14 +2257,14 @@
+ echol
+ 
+ for f in $DFILES ; do
+-  echol "${f}.c : ${f}.d comment5${HEXE}${XDECL_DEPENDENCIES}"
+-  echotabpipe "\$(COMMENT5) ${f}.d${CHSCONVERT_FILTER} ${XDECL_FILTER} > ${f}.c"
++  echol "${f}.c : ${f}.d ${XDECL_DEPENDENCIES}"
++  echotabpipe "\$(CAT) ${f}.d${CHSCONVERT_FILTER} ${XDECL_FILTER} > ${f}.c"
+   echol
+ done
+ 
+ for f in $ARI_ASMD $SP_ASMD ; do
+-  echol "${f}.c : ${f}.d comment5${HEXE} ${XCCPAUX}"
+-  echotabpipe "\$(COMMENT5) ${f}.d${XASMCCPAUX_FILTER} > ${f}.c"
++  echol "${f}.c : ${f}.d ${XCCPAUX}"
++  echotabpipe "\$(CAT) ${f}.d${XASMCCPAUX_FILTER} > ${f}.c"
+   echol
+ done
+ 
+@@ -3618,7 +3594,7 @@
+   echotab "-\$(RM) MAGIC.add"
+ fi
+ echotab "-\$(RMRF) data"
+-echotab "-\$(RM) comment5${HEXE} ansidecl${HEXE} varbrace${HEXE} ccpaux${HEXE} deema${HEXE} txt2c${HEXE} ccmp2c${HEXE} modprep${HEXE} clisp${HEXE}"
++echotab "-\$(RM) ansidecl${HEXE} varbrace${HEXE} ccpaux${HEXE} deema${HEXE} txt2c${HEXE} ccmp2c${HEXE} modprep${HEXE} clisp${HEXE}"
+ echol
+ cat <<!!
+ # clean6 lets us go back to "makemake > Makefile".
+--- clisp-conversion2/src/lispbibl.d	Sat Feb 15 18:03:58 2003
++++ clisp-conversion/src/lispbibl.d	Sat Feb 15 18:10:20 2003
+@@ -84,7 +84,7 @@
+ # Acorn        Risc PC            RISC OS 3.x                   GNU           [__]arm, [__]riscos, __GNUC__
+ # Acorn        Risc PC            RISC OS 3.x                   Norcroft      [__]arm, [__]riscos
+ # APPLE IIGS   Apple              ??                            ??
+-# For ANSI-C-Compiler: use pre-processors comment5, ansidecl
++# For ANSI-C-Compiler: use pre-processors ansidecl
+ #   (and maybe gcc-cpp, ccpaux).
+ 
+ 
+--- clisp-conversion2/utils/ccmp2c.c	Mon Dec  2 06:22:30 2002
++++ clisp-conversion/utils/ccmp2c.c	Sat Feb 15 16:41:19 2003
+@@ -58,8 +58,6 @@
+ #define MAXARGCOUNT        50
+ /* define as 1 if C++ style comments "//" shall be understood */
+ #define CPLUSPLUS_COMMENTS 1
+-/* define as 1 if comment5 style comments "# " shall be understood */
+-#define COMMENT5_COMMENTS  1
+ /* functions are split after this many statements */
+ #define MAXFUNCLENGTH  20
+ 
+@@ -368,14 +366,6 @@
+         if (within_prep_directive)
+           goto separator;
+         else
+-#if COMMENT5_COMMENTS
+-          if (peek_char(infile) == ' ') {
+-            next_char(infile);
+-            do { c = next_char(infile); }
+-            while (c!=EOF && c!='\n');
+-            goto restart;
+-          } else
+-#endif
+             {
+               while(1) {
+                 token_t* subtoken = nexttoken(infile,tokens,FALSE,TRUE);

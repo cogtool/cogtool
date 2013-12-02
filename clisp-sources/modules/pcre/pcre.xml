@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="pcre"><title>Perl Compatible Regular Expressions</title>
+
+<para>This is an interface to <ulink url="http://www.pcre.org/">Perl
+  Compatible Regular Expressions</ulink>.</para>
+<simpara>When this module is present, &features-var; contains the
+ symbol <constant>:PCRE</constant>.</simpara>
+
+<variablelist id="pcre-api"><title>PCRE module API</title>
+ <varlistentry id="pcre-version">
+  <term><code>(PCRE:PCRE-VERSION)</code></term>
+  <listitem><simpara>Return version information as 3 values: descriptive
+    &string-t; and 2 &fixnum-t;s: major and minor numbers.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="pcre-config">
+  <term><code>(PCRE:PCRE-CONFIG &type-r;)</code></term>
+  <listitem><para>Return some information about the PCRE build
+    configuration.  &type-r; is one of <simplelist>
+     <member><literal>:UTF8</literal></member>
+     <member><literal>:NEWLINE</literal></member>
+     <member><literal>:LINK-SIZE</literal></member>
+     <member><literal>:POSIX-MALLOC-THRESHOLD</literal></member>
+     <member><literal>:MATCH-LIMIT</literal></member>
+ </simplelist></para></listitem></varlistentry>
+ <varlistentry id="pcre-compile">
+  <term><code>(PCRE:PCRE-COMPILE &string-r; &key-amp; :STUDY
+    :IGNORE-CASE :MULTILINE :DOTALL :EXTENDED :ANCHORED :DOLLAR-ENDONLY
+    :EXTRA :NOTBOL :NOTEOL :UNGREADY :NOTEMPTY :NO-AUTO-CAPTURE)</code></term>
+  <listitem><simpara>Compile a pattern, optionally study it.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="pattern-info"><term>
+   <code>(PCRE:PATTERN-INFO &pattern-r; &optional-amp; request)</code></term>
+  <listitem><para>Return some information about the &pattern-r;,
+    such as <simplelist><member><literal>:OPTIONS</literal></member>
+     <member><literal>:SIZE</literal></member>
+     <member><literal>:CAPTURECOUNT</literal></member>
+     <member><literal>:BACKREFMAX</literal></member>
+     <member><literal>:FIRSTBYTE</literal></member>
+     <member><literal>:FIRSTTABLE</literal></member>
+     <member><literal>:LASTLITERAL</literal></member>
+     <member><literal>:NAMEENTRYSIZE</literal></member>
+     <member><literal>:NAMECOUNT</literal></member>
+     <member><literal>:NAMETABLE</literal></member>
+     <member><literal>:STUDYSIZE</literal></member>
+ </simplelist></para></listitem></varlistentry>
+ <varlistentry id="pcre-name-to-index">
+  <term><code>(PCRE:PCRE-NAME-TO-INDEX &pattern-r; &name-r;)</code></term>
+  <listitem><simpara>Convert the name of the sub-pattern to an index in
+    the return vector.</simpara></listitem></varlistentry>
+ <varlistentry id="pcre-exec">
+  <term><code>(PCRE:PCRE-EXEC &pattern-r; &string-r; &key-amp; :BOOLEAN
+    :OFFSET :ANCHORED :NOTBOL :NOTEOL :NOTEMPTY)</code></term>
+  <listitem><simpara>Execute the compiled &pattern-r; against the
+    &string-r; at the given &offset-r; with the given options.
+    Returns &nil; if no matches or a &vector-t; of &length;
+    <literal>CAPTURECOUNT+1</literal> of <type>PCRE:MATCH</type> structures,
+    unless <literal>:BOOLEAN</literal> was non-&nil;, in which case
+    return &t; as an indicator of success, but do not allocate anything.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="pcre-match-access">
+  <term><code>(PCRE:MATCH-START &match-r;)</code></term>
+  <term><code>(PCRE:MATCH-END &match-r;)</code></term>
+  <listitem><simpara>Return the start and end of the &match-r;. &setf;-able.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="match-substring">
+  <term><code>(PCRE:MATCH-SUBSTRING &match-r; &string-r;)</code></term>
+  <listitem><simpara>Return the substring of &string-r; bounded by &match-r;.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="match-strings">
+  <term><code>(PCRE:MATCH-STRINGS return-vector &string-r;)</code></term>
+  <listitem><simpara>Return all substrings for all matches found
+    by <function>PCRE:PCRE-EXEC</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="match-string">
+  <term><code>(PCRE:MATCH-STRING return-vector which
+    &string-r; &optional-amp; &pattern-r;)</code></term>
+  <listitem><simpara>Return the substring that matches the given sub-pattern.
+    If <replaceable>which</replaceable> is a name of the sub-pattern (as
+    opposed to its number), &pattern-r; must be supplied.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="pcre-matcher">
+  <term><code>(PCRE:PCRE-MATCHER &pattern-r;)</code></term>
+  <listitem><simpara>A valid value for &apropos-matcher;.
+ </simpara></listitem></varlistentry>
+</variablelist>
+</section>

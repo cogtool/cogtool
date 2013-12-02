@@ -1,0 +1,18 @@
+<mockup version="1.0" skin="sketch" measuredW="468" measuredH="186">
+  <controls>
+    <control controlID="8" controlTypeID="__group__" x="235" y="113" w="-1" h="-1" measuredW="223" measuredH="63" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::CheckBox" x="140" y="0" w="83" h="18" measuredW="83" measuredH="18" zOrder="0" locked="false" isInGroup="8">
+          <controlProperties>
+            <text>Checkbox</text>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::CheckBox" x="0" y="45" w="83" h="18" measuredW="83" measuredH="18" zOrder="1" locked="false" isInGroup="8">
+          <controlProperties>
+            <text>Checkbox</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>

@@ -1,0 +1,193 @@
+                       Choosing a Good Newline Convention
+                       ==================================
+
+Question: Should programs output a newline before or after each line of output?
+
+The answer is complicated. There is an antagonism between the "old Lisp way"
+of outputting a newline before the line's contents (exemplified by the
+functions PRINT and PPRINT) and the "Unix way" of outputting a newline after
+the line's contents. Which one is "right"?
+
+A newline convention is, by definition, a consistent way to use the TERPRI
+and FRESH-LINE functions or - in FORMAT notation - ~% and ~& directives in
+such a way that the resulting output is properly subdivided into lines.
+
+Three newline conventions are conceivable:
+
+  A) Print a newline before the line, and nothing after it.
+     As a format string: "~%First line.~%Second line."
+
+  B) Print a newline if needed before the line, and a newline always after it.
+     As a format string: "~&First line.~%Second line.~%"
+
+  C) Print nothing before the line, and a newline always after it.
+     As a format string: "First line.~%Second line.~%"
+
+The most important criterion is interoperability. Two newline conventions
+are interoperable if, when parts of a program use one of the convention
+and other parts of the program use the other conventions, lines are still
+properly separated. It is easily seen that A and B are interoperable, B and
+C are interoperable as well, but A and C are not interoperable: When an
+output with convention A is followed by output in convention C, two lines
+are appended without a line separator. This should not happen.
+
+Therefore, in what follows, we consider five kinds of programs:
+
+  A) using convention A exclusively,
+  AB) using conventions A and B in a mixed way,
+  B) using convention B exclusively,
+  BC) using conventions B and C in a mixed way,
+  C) using convention C exclusively,
+
+Which of these five kinds of programs operates satisfactorily?
+Let's consider different criteria:
+
+  1. Do extra blank lines occur during normal operation?
+  2. What happens if FRESH-LINE prints a newline when it's not needed, i.e.
+     when it cannot tell for sure whether the current column is 0?
+     (This situation happens, for example, when logging to a file: After the
+     user has entered a line interactively, the column on screen is 0, but
+     since the input has not been echoed in the log file, the column in the
+     log file is usually not 0, and FRESH-LINE _must_ output a newline. Then
+     a blank line is visible on the screen.)
+  3. What happens if FRESH-LINE omits a newline when it would be needed?
+     (This is more rare, but can happen, for example, when standard output
+     and standard error are different streams but are joined outside the
+     Lisp implementation, at the OS level. Such as in "lisp | cat".)
+  4. Is it possible to reliably output a blank line before or after a
+     paragraph of text? I.e. what happens with
+     A1) "~%~%First line.~%Second line."
+     A2) "~%First line.~%Second line.~%"
+     B1) "~&~%First line.~%Second line.~%"
+     B2) "~&First line.~%Second line.~%~%"
+     C1) "~%First line.~%Second line.~%"
+     C2) "First line.~%Second line.~%~%"
+  5. Is is possible to optimize away blank lines? I.e. is it possible to avoid
+     a blank line even though another piece of code uses one of A1 ... C2,
+     without risking that adjacent lines be unseparated?
+
+Here is the analysis:
+
+  1. A)  No extra blank lines.
+     AB) An extra blank line each time one switches from convention B to A.
+     B)  No extra blank lines.
+     BC) No extra blank lines.
+     C)  No extra blank lines.
+
+  2. A)  No extra blank lines.
+     AB) Blank lines can occur, when convention B is used.
+     B)  Blank lines can occur.
+     BC) Blank lines can occur, when convention B is used.
+     C)  No extra blank lines.
+
+  3. A)  No problem.
+     AB) Lines can be unseparated when one switches from convention A to B.
+     B)  No problem.
+     BC) No problem.
+     C)  No problem.
+
+  4. A)  No problem.
+     AB) The blank line is omitted when using A2 before switching to B.
+     B)  No problem.
+     BC) No problem.
+     C)  No problem.
+
+  5. A)  Yes, using "~&First line.~%Second line." eats a previous blank line.
+     AB) Not really: Using "~&First line.~%Second line." may eat a previous
+         blank line or a following blank line, but you cannot know in advance
+         which one.
+     B)  Yes, using "~&First line.~%Second line." eats a following blank line.
+     BC) Impossible.
+     C)  Impossible.
+     To optimize blank lines in case C would require the opposite of
+     FRESH-LINE, namely a conditional newline that is annullated if the
+     _next_ output on the stream will be a newline. (ELASTIC-NEWLINE,
+     see below.)
+
+Conclusion:
+
+Each approach has its benefits and drawbacks.
+
+When used globally (i.e. no interoperability requirements), A, B, C can be
+compared as follows:
+  - A and C are equally perfect if eating blank lines is not a requirement.
+  - If eating blank lines is desirable, A is perfect.
+  - B is not so good, because it is suboptimal in case 2.
+
+For CLISP built-ins, however, the interoperability requirement with both A
+and C is a major requirement. Therefore we have to choose B, and accept the
+drawbacks:
+  1. AB) An extra blank line each time one switches from convention B to A.
+  2. B) When logging to a file, blank lines can occur.
+  3. AB) When joining two output streams into one, lines can be unseparated.
+  4. AB) Blank lines after a paragraph can be eaten by CLISP.
+  5. AB) Optimizing blank lines is not really possible.
+And to minimize the drawbacks, we recommend to user programs to use approach
+B or C, but not A.
+
+Another drawback of B is, however, that in interactive sessions the cursor
+is nearly always positioned at the beginning of a line, pointing the user's
+focus to the wrong point and taking away a screen line.
+
+To solve this, we introduce the concept of ELASTIC-NEWLINE. This is the
+converse of FRESH-LINE: It waits for the next character and outputs a newline
+when the next character is not a newline; then the next character is processed
+normally. As a FORMAT directive, we write it "~." (the only FORMAT directives
+left are "~.", "~=", "~\""). ELASTIC-NEWLINE followed by FRESH-LINE leads to
+exactly one newline always.
+
+It leads to a slightly different newline convention:
+
+  B') Print a newline if needed before the line, and a newline if needed after
+      it.
+      As a format string: "~&First line.~%Second line.~."
+
+The five programs being considered are now:
+
+  A) using convention A exclusively,
+  AB') using conventions A and B' in a mixed way,
+  B') using convention B' exclusively,
+  B'C) using conventions B' and C in a mixed way,
+  C) using convention C exclusively,
+
+Here is the corresponding analysis:
+
+  1. A)   No extra blank lines.
+     AB') No extra blank lines.
+     B')  No extra blank lines.
+     B'C) No extra blank lines.
+     C)   No extra blank lines.
+
+  2. A)   No extra blank lines.
+     AB') Blank lines can occur, when convention B' is used.
+     B')  Blank lines can occur.
+     B'C) Blank lines can occur, when convention B' is used.
+     C)   No extra blank lines.
+
+  3. A)   No problem.
+     AB') Lines can be unseparated when one switches from convention A to B'.
+     B')  Lines can be unseparated when one switches from one stream to another
+          without performing a FORCE-OUTPUT. This is a general problem with
+          buffered streams; CLISP's FRESH-LINE contains a workaround that is
+          limited to *STANDARD-OUTPUT* and *ERROR-OUTPUT*.
+     B'C) No problem.
+     C)   No problem.
+
+  4. A)   No problem.
+     AB') The blank line is omitted when using A2 before switching to B'
+          or when using B'2 before switching to A.
+     B')  No problem.
+     B'C) No problem.
+     C)   No problem.
+
+  5. A)   Yes, using "~&First line.~%Second line." eats a previous blank line.
+     AB') Not really: Using "~&First line.~%Second line." may eat a previous
+          blank line or a following blank line, but you cannot know in advance
+          which one.
+     B')  Yes, using "~&First line.~%Second line." eats a following blank line.
+     B'C) Impossible.
+     C)   Yes, using "First line.~%Second line.~." eats a following blank line.
+
+Now criterium 1 is satisfied perfectly. We therefore choose B', not B, for
+use inside CLISP, and programs can use either A or C without problems during
+normal operation.

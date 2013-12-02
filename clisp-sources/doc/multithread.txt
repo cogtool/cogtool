@@ -1,0 +1,146 @@
+                              Multithreading
+                              ==============
+
+is currently being developed and does not work yet.
+
+General principles
+------------------
+
+* Parallelizability Principle:
+
+  Simple formulation:
+    "A program that was developed for a single-threaded world and which shares
+     no application objects with programs running in other threads must run
+     fine, without problems."
+
+  Extended formulation:
+    "If, in a single-threaded world, execution of program A before program B
+     produces semantically the same results as execution of program B before
+     program A, then in a multithreaded world, it is possible to run A and B
+     simultaneously in different threads, and the result will be the same as
+     in the two single-threaded cases (A before B, or B before A)."
+  That's what the users ultimately want.
+  - If A and B have no objects in common, then the implementation ensures by
+    itself that the principle is fulfilled.
+  - If A and B shared some objects, the implementation allows the programs
+    to satisfy the principle with little effort.
+
+Installation
+------------
+
+In the Makefile, define in the CFLAGS the symbol MULTITHREAD and one of
+the symbols POSIX_THREADS, POSIXOLD_THREADS, SOLARIS_THREADS, C_THREADS,
+WIN32_THREADS. (See xthread.d about their meaning.)
+
+Symbol values
+-------------
+
+Any symbol can be in one of five states:
+
+  - Global Variable. This means that SYMBOL-VALUE of the symbol accesses
+    the same value cell for all threads.
+
+  - Global Constant. This is the same as Global Variable, except that the
+    value cell cannot be modified. And the compiler can optimize this kind
+    of symbols.
+
+  - Per-Thread Variable. This means that every thread has its private value
+    cell which is accessed by SYMBOL-VALUE. LET/LET*/MULTIPLE-VALUE-BIND
+    bindings of the variable will affect the lexical environment only, not
+    the value cell, unless the variable is locally declared SPECIAL.
+
+  - Per-Thread Special Variable. This means that every thread has its private
+    value cell which is accessed by SYMBOL-VALUE. LET/LET*/MULTIPLE-VALUE-BIND
+    bindings of the variable will affect this value cell.
+
+  - Lazy. This is the initial state of the symbol. It lasts until
+      - a DEFGLOBAL or DEFCONSTANT declaration for the symbol is evaluated,
+        in which case the symbol becomes a Global Variable or a Global Constant,
+    or
+      - a SPECIAL proclamation for the symbol is evaluated,
+        in which case the symbol becomes a Per-Thread Special Variable,
+    or
+      - a SYMBOL-VALUE reference for the symbol is evaluated,
+        in which case the symbol becomes a Per-Thread Variable.
+
+Once a symbol is Global or Per-Thread, this cannot change any more.
+However, a Global Variable can become a Global Constant (by means of a
+DEFCONSTANT declaration), and a Per-Thread Variable can become a
+Per-Thread Special Variable (by means of a SPECIAL proclamation).
+
+The Common Lisp standard variables are all Per-Thread, except *features* and
+*modules*, which are Global.
+
+Packages
+--------
+
+PACKAGE objects are LOCKABLE and are locked by INTERN before adding a
+symbol (if FIND-SYMBOL fails).
+(This is a consequence of the Parallelizability Principle.)
+This puts an unknown speed penalty on READ and therefore LOAD.
+
+CLOS
+----
+
+DEFCLASS, DEFGENERIC, DEFMETHOD, DEFSTRUCT must get a global "DEF-CLOS"
+lock because they change the global class hierarchy.
+(This is a consequence of the Parallelizability Principle.)
+
+Hash Tables and Sequences
+-------------------------
+
+Nothing is ever locked, so the user is required to use locks when
+sharing HASH-TABLEs and SEQUENCEs between threads.
+If two threads evaluate
+   (INCF (GETHASH x global-ht 0)),
+the results are undefined.
+-- But this doesn't allow the programmer to fulfill the Parallelizability
+   Principle easily.
+     Program PRELUDE: (defparameter global-ht (make-hash-table))
+     Program A: (setf (gethash 'a global-ht) 'aaaa)
+     Program B: (setf (gethash 'b global-ht) 'bbbb)
+   The Parallelizability Principle implies that one should
+   have an easy way to declare that global-ht is shared, without modifying
+   the programs A and B. The obvious proposal is a change in the PRELUDE:
+        (defparameter global-ht (make-hash-table :lockable t))
+   While this automatic locking will indeed work when no keys are shared,
+   this is not a universal solution:
+     Program A: (incf (gethash 10 global-ht 0))
+     Program B: (incf (gethash 10 global-ht 0))
+   It is possible that both GETHASH calls will happen before both
+   PUTHASH calls unless both INCF forms are guarded with a lock.
+   Instead of making GLOBAL-HT an instance of LOCK (and relying on some
+   magic which cannot always work), one needs to create an explicit lock with
+        (defparameter global-ht-lock (ext:make-lock))
+   and wrap all his GLOBAL-HT accesses with
+        (with-lock (global-ht-lock)
+          (incf (gethash 'a global-ht 0)))
+   The bottom line is: programs that use global variables do not fall
+   under the Parallelizability Principle because they share application
+   objects with programs running in other threads.
+--
+Automatic locking will impose an unjustifiable penalty on HASH-TABLEs
+and SEQUENCEs local to threads.
+It is also consistent with the usual Common Lisp approach of
+   http://www.lisp.org/HyperSpec/Body/sec_3-6.html:
+        The consequences are undefined when code executed during an
+        object-traversing operation destructively modifies the object in
+        a way that might affect the ongoing traversal operation...
+
+Garbage Collector
+-----------------
+
+GC must stop all other threads while it is executing.
+CLISP has a copying GC, so anything else would require a write barrier
+during the scan phase and a read barrier during the move phase.
+
+C variables of type "object" are invalidated by GC, so the code that
+uses such variables must be surrounded with NO-GC locks.
+Actually, even gcv_object_t is not safe here:
+          ThePackage(STACK_0)->pack_name = ...
+When STACK_0 is already dereferenced and converted to a Package, but
+before the assignment occurs, GC should be banned.
+Looks like any C code that manipulates Lisp objects must lock GC.
+Also, begin_system_call() should release the lock and end_system_call()
+should re-acquire the lock (so that blocking system calls do not block
+other threads that need to GC), thus all system calls now "maygc".

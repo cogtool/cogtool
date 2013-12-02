@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- *** Entities for impnotes.xml *** -->
+<!ENTITY clisp-announce '<email>clisp-announce@lists.sourceforge.net</email> (<ulink url="http://lists.sourceforge.net/lists/listinfo/clisp-announce"/>)'>
+<!ENTITY clisp-list '<email>clisp-list@lists.sourceforge.net</email> (<ulink url="http://lists.sourceforge.net/lists/listinfo/clisp-list"/>)'>
+<!ENTITY clisp-devel '<email>clisp-devel@lists.sourceforge.net</email> (<ulink url="http://lists.sourceforge.net/lists/listinfo/clisp-devel"/>)'>
+
+<!-- *** people *** -->
+<!ENTITY bruno '<author><firstname>Bruno</firstname><surname>Haible</surname><address><otheraddr><ulink url="http://www.haible.de/bruno/"/></otheraddr></address></author>'>
+<!ENTITY gilbert-baumann '<author><firstname>Gilbert</firstname><surname>Baumann</surname><address><otheraddr><ulink url="http://www.uni-karlsruhe.de/~unk6/"/></otheraddr></address><email>unk6@rz.uni-karlsruhe.de</email></author>'>
+<!ENTITY hin '<author><firstname>John</firstname><surname>Hinsdale</surname><address><otheraddr><ulink url="http://www.alma.com/staff/hin"/></otheraddr></address><email>hin@alma.com</email></author>'>
+<!ENTITY sds '<author><firstname>Sam</firstname><surname>Steingold</surname><address><otheraddr><ulink url="http://www.podval.org/~sds/"/></otheraddr></address></author>'>
+<!ENTITY stoll '<author><firstname>Michael</firstname><surname>Stoll</surname><address><otheraddr><ulink url="http://www.math.iu-bremen.de/stoll/"/></otheraddr></address></author>'>
+
+<!-- *** platforms *** -->
+<!ENTITY with '<emphasis role="strong">with</emphasis>'>
+<!ENTITY without '<emphasis role="strong">without</emphasis>'>
+<!ENTITY typecodes '<link linkend="typecodes"><emphasis role="strong"><option>TYPECODES</option></emphasis></link>'>
+<!ENTITY heapcodes '<link linkend="typecodes"><emphasis role="strong"><option>HEAPCODES</option></emphasis></link>'>
+
+<!-- *** literals *** -->
+<!ENTITY abort-k '<constant>:ABORT</constant>'>
+<!ENTITY absolute-k '<constant>:ABSOLUTE</constant>'>
+<!ENTITY accessor-k '<constant>:ACCESSOR</constant>'>
+<!ENTITY all-k '<constant>:ALL</constant>'>
+<!ENTITY alloca-k '<constant>:ALLOCA</constant>'>
+<!ENTITY allocation-k '<constant>:ALLOCATION</constant>'>
+<!ENTITY append-k '<constant>:APPEND</constant>'>
+<!ENTITY argument-precedence-order-k '<constant>:ARGUMENT-PRECEDENCE-ORDER</constant>'>
+<!ENTITY arguments-k '<constant>:ARGUMENTS</constant>'>
+<!ENTITY c-k '<constant>:C</constant>'>
+<!ENTITY c-NULL '<constant>NULL</constant>'>
+<!ENTITY class-k '<constant>:CLASS</constant>'>
+<!ENTITY compiling-k '<constant>:COMPILING</constant>'>
+<!ENTITY control-k '<constant>:CONTROL</constant>'>
+<!ENTITY copy-k '<constant>:COPY</constant>'>
+<!ENTITY count-k '<constant>:COUNT</constant>'>
+<!ENTITY current-k '<constant>:CURRENT</constant>'>
+<!ENTITY declarations-k '<constant>:DECLARATIONS</constant>'>
+<!ENTITY declare-k '<constant>:DECLARE</constant>'>
+<!ENTITY default-k '<constant>:DEFAULT</constant>'>
+<!ENTITY direct-default-initargs-k '<constant>:DIRECT-DEFAULT-INITARGS</constant>'>
+<!ENTITY direct-slots-k '<constant>:DIRECT-SLOTS</constant>'>
+<!ENTITY direct-superclasses-k '<constant>:DIRECT-SUPERCLASSES</constant>'>
+<!ENTITY direction-k '<constant>:DIRECTION</constant>'>
+<!ENTITY documentation-k '<constant>:DOCUMENTATION</constant>'>
+<!ENTITY echo-k '<constant>:ECHO</constant>'>
+<!ENTITY end-k '<constant>:END</constant>'>
+<!ENTITY eof-k '<constant>:EOF</constant>'>
+<!ENTITY error-k '<constant>:ERROR</constant>'>
+<!ENTITY external-k '<constant>:EXTERNAL</constant>'>
+<!ENTITY extra-file-types-k '<constant>:EXTRA-FILE-TYPES</constant>'>
+<!ENTITY function-k '<constant>:FUNCTION</constant>'>
+<!ENTITY gf-k '<constant>:GENERIC-FUNCTION</constant>'>
+<!ENTITY gf-class-k '<constant>:GENERIC-FUNCTION-CLASS</constant>'>
+<!ENTITY home-k '<constant>:HOME</constant>'>
+<!ENTITY hyper-k '<constant>:HYPER</constant>'>
+<!ENTITY if-does-not-exist '<constant>:IF-DOES-NOT-EXIST</constant>'>
+<!ENTITY if-output-exists '<constant>:IF-OUTPUT-EXISTS</constant>'>
+<!ENTITY ignore-k '<constant>:IGNORE</constant>'>
+<!ENTITY in-k '<constant>:IN</constant>'>
+<!ENTITY in-out-k '<constant>:IN-OUT</constant>'>
+<!ENTITY include-k '<constant>:INCLUDE</constant>'>
+<!ENTITY inherit-k '<constant>:INHERIT</constant>'>
+<!ENTITY initarg-k '<constant>:INITARG</constant>'>
+<!ENTITY initargs-k '<constant>:INITARGS</constant>'>
+<!ENTITY initform-k '<constant>:INITFORM</constant>'>
+<!ENTITY initfunction-k '<constant>:INITFUNCTION</constant>'>
+<!ENTITY input-k '<constant>:INPUT</constant>'>
+<!ENTITY instance-k '<constant>:INSTANCE</constant>'>
+<!ENTITY io-k '<constant>:IO</constant>'>
+<!ENTITY key-k '<constant>:KEY</constant>'>
+<!ENTITY key-and-value-k '<constant>:KEY-AND-VALUE</constant>'>
+<!ENTITY key-or-value-k '<constant>:KEY-OR-VALUE</constant>'>
+<!ENTITY lambda-list-k '<constant>:LAMBDA-LIST</constant>'>
+<!ENTITY lang-k '<link linkend="c-flavor"><constant>:LANGUAGE</constant></link>'>
+<!ENTITY library-k '<constant>:LIBRARY</constant>'>
+<!ENTITY malloc-free-k '<constant>:MALLOC-FREE</constant>'>
+<!ENTITY merge-k '<constant>:MERGE</constant>'>
+<!ENTITY meta-k '<constant>:META</constant>'>
+<!ENTITY metaclass-k '<constant>:METACLASS</constant>'>
+<!ENTITY method-k '<constant>:METHOD</constant>'>
+<!ENTITY method-class-k '<constant>:METHOD-CLASS</constant>'>
+<!ENTITY method-combination-k '<constant>:METHOD-COMBINATION</constant>'>
+<!ENTITY name-k '<constant>:NAME</constant>'>
+<!ENTITY newest-k '<constant>:NEWEST</constant>'>
+<!ENTITY none-k '<constant>:NONE</constant>'>
+<!ENTITY obsolete-action-k '<constant>:OBSOLETE-ACTION</constant>'>
+<!ENTITY out-k '<constant>:OUT</constant>'>
+<!ENTITY outfile-k '<constant>:OUTPUT-FILE</constant>'>
+<!ENTITY output-k '<constant>:OUTPUT</constant>'>
+<!ENTITY overwrite-k '<constant>:OVERWRITE</constant>'>
+<!ENTITY parent-k '<constant>:PARENT</constant>'>
+<!ENTITY previous-k '<constant>:PRECIOUS</constant>'>
+<!ENTITY print-function-k '<constant>:PRINT-FUNCTION</constant>'>
+<!ENTITY print-k '<constant>:PRINT</constant>'>
+<!ENTITY qualifiers-k '<constant>:QUALIFIERS</constant>'>
+<!ENTITY reader-k '<constant>:READER</constant>'>
+<!ENTITY readers-k '<constant>:READERS</constant>'>
+<!ENTITY relative-k '<constant>:RELATIVE</constant>'>
+<!ENTITY ret-type-k '<constant>:RETURN-TYPE</constant>'>
+<!ENTITY ro-k '<constant>:READ-ONLY</constant>'>
+<!ENTITY root-k '<constant>:ROOT</constant>'>
+<!ENTITY slotdef-k '<constant>:SLOT-DEFINITION</constant>'>
+<!ENTITY specializers-k '<constant>:SPECIALIZERS</constant>'>
+<!ENTITY start-k '<constant>:START</constant>'>
+<!ENTITY stdc-k '<constant>:STDC</constant>'>
+<!ENTITY stdc-sc-k '<constant>:STDC-STDCALL</constant>'>
+<!ENTITY stream-k '<constant>:STREAM</constant>'>
+<!ENTITY super-k '<constant>:SUPER</constant>'>
+<!ENTITY test-k '<constant>:TEST</constant>'>
+<!ENTITY type-k '<constant>:TYPE</constant>'>
+<!ENTITY use-k '<constant>:USE</constant>'>
+<!ENTITY value-k '<constant>:VALUE</constant>'>
+<!ENTITY verbose-k '<constant>:VERBOSE</constant>'>
+<!ENTITY wait-k '<constant>:WAIT</constant>'>
+<!ENTITY warnings-k '<constant>:WARNINGS</constant>'>
+<!ENTITY wild-inferiors-k '<constant>:WILD-INFERIORS</constant>'>
+<!ENTITY wild-k '<constant>:WILD</constant>'>
+<!ENTITY writer-k '<constant>:WRITER</constant>'>
+<!ENTITY writers-k '<constant>:WRITERS</constant>'>
+<!ENTITY zero '<literal>0</literal>'>
+<!ENTITY sh-prompt '<prompt>$</prompt>'>
+
+<!ENTITY dos-k '<constant>:DOS</constant>'>
+<!ENTITY mac-k '<constant>:MAC</constant>'>
+<!ENTITY unix-k '<constant>:UNIX</constant>'>
+
+<!-- *** characters *** -->
+<!ENTITY nl-s '<keysym>#\Newline</keysym>'>
+<!ENTITY cr-s '<keysym>#\Return</keysym>'>
+<!ENTITY lf-s '<keysym>#\Linefeed</keysym>'>
+<!ENTITY cr-c '<keycode>CR</keycode>'>
+<!ENTITY lf-c '<keycode>LF</keycode>'>
+<!ENTITY tab-c '<keycode>TAB</keycode>'>
+
+<!-- *** packages *** -->
+<!ENTITY affi-pac '<link linkend="affi"><quote role="package">AFFI</quote></link>'>
+<!ENTITY charset-pac '<link linkend="encoding"><quote role="package">CHARSET</quote></link>'>
+<!ENTITY clos-pac '<link linkend="classes"><quote role="package">CLOS</quote></link>'>
+<!ENTITY cs-cl '<olink targetdoc="impnotes" targetptr="package-case"><quote role="package">CS-COMMON-LISP</quote></olink>'>
+<!ENTITY cs-clu '<olink targetdoc="impnotes" targetptr="cs-clu"><quote role="package">CS-COMMON-LISP-USER</quote></olink>'>
+<!ENTITY custom-pac '<link linkend="customize"><quote role="package">CUSTOM</quote></link>'>
+<!ENTITY ext-pac '<link linkend="ext-pac"><quote role="package">EXT</quote></link>'>
+<!ENTITY ffi-pac '<link linkend="dffi"><quote role="package">FFI</quote></link>'>
+<!ENTITY gray-pac '<link linkend="gray"><quote role="package">GRAY</quote></link>'>
+<!ENTITY gstream-pac '<link linkend="gstream"><quote role="package">GSTREAM</quote></link>'>
+<!ENTITY i18n-pac '<link linkend="i18n"><quote role="package">I18N</quote></link>'>
+<!ENTITY ldap-pac '<link linkend="dir-key"><quote role="package">LDAP</quote></link>'>
+<!ENTITY posix-pac '<link linkend="syscalls"><quote role="package">POSIX</quote></link>'>
+<!ENTITY regexp-pac '<link linkend="regexp-mod"><quote role="package">REGEXP</quote></link>'>
+<!ENTITY screen-pac '<link linkend="screen"><quote role="package">SCREEN</quote></link>'>
+<!ENTITY socket-pac '<link linkend="socket"><quote role="package">SOCKET</quote></link>'>
+<!ENTITY sys-pac '<link linkend="sys-pac"><quote role="package">SYSTEM</quote></link>'>
+<!-- * redefines the entity in cl-ent.xml * -->
+<!ENTITY clu-pac '<link linkend="clupack"><quote role="package">COMMON-LISP-USER</quote></link>'>
+
+<!-- *** local *** -->
+<!ENTITY abort-on-error '<olink targetdoc="impnotes" targetptr="abort-on-error"><function>EXT:ABORT-ON-ERROR</function></olink>'>
+<!ENTITY absolute-pathname '<link linkend="absolute-pathname"><function>EXT:ABSOLUTE-PATHNAME</function></link>'>
+<!ENTITY ansi '<olink targetdoc="impnotes" targetptr="ansi"><varname>CUSTOM:*ANSI*</varname></olink>'>
+<!ENTITY ansi-opt '<olink targetdoc="man" targetptr="opt-ansi"><option>-ansi</option></olink>'>
+<!ENTITY apropos-do-more '<link linkend="apropos"><varname>CUSTOM:*APROPOS-DO-MORE*</varname></link>'>
+<!ENTITY apropos-matcher '<link linkend="apropos"><varname>CUSTOM:*APROPOS-MATCHER*</varname></link>'>
+<!ENTITY appease-cerrors '<olink targetdoc="impnotes" targetptr="appease-cerrors"><function>EXT:APPEASE-CERRORS</function></olink>'>
+<!ENTITY browse-url '<link linkend="browse-url"><function>EXT:BROWSE-URL</function></link>'>
+<!ENTITY browser '<link linkend="browse-url"><varname>CUSTOM:*BROWSER*</varname></link>'>
+<!ENTITY browser-k '<link linkend="browse-url"><constant>:BROWSER</constant></link>'>
+<!ENTITY browsers '<link linkend="browse-url"><constant>CUSTOM:*BROWSERS*</constant></link>'>
+<!ENTITY clhs-root '<olink targetdoc="impnotes" targetptr="clhs-root"><function>CUSTOM:CLHS-ROOT</function></olink>'>
+<!ENTITY clhs-root-default '<link linkend="clhs-root"><varname>CUSTOM:*CLHS-ROOT-DEFAULT*</varname></link>'>
+<!ENTITY impnotes-root '<olink targetdoc="impnotes" targetptr="impnotes-root"><function>CUSTOM:IMPNOTES-ROOT</function></olink>'>
+<!ENTITY impnotes-root-default '<link linkend="impnotes-root"><varname>CUSTOM:*IMPNOTES-ROOT-DEFAULT*</varname></link>'>
+<!ENTITY open-http '<link linkend="open-http"><function>EXT:OPEN-HTTP</function></link>'>
+<!ENTITY buffered '<link linkend="buffered"><constant>:BUFFERED</constant></link>'>
+<!ENTITY byte-t '<link linkend="byte-type"><type>BYTE</type></link>'>
+<!ENTITY case-inverted-k '<link linkend="package-case"><constant>:CASE-INVERTED</constant></link>'>
+<!ENTITY case-sensitive-k '<link linkend="package-case"><constant>:CASE-SENSITIVE</constant></link>'>
+<!ENTITY modern-k '<link linkend="package-case"><constant>:MODERN</constant></link>'>
+<!ENTITY cd '<link linkend="cd"><function>EXT:CD</function></link>'>
+<!ENTITY ch-ctrl '<link linkend="char-bits"><constant>EXT:CHAR-CONTROL-BIT</constant></link>'>
+<!ENTITY ch-hyper '<link linkend="char-bits"><constant>EXT:CHAR-HYPER-BIT</constant></link>'>
+<!ENTITY ch-meta '<link linkend="char-bits"><constant>EXT:CHAR-META-BIT</constant></link>'>
+<!ENTITY ch-super '<link linkend="char-bits"><constant>EXT:CHAR-SUPER-BIT</constant></link>'>
+<!ENTITY char-width '<link linkend="char-width"><function>EXT:CHAR-WIDTH</function></link>'>
+<!ENTITY char-invertcase '<link linkend="char-invertcase"><function>EXT:CHAR-INVERTCASE</function></link>'>
+<!ENTITY char-key '<link linkend="with-kbd"><function>EXT:CHAR-KEY</function></link>'>
+<!ENTITY cur-frame '<link linkend="cur-frame">current stack frame</link>'>
+<!ENTITY no-prim '<link linkend="no-prim"><function>CLOS:NO-PRIMARY-METHOD</function></link>'>
+<!ENTITY meth-call-err '<link linkend="meth-call-err"><classname>CLOS:METHOD-CALL-ERROR</classname></link>'>
+<!ENTITY meth-call-type-err '<link linkend="meth-call-type-err"><classname>CLOS:METHOD-CALL-TYPE-ERROR</classname></link>'>
+<!ENTITY features-my '<olink targetdoc="impnotes" targetptr="features"><varname>*FEATURES*</varname></olink>'>
+<!ENTITY inspect-my '<link linkend="inspect"><function>INSPECT</function></link>'>
+<!ENTITY apropos-my '<olink targetdoc="impnotes" targetptr="apropos"><function>APROPOS</function></olink>'>
+<!ENTITY describe-my '<olink targetdoc="impnotes" targetptr="describe"><function>DESCRIBE</function></olink>'>
+<!ENTITY fill-indent-sexp '<olink targetdoc="impnotes" targetptr="fill-stream"><varname>CUSTOM:*FILL-INDENT-SEXP*</varname></olink>'>
+<!ENTITY gen-flet '<link linkend="gen-flet"><function>CLOS:GENERIC-FLET</function></link>'>
+<!ENTITY gen-labels '<link linkend="gen-labels"><function>CLOS:GENERIC-LABELS</function></link>'>
+<!ENTITY symbol-mex '<link linkend="symbol-mex"><function>EXT:SYMBOL-MACRO-EXPAND</function></link>'>
+<!ENTITY compile-decl '<link linkend="compile-decl"><code>(COMPILE)</code></link>'>
+<!ENTITY compile-warn '<link linkend="compilefile"><varname>CUSTOM:*COMPILE-WARNINGS*</varname></link>'>
+<!ENTITY compiled-types '<link linkend="loadfile"><varname>CUSTOM:*COMPILED-FILE-TYPES*</varname></link>'>
+<!ENTITY count-ansi '<link linkend="count-ansi"><varname>CUSTOM:*SEQUENCE-COUNT-ANSI*</varname></link>'>
+<!ENTITY curr-lang '<olink targetdoc="impnotes" targetptr="language"><varname>CUSTOM:*CURRENT-LANGUAGE*</varname></olink>'>
+<!ENTITY deflang '<link linkend="deflang"><function>I18N:DEFLANGUAGE</function></link>'>
+<!ENTITY def-i-l '<link linkend="def-i-l"><function>I18N:DEFINTERNATIONAL</function></link>'>
+<!ENTITY defloc '<link linkend="defloc"><function>I18N:DEFLOCALIZED</function></link>'>
+<!ENTITY localized '<link linkend="localized"><function>I18N:LOCALIZED</function></link>'>
+<!ENTITY locale-conv '<link linkend="locale-conv"><function>I18N:LOCALE-CONV</function></link>'>
+<!ENTITY set-locale '<link linkend="set-locale"><function>I18N:SET-LOCALE</function></link>'>
+<!ENTITY lang-info '<link linkend="lang-info"><function>I18N:LANGUAGE-INFORMATION</function></link>'>
+<!ENTITY def-file-enc '<olink targetdoc="impnotes" targetptr="def-file-enc"><varname>CUSTOM:*DEFAULT-FILE-ENCODING*</varname></olink>'>
+<!ENTITY default-float-format '<link linkend="default-float-format"><varname>CUSTOM:*DEFAULT-FLOAT-FORMAT*</varname></link>'>
+<!ENTITY default-tz '<link linkend="default-tz"><varname>CUSTOM:*DEFAULT-TIME-ZONE*</varname></link>'>
+<!ENTITY defun-accept-spelalist '<link linkend="defun-accept-spelalist"><varname>CUSTOM:*DEFUN-ACCEPT-SPECIALIZED-LAMBDA-LIST*</varname></link>'>
+<!ENTITY dev-prefix '<link linkend="device-prefix"><varname>CUSTOM:*DEVICE-PREFIX*</varname></link>'>
+<!ENTITY dk-t '<link linkend="dir-key-type">directory key type</link>'>
+<!ENTITY dkey-close '<link linkend="dir-key-close"><function>LDAP:DIR-KEY-CLOSE</function></link>'>
+<!ENTITY dkey-open '<link linkend="dir-key-open"><function>LDAP:DIR-KEY-OPEN</function></link>'>
+<!ENTITY defhash '<link linkend="defhash"><function>EXT:DEFINE-HASH-TABLE-TEST</function></link>'>
+<!ENTITY dohash '<link linkend="dohash"><function>EXT:DOHASH</function></link>'>
+<!ENTITY doseq '<link linkend="doseq"><function>EXT:DOSEQ</function></link>'>
+<!ENTITY ds-t '<link linkend="dribble"><classname>EXT:DRIBBLE-STREAM</classname></link>'>
+<!ENTITY editor '<link linkend="ed"><varname>CUSTOM:*EDITOR*</varname></link>'>
+<!ENTITY elastic-newline '<link linkend="elastic-newline"><function>EXT:ELASTIC-NEWLINE</function></link>'>
+<!ENTITY eltype '<link linkend="eltype"><constant>:ELEMENT-TYPE</constant></link>'>
+<!ENTITY enc-built-in '<link linkend="charset-symbols">built-in</link>'> <!-- encoding -->
+<!ENTITY enc-charset '<link linkend="enc-charset"><function>EXT:ENCODING-CHARSET</function></link>'>
+<!ENTITY encoding '<link linkend="encoding"><classname>EXT:ENCODING</classname></link>'>
+<!ENTITY endianness '<link linkend="endianness"><replaceable>ENDIANNESS</replaceable></link>'>
+<!ENTITY ethe '<link linkend="ethe"><function>EXT:ETHE</function></link>'>
+<!ENTITY exec '<link linkend="exec"><function>EXT:EXECUTE</function></link>'>
+<!ENTITY exit-on-error '<olink targetdoc="impnotes" targetptr="exit-on-error"><function>EXT:EXIT-ON-ERROR</function></olink>'>
+<!ENTITY expand-form '<link linkend="code-walk"><function>EXT:EXPAND-FORM</function></link>'>
+<!ENTITY extfmt '<link linkend="extfmt"><constant>:EXTERNAL-FORMAT</constant></link>'>
+<!ENTITY file-pipe-socket-s '<link linkend="open">file</link>/<link linkend="pipe">pipe</link>/<link linkend="socket">socket</link> &stream-t;'>
+<!ENTITY finalize '<link linkend="final"><function>EXT:FINALIZE</function></link>'>
+<!ENTITY fixnum-char-ansi '<link linkend="fixnum-char-ansi"><varname>CUSTOM:*COERCE-FIXNUM-CHAR-ANSI*</varname></link>'>
+<!ENTITY flocont '<link linkend="flocont"><varname>CUSTOM:*FLOATING-POINT-CONTAGION-ANSI*</varname></link>'>
+<!ENTITY floratcont '<link linkend="floratcont"><varname>CUSTOM:*FLOATING-POINT-RATIONAL-CONTAGION-ANSI*</varname></link>'>
+<!ENTITY foreign-enc '<olink targetdoc="impnotes" targetptr="foreign-enc"><varname>CUSTOM:*FOREIGN-ENCODING*</varname></olink>'>
+<!ENTITY fu-st '<link linkend="fu-st"><classname>GRAY:FUNDAMENTAL-STREAM</classname></link>'>
+<!ENTITY fu-st-bin '<link linkend="fu-st-bin"><classname>GRAY:FUNDAMENTAL-BINARY-STREAM</classname></link>'>
+<!ENTITY fu-st-char '<link linkend="fu-st-char"><classname>GRAY:FUNDAMENTAL-CHARACTER-STREAM</classname></link>'>
+<!ENTITY fu-st-in '<link linkend="fu-st-in"><classname>GRAY:FUNDAMENTAL-INPUT-STREAM</classname></link>'>
+<!ENTITY fu-st-out '<link linkend="fu-st-out"><classname>GRAY:FUNDAMENTAL-OUTPUT-STREAM</classname></link>'>
+<!ENTITY fill-stream '<link linkend="fill-stream"><classname>EXT:FILL-STREAM</classname></link>'>
+<!ENTITY gc '<link linkend="gc">garbage-collect</link>'>
+<!ENTITY getenv '<link linkend="getenv"><function>EXT:GETENV</function></link>'>
+<!ENTITY input-char '<link linkend="input-char"><classname>SYS::INPUT-CHARACTER</classname></link>'>
+<!ENTITY init-hooks '<olink targetdoc="impnotes" targetptr="init-hooks"><varname>CUSTOM:*INIT-HOOKS*</varname></olink>'>
+<!ENTITY fini-hooks '<link linkend="fini-hooks"><varname>CUSTOM:*FINI-HOOKS*</varname></link>'>
+<!ENTITY kbd-in '<olink targetdoc="impnotes" targetptr="with-kbd"><varname>EXT:*KEYBOARD-INPUT*</varname></olink>'>
+<!ENTITY lalist '<link linkend="lalist">lambda list</link>'>
+<!ENTITY letf '<link linkend="letf"><function>EXT:LETF</function></link>'>
+<!ENTITY letf-star '<link linkend="letf"><function>EXT:LETF*</function></link>'>
+<!ENTITY lfd '<link linkend="lfd"><function>EXT:LONG-FLOAT-DIGITS</function></link>'>
+<!ENTITY lfd-l '<code>(<link linkend="lfd"><function>EXT:LONG-FLOAT-DIGITS</function></link>)</code>'>
+<!ENTITY line-term '<link linkend="newline">line terminator</link>'>
+<!ENTITY load-comp '<olink targetdoc="impnotes" targetptr="loadfile"><varname>CUSTOM:*LOAD-COMPILING*</varname></olink>'>
+<!ENTITY load-echo '<olink targetdoc="impnotes" targetptr="loadfile"><varname>CUSTOM:*LOAD-ECHO*</varname></olink>'>
+<!ENTITY load-lpt-db '<olink targetdoc="impnotes" targetptr="load-lpt"><varname>CUSTOM:*LOAD-LOGICAL-PATHNAME-TRANSLATIONS-DATABASE*</varname></olink>'>
+<!ENTITY load-obs '<link linkend="loadfile"><varname>CUSTOM:*LOAD-OBSOLETE-ACTION*</varname></link>'>
+<!ENTITY load-paths '<link linkend="load-paths"><varname>CUSTOM:*LOAD-PATHS*</varname></link>'>
+<!ENTITY make-encoding '<link linkend="make-encoding"><function>EXT:MAKE-ENCODING</function></link>'>
+<!ENTITY make-stream '<link linkend="make-stream"><function>EXT:MAKE-STREAM</function></link>'>
+<!ENTITY mapcap '<link linkend="mapcap"><function>EXT:MAPCAP</function></link>'>
+<!ENTITY maplap '<link linkend="mapcap"><function>EXT:MAPLAP</function></link>'>
+<!ENTITY match-t '<classname>REGEXP:MATCH</classname>'>
+<!ENTITY mem-image '<olink targetdoc="impnotes" targetptr="image">memory image</olink>'>
+<!ENTITY savemem '<olink targetdoc="impnotes" targetptr="image"><function>EXT:SAVEINITMEM</function></olink>'>
+<!ENTITY misc-enc '<olink targetdoc="impnotes" targetptr="misc-enc"><varname>CUSTOM:*MISC-ENCODING*</varname></olink>'>
+<!ENTITY mk-pipe-in '<link linkend="pipe"><function>EXT:MAKE-PIPE-INPUT-STREAM</function></link>'>
+<!ENTITY mk-pipe-io '<link linkend="pipe"><function>EXT:MAKE-PIPE-IO-STREAM</function></link>'>
+<!ENTITY mk-pipe-out '<link linkend="pipe"><function>EXT:MAKE-PIPE-OUTPUT-STREAM</function></link>'>
+<!ENTITY mop '<link linkend="mop-chap">Meta-Object Protocol</link>'>
+<!ENTITY muffle-cerrors '<link linkend="muffle-cerrors"><function>EXT:MUFFLE-CERRORS</function></link>'>
+<!ENTITY need-defmethod '<simpara>You must define a method for this function.</simpara>'>
+<!ENTITY notspec '<link linkend="notspec-decl"><literal>EXT:NOTSPECIAL</literal></link>'>
+<!ENTITY no-underflow '<link linkend="no-underflow"><function>EXT:WITHOUT-FLOATING-POINT-UNDERFLOW</function></link>'>
+<!ENTITY opt-C '<option><olink targetdoc="man" targetptr="opt-load-comp">-C</olink></option>'>
+<!ENTITY opt-E '<option><olink targetdoc="man" targetptr="opt-enc"/></option>'>
+<!ENTITY opt-i '<option><olink targetdoc="man" targetptr="opt-init">-i</olink></option>'>
+<!ENTITY opt-K '<option><olink targetdoc="man" targetptr="opt-link-set">-K</olink></option>'>
+<!ENTITY opt-L '<option><olink targetdoc="man" targetptr="opt-lang">-L</olink></option>'>
+<!ENTITY opt-M '<option><olink targetdoc="man" targetptr="opt-memfile">-M</olink></option>'>
+<!ENTITY opt-v '<option><olink targetdoc="man" targetptr="opt-verbose">-v</olink></option>'>
+<!ENTITY opt-q '<option><olink targetdoc="man" targetptr="opt-verbose">-q</olink></option>'>
+<!ENTITY opt-x '<option><olink targetdoc="man" targetptr="opt-exec-expr">-x</olink></option>'>
+<!ENTITY opt-norc '<option><olink targetdoc="man" targetptr="opt-norc">-norc</olink></option>'>
+<!ENTITY opt-modern '<option><olink targetdoc="man" targetptr="opt-modern">-modern</olink></option>'>
+<!ENTITY opt-on-error '<option><olink targetdoc="man" targetptr="opt-on-error">-on-error</olink></option>'>
+<!ENTITY pack-inverted '<link linkend="pack-inverted"><function>EXT:PACKAGE-CASE-INVERTED-P</function></link>'>
+<!ENTITY pack-sensitive '<link linkend="pack-sensitive"><function>EXT:PACKAGE-CASE-SENSITIVE-P</function></link>'>
+<!ENTITY package-lock '<link linkend="pack-lock"><function>EXT:PACKAGE-LOCK</function></link>'>
+<!ENTITY without-package-lock '<link linkend="without-pack-lock"><function>EXT:WITHOUT-PACKAGE-LOCK</function></link>'>
+<!ENTITY parsedot '<link linkend="name-type-split"><varname>CUSTOM:*PARSE-NAMESTRING-DOT-FILE*</varname></link>'>
+<!ENTITY parsename '<link linkend="parsename"><varname>CUSTOM:*PARSE-NAMESTRING-ANSI*</varname></link>'>
+<!ENTITY path-des '<link linkend="path-des">pathname designator</link>'>
+<!ENTITY path-enc '<olink targetdoc="impnotes" targetptr="path-enc"><varname>CUSTOM:*PATHNAME-ENCODING*</varname></olink>'>
+<!ENTITY pathmerge '<link linkend="pathmerge"><varname>CUSTOM:*MERGE-PATHNAMES-ANSI*</varname></link>'>
+<!ENTITY pathprint '<link linkend="pathprint"><varname>CUSTOM:*PRINT-PATHNAMES-ANSI*</varname></link>'>
+<!ENTITY phasecont '<link linkend="phasecont"><varname>CUSTOM:*PHASE-ANSI*</varname></link>'>
+<!ENTITY loop-ansi '<link linkend="loop-ansi"><varname>CUSTOM:*LOOP-ANSI*</varname></link>'>
+<!ENTITY ppr-first-newline '<link linkend="ppr-first-newline"><varname>CUSTOM:*PPRINT-FIRST-NEWLINE*</varname></link>'>
+<!ENTITY pr-closure '<link linkend="pr-closure"><varname>CUSTOM:*PRINT-CLOSURE*</varname></link>'>
+<!ENTITY pr-indent '<link linkend="pr-indent"><varname>CUSTOM:*PRINT-INDENT-LISTS*</varname></link>'>
+<!ENTITY pr-rpars '<link linkend="pr-rpars"><varname>CUSTOM:*PRINT-RPARS*</varname></link>'>
+<!ENTITY probe-dir '<link linkend="probe-dir"><function>EXT:PROBE-DIRECTORY</function></link>'>
+<!ENTITY prompt-start '<link linkend="prompt-start"><varname>CUSTOM:*PROMPT-START*</varname></link>'>
+<!ENTITY prompt-step '<link linkend="prompt-step"><varname>CUSTOM:*PROMPT-STEP*</varname></link>'>
+<!ENTITY prompt-break '<link linkend="prompt-break"><varname>CUSTOM:*PROMPT-BREAK*</varname></link>'>
+<!ENTITY prompt-body '<link linkend="prompt-body"><varname>CUSTOM:*PROMPT-BODY*</varname></link>'>
+<!ENTITY prompt-finish '<link linkend="prompt-finish"><varname>CUSTOM:*PROMPT-FINISH*</varname></link>'>
+<!ENTITY prompt-new-package '<link linkend="prompt-new-package"><function>EXT:PROMPT-NEW-PACKAGE</function></link>'>
+<!ENTITY package-shortest-name '<link linkend="package-shortest-name"><function>EXT:PACKAGE-SHORTEST-NAME</function></link>'>
+<!ENTITY pr-sym-pack-prefix '<link linkend="pr-sym-pack-prefix"><function>CUSTOM:*PRINT-SYMBOL-PACKAGE-PREFIX-SHORTEST*</function></link>'>
+<!ENTITY command-index '<link linkend="command-index"><varname>EXT:*COMMAND-INDEX*</varname></link>'>
+<!ENTITY break-level '<link linkend="break-level"><function>EXT:BREAK-LEVEL</function></link>'>
+<!ENTITY step-level '<link linkend="step-level"><function>EXT:STEP-LEVEL</function></link>'>
+<!ENTITY rbla '<link linkend="rbla"><function>EXT:READ-BYTE-LOOKAHEAD</function></link>'>
+<!ENTITY rbnh '<link linkend="rbnh"><function>EXT:READ-BYTE-NO-HANG</function></link>'>
+<!ENTITY rbwhp '<link linkend="rbwhp"><function>EXT:READ-BYTE-WILL-HANG-P</function></link>'>
+<!ENTITY rcwhp '<link linkend="rcwhp"><function>EXT:READ-CHAR-WILL-HANG-P</function></link>'>
+<!ENTITY rd-by-seq '<link linkend="rd-by-seq"><function>EXT:READ-BYTE-SEQUENCE</function></link>'>
+<!ENTITY rd-ch-seq '<link linkend="rd-ch-seq"><function>EXT:READ-CHAR-SEQUENCE</function></link>'>
+<!ENTITY rd-float '<link linkend="bin-input"><function>EXT:READ-FLOAT</function></link>'>
+<!ENTITY rd-integer '<link linkend="bin-input"><function>EXT:READ-INTEGER</function></link>'>
+<!ENTITY re-cflags-opts '<link linkend="re-cflags"><constant>:EXTENDED</constant> <constant>:IGNORE-CASE</constant> <constant>:NEWLINE</constant> <constant>:NOSUB</constant></link>'>
+<!ENTITY re-eflags-opts '<link linkend="re-eflags"><constant>:NOTBOL</constant> <constant>:NOTEOL</constant></link>'>
+<!ENTITY re-matcher '<link linkend="re-matcher"><function>REGEXP:REGEXP-MATCHER</function></link>'>
+<!ENTITY re-export '<link linkend="re-export"><function>EXT:RE-EXPORT</function></link>'>
+<!ENTITY re-match '<link linkend="re-match"><function>REGEXP:MATCH</function></link>'>
+<!ENTITY re-match-end '<link linkend="re-match-access"><function>REGEXP:MATCH-END</function></link>'>
+<!ENTITY re-match-start '<link linkend="re-match-access"><function>REGEXP:MATCH-START</function></link>'>
+<!ENTITY re-match-string '<link linkend="re-match-string"><function>REGEXP:MATCH-STRING</function></link>'>
+<!ENTITY re-regexp-compile '<link linkend="re-regexp-compile"><function>REGEXP:REGEXP-COMPILE</function></link>'>
+<!ENTITY re-regexp-exec '<link linkend="re-regexp-exec"><function>REGEXP:REGEXP-EXEC</function></link>'>
+<!ENTITY re-regexp-quote '<link linkend="re-regexp-quote"><function>REGEXP:REGEXP-QUOTE</function></link>'>
+<!ENTITY re-regexp-split '<link linkend="re-regexp-split"><function>REGEXP:REGEXP-SPLIT</function></link>'>
+<!ENTITY re-with-loop-split '<link linkend="re-with-loop-split"><function>REGEXP:WITH-LOOP-SPLIT</function></link>'>
+<!ENTITY run-cmd '<link linkend="run-prog"><function>EXT:RUN-SHELL-COMMAND</function></link>'>
+<!ENTITY run-prog '<link linkend="run-prog"><function>EXT:RUN-PROGRAM</function></link>'>
+<!ENTITY scr-win '<link linkend="screen"><varname>SCREEN:*WINDOW*</varname></link>'>
+<!ENTITY set-global-handler '<olink targetdoc="impnotes" targetptr="global-handler"><function>EXT:SET-GLOBAL-HANDLER</function></olink>'>
+<!ENTITY without-global-handlers '<olink targetdoc="impnotes" targetptr="without-global-handlers"><function>EXT:WITHOUT-GLOBAL-HANDLERS</function></olink>'>
+<!ENTITY shell '<olink targetdoc="impnotes" targetptr="exec"><function>EXT:SHELL</function></olink>'>
+<!ENTITY so-accept '<link linkend="so-accept"><function>SOCKET:SOCKET-ACCEPT</function></link>'>
+<!ENTITY so-connect '<link linkend="so-connect"><function>SOCKET:SOCKET-CONNECT</function></link>'>
+<!ENTITY so-opt '<link linkend="so-opt"><function>SOCKET:SOCKET-OPTIONS</function></link>'>
+<!ENTITY so-status '<link linkend="so-status"><function>SOCKET:SOCKET-STATUS</function></link>'>
+<!ENTITY so-wait '<link linkend="so-wait"><function>SOCKET:SOCKET-WAIT</function></link>'>
+<!ENTITY socket-server '<link linkend="socket"><classname>SOCKET:SOCKET-SERVER</classname></link>'>
+<!ENTITY socket-stream '<link linkend="socket"><classname>SOCKET:SOCKET-STREAM</classname></link>'>
+<!ENTITY sose '<link linkend="sose"><function>SOCKET:SOCKET-SERVER</function></link>'>
+<!ENTITY sose-close '<link linkend="sose-close"><function>SOCKET:SOCKET-SERVER-CLOSE</function></link>'>
+<!ENTITY sose-host '<link linkend="sose-hopo"><function>SOCKET:SOCKET-SERVER-HOST</function></link>'>
+<!ENTITY sose-port '<link linkend="sose-hopo"><function>SOCKET:SOCKET-SERVER-PORT</function></link>'>
+<!ENTITY so-handles '<link linkend="so-handles"><function>SOCKET:STREAM-HANDLES</function></link>'>
+<!ENTITY sost-host '<link linkend="sost-hopo"><function>SOCKET:SOCKET-STREAM-HOST</function></link>'>
+<!ENTITY sost-local '<link linkend="sost-local"><function>SOCKET:SOCKET-STREAM-LOCAL</function></link>'>
+<!ENTITY sost-peer '<link linkend="sost-peer"><function>SOCKET:SOCKET-STREAM-PEER</function></link>'>
+<!ENTITY sost-port '<link linkend="sost-hopo"><function>SOCKET:SOCKET-STREAM-PORT</function></link>'>
+<!ENTITY sost-shut '<link linkend="sost-shut"><function>SOCKET:SOCKET-STREAM-SHUTDOWN</function></link>'>
+<!ENTITY source-types '<link linkend="loadfile"><varname>CUSTOM:*SOURCE-FILE-TYPES*</varname></link>'>
+<!ENTITY spacecharprint '<link linkend="spacecharprint"><varname>CUSTOM:*PRINT-SPACE-CHAR-ANSI*</varname></link>'>
+<!ENTITY spe-var-p '<link linkend="spe-var-p"><function>EXT:SPECIAL-VARIABLE-P</function></link>'>
+<!ENTITY st-lc '<link linkend="st-lc"><function>GRAY:STREAM-LINE-COLUMN</function></link>'>
+<!ENTITY st-rb '<link linkend="st-rb"><function>GRAY:STREAM-READ-BYTE</function></link>'>
+<!ENTITY st-rbla '<link linkend="st-rbla"><function>GRAY:STREAM-READ-BYTE-LOOKAHEAD</function></link>'>
+<!ENTITY st-rc '<link linkend="st-rc"><function>GRAY:STREAM-READ-CHAR</function></link>'>
+<!ENTITY st-rcnh '<link linkend="st-rcnh"><function>GRAY:STREAM-READ-CHAR-NO-HANG</function></link>'>
+<!ENTITY st-uc '<link linkend="st-uc"><function>GRAY:STREAM-UNREAD-CHAR</function></link>'>
+<!ENTITY st-wc '<link linkend="st-wc"><function>GRAY:STREAM-WRITE-CHAR</function></link>'>
+<!ENTITY string-width '<link linkend="string-width"><function>EXT:STRING-WIDTH</function></link>'>
+<!ENTITY string-invertcase '<link linkend="string-invertcase"><function>EXT:STRING-INVERTCASE</function></link>'>
+<!ENTITY nstring-invertcase '<link linkend="string-invertcase"><function>EXT:NSTRING-INVERTCASE</function></link>'>
+<!ENTITY suppress-check-redef '<link linkend="suppress-check-redef"><varname>CUSTOM:*SUPPRESS-CHECK-REDEFINITION*</varname></link>'>
+<!ENTITY sys-pack-list '<link linkend="pack-lock"><varname>CUSTOM:*SYSTEM-PACKAGE-LIST*</varname></link>'>
+<!ENTITY term-enc '<olink targetdoc="impnotes" targetptr="term-enc"><varname>CUSTOM:*TERMINAL-ENCODING*</varname></olink>'>
+<!ENTITY the-env '<link linkend="the-env"><function>EXT:THE-ENVIRONMENT</function></link>'>
+<!ENTITY timeout-k '<link linkend="timeout-k"><constant>:TIMEOUT</constant></link>'>
+<!ENTITY timeout-opt '&optional-amp; <link linkend="timeout-opt">[<replaceable>seconds</replaceable> [<replaceable>microseconds</replaceable>]]</link>'>
+<!ENTITY trace-indent '<link linkend="trace-indent"><varname>CUSTOM:*TRACE-INDENT*</varname></link>'>
+<!ENTITY trace-val '<link linkend="trace-val"><varname>EXT:*TRACE-VALUES*</varname></link>'>
+<!ENTITY traditional-opt '<olink targetdoc="man" targetptr="opt-traditional"><option>-traditional</option></olink>'>
+<!ENTITY ts '<link linkend="time"><function>EXT:TIMES</function></link>'>
+<!ENTITY uncompile '<link linkend="uncompile"><function>EXT:UNCOMPILE</function></link>'>
+<!ENTITY user-commands '<link linkend="user-commands"><varname>CUSTOM:*USER-COMMANDS*</varname></link>'>
+<!ENTITY utf-8 '<link linkend="charset-UTF-8"><constant>CHARSET:UTF-8</constant></link>'>
+<!ENTITY utf-16 '<link linkend="charset-UTF-16"><constant>CHARSET:UTF-16</constant></link>'>
+<!ENTITY warn-fpc '<link linkend="warn-fpc"><varname>CUSTOM:*WARN-ON-FLOATING-POINT-CONTAGION*</varname></link>'>
+<!ENTITY warn-fprc '<link linkend="warn-fprc"><varname>CUSTOM:*WARN-ON-FLOATING-POINT-RATIONAL-CONTAGION*</varname></link>'>
+<!ENTITY wdkey-open '<link linkend="with-dir-key-open"><function>LDAP:WITH-DIR-KEY-OPEN</function></link>'>
+<!ENTITY wdkey-search '<link linkend="with-dir-key-search"><function>LDAP:WITH-DIR-KEY-SEARCH</function></link>'>
+<!ENTITY weak-alist '<link linkend="weak-alist"><classname>EXT:WEAK-ALIST</classname></link>'>
+<!ENTITY weak-and-mapping '<link linkend="weak-and-mapping"><classname>EXT:WEAK-AND-MAPPING</classname></link>'>
+<!ENTITY weak-and-relation '<link linkend="weak-and-relation"><classname>EXT:WEAK-AND-RELATION</classname></link>'>
+<!ENTITY weak-list '<link linkend="weak-list"><classname>EXT:WEAK-LIST</classname></link>'>
+<!ENTITY weak-mapping '<link linkend="weak-mapping"><classname>EXT:WEAK-MAPPING</classname></link>'>
+<!ENTITY weak-or-mapping '<link linkend="weak-or-mapping"><classname>EXT:WEAK-OR-MAPPING</classname></link>'>
+<!ENTITY weak-or-relation '<link linkend="weak-or-relation"><classname>EXT:WEAK-OR-RELATION</classname></link>'>
+<!ENTITY weak-pointer '<link linkend="weak-pointer"><classname>EXT:WEAK-POINTER</classname></link>'>
+<!ENTITY with-kbd '<link linkend="with-kbd"><function>EXT:WITH-KEYBOARD</function></link>'>
+<!ENTITY with-print '<link linkend="hardcopy"><function>EXT:WITH-OUTPUT-TO-PRINTER</function></link>'>
+<!ENTITY with-restarts '<link linkend="with-restarts"><function>EXT:WITH-RESTARTS</function></link>'>
+<!ENTITY wr-by-seq '<link linkend="wr-by-seq"><function>EXT:WRITE-BYTE-SEQUENCE</function></link>'>
+<!ENTITY wr-ch-seq '<link linkend="wr-ch-seq"><function>EXT:WRITE-CHAR-SEQUENCE</function></link>'>
+<!ENTITY wr-float '<link linkend="bin-output"><function>EXT:WRITE-FLOAT</function></link>'>
+<!ENTITY wr-integer '<link linkend="bin-output"><function>EXT:WRITE-INTEGER</function></link>'>
+<!ENTITY pr-empty-arr-ansi '<link linkend="pr-empty-arr-ansi"><varname>CUSTOM:*PRINT-EMPTY-ARRAYS-ANSI*</varname></link>'>
+<!ENTITY pr-unreadable-ansi '<link linkend="pr-unreadable-ansi"><varname>CUSTOM:*PRINT-UNREADABLE-ANSI*</varname></link>'>
+<!ENTITY init-function '<olink targetdoc="impnotes" targetptr="image">init function</olink>'>
+<!ENTITY RC-file '<olink targetdoc="man" targetptr="opt-norc">RC file</olink>'>
+<!ENTITY compile-file-my '<olink targetdoc="impnotes" targetptr="compilefile"><function>COMPILE-FILE</function></olink>'>
+<!ENTITY load-my '<olink targetdoc="impnotes" targetptr="loadfile"><function>LOAD</function></olink>'>
+<!ENTITY require-my '<olink targetdoc="impnotes" targetptr="require"><function>REQUIRE</function></olink>'>
+<!ENTITY bytecode '<olink targetdoc="impnotes" targetptr="bytecode">bytecode</olink>'>
+<!ENTITY immediate-o '<link linkend="immediate-o">immediate object</link>'>
+<!ENTITY fasthash-eq '<link linkend="make-hash"><constant>EXT:FASTHASH-EQ</constant></link>'>
+<!ENTITY stablehash-eq '<link linkend="make-hash"><constant>EXT:STABLEHASH-EQ</constant></link>'>
+<!ENTITY standard-stablehash '<link linkend="make-hash"><classname>EXT:STANDARD-STABLEHASH</classname></link>'>
+<!ENTITY structure-stablehash '<link linkend="make-hash"><classname>EXT:STRUCTURE-STABLEHASH</classname></link>'>
+<!ENTITY warn-on-hashtable-needing-rehash-after-gc '<link linkend="hashtable-gc-rehash-warn"><varname>CUSTOM:*WARN-ON-HASHTABLE-NEEDING-REHASH-AFTER-GC*</varname></link>'>
+<!ENTITY err-pr-bt '<olink targetdoc="impnotes" targetptr="err-pr-bt"><varname>CUSTOM:*REPORT-ERROR-PRINT-BACKTRACE*</varname></olink>'>
+<!ENTITY http-proxy "<link linkend='http-proxy'><varname>CUSTOM:*HTTP-PROXY*</varname></link>">
+<!-- *** pre-processors *** -->
+<!ENTITY modprep '<link linkend="modprep-file"><command>modprep</command></link>'>
+
+<!-- *** syscalls *** -->
+<!ENTITY resolve-host '<link linkend="resolve-host"><function>POSIX:RESOLVE-HOST-IPADDR</function></link>'>
+<!ENTITY rlimit '<link linkend="rlimit"><function>POSIX:RLIMIT</function></link>'>
+<!ENTITY mk-xterm-io '<link linkend="mk-xterm-io"><function>POSIX:MAKE-XTERM-IO-STREAM</function></link>'>
+
+<!-- *** netica *** -->
+<!ENTITY netica-link '<ulink url="http://norsys.com/netica_c_api.htm">Netica C API</ulink>'>
+
+<!-- *** oracle *** -->
+<!ENTITY oracle-link '<ulink url="http://www.oracle.com">Oracle</ulink>'>
+<!ENTITY oracle-oci '<ulink url="http://www.vivtek.com/oracle.html">OCI</ulink>'>
+<!ENTITY ora-connect '<link linkend="ora-connect"><function>ORACLE:CONNECT</function></link>'>
+
+<!-- *** fastcgi *** -->
+<!ENTITY fastcgi-link '<ulink url="http://www.fastcgi.com">FastCGI</ulink>'>
+<!ENTITY mod-fastcgi '<ulink url="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html">mod_fastcgi</ulink>'>
+
+<!-- *** postgresql *** -->
+<!ENTITY postgresql-link '<ulink url="http://www.PostgreSQL.org/">PostgreSQL</ulink>'>
+<!ENTITY postgresql-doc 'http://www.postgresql.org/docs/8.0/interactive'>
+
+<!-- *** pari *** -->
+<!ENTITY pari-link '<ulink url="http://pari.math.u-bordeaux.fr/">PARI</ulink>'>
+
+<!-- *** gettext *** -->
+<!ENTITY category '<link linkend="category"><replaceable>CATEGORY</replaceable></link>'>
+<!ENTITY domain '<link linkend="domain"><replaceable>DOMAIN</replaceable></link>'>
+<!ENTITY gettext '<link linkend="gettext"><function>I18N:GETTEXT</function></link>'>
+<!ENTITY msgid '<replaceable>MSGID</replaceable>'>
+<!ENTITY ngettext '<link linkend="ngettext"><function>I18N:NGETTEXT</function></link>'>
+<!ENTITY textdomain '<link linkend="textdomain"><function>I18N:TEXTDOMAIN</function></link>'>
+<!ENTITY textdomaindir '<link linkend="textdomaindir"><function>I18N:TEXTDOMAINDIR</function></link>'>
+
+<!-- *** FFI *** -->
+<!ENTITY allocate-deep '<link linkend="foreign-heap"><function>FFI:ALLOCATE-DEEP</function></link>'>
+<!ENTITY allocate-shallow '<link linkend="foreign-heap"><function>FFI:ALLOCATE-SHALLOW</function></link>'>
+<!ENTITY allocation '<link linkend="allocation"><replaceable>ALLOCATION</replaceable></link>'>
+<!ENTITY bitsizeof '<link linkend="bitsizeof"><function>FFI:BITSIZEOF</function></link>'>
+<!ENTITY c-array '<link linkend="c-array"><type>FFI:C-ARRAY</type></link>'>
+<!ENTITY c-array-max '<link linkend="c-array-max"><type>FFI:C-ARRAY-MAX</type></link>'>
+<!ENTITY c-array-ptr '<link linkend="c-array-ptr"><type>FFI:C-ARRAY-PTR</type></link>'>
+<!ENTITY c-function '<link linkend="c-function"><type>FFI:C-FUNCTION</type></link>'>
+<!ENTITY c-lines '<link linkend="c-lines"><function>FFI:C-LINES</function></link>'>
+<!ENTITY c-pointer '<link linkend="c-pointer"><type>FFI:C-POINTER</type></link>'>
+<!ENTITY c-ptr '<link linkend="c-ptr"><type>FFI:C-PTR</type></link>'>
+<!ENTITY c-ptr-null '<link linkend="c-ptr-null"><type>FFI:C-PTR-NULL</type></link>'>
+<!ENTITY c-string '<link linkend="c-string"><type>FFI:C-STRING</type></link>'>
+<!ENTITY c-struct '<link linkend="c-struct"><type>FFI:C-STRUCT</type></link>'>
+<!ENTITY c-union '<link linkend="c-union"><type>FFI:C-UNION</type></link>'>
+<!ENTITY c-var-addr '<link linkend="c-var-addr"><function>FFI:C-VAR-ADDRESS</function></link>'>
+<!ENTITY c-var-object '<link linkend="c-var-object"><function>FFI:C-VAR-OBJECT</function></link>'>
+<!ENTITY cast '<link linkend="cast"><function>FFI:CAST</function></link>'>
+<!ENTITY clisp-link '<link linkend="mod-overview"><command>clisp-link</command></link>'>
+<!ENTITY def-c-const '<link linkend="def-c-const"><function>FFI:DEF-C-CONST</function></link>'>
+<!ENTITY def-c-enum '<link linkend="def-c-enum"><function>FFI:DEF-C-ENUM</function></link>'>
+<!ENTITY def-c-struct '<link linkend="def-c-struct"><function>FFI:DEF-C-STRUCT</function></link>'>
+<!ENTITY def-c-type '<link linkend="def-c-type"><function>FFI:DEF-C-TYPE</function></link>'>
+<!ENTITY def-c-var '<link linkend="def-c-var"><function>FFI:DEF-C-VAR</function></link>'>
+<!ENTITY def-call-in '<link linkend="def-call-in"><function>FFI:DEF-CALL-IN</function></link>'>
+<!ENTITY def-call-out '<link linkend="def-call-out"><function>FFI:DEF-CALL-OUT</function></link>'>
+<!ENTITY deparse-c-type '<link linkend="c-type-parse"><function>FFI:DEPARSE-C-TYPE</function></link>'>
+<!ENTITY deref '<link linkend="deref"><function>FFI:DEREF</function></link>'>
+<!ENTITY element '<link linkend="element"><function>FFI:ELEMENT</function></link>'>
+<!ENTITY ffi-guard '<link linkend="ffi-guard"><varname>FFI:*FOREIGN-GUARD*</varname></link>'>
+<!ENTITY ffi-out-fun '<link linkend="ffi-extern-output"><varname>FFI:*OUTPUT-C-FUNCTIONS*</varname></link>'>
+<!ENTITY f-addr '<replaceable>foreign-address</replaceable>'>
+<!ENTITY f-ent '<replaceable>foreign-entity</replaceable>'>
+<!ENTITY f-ptr '<replaceable>foreign-pointer</replaceable>'>
+<!ENTITY set-foreign-pointer '<link linkend="fptr"><function>FFI:SET-FOREIGN-POINTER</function></link>'>
+<!ENTITY foreign-address '<link linkend="faddr"><function>FFI:FOREIGN-ADDRESS</function></link>'>
+<!ENTITY foreign-address-null '<link linkend="fa-null"><function>FFI:FOREIGN-ADDRESS-NULL</function></link>'>
+<!ENTITY foreign-address-t '<link linkend="faddr"><classname>FFI:FOREIGN-ADDRESS</classname></link>'>
+<!ENTITY foreign-address-unsigned '<link linkend="faddr-u"><function>FFI:FOREIGN-ADDRESS-UNSIGNED</function></link>'>
+<!ENTITY foreign-value '<link linkend="foreign-value"><function>FFI:FOREIGN-VALUE</function></link>'>
+<!ENTITY foreign-allocate '<link linkend="foreign-heap"><function>FFI:FOREIGN-ALLOCATE</function></link>'>
+<!ENTITY foreign-free '<link linkend="foreign-heap"><function>FFI:FOREIGN-FREE</function></link>'>
+<!ENTITY foreign-function '<link linkend="dffi-make-func"><function>FFI:FOREIGN-FUNCTION</function></link>'>
+<!ENTITY foreign-function-t '<link linkend="dffi"><classname>FFI:FOREIGN-FUNCTION</classname></link>'>
+<!ENTITY foreign-pointer '<link linkend="fptr"><function>FFI:FOREIGN-POINTER</function></link>'>
+<!ENTITY foreign-pointer-t '<link linkend="fptr"><classname>FFI:FOREIGN-POINTER</classname></link>'>
+<!ENTITY foreign-variable '<link linkend="dffi-make-var"><function>FFI:FOREIGN-VARIABLE</function></link>'>
+<!ENTITY foreign-variable-t '<link linkend="dffi-variables"><classname>FFI:FOREIGN-VARIABLE</classname></link>'>
+<!ENTITY close-foreign-library '<link linkend="dffi-close-lib"><function>FFI:CLOSE-FOREIGN-LIBRARY</function></link>'>
+<!ENTITY linkset '<olink targetdoc="impnotes" targetptr="linkset">linking set</olink>'>
+<!ENTITY link-sh '<olink targetdoc="impnotes" targetptr="modset"><command>link.sh</command></olink>'>
+<!ENTITY modset '<olink targetdoc="impnotes" targetptr="modset">module set</olink>'>
+<!ENTITY mod-dynload '<link linkend="mod-dynload"><function>SYS::DYNLOAD-MODULES</function></link>'>
+<!ENTITY mod-load '<link linkend="mod-load"><envar>TO_LOAD</envar></link>'>
+<!ENTITY mod-preload '<link linkend="mod-preload"><envar>TO_PRELOAD</envar></link>'>
+<!ENTITY modinfo '<link linkend="modinfo"><function>EXT:MODULE-INFO</function></link>'>
+<!ENTITY module '<link linkend="modules">module</link>'>
+<!ENTITY base-module '<simpara>This module is present even in the &base; &linkset; by default.</simpara>'>
+<!ENTITY base '<olink targetdoc="impnotes" targetptr="base-modules"><command>base</command></olink>'>
+<!ENTITY full '<olink targetdoc="impnotes" targetptr="base-modules"><command>full</command></olink>'>
+<!ENTITY object-t '<link linkend="typecodes"><type>object</type></link>'>
+<!ENTITY offset '<link linkend="offset"><function>FFI:OFFSET</function></link>'>
+<!ENTITY param-mode '<link linkend="param-mode"><replaceable>PARAM-MODE</replaceable></link>'>
+<!ENTITY parse-c-type '<link linkend="c-type-parse"><function>FFI:PARSE-C-TYPE</function></link>'>
+<!ENTITY simple-c-type '<link linkend="simple-c-type"><replaceable>SIMPLE-C-TYPE</replaceable></link>'>
+<!ENTITY sizeof '<link linkend="sizeof"><function>FFI:SIZEOF</function></link>'>
+<!ENTITY slot '<link linkend="slot"><function>FFI:SLOT</function></link>'>
+<!ENTITY typeof '<link linkend="typeof"><function>FFI:TYPEOF</function></link>'>
+<!ENTITY unsigned-foreign-address '<link linkend="faddr-u"><function>FFI:UNSIGNED-FOREIGN-ADDRESS</function></link>'>
+<!ENTITY validp '<link linkend="validp"><function>FFI:VALIDP</function></link>'>
+<!ENTITY with-c-place '<link linkend="with-c-place"><function>FFI:WITH-C-PLACE</function></link>'>
+<!ENTITY with-c-var '<link linkend="foreign-stack"><function>FFI:WITH-C-VAR</function></link>'>
+<!ENTITY with-foreign-object '<link linkend="foreign-stack"><function>FFI:WITH-FOREIGN-OBJECT</function></link>'>
+<!ENTITY with-foreign-string '<link linkend="foreign-stack-string"><function>FFI:WITH-FOREIGN-STRING</function></link>'>
+<!ENTITY memory-as '<link linkend="memory-as"><function>FFI:MEMORY-AS</function></link>'>
+
+<!-- *** Byte code *** -->
+<!ENTITY block-const '<link linkend="comp-fun"><literal>block-const</literal></link>'>
+<!ENTITY codevec '<link linkend="comp-fun"><literal>codevec</literal></link>'>
+<!ENTITY consts '<link linkend="comp-fun"><literal>consts</literal></link>'>
+<!ENTITY disabled '<literal role="data">#&lt;DISABLED&gt;</literal>'>
+<!ENTITY flags '<link linkend="comp-fun"><literal>flags</literal></link>'>
+<!ENTITY jbs '<link linkend="vm"><varname>jmpbufsize</varname></link>'>
+<!ENTITY keyword-const '<link linkend="comp-fun"><literal>keyword-const</literal></link>'>
+<!ENTITY mnem-desc-sem-header '<thead><row><entry>mnemonic</entry>
+   <entry>description</entry><entry>semantics</entry></row></thead>'>
+<!ENTITY mv-count '<link linkend="vm"><varname>mv_count</varname></link>'>
+<!ENTITY mv-space '<link linkend="vm"><varname>mv_space</varname></link>'>
+<!ENTITY numreq '<link linkend="comp-fun"><literal>numreq</literal></link>'>
+<!ENTITY other-const '<link linkend="comp-fun"><literal>other-const</literal></link>'>
+<!ENTITY SP '<olink targetdoc="impnotes" targetptr="vm"><literal>SP</literal></olink>'>
+<!ENTITY STACK '<olink targetdoc="impnotes" targetptr="vm"><literal>STACK</literal></olink>'>
+<!ENTITY tagbody-const '<link linkend="comp-fun"><literal>tagbody-const</literal></link>'>
+<!ENTITY unbound '<literal role="data">#&lt;UNBOUND&gt;</literal>'>
+<!ENTITY value1 '<link linkend="vm"><varname>value1</varname></link>'>
+<!ENTITY venv-const '<link linkend="comp-fun"><literal>venv-const</literal></link>'>
+
+<!-- *** variable names *** -->
+<!ENTITY addr-r '<replaceable>address</replaceable>'>
+<!ENTITY arg-r '<replaceable>argument</replaceable>'>
+<!ENTITY args-r '<replaceable>arguments</replaceable>'>
+<!ENTITY b-r '<replaceable>b</replaceable>'>
+<!ENTITY base-r '<replaceable>base</replaceable>'>
+<!ENTITY bc-r '<replaceable>block-cons</replaceable>'>
+<!ENTITY body-r '<replaceable>body</replaceable>'>
+<!ENTITY buf-r '<replaceable>buffer</replaceable>'>
+<!ENTITY c-r '<replaceable>c</replaceable>'>
+<!ENTITY case-sensitive-r '<replaceable>case-sensitive</replaceable>'>
+<!ENTITY ch-r '<replaceable>char</replaceable>'>
+<!ENTITY class-r '<replaceable>class</replaceable>'>
+<!ENTITY classes-r '<replaceable>classes</replaceable>'>
+<!ENTITY cname-r '<replaceable>c-name</replaceable>'>
+<!ENTITY command-r '<replaceable>command</replaceable>'>
+<!ENTITY cond-r '<replaceable>condition</replaceable>'>
+<!ENTITY conn-r '<replaceable>connection</replaceable>'>
+<!ENTITY cont-r '<replaceable>contents</replaceable>'>
+<!ENTITY count-r '<replaceable>count</replaceable>'>
+<!ENTITY cplace-r '<replaceable>c-place</replaceable>'>
+<!ENTITY create-r '<replaceable>create</replaceable>'>
+<!ENTITY ctype-r '<replaceable>c-type</replaceable>'>
+<!ENTITY ctypei-r '<replaceable>c-type-internal</replaceable>'>
+<!ENTITY data-r '<replaceable>data</replaceable>'>
+<!ENTITY declaration-r '<replaceable>declaration</replaceable>'>
+<!ENTITY dependent-r '<replaceable>dependent</replaceable>'>
+<!ENTITY dest-r '<replaceable>destination</replaceable>'>
+<!ENTITY digits-r '<replaceable>digits</replaceable>'>
+<!ENTITY dimensions-r '<replaceable>dimensions</replaceable>'>
+<!ENTITY direction-r '<replaceable>direction</replaceable>'>
+<!ENTITY dkey-r '<replaceable>dkey</replaceable>'>
+<!ENTITY eltype-r '<replaceable>element-type</replaceable>'>
+<!ENTITY encoding-r '<replaceable>encoding</replaceable>'>
+<!ENTITY end-r '<replaceable>end</replaceable>'>
+<!ENTITY eof-ep '<replaceable>eof-error-p</replaceable>'>
+<!ENTITY eof-v '<replaceable>eof-value</replaceable>'>
+<!ENTITY f-r '<replaceable>f</replaceable>'>
+<!ENTITY filename-r '<replaceable>filename</replaceable>'>
+<!ENTITY form-r '<replaceable>form</replaceable>'>
+<!ENTITY fmt-r '<replaceable>format-string</replaceable>'>
+<!ENTITY func-r '<replaceable>function</replaceable>'>
+<!ENTITY funcname-r '<replaceable>function-name</replaceable>'>
+<!ENTITY gf-r '<replaceable>generic-function</replaceable>'>
+<!ENTITY gid-r '<replaceable>gid</replaceable>'>
+<!ENTITY hash-f '<replaceable>hash-function</replaceable>'>
+<!ENTITY host-r '<replaceable>host</replaceable>'>
+<!ENTITY hw '<replaceable>hardware</replaceable>'>
+<!ENTITY i-r '<replaceable>i</replaceable>'>
+<!ENTITY initargs-r '<replaceable>initargs</replaceable>'>
+<!ENTITY initform-r '<replaceable>initform</replaceable>'>
+<!ENTITY instance-r '<replaceable>instance</replaceable>'>
+<!ENTITY int-r '<replaceable>integer</replaceable>'>
+<!ENTITY interactive-r '<replaceable>interactive</replaceable>'>
+<!ENTITY item-r '<replaceable>item</replaceable>'>
+<!ENTITY k-r '<replaceable>k</replaceable>'>
+<!ENTITY k1-r '<replaceable>k&sub-1;</replaceable>'>
+<!ENTITY k2-r '<replaceable>k&sub-2;</replaceable>'>
+<!ENTITY kn-r '<replaceable>k&sub-n;</replaceable>'>
+<!ENTITY key-r '<replaceable>key</replaceable>'>
+<!ENTITY keys-r '<replaceable>keys</replaceable>'>
+<!ENTITY l-r '<replaceable>l</replaceable>'>
+<!ENTITY lib-name '<replaceable>library-name</replaceable>'>
+<!ENTITY lab-r '<replaceable>label</replaceable>'>
+<!ENTITY lang-r '<replaceable>language</replaceable>'>
+<!ENTITY lc-r '<replaceable>lc</replaceable>'>
+<!ENTITY len-r '<replaceable>length</replaceable>'>
+<!ENTITY list-r '<replaceable>list</replaceable>'>
+<!ENTITY location-r '<replaceable>location</replaceable>'>
+<!ENTITY m-r '<replaceable>m</replaceable>'>
+<!ENTITY match-r '<replaceable>match</replaceable>'>
+<!ENTITY maxdim-r '<replaceable>maxdimension</replaceable>'>
+<!ENTITY mc-r '<replaceable>method-combination</replaceable>'>
+<!ENTITY mesg-r '<replaceable>message</replaceable>'>
+<!ENTITY metaobject-r '<replaceable>metaobject</replaceable>'>
+<!ENTITY method-r '<replaceable>method</replaceable>'>
+<!ENTITY methods-r '<replaceable>methods</replaceable>'>
+<!ENTITY mod-r '<replaceable>module</replaceable>'>
+<!ENTITY mode-r '<replaceable>mode</replaceable>'>
+<!ENTITY n-r '<replaceable>n</replaceable>'>
+<!ENTITY name-r '<replaceable>name</replaceable>'>
+<!ENTITY next-r '<replaceable>next</replaceable>'>
+<!ENTITY nname-r '<replaceable>new-name</replaceable>'>
+<!ENTITY no-hang '<replaceable>no-hang</replaceable>'>
+<!ENTITY number-r '<replaceable>number</replaceable>'>
+<!ENTITY nval-r '<replaceable>new-value</replaceable>'>
+<!ENTITY object-r '<replaceable>object</replaceable>'>
+<!ENTITY offset-r '<replaceable>offset</replaceable>'>
+<!ENTITY open-r '<replaceable>open</replaceable>'>
+<!ENTITY option-r '<replaceable>option</replaceable>'>
+<!ENTITY options-r '<replaceable>options</replaceable>'>
+<!ENTITY os '<replaceable>operating system</replaceable>'>
+<!ENTITY pack-r '<replaceable>package</replaceable>'>
+<!ENTITY pass-r '<replaceable>password</replaceable>'>
+<!ENTITY path-r '<replaceable>pathname</replaceable>'>
+<!ENTITY pattern-r '<replaceable>pattern</replaceable>'>
+<!ENTITY pid-r '<replaceable>pid</replaceable>'>
+<!ENTITY place-r '<replaceable>place</replaceable>'>
+<!ENTITY port-r '<replaceable>port</replaceable>'>
+<!ENTITY pred-r '<replaceable>predicate</replaceable>'>
+<!ENTITY program-r '<replaceable>program</replaceable>'>
+<!ENTITY proto-r '<replaceable>protocol</replaceable>'>
+<!ENTITY real-r '<replaceable>real</replaceable>'>
+<!ENTITY res-r '<replaceable>result</replaceable>'>
+<!ENTITY restart-clause-r '<replaceable>restart-clause</replaceable>'>
+<!ENTITY sequence-r '<replaceable>sequence</replaceable>'>
+<!ENTITY size-r '<replaceable>size</replaceable>'>
+<!ENTITY slot-r '<replaceable>slot</replaceable>'>
+<!ENTITY slotdef-r '<replaceable>slot-definition</replaceable>'>
+<!ENTITY esd-r '<replaceable>effective-slot-definition</replaceable>'>
+<!ENTITY dsd-r '<replaceable>direct-slot-definition</replaceable>'>
+<!ENTITY slot-name-r '<replaceable>slot-name</replaceable>'>
+<!ENTITY slot-spec-r '<replaceable>slot-spec</replaceable>'>
+<!ENTITY sig-r '<replaceable>signal</replaceable>'>
+<!ENTITY sock-r '<replaceable>socket</replaceable>'>
+<!ENTITY sose-r '<replaceable>socket-server</replaceable>'>
+<!ENTITY sost-r '<replaceable>socket-stream</replaceable>'>
+<!ENTITY source-r '<replaceable>source</replaceable>'>
+<!ENTITY spec-lalist-r '<replaceable>specialized-lambda-list</replaceable>'>
+<!ENTITY specializer-r '<replaceable>specializer</replaceable>'>
+<!ENTITY start-r '<replaceable>start</replaceable>'>
+<!ENTITY status-r '<replaceable>status</replaceable>'>
+<!ENTITY stream-r '<replaceable>stream</replaceable>'>
+<!ENTITY string-r '<replaceable>string</replaceable>'>
+<!ENTITY sub-1 '<subscript>1</subscript>'>
+<!ENTITY sub-2 '<subscript>2</subscript>'>
+<!ENTITY sub-l '<subscript>l</subscript>'>
+<!ENTITY sub-max '<subscript>max</subscript>'>
+<!ENTITY sub-n '<subscript>n</subscript>'>
+<!ENTITY subclass-r '<replaceable>subclass</replaceable>'>
+<!ENTITY superclass-r '<replaceable>superclass</replaceable>'>
+<!ENTITY symbol-r '<replaceable>symbol</replaceable>'>
+<!ENTITY tag-r '<replaceable>tag</replaceable>'>
+<!ENTITY target-r '<replaceable>target</replaceable>'>
+<!ENTITY tbc-r '<replaceable>tagbody-cons</replaceable>'>
+<!ENTITY test-f '<replaceable>test-function</replaceable>'>
+<!ENTITY type-r '<replaceable>type</replaceable>'>
+<!ENTITY uc-r '<replaceable>uc</replaceable>'>
+<!ENTITY uid-r '<replaceable>uid</replaceable>'>
+<!ENTITY v-r '<replaceable>v</replaceable>'>
+<!ENTITY val-type-r '<replaceable>value-type</replaceable>'>
+<!ENTITY value-r '<replaceable>value</replaceable>'>
+<!ENTITY var-r '<replaceable>variable</replaceable>'>
+<!ENTITY vec-r '<replaceable>vector</replaceable>'>
+<!ENTITY what-r '<replaceable>what</replaceable>'>
+<!ENTITY ws-r '<replaceable>window-stream</replaceable>'>
+<!ENTITY x-r '<replaceable>x</replaceable>'>
+<!ENTITY x1-r '<replaceable>x&sub-1;</replaceable>'>
+<!ENTITY xn-r '<replaceable>x&sub-n;</replaceable>'>
+<!ENTITY y-r '<replaceable>y</replaceable>'>
+
+<!-- *** quickstart *** -->
+<!ENTITY args '<olink targetdoc="impnotes" targetptr="script-exec"><varname>EXT:*ARGS*</varname></olink>'>
+<!ENTITY clisp-cmd '<command>clisp</command>'>
+<!ENTITY interp-args '<replaceable>interpreter-arguments</replaceable>'>
+<!ENTITY interp-r '<replaceable>interpreter</replaceable>'>
+
+<!ENTITY cpu-type-header '<colspec colname="vars"/><colspec colname="b32"/>
+ <colspec colname="b64"/><thead><row><entry>CPU type</entry>
+   <entry>32-bit CPU</entry><entry>64-bit CPU</entry></row></thead>'>
+<!ENTITY cmd-abbrev-oper-header
+ ' <thead><row><entry>command</entry><entry>abbreviation</entry>
+         <entry>operation</entry></row></thead>'>
+<!ENTITY char-code-header
+ ' <thead><row><entry>character</entry><entry>code</entry></row></thead>'>
+<!ENTITY code-char-header
+ ' <thead><row><entry>code</entry><entry>char</entry></row></thead>'>
+<!ENTITY char-table-header
+ ' <thead><row><entry/><entry>#x0</entry><entry>#x1</entry>
+   <entry>#x2</entry><entry>#x3</entry><entry>#x4</entry><entry>#x5</entry>
+   <entry>#x6</entry><entry>#x7</entry><entry>#x8</entry><entry>#x9</entry>
+   <entry>#xA</entry><entry>#xB</entry><entry>#xC</entry><entry>#xD</entry>
+   <entry>#xE</entry><entry>#xF</entry></row></thead>'>
+<!ENTITY key-value-header
+ ' <thead><row><entry>key</entry><entry>value</entry></row></thead>'>
+<!ENTITY cc '<entry>**</entry>'> <!-- control character -->
+<!ENTITY char-table-legend 'Here ** are control characters, not graphic
+  characters.  (The characters left blank here cannot be represented in
+  this character set).'>
+<!ENTITY ascii-printable
+ '<row><entry>#x20</entry><entry>&nbsp;</entry><entry>!</entry>
+   <entry>&quot;</entry><entry>#</entry><entry>$</entry><entry>&#37;</entry>
+   <entry>&amp;</entry><entry>&#39;</entry><entry>(</entry><entry>)</entry>
+   <entry>*</entry><entry>+</entry><entry>,</entry><entry>-</entry>
+   <entry>.</entry><entry>/</entry></row>
+  <row><entry>#x30</entry><entry>0</entry><entry>1</entry><entry>2</entry>
+   <entry>3</entry><entry>4</entry><entry>5</entry><entry>6</entry>
+   <entry>7</entry><entry>8</entry><entry>9</entry><entry>:</entry>
+   <entry>;</entry><entry>&lt;</entry><entry>=</entry><entry>&gt;</entry>
+   <entry>?</entry></row>
+  <row><entry>#x40</entry><entry>@</entry><entry>A</entry><entry>B</entry>
+   <entry>C</entry><entry>D</entry><entry>E</entry><entry>F</entry>
+   <entry>G</entry><entry>H</entry><entry>I</entry><entry>J</entry>
+   <entry>K</entry><entry>L</entry><entry>M</entry><entry>N</entry>
+   <entry>O</entry></row>
+  <row><entry>#x50</entry><entry>P</entry><entry>Q</entry><entry>R</entry>
+   <entry>S</entry><entry>T</entry><entry>U</entry><entry>V</entry>
+   <entry>W</entry><entry>X</entry><entry>Y</entry><entry>Z</entry>
+   <entry>[</entry><entry>\</entry><entry>]</entry><entry>^</entry>
+   <entry>_</entry></row>
+  <row><entry>#x60</entry><entry>`</entry><entry>a</entry><entry>b</entry>
+   <entry>c</entry><entry>d</entry><entry>e</entry><entry>f</entry>
+   <entry>g</entry><entry>h</entry><entry>i</entry><entry>j</entry>
+   <entry>k</entry><entry>l</entry><entry>m</entry><entry>n</entry>
+   <entry>o</entry></row>
+  <row><entry>#x70</entry><entry>p</entry><entry>q</entry><entry>r</entry>
+   <entry>s</entry><entry>t</entry><entry>u</entry><entry>v</entry>
+   <entry>w</entry><entry>x</entry><entry>y</entry><entry>z</entry>
+   <entry>{</entry><entry>|</entry><entry>}</entry><entry>~</entry>
+   <entry/></row>'>
+<!ENTITY alt '<keycap>Alternate</keycap>'>
+<!ENTITY ctrl '<keycap>Control</keycap>'>
+<!ENTITY shift '<keycap>Shift</keycap>'>
+<!ENTITY fasl-file '<filename>#P".fas"</filename>'>
+<!ENTITY lisp-file '<filename>#P".lisp"</filename>'>
+<!ENTITY mem-file '<filename>#P".mem"</filename>'>
+<!ENTITY c-file '<filename>#P".c"</filename>'>
+<!ENTITY lib-file '<link linkend="require"><filename>#P".lib"</filename></link>'>
+<!ENTITY make-file '<filename>Makefile</filename>'>
+<!ENTITY lispinit '<link linkend="image"><filename>lispinit.mem</filename></link>'>
+<!ENTITY lisp-run '<filename>lisp.run</filename>'>
+<!ENTITY clisp-h '<link linkend="clisp-h"><filename>"clisp.h"</filename></link>'>
+
+<!-- *** pathnames *** -->
+<!ENTITY file-star  '<filename>"*"</filename>'>
+<!ENTITY file-ques  '<filename>"?"</filename>'>
+<!ENTITY file-dot   '<filename>"."</filename>'>
+<!ENTITY file-slash '<filename>"/"</filename>'>
+<!ENTITY file-bsla  '<filename>"\"</filename>'>
+<!ENTITY file-colon '<filename>":"</filename>'>
+<!ENTITY file-letter-lc '<filename>a</filename>|...|<filename>z</filename>'>
+<!ENTITY file-letter-uc '<filename>A</filename>|...|<filename>Z</filename>'>
+<!ENTITY defaults-r '<replaceable>defaults</replaceable>'>
+<!ENTITY device-r '<replaceable>device</replaceable>'>
+<!ENTITY directory-r '<replaceable>directory</replaceable>'>
+<!ENTITY startpoint-r '<replaceable>startpoint</replaceable>'>
+<!ENTITY subdir-r '<replaceable>subdir</replaceable>'>
+<!ENTITY always-nil '<listitem><simpara>always &nil;</simpara></listitem>'>
+<!ENTITY path-comps '<title>Pathname components</title>'>
+<!ENTITY unix-win32-dir-name-type-version
+ '<varlistentry><term><code>&directory-r; = (&startpoint-r;
+  . <replaceable>subdirs</replaceable>)</code></term>
+ <listitem><informaltable frame="all">
+ <tgroup cols="2" colsep="1" rowsep="1" align="center">
+  <thead><row><entry>element</entry><entry>values</entry>
+    <entry>meaning</entry></row></thead><tbody>
+   <row><entry>&startpoint-r;</entry>
+    <entry>&relative-k; | &absolute-k;</entry><entry/></row>
+   <row><entry><replaceable>subdirs</replaceable></entry>
+    <entry><literal role="data">()</literal> | <literal role="data">(&subdir-r;
+      . <replaceable>subdirs</replaceable>)</literal></entry><entry/></row>
+   <row><entry>&subdir-r;</entry>
+    <entry>&wild-inferiors-k;</entry><entry><filename>**</filename> or
+     <filename>...</filename>, all subdirectories</entry></row>
+   <row><entry>&subdir-r;</entry><entry>&simple-string-t;,
+     &maybe-wild;</entry><entry/></row>
+ </tbody></tgroup></informaltable></listitem></varlistentry>
+ <varlistentry><term>&name-r;</term><term>&type-r;</term>
+  <listitem><simpara>&nil; or &simple-string-t;, &maybe-wild;
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><replaceable>version</replaceable></term>
+  <listitem><simpara>&nil; or &wild-k; or &newest-k;
+    (after merging the defaults)</simpara></listitem></varlistentry>'>
+<!ENTITY maybe-wild 'may contain wildcard characters &file-ques; and
+  &file-star; (may also be specified as &wild-k;)'>
+<!ENTITY name-type-split 'filename is <link
+   linkend="name-type-split">split into name and type</link>.'>
+<!ENTITY foo-f '<filename>#P"foo"</filename>'>
+<!ENTITY bar-f '<filename>#P"bar"</filename>'>
+<!ENTITY foolisp-f '<filename>#P"foo.lisp"</filename>'>
+<!-- *** clisp sources *** -->
+<!ENTITY bytecode-d '<link linkend="bytecode-d"><filename>bytecode.d</filename></link>'>
+<!ENTITY config-lisp '<link linkend="config-lisp"><filename>config.lisp</filename></link>'>
+<!ENTITY constobj-d '<link linkend="constobj-d"><filename>constobj.d</filename></link>'>
+<!ENTITY constsym-d '<link linkend="constsym-d"><filename>constsym.d</filename></link>'>
+<!ENTITY eval-d '<link linkend="eval-d"><filename>eval.d</filename></link>'>
+<!ENTITY fsubr-d '<link linkend="fsubr-d"><filename>fsubr.d</filename></link>'>
+<!ENTITY init-lisp '<link linkend="init-lisp"><filename>init.lisp</filename></link>'>
+<!ENTITY inspect-lisp '<link linkend="inspect-lisp"><filename>inspect.lisp</filename></link>'>
+<!ENTITY exporting-lisp '<link linkend="exporting-lisp"><filename>exporting.lisp</filename></link>'>
+<!ENTITY floatprint-lisp '<link linkend="floatprint-lisp"><filename>floatprint.lisp</filename></link>'>
+<!ENTITY macros3-lisp '<link linkend="macros3-lisp"><filename>macros3.lisp</filename></link>'>
+<!ENTITY news '<link linkend="src-news"><filename>src/NEWS</filename></link>'>
+<!ENTITY spvw-d '<link linkend="spvw-d"><filename>spvw.d</filename></link>'>
+<!ENTITY subr-d '<link linkend="subr-d"><filename>subr.d</filename></link>'>
+<!ENTITY subrkw-d '<link linkend="subrkw-d"><filename>subrkw.d</filename></link>'>
+
+<!-- *** shortcuts *** -->
+<!ENTITY sbyte-16 '<literal role="type">(&signed-byte-t; 16)</literal>'>
+<!ENTITY sbyte-32 '<literal role="type">(&signed-byte-t; 32)</literal>'>
+<!ENTITY sbyte-8 '<literal role="type">(&signed-byte-t; 8)</literal>'>
+<!ENTITY sbyte-n '<literal role="type">(&signed-byte-t; &n-r;)</literal>'>
+<!ENTITY ubyte-16 '<literal role="type">(&unsigned-byte-t; 16)</literal>'>
+<!ENTITY ubyte-32 '<literal role="type">(&unsigned-byte-t; 32)</literal>'>
+<!ENTITY ubyte-8 '<literal role="type">(&unsigned-byte-t; 8)</literal>'>
+<!ENTITY ubyte-n '<literal role="type">(&unsigned-byte-t; &n-r;)</literal>'>
+<!ENTITY ubyte-vec '<literal role="type">(&vector-t; (&unsigned-byte-t; 8))</literal>'>
+<!ENTITY yes '<listitem><simpara>yes</simpara></listitem>'>
+<!ENTITY no '<listitem><simpara>no</simpara></listitem>'>
+<!ENTITY and-e '<emphasis role="strong">and</emphasis>'>
+<!ENTITY not-e '<emphasis role="strong">not</emphasis>'>
+<!ENTITY is-e '<emphasis role="strong">is</emphasis>'>
+<!ENTITY charset-glibc-libiconv 'This character set is only available on
+                                 platforms with &glibc; or &libiconv;.'>
+<!ENTITY charset-libiconv 'This character set is only available on
+                           platforms with &libiconv;.'>
+<!ENTITY charset-ascii '<link linkend="charset-ASCII">ASCII character set</link>'>
+<!ENTITY ascii-pl-ext 'a platform specific extension of the &charset-ascii;'>
+<!ENTITY ascii-iso-ext 'an extension of the &charset-ascii;, suitable for the'>
+<!ENTITY err-sig '&error-t; is &signal;ed'>
+<!ENTITY sig-err '&signal;s an &error-t;'>
+
+<!ENTITY clisp-only '<title>Implementation dependent: only in &clisp;</title>'>
+<!ENTITY win32-only '<emphasis role="plat-dep">&win32; platform only.</emphasis>'>
+<!ENTITY unix-only '<emphasis role="plat-dep">&unix; platform only.</emphasis>'>
+<!ENTITY unix-w32-only '<emphasis role="plat-dep">&unix;, &win32; platforms only.</emphasis>'>
+<!ENTITY unicode-only '<emphasis role="plat-dep">Only in &clisp; built &with; compile-time flag &unicode;</emphasis>'>
+<!ENTITY non-unicode-only '<emphasis role="plat-dep">Only in &clisp; built &without; compile-time flag &unicode;</emphasis>'>
+<!ENTITY no-platform-only '<emphasis role="plat-dep">No platform supports this currently</emphasis>'>
+<!ENTITY varlist-table '<?dbhtml list-presentation="table"?><?dbfo list-presentation="list"?>'>
+<!ENTITY advantages '<title>Advantages and Disadvantages</title>&varlist-table;'>
+<!ENTITY sost-raw-too '<simpara>The &sost-r; argument can also be a
+                       <link linkend="rawsock">raw socket</link>.</simpara>'>

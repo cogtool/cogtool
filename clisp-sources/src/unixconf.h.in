@@ -1,0 +1,786 @@
+/* unixconf.h.in.  Generated from configure.in by autoheader.  */
+
+/* is abort() __volatile__? */
+#undef ABORT_VOLATILE
+
+/* is <sys/file.h> needed for R_OK/W_OK/X_OK? */
+#undef ACCESS_NEEDS_SYS_FILE_H
+
+/* symbols are prefixed by an underscore in assembly language */
+#undef ASM_UNDERSCORE
+
+/* what is your caddr_t type? */
+#undef CADDR_T
+
+/* address range of program code (text+data+bss) */
+#undef CODE_ADDRESS_RANGE
+
+/* type of `addrlen' in connect() declaration */
+#undef CONNECT_ADDRLEN_T
+
+/* does declaration of connect() need const? */
+#undef CONNECT_CONST
+
+/* type of `name' in connect() declaration */
+#undef CONNECT_NAME_T
+
+/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c' support on those systems.
+   */
+#undef CRAY_STACKSEG_END
+
+/* Define to 1 if using `alloca.c'. */
+#undef C_ALLOCA
+
+/* have <dirent.h>? */
+#undef DIRENT
+
+/* Define to 1 if 'double' division by zero raises an exception. */
+#undef DOUBLE_DIV0_EXCEPTION
+
+/* Define to 1 if a 'double' inexact operation raises an exception. */
+#undef DOUBLE_INEXACT_EXCEPTION
+
+/* Define to 1 if 'double' overflow raises an exception. */
+#undef DOUBLE_OVERFLOW_EXCEPTION
+
+/* Define to 1 if 'double' underflow raises an exception. */
+#undef DOUBLE_UNDERFLOW_EXCEPTION
+
+/* the real value of ELOOP even if it is hidden in <errno.h> */
+#undef ELOOP_VALUE
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#undef ENABLE_NLS
+
+/* Define to 1 if 'float' division by zero raises an exception. */
+#undef FLOAT_DIV0_EXCEPTION
+
+/* Define to 1 if a 'float' inexact operation raises an exception. */
+#undef FLOAT_INEXACT_EXCEPTION
+
+/* Define to 1 if 'float' overflow raises an exception. */
+#undef FLOAT_OVERFLOW_EXCEPTION
+
+/* Define to 1 if 'float' underflow raises an exception. */
+#undef FLOAT_UNDERFLOW_EXCEPTION
+
+/* the type of `bufsize' in getcwd() */
+#undef GETCWD_SIZE_T
+
+/* declaration of gettimeofday() needs dots */
+#undef GETTIMEOFDAY_DOTS
+
+/* type of `tzp' in gettimeofday() declaration */
+#undef GETTIMEOFDAY_TZP_T
+
+/* Define to 1 if you have `alloca', as a function or macro. */
+#undef HAVE_ALLOCA
+
+/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
+#undef HAVE_ALLOCA_H
+
+/* Define to 1 if you have the <arpa/inet.h> header file. */
+#undef HAVE_ARPA_INET_H
+
+/* __builtin_strlen() is compiled inline (not a call to strlen()) */
+#undef HAVE_BUILTIN_STRLEN
+
+/* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the
+   CoreFoundation framework. */
+#undef HAVE_CFLOCALECOPYCURRENT
+
+/* Define to 1 if you have the MacOS X function CFPreferencesCopyAppValue in
+   the CoreFoundation framework. */
+#undef HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* Define to 1 if you have the `connect' function. */
+#undef HAVE_CONNECT
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#undef HAVE_DCGETTEXT
+
+/* Define to 1 if you have the declaration of `environ', and to 0 if you
+   don't. */
+#undef HAVE_DECL_ENVIRON
+
+/* Define to 1 if you have the declaration of `rl_already_prompted', and to 0
+   if you don't. */
+#undef HAVE_DECL_RL_ALREADY_PROMPTED
+
+/* Define to 1 if you have the declaration of `rl_gnu_readline_p', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_GNU_READLINE_P
+
+/* Define to 1 if you have the declaration of `rl_readline_name', and to 0 if
+   you don't. */
+#undef HAVE_DECL_RL_READLINE_NAME
+
+/* Define to 1 if you have the `dlclose' function. */
+#undef HAVE_DLCLOSE
+
+/* Define to 1 if you have the `dlerror' function. */
+#undef HAVE_DLERROR
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the `dlopen' function. */
+#undef HAVE_DLOPEN
+
+/* Define to 1 if you have the `dlsym' function. */
+#undef HAVE_DLSYM
+
+/* Define to 1 if you have the `fchmod' function. */
+#undef HAVE_FCHMOD
+
+/* have the FIONREAD ioctl() */
+#undef HAVE_FIONREAD
+
+/* Define to 1 if you have the `flock' function. */
+#undef HAVE_FLOCK
+
+/* Define to 1 if you have the `fork' function. */
+#undef HAVE_FORK
+
+/* have <fpu_control.h> and it defines the fpu_control_t type */
+#undef HAVE_FPU_CONTROL_T
+
+/* Define to 1 if you have the `fsync' function. */
+#undef HAVE_FSYNC
+
+/* Define to 1 if you have the `ftime' function. */
+#undef HAVE_FTIME
+
+/* have getcwd() */
+#undef HAVE_GETCWD
+
+/* Define to 1 if you have the `getdtablesize' function. */
+#undef HAVE_GETDTABLESIZE
+
+/* have gethostbyname() */
+#undef HAVE_GETHOSTBYNAME
+
+/* Define to 1 if you have the `gethostent' function. */
+#undef HAVE_GETHOSTENT
+
+/* Define to 1 if you have the `gethostname' function. */
+#undef HAVE_GETHOSTNAME
+
+/* have getpagesize() */
+#undef HAVE_GETPAGESIZE
+
+/* Define to 1 if you have the `getrlimit' function. */
+#undef HAVE_GETRLIMIT
+
+/* have <sys/time.h>, the getrusage() function, the struct rusage type, and
+   <sys/resource.h> defines RUSAGE_SELF */
+#undef HAVE_GETRUSAGE
+
+/* Define to 1 if you have the `getsockopt' function. */
+#undef HAVE_GETSOCKOPT
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#undef HAVE_GETTEXT
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define if you have the iconv() function. */
+#undef HAVE_ICONV
+
+/* Define to 1 if you have the `inet_addr' function. */
+#undef HAVE_INET_ADDR
+
+/* Define to 1 if you have the `inet_ntop' function. */
+#undef HAVE_INET_NTOP
+
+/* Define to 1 if you have the `inet_pton' function. */
+#undef HAVE_INET_PTON
+
+/* Define if <inttypes.h> exists and doesn't clash with <sys/types.h>. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `ioctl' function. */
+#undef HAVE_IOCTL
+
+/* <sys/socket.h> defines AF_INET */
+#undef HAVE_IPV4
+
+/* <sys/socket.h> defines AF_INET6 */
+#undef HAVE_IPV6
+
+/* Define to 1 if you have the <lber.h> header file. */
+#undef HAVE_LBER_H
+
+/* Define if your <locale.h> file defines LC_MESSAGES. */
+#undef HAVE_LC_MESSAGES
+
+/* Define to 1 if you have the <ldap.h> header file. */
+#undef HAVE_LDAP_H
+
+/* Define to 1 if you have the `sun' library (-lsun). */
+#undef HAVE_LIBSUN
+
+/* Define if the compiler supports the 'long long' type */
+#undef HAVE_LONGLONG
+
+/* Define if you have the 'long double' type. */
+#undef HAVE_LONG_DOUBLE
+
+/* Define if you have the 'long long' type. */
+#undef HAVE_LONG_LONG
+
+/* have lstat()? */
+#undef HAVE_LSTAT
+
+/* have vm_allocate() and task_self() functions */
+#undef HAVE_MACH_VM
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `memset' function. */
+#undef HAVE_MEMSET
+
+/* have <sys/mmap.h> and the mmap() function */
+#undef HAVE_MMAP
+
+/* <sys/mman.h> defines MAP_ANON and mmaping with MAP_ANON works */
+#undef HAVE_MMAP_ANON
+
+/* <sys/mman.h> defines MAP_ANONYMOUS and mmaping with MAP_ANONYMOUS works */
+#undef HAVE_MMAP_ANONYMOUS
+
+/* mmaping of the special device /dev/zero works */
+#undef HAVE_MMAP_DEVZERO
+
+/* mmaping of the special device /dev/zero works, but only on addresses < 2^29
+   */
+#undef HAVE_MMAP_DEVZERO_SUN4_29
+
+/* Define to 1 if you have the `mprotect' function. */
+#undef HAVE_MPROTECT
+
+/* Define to 1 if you have the `msync' function. */
+#undef HAVE_MSYNC
+
+/* Define to 1 if you have the `munmap' function. */
+#undef HAVE_MUNMAP
+
+/* Define to 1 if you have the <netdb.h> header file. */
+#undef HAVE_NETDB_H
+
+/* Define to 1 if you have the <netinet/in.h> header file. */
+#undef HAVE_NETINET_IN_H
+
+/* Define to 1 if you have the <netinet/tcp.h> header file. */
+#undef HAVE_NETINET_TCP_H
+
+/* Define to 1 if you have the `nice' function. */
+#undef HAVE_NICE
+
+/* <stddef.h> defines the offsetof macro */
+#undef HAVE_OFFSETOF
+
+/* <errno.h> or <stdio.h> contains a declaration for perror() */
+#undef HAVE_PERROR_DECL
+
+/* Define to 1 if you have the 'poll' function and it works. */
+#undef HAVE_POLL
+
+/* Define if you have the putenv() function. */
+#undef HAVE_PUTENV
+
+/* have raise() function */
+#undef HAVE_RAISE
+
+/* have a working modern GNU readline */
+#undef HAVE_READLINE
+
+/* Define to 1 if you have the <readline/readline.h> header file. */
+#undef HAVE_READLINE_READLINE_H
+
+/* Define to 1 if you have the `readlink' function. */
+#undef HAVE_READLINK
+
+/* Define to 1 if you have the `realpath' function. */
+#undef HAVE_REALPATH
+
+/* have the FIONREAD ioctl() and it works reliably on files */
+#undef HAVE_RELIABLE_FIONREAD
+
+/* have poll() and it works reliably on files */
+#undef HAVE_RELIABLE_POLL
+
+/* have select() and it works reliably on files */
+#undef HAVE_RELIABLE_SELECT
+
+/* Define to 1 if you have the `rl_filename_completion_function' function. */
+#undef HAVE_RL_FILENAME_COMPLETION_FUNCTION
+
+/* Define to 1 if the f_fsid member of 'struct statvfs' has a integral type.
+   */
+#undef HAVE_SCALAR_FSID
+
+/* Define if you have the select() function. */
+#undef HAVE_SELECT
+
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
+
+/* have <fpu_control.h> and it declares the __setfpucw() function */
+#undef HAVE_SETFPUCW
+
+/* Define to 1 if you have the `setitimer' function. */
+#undef HAVE_SETITIMER
+
+/* Define to 1 if you have the `setpgid' function. */
+#undef HAVE_SETPGID
+
+/* Define to 1 if you have the `setrlimit' function. */
+#undef HAVE_SETRLIMIT
+
+/* Define to 1 if you have the `setsid' function. */
+#undef HAVE_SETSID
+
+/* Define to 1 if you have the `setsockopt' function. */
+#undef HAVE_SETSOCKOPT
+
+/* Define to 1 if you have the <sgtty.h> header file. */
+#undef HAVE_SGTTY_H
+
+/* have <sys/shm.h> and <sys/ipc.h> and shared memory works */
+#undef HAVE_SHM
+
+/* Define to 1 if you have the `shutdown' function. */
+#undef HAVE_SHUTDOWN
+
+/* Define to 1 if you have the `sigaction' function. */
+#undef HAVE_SIGACTION
+
+/* Define to 1 if you have the `siginterrupt' function. */
+#undef HAVE_SIGINTERRUPT
+
+/* Define if you have the libsigsegv library. */
+#undef HAVE_SIGSEGV
+
+/* Define to 1 if you have the `sigvec' function. */
+#undef HAVE_SIGVEC
+
+/* `struct sockaddr_un' from <sys/un.h> has a `sun_len' field */
+#undef HAVE_SOCKADDR_UN_LEN
+
+/* Define if you have a working <stdbool.h> header file. */
+#undef HAVE_STDBOOL_H
+
+/* Define if you have a working <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strerror' function. */
+#undef HAVE_STRERROR
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if `d_namlen' is member of `struct dirent'. */
+#undef HAVE_STRUCT_DIRENT_D_NAMLEN
+
+/* Define to 1 if `st_blksize' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_BLKSIZE
+
+/* Define to 1 if `st_blocks' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_BLOCKS
+
+/* Define to 1 if `st_rdev' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_RDEV
+
+/* Define to 1 if you have the `sysconf' function. */
+#undef HAVE_SYSCONF
+
+/* Define to 1 if you have the <sys/file.h> header file. */
+#undef HAVE_SYS_FILE_H
+
+/* Define to 1 if you have the <sys/inttypes.h> header file. */
+#undef HAVE_SYS_INTTYPES_H
+
+/* Define to 1 if you have the <sys/ipc.h> header file. */
+#undef HAVE_SYS_IPC_H
+
+/* Define to 1 if you have the <sys/param.h> header file. */
+#undef HAVE_SYS_PARAM_H
+
+/* Define to 1 if you have the <sys/resource.h> header file. */
+#undef HAVE_SYS_RESOURCE_H
+
+/* have <sys/select.h>? */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/shm.h> header file. */
+#undef HAVE_SYS_SHM_H
+
+/* Define to 1 if you have the <sys/statfs.h> header file. */
+#undef HAVE_SYS_STATFS_H
+
+/* Define to 1 if you have the <sys/statvfs.h> header file. */
+#undef HAVE_SYS_STATVFS_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/sysmacros.h> header file. */
+#undef HAVE_SYS_SYSMACROS_H
+
+/* Define to 1 if you have the <sys/termio.h> header file. */
+#undef HAVE_SYS_TERMIO_H
+
+/* Define to 1 if you have the <sys/times.h> header file. */
+#undef HAVE_SYS_TIMES_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/un.h> header file. */
+#undef HAVE_SYS_UN_H
+
+/* have <sys/utsname.h> and it defines struct utsname */
+#undef HAVE_SYS_UTSNAME_H
+
+/* have tcgetattr(), either as a function or as a macro defined by <termios.h>
+   */
+#undef HAVE_TCGETATTR
+
+/* <termios.h> defines TCSAFLUSH */
+#undef HAVE_TCSAFLUSH
+
+/* Define to 1 if you have the <termios.h> header file. */
+#undef HAVE_TERMIOS_H
+
+/* Define to 1 if you have the <termio.h> header file. */
+#undef HAVE_TERMIO_H
+
+/* have the times() function and it returns the real time, but do not have the
+   gettimeofday() or ftime() function */
+#undef HAVE_TIMES_CLOCK
+
+/* Define to 1 if you have the `ualarm' function. */
+#undef HAVE_UALARM
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `unsetenv' function. */
+#undef HAVE_UNSETENV
+
+/* Define to 1 if you have the `usleep' function. */
+#undef HAVE_USLEEP
+
+/* have the vadvise() system call */
+#undef HAVE_VADVISE
+
+/* Define to 1 if you have the `vfork' function. */
+#undef HAVE_VFORK
+
+/* Define to 1 if you have the <vfork.h> header file. */
+#undef HAVE_VFORK_H
+
+/* Define to 1 if `fork' works. */
+#undef HAVE_WORKING_FORK
+
+/* have a working mprotect() function */
+#undef HAVE_WORKING_MPROTECT
+
+/* Define to 1 if `vfork' works. */
+#undef HAVE_WORKING_VFORK
+
+/* have the X11 Window System */
+#undef HAVE_X11
+
+/* have _setjmp() and _longjmp() */
+#undef HAVE__JMP
+
+/* Define as const if the declaration of iconv() needs const. */
+#undef ICONV_CONST
+
+/* declaration of inet_addr() needs const */
+#undef INET_ADDR_CONST
+
+/* Define as .s_addr if the return type of inet_addr() is a struct type, as
+   empty if it is a scalar type */
+#undef INET_ADDR_SUFFIX
+
+/* type of `argument' in ioctl() declaration, if not superseded by dots */
+#undef IOCTL_ARGUMENT_T
+
+/* declaration of ioctl() needs dots */
+#undef IOCTL_DOTS
+
+/* type of `request' in ioctl() declaration */
+#undef IOCTL_REQUEST_T
+
+/* need <linux/in6.h> for the in6_addr and sockaddr_in6 types */
+#undef IPV6_NEED_LINUX_IN6_H
+
+/* longjmp() may return */
+#undef LONGJMP_RETURNS
+
+/* address range of malloc() memory */
+#undef MALLOC_ADDRESS_RANGE
+
+/* no <dirent.h>, use <ndir.h> */
+#undef NDIR
+
+/* need <sys/filio.h> for using ioctl() FIONREAD */
+#undef NEED_SYS_FILIO_H
+
+/* need <sys/ioctl.h> for using ioctl() FIONREAD */
+#undef NEED_SYS_IOCTL_H
+
+/* need <sys/file.h> for using open() flags like O_RDWR */
+#undef OPEN_NEEDS_SYS_FILE_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* type of `pid' in waitpid() declaration */
+#undef PID_T
+
+/* declaration of filename_completion_function() needs const in the first
+   argument */
+#undef READLINE_CONST
+
+/* The readline built-in filename completion function, either
+   rl_filename_completion_function() or filename_completion_function() */
+#undef READLINE_FILE_COMPLETE
+
+/* abort() return type */
+#undef RETABORTTYPE
+
+/* closedir() return type */
+#undef RETCLOSEDIRTYPE
+
+/* return type of getpagesize() */
+#undef RETGETPAGESIZETYPE
+
+/* return type of signal handlers (int or void) */
+#undef RETSIGTYPE
+
+/* return type of inet_addr() */
+#undef RET_INET_ADDR_TYPE
+
+/* type of `resource' in setrlimit() declaration */
+#undef RLIMIT_RESOURCE_T
+
+/* type of `who' in getrusage() declaration */
+#undef RUSAGE_WHO_T
+
+/* declaration of select() needs const in the fifth argument */
+#undef SELECT_CONST
+
+/* type of `* readfds', `* writefds', `* exceptfds' in select() declaration */
+#undef SELECT_SET_T
+
+/* type of `width' in select() declaration */
+#undef SELECT_WIDTH_T
+
+/* declaration of setrlimit() needs const */
+#undef SETRLIMIT_CONST
+
+/* type of `optval' in setsockopt() declaration */
+#undef SETSOCKOPT_ARG_T
+
+/* declaration of setsockopt() needs const */
+#undef SETSOCKOPT_CONST
+
+/* type of `optlen' in setsockopt() declaration */
+#undef SETSOCKOPT_OPTLEN_T
+
+/* address range of shared library code */
+#undef SHLIB_ADDRESS_RANGE
+
+/* attaching removed (but alive!) shared memory segments works */
+#undef SHM_RMID_VALID
+
+/* signal handlers installed via sigaction() need to be reinstalled when they
+   are activated */
+#undef SIGACTION_NEED_REINSTALL
+
+/* signals need to be unblocked when signal handlers installed via sigaction()
+   are left */
+#undef SIGACTION_NEED_UNBLOCK
+
+/* how to block and unblock signals */
+#undef SIGNALBLOCK_BSD
+
+/* how to block and unblock signals */
+#undef SIGNALBLOCK_POSIX
+
+/* how to block and unblock signals */
+#undef SIGNALBLOCK_SYSV
+
+/* signal handlers need to be reinstalled when they are activated */
+#undef SIGNAL_NEED_REINSTALL
+
+/* SIGNALBLOCK_BSD is defined above and signals need to be unblocked when
+   signal handlers are left */
+#undef SIGNAL_NEED_UNBLOCK
+
+/* SIGNALBLOCK_BSD is defined above and other signals need to be unblocked
+   when signal handlers are left */
+#undef SIGNAL_NEED_UNBLOCK_OTHERS
+
+/* declaration of the signal handler function type needs dots */
+#undef SIGTYPE_DOTS
+
+/* The size of a `dev_t', as computed by sizeof. */
+#undef SIZEOF_DEV_T
+
+/* The size of a `fsblkcnt_t', as computed by sizeof. */
+#undef SIZEOF_FSBLKCNT_T
+
+/* The size of a `fsfilcnt_t', as computed by sizeof. */
+#undef SIZEOF_FSFILCNT_T
+
+/* The size of a `ino_t', as computed by sizeof. */
+#undef SIZEOF_INO_T
+
+/* The size of a `off_t', as computed by sizeof. */
+#undef SIZEOF_OFF_T
+
+/* The size of a `rlim_t', as computed by sizeof. */
+#undef SIZEOF_RLIM_T
+
+/* The size of a `struct timeval', as computed by sizeof. */
+#undef SIZEOF_STRUCT_TIMEVAL
+
+/* socklen_t (if defined in <sys/socket.h>) or int otherwise) */
+#undef SOCKLEN_T
+
+/* address range of the C stack */
+#undef STACK_ADDRESS_RANGE
+
+/* If using the C implementation of alloca, define if you know the
+   direction of stack growth for your system; otherwise it will be
+   automatically deduced at run-time.
+	STACK_DIRECTION > 0 => grows toward higher addresses
+	STACK_DIRECTION < 0 => grows toward lower addresses
+	STACK_DIRECTION = 0 => direction of growth unknown */
+#undef STACK_DIRECTION
+
+/* Define to 1 if the `S_IS*' macros in <sys/stat.h> do not work properly. */
+#undef STAT_MACROS_BROKEN
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* no <dirent.h>, use <sys/dir.h> */
+#undef SYSDIR
+
+/* no <dirent.h>, use <sys/ndir.h> */
+#undef SYSNDIR
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Define to 1 if your <sys/time.h> declares `struct tm'. */
+#undef TM_IN_SYS_TIME
+
+/* define to 1 if the return type of unsetenv is int */
+#undef UNSETENV_POSIX
+
+/* expression in ch which is true if ch is a valid character in filenames */
+#undef VALID_FILENAME_CHAR
+
+/* closedir() return value is void or unusable */
+#undef VOID_CLOSEDIR
+
+/* have <termios.h> but need <sys/ioctl.h> for `struct winsize' */
+#undef WINSIZE_NEED_SYS_IOCTL_H
+
+/* have <termios.h> but need <sys/ptem.h> for `struct winsize' */
+#undef WINSIZE_NEED_SYS_PTEM_H
+
+/* Define to 1 if your processor stores words with the most significant byte
+   first (like Motorola and SPARC, unlike Intel and VAX). */
+#undef WORDS_BIGENDIAN
+
+/* Define to 1 if on AIX 3.
+   System headers sometimes define this.
+   We just want to avoid a redefinition error message.  */
+#ifndef _ALL_SOURCE
+# undef _ALL_SOURCE
+#endif
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
+
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
+
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
+
+/* Define to 1 if on MINIX. */
+#undef _MINIX
+
+/* Define to 2 if the system does not provide POSIX.1 features except with
+   this defined. */
+#undef _POSIX_1_SOURCE
+
+/* Define to 1 if you need to in order for `stat' and other things to work. */
+#undef _POSIX_SOURCE
+
+/* Define to 1 if type `char' is unsigned and you are not using gcc.  */
+#ifndef __CHAR_UNSIGNED__
+# undef __CHAR_UNSIGNED__
+#endif
+
+/* Enable extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# undef __EXTENSIONS__
+#endif
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# undef _POSIX_PTHREAD_SEMANTICS
+#endif
+
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
+#undef inline
+#endif
+
+/* Define to `int' if <sys/types.h> does not define. */
+#undef pid_t
+
+/* Define as `return' if your compiler allows returning expressions of type
+   `void' from functions */
+#undef return_void
+
+/* Define as `fork' if `vfork' does not work. */
+#undef vfork
+
+/* Define to, say, char, if your system does not support void type */
+#undef void

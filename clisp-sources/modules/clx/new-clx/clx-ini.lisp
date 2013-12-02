@@ -1,0 +1,20 @@
+(let ((clxffn   (merge-pathnames "clx.fas" *load-pathname*))
+      (imageffn (merge-pathnames "image.fas" *load-pathname*))
+      (clxlfn   (merge-pathnames "clx.lisp" *load-pathname*))
+      (imagelfn (merge-pathnames "image.lisp" *load-pathname*)))
+  (delete-file clxffn)
+  (delete-file imageffn)
+  (compile-file clxlfn)
+  (compile-file imagelfn)
+  (cond ((and (probe-file clxffn) (probe-file imageffn))
+         (load clxffn)
+         (load imageffn))
+        (t
+         (format T "~%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+         (format T "~%")
+         (format T "~%  Build failed, clx.lisp and image.lisp were not correctly")
+         (format T "~%  compiled. CLX is incomplete and non-functional.")
+         (format T "~%")
+         (format T "~%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+         (exit 1)) ))                   ;aber auf mich hoert ja keiner 8-(
+

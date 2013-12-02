@@ -1,0 +1,103 @@
+MyPanel = {
+    SUPERCLASS = Panel;
+};
+FirstResponder = {
+    ACTIONS = {
+	orderFrontNXColorPanel:;
+    };
+    SUPERCLASS = Object;
+};
+CommandScroll = {
+    OUTLETS = {
+	delegate;
+    };
+    SUPERCLASS = ScrollView;
+};
+BreakManager = {
+    ACTIONS = {
+	up:;
+	next:;
+	mode4:;
+	abort:;
+	down:;
+	backtrace:;
+	step:;
+	continue:;
+	over:;
+	bottom:;
+	top:;
+	mode1:;
+	activate:;
+	mode2:;
+	mode3:;
+    };
+    OUTLETS = {
+	window;
+	coordinator;
+    };
+    SUPERCLASS = Object;
+};
+LispPreferencesPanel = {
+    ACTIONS = {
+	changeFont:;
+    };
+    OUTLETS = {
+	coordinator;
+    };
+    SUPERCLASS = Panel;
+};
+LispText = {
+    SUPERCLASS = Text;
+};
+Coordinator = {
+    ACTIONS = {
+	appWillTerminate:;
+	getStartFile:;
+	killProcess:;
+	stopProcess:;
+	setLineLength:;
+	setQuietYes:;
+	showInfo:;
+	setMachineFont:;
+	makeMeCurrent:;
+	newProcessWithMemFile:;
+	setMachineColor:;
+	changeFont:;
+	showPreferences:;
+	compileFile:;
+	setHighlightColor:;
+	setUserColor:;
+	setDefaults:;
+	setEnteredColor:;
+	setQuietNo:;
+	setUserFont:;
+	removeMe:;
+	newProcess:;
+	findStartFile:;
+	appDidInit:;
+	loadFile:;
+	removeMeFromCurrent:;
+    };
+    OUTLETS = {
+	colorWellMachine;
+	colorWellUser;
+	openPanel;
+	colorWellEntered;
+	startFileText;
+	machineFontText;
+	lineLengthText;
+	currentUserFont;
+	defaultMachineFont;
+	serverList;
+	infoPanel;
+	defaultUserFont;
+	fontManager;
+	colorWellHighlight;
+	quietModeMatrix;
+	currentMachineFont;
+	preferencesPanel;
+	userFontText;
+	currentServer;
+    };
+    SUPERCLASS = Object;
+};

@@ -1,0 +1,7 @@
+To install the PostgreSQL bindings, do the following:
+
+$ /configure --with-module=postgresql --with-libpq-prefix=/usr/local/ --build build-pq
+
+Use dos (8.3) names on win32:
+
+$ /configure --with-module=postgresql --with-libpq-prefix=C:/Progra~1/PostgreSQL/8.0/ --build build-pq

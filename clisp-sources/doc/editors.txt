@@ -1,0 +1,295 @@
+                       Good text editors for Lisp
+                       ==========================
+
+This is a small survey of editors available with Lisp support.
+
+1. vi
+2. axe
+3. Emacs
+
+
+1. vi
+   --
+
+Platforms: Unix, DOS, Win32...
+(We recommend especially vim and elvis.)
+
+Characteristics:
+- Text mode editor.
+- Full GUI in elvis 2 and vim 6.
+
+Features:
+- Fast, small.
+- Automatic backup.
+- Extremely handy search / replace / repeat functions ("/", "s", ".").
+- Deals well with big files (provided enough room in /tmp).
+- Syntax highlighting in recent versions of elvis and vim.
+
+Drawbacks:
+- User needs to constantly switch between "command mode" and "insert mode".
+- Typos in "command mode" are not undoable.
+
+Lisp support:
+- Parenthesis matching function ("%").
+
+Recommended in the following situations:
+- All kinds of minor editing operations.
+- Non-Unix platform.
+
+
+2. axe
+   ---
+
+Platforms: Unix X11.
+
+Characteristics:
+- X11 GUI editor with pull-down menus.
+
+Features:
+- Fast, small.
+- Multiple windows.
+- Easy to use.
+- Optimal Cut & Paste functionality.
+- Two kinds of search / replace functions.
+- Opening a new window from the shell command line ("faxe") is very fast.
+
+Drawbacks:
+- Nonstandard menubar layout.
+- Slow cursor positioning in files larger than 1 MB.
+- Not 100% stable: dumps core with a small probability in certain situations
+  (faxe calling, or after search & replace), so it's best to save your files
+  regularly.
+
+Lisp support:
+- Parenthesis matching (blinks once).
+
+Recommended in the following situations:
+- All kinds of major editing operations.
+
+* How to customize axe in general?
+
+  The default font is bold. To choose another font globally, add the
+  following to your .Xdefaults:
+
+      Axe*ed*Font:         6x13
+
+  To choose this font only for text pieces, but not for dialog boxes
+  (this is prettier), instead add the following to your .Xdefaults:
+
+      Axe*ed.?.Font:       6x13
+      Axe*ed*Text*Font:    6x13
+
+  The font must be one existing in your X11 font directory
+  (/usr/X11R6/lib/X11/fonts or something like that).
+
+
+3. emacs, xemacs
+   -------------
+
+Platforms: Unix, Win32.
+
+Characteristics:
+- GUI editor with pull-down menus.
+
+Features:
+- Can also be used in text mode.
+- Lots of customization packages exist.
+- Good integration with Lisp process.
+- Automatic backup.
+- Extremely powerful.
+- Highly customizable for those willing to dig into Emacs Lisp.
+- No problems whatsoever with big or huge files.
+
+Drawbacks:
+- Needs proper configuration. By default, it doesn't do cut & paste the way
+  it is normally done in X11, and sometimes the backspace key is configured
+  to trigger a help screen.
+- Heavyweight. On a 8 MB machine with X11, Emacs causes much swapping.
+  Moreover, process size increases with time.
+- The editor is often unresponsive, because of
+  - normal Unix swapping,
+  - Emacs' conservative GC (incremental and generational GCs don't cause
+    noticeable interruptions),
+  - automatic backup.
+  Often, you click on the menubar and have to wait 10 seconds for the menu.
+- Inconsistent user interface:
+  - Few functions are available through menus, some through keybindings,
+    others only through M-x.
+  - Using the scrollbar repositions the cursor.
+  - Need to press C-g twice to abort incremental search.
+  - many more details like this...
+
+Lisp support:
+- Parenthesis matching (blinks once).
+- Helps indentation of Lisp code.
+- Display Lisp keywords, comments, strings in different colours
+  (font-lock-mode).
+- Keybindings for evaluating forms, macroexpanding forms.
+
+Recommended in the following situations:
+- Professional programmer with fast machine needs good integration with
+  Lisp running as a separate process.
+
+Discussion:
+
+* What is Emacs good for?
+
+  1. Fill your machine's memory. Remember, EMACS means "Eight Megabytes
+     Always Continuously Swapping". And on my 8 MB machine, this is true!
+
+  2. It gives a better interaction with CLISP. When you use CLISP on a
+     console, terminal or xterm, your interactions with CLISP are
+     limited to:
+       - typing text,
+       - scrolling in the history,
+       - see parentheses matching,
+       - cut & paste from/to the xterm.
+     In Emacs, you have the entire interaction in a buffer. You have
+     a keystroke for evaluating a form, macroexpanding a form etc.
+
+* Which Emacs to use?
+
+  To date, we have the choice between
+   * Emacs 18.58 (text mode only);
+   * Emacs 19.34 (GUI for X11 and Win32);
+   * Emacs 20.7 (ditto);
+   * Emacs 21.1 (GUI for X11, Win32 and MacOS);
+   * XEmacs 19.16 (GUI for X11);
+   * XEmacs 20.4 (GUI for X11);
+   * XEmacs 21.1 (GUI for X11 and Win32).
+
+  We recommend using the latest (21.*) version of either
+   - Emacs <http://www.gnu.org/software/emacs/> or
+   - XEmacs <http://www.xemacs.org>.
+
+* How to customize Emacs in general?
+
+  1. Create a file called .emacs in your home directory. (This file
+     is called \!EMACS on DOS, and _emacs on Win32.)
+     The file called etc/sample.emacs in the XEmacs distribution might
+     be a good starting point.
+
+  2. Get rid of tabs. When you cut & paste some lisp text to clisp, tabs in
+     it will make the readline library think that user want completion of
+     a symbol, thus causing delays, beeps and general annoyance. Therefore
+     don't use tabs at all, except in Makefiles where they are syntactically
+     required.
+
+     Add the following to your .emacs:
+
+         ;; Tabs are anachronistic.
+         (setq-default indent-tabs-mode nil)
+
+  3. Set the path for "info" documentation. If "M-x info" gives an error,
+     it is most likely that you have to set a the list of directories
+     where Emacs searches its documentation, roughly like this:
+
+         ;; GNU Info pages.
+         (setq Info-default-directory-list
+               '("/usr/local/info/" "/usr/info/"))
+
+  4. Choose the default font. On my screen, "6x13" looks better than
+     the default "9x15" font, so I put into my .emacs:
+
+         ;; Default font for GNU Emacs 19.
+         (if (not (string-match "XEmacs" emacs-version))
+           (set-default-font "6x13"))
+
+     For XEmacs, you set the default font through an X resource in your
+     .Xdefaults file. Get some inspiration from the file called
+     etc/sample.Xdefaults in the XEmacs distribution and the files
+     /usr/X11R6/lib/X11/fonts/*/fonts.alias of your X11 distribution.
+
+  5. Make the X11 selections work the normal way (i.e. as in xedit and
+     axe). With recent versions of GNU Emacs and XEmacs, it is sufficient
+     to add to your .emacs:
+
+         ;; X11 mouse and selection handling.
+         (setq-default mouse-yank-at-point t)
+
+* How to customize Emacs for use of CLISP?
+
+  1. When you load a Lisp file (extension ".lisp") into Emacs, it
+     automatically switches to `lisp-mode', magically by a variable
+     called `auto-mode-alist'.
+     One feature of the lisp-mode is that the tab key indents the current
+     line, which makes typing Lisp programs easier because you don't have
+     to type the whitespace.
+     The lisp-mode is not well suited for Common Lisp.
+     In particular, IF forms get badly indented.
+     To fix this, add the following to your <.emacs>:
+
+         ;; Common Lisp indentation.
+         (autoload 'common-lisp-indent-function "cl-indent")
+         (setq lisp-indent-function 'common-lisp-indent-function)
+
+  2. You might try out syntactic colouring of your Lisp programs.
+     Just after loading the first Lisp file into Emacs, type
+       M-x font-lock-mode RET
+     You can also add
+       (global-font-lock-mode 1)
+     to your <.emacs>.
+
+  3. The easiest way to start CLISP under Emacs is to type C-c C-z in a
+     Lisp buffer or M-x run-lisp RET anywhere.  This creates a Lisp
+     interaction buffer in `inferior-lisp-mode'.
+     (CLISP is by no means "inferior" to Emacs Lisp, but CLISP is
+      running "under" Emacs, thus the name).
+     For this, add to your .emacs:
+
+         ;; XEmacs doesn't autoload inf-lisp.el, load it now.
+         (load-library "inf-lisp")
+         ;; Define the program to be called by M-x run-lisp.
+         (setq inferior-lisp-program "clisp -I") ; the "-I" is important.
+         ;; Add new keybindings: C-x C-e evaluates the *next* form,
+         ;; C-x C-m macroexpands the next form.
+         (defun lisp-eval-sexp (&optional and-go)
+           "Send the next sexp to the inferior Lisp process.
+            Prefix argument means switch to the Lisp buffer afterwards."
+           (interactive "P")
+           (lisp-eval-region (point) (scan-sexps (point) 1) and-go))
+         (defun lisp-macroexpand-region (start end &optional and-go)
+           "Macroexpand the current region in the inferior Lisp process.
+            Prefix argument means switch to the Lisp buffer afterwards."
+           (interactive "r\nP")
+           (comint-send-string
+            (inferior-lisp-proc)
+            (format "(macroexpand-1 (quote %s))\n"
+                    (buffer-substring-no-properties start end)))
+           (if and-go (switch-to-lisp t)))
+         (defun lisp-macroexpand-sexp (&optional and-go)
+           "Macroexpand the next sexp in the inferior Lisp process.
+            Prefix argument means switch to the Lisp buffer afterwards."
+           (interactive "P")
+           (lisp-macroexpand-region (point) (scan-sexps (point) 1) and-go))
+         ;; Define the great keybindings.
+         (inferior-lisp-install-letter-bindings)
+         (define-key lisp-mode-map          "\C-x\C-e" 'lisp-eval-sexp)
+         (define-key inferior-lisp-mode-map "\C-x\C-e" 'lisp-eval-sexp)
+         (define-key lisp-mode-map          "\C-x\C-m" 'lisp-macroexpand-sexp)
+         (define-key inferior-lisp-mode-map "\C-x\C-m" 'lisp-macroexpand-sexp)
+
+     In this mode, M-p cycles through the history.
+     The keybinding C-x C-e, which may also be issued from
+     another lisp-mode buffer, evaluates the form before(!) the cursor.
+
+     If you want to start clisp in different configurations, you can make
+     different commands for it, like this:
+
+         (defun clisp ()
+           (interactive)
+           (setq inferior-lisp-program "clisp -I -q")
+           (run-lisp inferior-lisp-program))
+         (defun clx ()
+           (interactive)
+           (setq inferior-lisp-program "clx -I -q")
+           (run-lisp inferior-lisp-program))
+         (defun garnet ()
+           (interactive)
+           (setq inferior-lisp-program "garnet -I -q")
+           (run-lisp inferior-lisp-program))
+
+  4. There is an even better Emacs mode, called ilisp-mode.
+     [Merge here stuff from Marcus, Matthias, Peter.??]
+     XEmacs 19.14 comes with ILISP version 5.7. A newer version with much
+     better support for CLISP is at <http://ilisp.cons.org/>.

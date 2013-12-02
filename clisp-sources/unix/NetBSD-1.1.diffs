@@ -1,0 +1,52 @@
+-=-=-=-=-=-
+Kernel configuration
+
+To use generational GC under FreeBSD 2.1 and NetBSD 1.1 requires the
+appropriate configuration of the kernel and in the case of NetBSD a
+small kernel hack:
+
+1. For clisp to use shared memory and thus generational GC the size of
+SHMSEG needs to be increased.
+
+To do this under FreeBSD 2.1, just add the following line to your
+config file:
+options		"SHMSEG=200"
+
+Under NetBSD 1.1, edit the param.c file in the compile directory; you
+may need to run 'make param.c' first.
+
+2. Further to use generational GC under NetBSD requires a small hack
+to the kernel. The following two patches, against NetBSD 1.1 kernel
+sources, add the ability to return the address of a protection
+fault. Note: this is compatible with the FreeBSD implementation, and
+is also useful with gcl to implement SGC.
+
+*** i386/machdep.c.orig	Mon Oct 16 12:43:28 1995
+--- i386/machdep.c	Mon Nov 13 03:07:46 1995
+***************
+*** 532,537 ****
+--- 532,538 ----
+  
+  	frame.sf_code = code;
+  	frame.sf_scp = &fp->sf_sc;
++ 	frame.sf_addr = (char *)rcr2();
+  	frame.sf_handler = catcher;
+  
+  	/*
+
+*** include/frame.h.orig	Sat Oct 14 11:57:34 1995
+--- include/frame.h	Mon Nov 13 03:09:01 1995
+***************
+*** 117,122 ****
+--- 117,123 ----
+  	int	sf_signum;
+  	int	sf_code;
+  	struct	sigcontext *sf_scp;
++ 	char    *sf_addr;
+  	sig_t	sf_handler;
+  	struct	sigcontext sf_sc;
+  };
+
+-=-=-=-=-=-
+
+

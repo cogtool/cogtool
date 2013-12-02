@@ -1,0 +1,38 @@
+# Makefile for CLISP module set postgresql
+
+CC = @CC@
+PQCPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+INCLUDES= ..
+
+CLISP = clisp -q -norc
+
+LN = ln
+
+MAKE = make
+
+SHELL = /bin/sh
+
+DISTRIBFILES = postgresql.o link.sh Makefile postgresql.lisp sql.lisp
+distribdir =
+
+all : postgresql.o sql.fas
+
+postgresql.c : postgresql.lisp
+	$(CLISP) -c postgresql.lisp
+
+postgresql.o : postgresql.c $(INCLUDES)/clisp.h config.h
+	$(CC) $(CPPFLAGS) $(PQCPPFLAGS) $(CFLAGS) -I$(INCLUDES) -c postgresql.c
+
+sql.fas : sql.lisp
+	$(CLISP) -c sql.lisp
+
+# Make a module
+clisp-module : all
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+force :
+

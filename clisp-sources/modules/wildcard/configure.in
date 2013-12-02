@@ -1,0 +1,25 @@
+dnl AUTOCONF configuration for wildcard
+dnl Bruno Haible 12.4.1997
+dnl Sam Steingold 2003-07-28
+
+AC_PREREQ(2.57)
+AC_INIT(wildcard, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(wildcard.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([ * Wildcard (Checks)])
+AC_PROG_CC
+AC_PROG_CPP
+AC_HEADER_STDC
+gl_FUNC_FNMATCH_POSIX
+if test -n "$FNMATCH_H"; then
+  FNMATCH_O=fnmatch.o
+else
+  FNMATCH_O=
+fi
+AC_SUBST(FNMATCH_O)
+AC_MSG_NOTICE([ * Wildcard (Output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([ * Wildcard (Done)])

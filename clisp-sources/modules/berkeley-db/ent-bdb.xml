@@ -1,0 +1,10 @@
+<!-- Berkley DB XML entities -->
+<!ENTITY db-create '<link linkend="db-create"><function>BDB:DB-CREATE</function></link>'>
+<!ENTITY db-get-options '<link linkend="db-get-options"><function>BDB:DB-GET-OPTIONS</function></link>'>
+<!ENTITY db-open '<link linkend="db-open"><function>BDB:DB-OPEN</function></link>'>
+<!ENTITY db-set-options '<link linkend="db-set-options"><function>BDB:DB-SET-OPTIONS</function></link>'>
+<!ENTITY dbe-create '<link linkend="dbe-create"><function>BDB:DBE-CREATE</function></link>'>
+<!ENTITY dbe-get-options '<link linkend="dbe-get-options"><function>BDB:DBE-GET-OPTIONS</function></link>'>
+<!ENTITY dbe-open '<link linkend="dbe-open"><function>BDB:DBE-OPEN</function></link>'>
+<!ENTITY dbe-set-options '<link linkend="dbe-set-options"><function>BDB:DBE-SET-OPTIONS</function></link>'>
+<!ENTITY make-dbc '<link linkend="make-dbc"><function>BDB:MAKE-DBC</function></link>'>

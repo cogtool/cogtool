@@ -1,0 +1,496 @@
+--- clisp-build/src/makemake.in	Mon Mar  3 17:08:28 2003
++++ clisp-conversion/src/makemake.in	Mon Mar  3 17:08:59 2003
+@@ -331,8 +331,6 @@
+      CPP="@CPP@"                         # either $CC' -E' or '/lib/cpp'
+      CPPFLAGS='@CPPFLAGS@'               # additional options for $CC and $CPP
+      CC_GCC='@CC_GCC@'                   # either true or false
+-     CC_NEED_CCPAUX='@CC_NEED_CCPAUX@'   # either true or false
+-     CC_NEED_DEEMA='@CC_NEED_DEEMA@'     # either true or false
+      AS_UNDERSCORE='@AS_UNDERSCORE@'     # either true or false
+      RANLIB='@RANLIB@'                   # either 'ranlib' or 'true'
+      INSTALL='@INSTALL@'                 # either 'install -c' or 'cp'
+@@ -395,9 +393,7 @@
+          CC_GCC=false
+          CFLAGS='$(MFLAGS)'
+          CLFLAGS=''
+-         CC_NEED_CCPAUX=false
+          AS_UNDERSCORE=false
+-         CC_NEED_DEEMA=false
+        fi
+        if [ $TSYS = win32bc ] ; then
+          CC=$COMPILER # should be bcc32 or bcc32i
+@@ -408,9 +404,7 @@
+          CFLAGS='-O2 -g0 -w-rch'
+          CLFLAGS=''
+          CPP='cpp32 -P-' # buggy!
+-         CC_NEED_CCPAUX=false
+          AS_UNDERSCORE=true
+-         CC_NEED_DEEMA=false
+        fi
+      else
+        if [ $COMPILER = gcc ] ; then
+@@ -424,14 +418,12 @@
+        CLFLAGS=''
+        CPP="${CC} -E"
+        CPPFLAGS=''
+-       CC_NEED_CCPAUX=false
+        if [ $COMPILER = gcc ] ; then
+          # guess that if cross-compiling using gcc, then as preprends underscore
+          AS_UNDERSCORE=true
+        else
+          AS_UNDERSCORE=false
+        fi
+-       CC_NEED_DEEMA=false
+      fi
+      GROFF='groff'
+      GMALLOC=''
+@@ -455,8 +447,6 @@
+   XCPP="${XCC} -E"
+   XCPPFLAGS=''
+   XCC_GCC=true
+-  XCC_NEED_CCPAUX=false
+-  XCC_NEED_DEEMA=false
+ else
+   TSYS="$HSYS"
+   TOS="$HOS"
+@@ -464,8 +454,6 @@
+   XCPP="${CPP}"
+   XCPPFLAGS="${CPPFLAGS}"
+   XCC_GCC="${CC_GCC}"
+-  XCC_NEED_CCPAUX="${CC_NEED_CCPAUX}"
+-  XCC_NEED_DEEMA="${CC_NEED_DEEMA}"
+ fi
+ XCC_UNUSABLE_CPP=false
+ 
+@@ -757,15 +745,6 @@
+   OS_INCLUDES=$OS_INCLUDES' xthread'
+ fi
+ 
+-if [ $CROSS = true ] ; then
+-  if [ $TOS = os2 ] ; then
+-    # CHSCONVERT='$(HOME)/cc/convert-to-ibmpc'
+-    # CHSCONVERT='/usr/local/utils/cv-to-ibmpc'
+-    # CHSCONVERT='recode latin1:ibmpc | crlf-to-nl'
+-    CHSCONVERT='./cv_lt_pc'
+-  fi
+-fi
+-
+ # TEXE = extension for executable files on target
+ # LEXE = extension for executable file LISP on target
+ if [ ${TOS} = os2 -o ${TOS} = win32 -o ${HSYSOS} = cygwin32 ] ; then
+@@ -852,7 +831,7 @@
+   fi
+   XCFLAGS="$XCPPFLAGS $XCFLAGS"
+   if [ "$DEBUGGING" != debug ] ; then
+-    # We do not need a frame-pointer. Where we need it (in eval.d:
++    # We do not need a frame-pointer. Where we need it (in eval.c:
+     # interpret_bytecode_()), we enforce it by using alloca().
+     # On Windows, -fomit-frame-pointer may not be used in general (because
+     # otherwise gcc might store data-pointers in %ebp, which is not admissible
+@@ -970,7 +949,7 @@
+     # 1. because of "macro expansion buffer overflow", 2. because it is an
+     # ANSI like preprocessor (## and the like) in front of a K&R C compiler.
+     # The AIX 4.2 xlc preprocessor is not usable because when avl.c is included
+-    # twice from spvw.d, the second inclusion produces no expansion at all.
++    # twice from spvw.c, the second inclusion produces no expansion at all.
+     # The Ultrix cc preprocessor is not usable because it does not
+     # expand the `alloc_FNDS_nocopy' macro in lisparit.
+     # The MSVC4 preprocessor is not usable because of its treatment of empty
+@@ -979,8 +958,6 @@
+     # bug.
+     XCC_UNUSABLE_CPP=true
+     XCPP="${UTILDIR_}gcc-cccp${NEXT_}cccp -U__GNUC__"
+-    XCC_NEED_CCPAUX=false
+-    XCC_NEED_DEEMA=false
+     XCPP_POSTPROCESS=""
+     if [ "$TSYSOS" = aix ] ; then
+       XCPP="$XCPP -D_AIX -D_IBMR2"
+@@ -1024,7 +1001,7 @@
+     else
+       if [ "$HSYSOS" = hp-ux -o $TSYS = sun4 -o $TSYS = acorn ] ; then
+         # HP's HPPA compilers crash when optimizing.
+-        # SUN's cc is buggy when optimizing spvw.d, even with only -O1.
++        # SUN's cc is buggy when optimizing spvw.c, even with only -O1.
+         # No -O for Acorn/Norcroft cc.
+         XCFLAGS=''
+       else
+@@ -1033,7 +1010,7 @@
+     fi
+   fi
+   if [ "$TSYSOS" = ultrix ] ; then
+-    # Ultrix cc needs this for compiling spvw.d.
++    # Ultrix cc needs this for compiling spvw.c.
+     XCFLAGS="$XCFLAGS -Olimit 1000"
+   fi
+   if [ $XCC_UNUSABLE_CPP = true ] ; then
+@@ -1045,7 +1022,6 @@
+   case $TSYS in mips | ip*)
+     # IRIX 4 "cc -ansi" sometimes barfs when a string constant contains one
+     # or more quotes('). They must be written as \047.
+-    ANSIDECLFLAGS="${ANSIDECLFLAGS} -DQUOTE_QUOTES"
+     TXT2CFLAGS="${TXT2CFLAGS} -DQUOTE_QUOTES"
+   esac
+   if [ $TSYS = sun4 ] ; then
+@@ -1454,13 +1430,12 @@
+ 
+ EXTRA_CPARTS='noreadline'
+ 
+-DFILES="$CPARTS $EVERY_INCLUDES $OTHER_INCLUDES $SPVW_INCLUDES $ERROR_INCLUDES $LISPARIT_INCLUDES genclisph modules $EXTRA_CPARTS"
++CFILES="$CPARTS $EVERY_INCLUDES $OTHER_INCLUDES $SPVW_INCLUDES $ERROR_INCLUDES $LISPARIT_INCLUDES genclisph modules $EXTRA_CPARTS"
+ 
+-ARI_ASMD=''
+ ARI_ASMC=''
+ ARI_ASMS=''
+ if [ "$cpu" = m68k ] ; then
+-  ARI_ASMD=$ARI_ASMD' ari68000 ari68020'
++  ARI_ASMC=$ARI_ASMC' ari68000 ari68020'
+   if [ $TSYS = sun3 -o $TSYS = hp300 -o $TSYS = m68k -o $TSYS = mc68040 -o $TSYS = amiga -a "$TSYSOS" = netbsd ] ; then
+     ARI_ASMS=$ARI_ASMS' ari68020'
+   else
+@@ -1469,54 +1444,54 @@
+   ARI_ASMC=$ARI_ASMS
+ fi
+ if [ "$cpu" = sparc ] ; then
+-  ARI_ASMD=$ARI_ASMD' arisparc'
++  ARI_ASMC=$ARI_ASMC' arisparc'
+   ARI_ASMS=$ARI_ASMS' arisparc'
+ fi
+ if [ "$cpu" = sparc64 ] ; then
+-  ARI_ASMD=$ARI_ASMD' arisparc64'
++  ARI_ASMC=$ARI_ASMC' arisparc64'
+   ARI_ASMS=$ARI_ASMS' arisparc64'
+ fi
+ if [ "$cpu" = mips ] ; then
+-  ARI_ASMD=$ARI_ASMD' arimips'
++  ARI_ASMC=$ARI_ASMC' arimips'
+   ARI_ASMS=$ARI_ASMS' arimips'
+ fi
+ if [ "$cpu" = mips64 ] ; then
+-  ARI_ASMD=$ARI_ASMD' arimips64'
++  ARI_ASMC=$ARI_ASMC' arimips64'
+   ARI_ASMS=$ARI_ASMS' arimips64'
+ fi
+ if [ "$cpu" = i386 ] ; then
+   if [ $TSYS != win32bc ] ; then
+-    ARI_ASMD=$ARI_ASMD' ari80386'
++    ARI_ASMC=$ARI_ASMC' ari80386'
+     ARI_ASMS=$ARI_ASMS' ari80386'
+   fi
+ fi
+ if [ "$cpu" = hppa ] ; then
+-  ARI_ASMD=$ARI_ASMD' arihppa'
++  ARI_ASMC=$ARI_ASMC' arihppa'
+   ARI_ASMS=$ARI_ASMS' arihppa'
+ fi
+ if [ "$cpu" = arm ] ; then
+-  ARI_ASMD=$ARI_ASMD' ariarm'
++  ARI_ASMC=$ARI_ASMC' ariarm'
+   ARI_ASMS=$ARI_ASMS' ariarm'
+ fi
+ 
+-SP_ASMD=''
++SP_ASMC=''
+ SP_ASMS=''
+ if [ $XCC_GCC = false ] ; then
+   if [ "$cpu" = m68k ] ; then
+-    SP_ASMD=$SP_ASMD' sp68000'
++    SP_ASMC=$SP_ASMC' sp68000'
+     SP_ASMS=$SP_ASMS' sp68000'
+   fi
+   if [ "$cpu" = sparc -o "$cpu" = sparc64 ] ; then
+-    SP_ASMD=$SP_ASMD" sp${cpu}"
++    SP_ASMC=$SP_ASMC" sp${cpu}"
+     SP_ASMS=$SP_ASMS" sp${cpu}"
+   fi
+   if [ "$cpu" = mips -o "$cpu" = mips64 ] ; then
+-    SP_ASMD=$SP_ASMD' spmips'
++    SP_ASMC=$SP_ASMC' spmips'
+     SP_ASMS=$SP_ASMS' spmips'
+   fi
+   if [ "$cpu" = i386 ] ; then
+     if [ $TSYS != win32bc ] ; then
+-      SP_ASMD=$SP_ASMD' sp80386'
++      SP_ASMC=$SP_ASMC' sp80386'
+       SP_ASMS=$SP_ASMS' sp80386'
+     fi
+   fi
+@@ -1806,12 +1781,6 @@
+     }
+   fi
+ fi
+-if [ -n "$CHSCONVERT" ] ; then
+-  echol "CHARSETCONVERT = ${CHSCONVERT}"
+-  CHSCONVERT_FILTER=" | \$(CHARSETCONVERT)"
+-else
+-  CHSCONVERT_FILTER=''
+-fi
+ echol
+ if [ $HOS = win32 -a $HSYS != win32gcc ] ; then
+   if [ $HSYS = win32msvc ] ; then
+@@ -1963,52 +1932,6 @@
+   echol
+ fi
+ 
+-if [ -n "$XCC_SUNPRO" ] ; then
+-  XASM_NEED_CCPAUX=true
+-else
+-  XASM_NEED_CCPAUX=$XCC_NEED_CCPAUX
+-fi
+-
+-if [ $CC_NEED_CCPAUX = true -o $XCC_NEED_CCPAUX = true -o $XASM_NEED_CCPAUX = true ] ; then
+-  NEED_CCPAUX=true
+-else
+-  NEED_CCPAUX=false
+-fi
+-XDECL_FILTER="| \$(ANSIDECL)"
+-XDECL_DEPENDENCIES=" ansidecl${HEXE}"
+-
+-echol "ANSIDECL = ${HERE}ansidecl"
+-if [ $CC_NEED_CCPAUX = true ] ; then
+-  CCPAUX='ccpaux'$HEXE
+-  CCPAUX_FILTER=' | '$HERE'ccpaux'
+-else
+-  CCPAUX=''
+-  CCPAUX_FILTER=''
+-fi
+-if [ $XCC_NEED_CCPAUX = true ] ; then
+-  XCCPAUX='ccpaux'$HEXE
+-  XCCPAUX_FILTER=' | '$HERE'ccpaux'
+-else
+-  XCCPAUX=''
+-  XCCPAUX_FILTER=''
+-fi
+-if [ $XASM_NEED_CCPAUX = true ] ; then
+-  XASMCCPAUX='ccpaux'$HEXE
+-  XASMCCPAUX_FILTER=' | '$HERE'ccpaux'
+-else
+-  XASMCCPAUX=''
+-  XASMCCPAUX_FILTER=''
+-fi
+-if [ $XCC_NEED_DEEMA = true ] ; then
+-  if [ $HOS = unix ] ; then
+-    echol "DEEMA = sed -e 's/,)/,_EMA_)/g' -e 's/,,/,_EMA_,/g'"
+-  else
+-    echol "DEEMA = deema"
+-    XDECL_DEPENDENCIES="${XDECL_DEPENDENCIES} deema${HEXE}"
+-  fi
+-  XDECL_FILTER="${XDECL_FILTER} | \$(DEEMA)"
+-fi
+-
+ if [ $TOS = unix ] ; then
+   TXT2CINCL="-I'${SRCTOPDIR}'"
+ else
+@@ -2025,10 +1948,7 @@
+ 
+ echol
+ 
+-echolist "DFILES =" "$DFILES $ARI_ASMD $SP_ASMD" ".d"
+-echol
+-
+-echolist "CFILES =" "$DFILES $ARI_ASMD $ARI_ASMC $SP_ASMD" ".c"
++echolist "CFILES =" "$CFILES $ARI_ASMC $ARI_ASMC $SP_ASMC" ".c"
+ echol
+ 
+ echolist "OBJECTS =" "$CPARTS $ARI_ASMS $SP_ASMS $GMALLOC" "${TOBJ}"
+@@ -2094,22 +2014,9 @@
+ 
+ 
+ UTILS=''
+-if [ $NEED_CCPAUX = true ] ; then
+-  UTILS=$UTILS' ccpaux'
+-fi
+-UTILS=$UTILS' ansidecl'
+-if [ $XCC_NEED_DEEMA = true -a $HOS != unix ] ; then
+-  UTILS=$UTILS' deema'
+-fi
+ UTILS=$UTILS' txt2c'
+ UTILS=$UTILS' ccmp2c' # needed by clx module
+ UTILS=$UTILS' modprep'
+-if [ "$CHSCONVERT" = "./cv_lt_at" ] ; then
+-  UTILS=$UTILS' cv_lt_at'
+-fi
+-if [ "$CHSCONVERT" = "./cv_lt_pc" ] ; then
+-  UTILS=$UTILS' cv_lt_pc'
+-fi
+ 
+ PARAMS="intparam floatparam";
+ PARAMS_H="";
+@@ -2129,7 +2036,7 @@
+ for util in $UTILS ; do
+   line=$line" ${util}${HEXE}"
+ done
+-line=$line" \$(DFILES) modules.h"
++line=$line" \$(CFILES) modules.h"
+ if [ -n "${SRCDIR}" ] ; then
+   for f in $UNICODE_INCLUDES $NLS_INCLUDES ; do
+     line=$line" ${f}.c"
+@@ -2169,7 +2076,7 @@
+   echol
+ fi
+ for util in $UTILS ; do
+-  if [ $util = ccpaux -o $util = deema -o $util = txt2c -o $util = ccmp2c -o $util = modprep ] ; then
++  if [ $util = txt2c -o $util = ccmp2c -o $util = modprep ] ; then
+     flags=''
+     if [ $util = ccmp2c ] ; then
+       flags=' -I.'
+@@ -2184,15 +2091,6 @@
+     echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)" "${SRCTOPDIR}os2/${util}.c" "${util}"
+     echol
+   fi
+-  if [ $util = ansidecl ] ; then
+-    flags="${ANSIDECLFLAGS}"
+-    echol "${util}${HEXE} : ${UTILDIR_M}${util}.d"
+-    echotab "\$(LN_S) ${UTILDIR_}${util}.d ${util}.c"
+-    echotab_to_HEXE "\$(CC) \$(CFLAGS) \$(CLFLAGS)${flags}" "${util}.c" "${util}"
+-    echotab "\$(RM) ${util}.c"
+-    echol
+-    OBSOLETE=$OBSOLETE" ${util}.c"
+-  fi
+ done
+ 
+ echol
+@@ -2223,9 +2121,9 @@
+ 
+ if [ -n "${SRCDIR}" ] ; then
+   if [ ${HOS} = unix -o ${HSYS} = win32gcc ] ; then
+-    for f in $DFILES $ARI_ASMD $SP_ASMD ; do
+-      echol "${f}.d : ${SRCDIR}${f}.d"
+-      echotab "-\$(LN_S) ${SRCDIR}${f}.d ${f}.d"
++    for f in $CFILES $ARI_ASMC $SP_ASMC ; do
++      echol "${f}.c : ${SRCDIR}${f}.c"
++      echotab "-\$(LN_S) ${SRCDIR}${f}.c ${f}.c"
+       echol
+     done
+     for f in $UNICODE_INCLUDES $NLS_INCLUDES ; do
+@@ -2246,18 +2144,6 @@
+ echodummyrule allc
+ echol
+ 
+-for f in $DFILES ; do
+-  echol "${f}.c : ${f}.d ${XDECL_DEPENDENCIES}"
+-  echotabpipe "\$(CAT) ${f}.d${CHSCONVERT_FILTER} ${XDECL_FILTER} > ${f}.c"
+-  echol
+-done
+-
+-for f in $ARI_ASMD $SP_ASMD ; do
+-  echol "${f}.c : ${f}.d ${XCCPAUX}"
+-  echotabpipe "\$(CAT) ${f}.d${XASMCCPAUX_FILTER} > ${f}.c"
+-  echol
+-done
+-
+ if [ $TSYS != win32msvc ] ; then
+   if [ $AS_UNDERSCORE = true ] ; then
+     ASMFLAGS=' -DASM_UNDERSCORE'
+@@ -2296,7 +2182,7 @@
+       *hppa) g='-' ;;
+       *)     g='' ;;
+     esac
+-    # In ari68020.d the dollars must be replaced, and \# replaced with # :
++    # In ari68020.c the dollars must be replaced, and \# replaced with # :
+     case $f in
+       ari68020*)
+         if [ $AS_UNDERSCORE = false ] ; then
+@@ -2488,7 +2374,7 @@
+       echotab "objasm -Stamp -Quit -CloseExec -from ${f}.s -o ${f}${TOBJ}"
+     else
+       if [ $f = arihppa ] ; then
+-        # Only the native as groks the .SHORTDATA statements in arihppa.d
++        # Only the native as groks the .SHORTDATA statements in arihppa.c
+         echotab "${XCC} ${XCFLAGS} -c ${f}.s || /usr/ccs/bin/as ${f}.s -o ${f}${TOBJ} || /bin/as ${f}.s -o ${f}${TOBJ}"
+       else
+         if [ $f = arimips ] ; then
+@@ -2807,11 +2693,11 @@
+   echol
+ 
+   echol "# check the sources:"
+-  echol "# 1. subr.d, fsubr.d, subrkw.d and all the LISPFUNs must add up"
++  echol "# 1. subr.c, fsubr.c, subrkw.c and all the LISPFUNs must add up"
+   echol "# 2. no variables of type gcv_object_t - only pointers to it"
+   echol "check-sources : # lisp${LEXE} lispinit.mem"
+   echotab "\$(RUN) -M lispinit.mem -C -i ${SRCDIR}check-lispfun.lisp -x '(check-lisp-defs \"${SRCDIR}\")'"
+-  echotab "if egrep ' var gcv_object_t *[^* ]' *.d; then false; else true; fi"
++  echotab "if egrep ' gcv_object_t *[^* ]' *.c; then false; else true; fi"
+   echol
+ 
+   echol "# Test: recompile \$(LISPFILES) and compare their contents."
+@@ -2932,10 +2818,9 @@
+ echotab "(echo; echo '/* genclisph */' ; ${HERE}genclisph ; echo ; echo '#endif /* _CLISP_H */') >> clisp.h"
+ echotab "\$(RM) genclisph${HEXE}"
+ echol
+-echol "linkkit : modules.d modules.c clisp.h"
++echol "linkkit : modules.c clisp.h"
+ echotab "-\$(RMRF) linkkit"
+ echotab "mkdir linkkit"
+-echotab "cd linkkit && \$(LN_S) ${PARENT_}modules.d modules.d"
+ echotab "cd linkkit && \$(LN_S) ${PARENT_}modules.c modules.c"
+ echotab "cd linkkit && \$(LN_S) ${PARENT_}clisp.h clisp.h"
+ echol
+@@ -3156,7 +3041,7 @@
+     echotab "(cd \$(DESTDIR)\$(lisplibdir) && \$(RMRF) base full)"
+     echotab "mkdir \$(DESTDIR)\$(lisplibdir)/base"
+     echotab "mkdir \$(DESTDIR)\$(lisplibdir)/full"
+-    echotab "for f in clisp-link linkkit/modules.d linkkit/modules.c linkkit/clisp.h base/* full/*; do \\"
++    echotab "for f in clisp-link linkkit/modules.c linkkit/clisp.h base/* full/*; do \\"
+     echotab "  case \$\$f in \\"
+     echotab "    */lisp${LEXE}) \$(INSTALL_PROGRAM) \$\$f \$(DESTDIR)\$(lisplibdir)/\$\$f;; \\"
+     echotab "    *) \$(INSTALL_DATA) \$\$f \$(DESTDIR)\$(lisplibdir)/\$\$f;; \\"
+@@ -3391,7 +3276,7 @@
+ echotab "${HLN} \$(LISPFILES) \$(FASFILES) \$(TOPDIR)/src"
+ echotab "${HLN} clisp-link \$(TOPDIR)"
+ echotab "mkdir \$(TOPDIR)/linkkit"
+-echotab "${HLN} modules.d modules.c clisp.h \$(TOPDIR)/linkkit"
++echotab "${HLN} modules.c clisp.h \$(TOPDIR)/linkkit"
+ echotab "for module in '' \$(MODULES); do if test -n \"\$\$module\"; then \\"
+ echotab "  (dir=\$(TOPDIR)/ ; for subdir in "'`'"echo \$\$module/ | sed -e 's,/, ,g'"'`'" ; do dir=\$\${dir}\$\${subdir} ; test -d \$\${dir} || mkdir \$\${dir} ; dir=\$\${dir}/ ; done ; cd \$\$module ; dots="'`'"echo \$\$module/ | sed -e 's,[^/][^/]*//*,../,g'"'`'" ; \$(MAKE) clisp-module-distrib distribdir=\$\${dots}\$(TOPDIR)/\$\$module LN="`if test "$HLN" = ln; then echo 'ln'; else echo '$${dots}hln'; fi`") \\"
+ echotab "fi; done"
+@@ -3501,7 +3386,7 @@
+ 
+ # clean1 removes everything that becomes obsolete once lisp${LEXE} is recompiled
+ # without changing the bytecode format and the tables in
+-# constobj.d, constpack.d, constsym.d, subr.d, fsubr.d, pseudofun.d.
++# constobj.c, constpack.c, constsym.c, subr.c, fsubr.c, pseudofun.c.
+ clean1 : clean0
+ 	-\$(RM) lispbibl.h clisp.h *.i *.s *${TOBJ} *.a lisp${LEXE} clisp-link makevars ${TESTDIR}${NEXT_}* ${TESTSDIR}${NEXT_}*
+ 	-\$(RMRF) base full
+@@ -3584,7 +3469,7 @@
+   echotab "-\$(RM) MAGIC.add"
+ fi
+ echotab "-\$(RMRF) data"
+-echotab "-\$(RM) ansidecl${HEXE} ccpaux${HEXE} deema${HEXE} txt2c${HEXE} ccmp2c${HEXE} modprep${HEXE} clisp${HEXE}"
++echotab "-\$(RM) txt2c${HEXE} ccmp2c${HEXE} modprep${HEXE} clisp${HEXE}"
+ echol
+ cat <<!!
+ # clean6 lets us go back to "makemake > Makefile".
+--- clisp-build/src/configure.in	Wed Sep  4 07:03:14 2002
++++ clisp-conversion/src/configure.in	Mon Mar  3 17:08:59 2003
+@@ -15,7 +15,7 @@
+ dnl  Makefile     ---<make>--->> lisp.run, lispinit.mem
+ dnl
+ dnl
+-AC_INIT(lispbibl.d)
++AC_INIT(lispbibl.c)
+ AC_CONFIG_HEADER(unixconf.h)
+ dnl
+ dnl           checks for programs
+--- clisp-build/src/clisp-link.in	Sun Aug 11 09:01:32 2002
++++ clisp-conversion/src/clisp-link.in	Mon Mar  3 17:08:59 2003
+@@ -60,7 +60,7 @@
+   linkkitdir=./linkkit
+ fi
+ LISPRUN="lisp@LEXE@";
+-if [ ! -r "$linkkitdir"/modules.d -o ! -r "$linkkitdir"/modules.c -o ! -r "$linkkitdir"/clisp.h ] ; then
++if [ ! -r "$linkkitdir"/modules.c -o ! -r "$linkkitdir"/clisp.h ] ; then
+   echo "$0: No link kit found in $CLISP_LINKKIT" 1>&2
+   exit 1
+ fi
+--- clisp-build/src/configure	Wed Jan 29 07:56:03 2003
++++ clisp-conversion/src/configure	Mon Mar  3 17:08:59 2003
+@@ -270,7 +270,7 @@
+ PACKAGE_STRING=
+ PACKAGE_BUGREPORT=
+ 
+-ac_unique_file="lispbibl.d"
++ac_unique_file="lispbibl.c"
+ # Factoring default headers for most tests.
+ ac_includes_default="\
+ #include <stdio.h>

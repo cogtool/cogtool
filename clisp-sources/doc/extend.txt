@@ -1,0 +1,404 @@
+                        Extending CLISP
+                        ===============
+
+Since CLISP is provided with source, you can add features you want yourself.
+
+Additions in Lisp are accomplished by writing a Lisp module and adding a
+LOAD form for it at the end of init.lisp. Please conditionalize with #+ and #-
+if you use features that are not present in all platforms supported by CLISP.
+
+Additions in C or assembly language are also possible, as well as interfacing
+code written in other languages.
+
+As general rules for extensions to CLISP:
+
+1. Add what you want in Lisp. This is both more portable and easier to
+   maintain.
+
+If that is not possible, you may choose to write it in C.
+
+2. If it makes up a separate module, then write it as a stand-alone program,
+   with the usual argv/argc interface, and call it from Lisp using
+   (SHELL "your-program argument ...") or
+   (EXECUTE "your-program" "argument" ...)
+
+Otherwise you'll indeed have to extend CLISP.
+
+For now, CLISP has no foreign function call facility with automatic type
+conversion between Lisp and C types and dynamic loading of C object modules.
+Thus you will create your own version of CLISP, which will have .mem files
+incompatible with what I distribute. (.fas files remain valid, you needn't
+recompile everything.)
+
+Split your project into three parts:
+A. The high-level things that may be implemented in Lisp. Do them in Lisp.
+B. C code that is already present or doesn't need access to Lisp data
+   structures.
+C. C code that makes up the interface between CLISP and part B. You may use
+   CLISP's dynamic memory management here for the purposes of part B.
+
+Part A code.
+
+Make the names of the .lisp files known to your makefile. This is done by
+modifying the lines CODE=... in makemake.in.
+Make them also contained in lispinit.mem. This is done by adding LOAD forms
+at the end of init.lisp.
+
+Part B and C code.
+
+Code in modules that begin with a  #include "lispbibl.c"  are considered
+internal to CLISP, code in other modules or libraries is considered external.
+Important: Calls from internal to external code must be protected by a pair
+of  begin_call();  and  end_call();  statements. Calls from external to
+internal code must either be avoided altogether, or the called code must
+begin with  begin_callback();  and end with  end_callback();  .
+
+Part C code is usually (although not absolutely necessary) written in a
+modified or enhanced C, which has been created to overcome the limitations
+of some C compilers. Such code is contained in .d files, which are
+preprocessed to .c files. The modifications against C are the following:
+- # and space introduce comments up to the end of the line.
+- Preprocessor directives may be preceded by spaces, so that they nest
+  properly with the rest of the program.
+- Function declarations and definitions have the "storage class" `global'
+  or `local'. `global' implies global visibility, `local' corresponds to
+  `static'.
+- Function declarations are written with full parameter types, as in ANSI C.
+- Function definitions are written as in traditional C, with only the
+  parameter names listed within the parentheses, and with full parameter
+  declarations afterwards, one declaration for each parameter.
+- #if defined(...), #elif, #error may be used as in ANSI C.
+- Adjacent strings are merged after preprocessing, as in ANSI C.
+- Variable declarations within functions are usually introduced by `var'
+  (for readability).
+This allows you to use the same source for both traditional (= deficient) and
+ANSI C compilers.
+
+Part C code may use the macros and functions listed in lispbibl.d.
+
+Make the names of the .d files known to your makefile. This is done by
+modifying the lines MODULES=... in makemake.in.
+The other modules (.o object files and .a libraries) should be added to the
+lines LIBS=... in makemake.in.
+
+When building an interface to CLISP, you must of course work with Lisp objects,
+at least with the arguments and the value to be returned.
+There are some rules that govern working with Lisp objects. The C type of a
+Lisp object is always `object'.
+1. C variables may hold Lisp objects only as long as no garbage collection may
+   be invoked. Those routines that may invoke a garbage collection are marked
+   in lispbibl.d as "kann GC auslösen"; they include allocate_cons(), funcall()
+   and eval() and even equalp(). Only low level routines and macros such as
+   type tests, eq() and accessing the slots of Lisp data types can't invoke
+   a garbage collection.
+2. The regular place for Lisp objects is on a special stack called the STACK.
+   The top element is STACK_0, the next-to-top element is STACK_1 etc. There
+   are macros pushSTACK() to push an object onto the stack and popSTACK() to
+   remove the top element.
+3. Arguments to functions are passed on the stack. In the simplest case, a
+   function with n required arguments receives the first argument in
+   STACK_(n-1) and the last argument in STACK_0. When the function has done
+   its work, it must remove its arguments from the STACK - n times popSTACK()
+   or, equivalently, skipSTACK(n) - and put its return value in the variable
+   value1, as well as the number of return values (1 in most cases) in the
+   variable mv_count. (Note that value1 is not GC-safe in the sense of
+   paragraph 1!) You may enforce a check that the STACK has been set correctly
+   by defining STACKCHECKS and STACKCHECKC as TRUE in lispbibl.d.
+4. Intermediate values of type `object' should be saved on the STACK when
+   needed. Of course, optimizations are possible: Assuming that foo(), foo1()
+   and foo2() return objects and may invoke GC, you may well write
+       var object temp = foo1(foo(x)); # don't use the contents of x afterwards!
+   but not
+       var object temp = foo2(foo(x),foo(y));
+   Be careful! If you are not sure what is allowed and what not, you can let
+   me <haible@clisp.cons.org> proof-read your code.
+5. If you need a global variable of type `object', add it at the end of
+   constobj.d like this:
+   LISPOBJ(foo,"initial value, to be read in at initialisation time")
+   You can then refer to the variable as O(foo).
+   Of course, you will have a reentrancy problem when using global variables.
+
+Lisp functions with n required arguments are declared like this:
+LISPFUNN(foo_bar,n) { /* ... function body ... */ }
+Also add a line
+LISPFUNN(foo_bar,n)
+at the end of subr.d.
+
+With every Lisp function is associated its name, a symbol. To declare a
+symbol known at compile-time, add a line
+LISPSYM(foo_bar,"FOO-BAR",pack)
+at the end of constsym.d. The string is the symbol's print name, and pack
+is either `lisp', `system', `keyword' or any package name defined in
+constpack.d. Be careful when choosing pack=lisp: you may produce package
+conflicts with applications.
+You can then refer to the symbol as S(foo_bar).
+NIL is nothing more than S(nil).
+
+
+                              An example
+                              ----------
+
+As an example, consider the 8-queens problem. The brute-force search may
+gain speed when written in assembly language or in C.
+
+We may generate queens.o either from
+
+================================= queens.c =====================================
+/* Compute the number of solutions to the n-queens problem on a nxn
+   checkboard. */
+
+/* dynamic data structures not needed for such a simple problem */
+#define nmax 100
+
+int queens (n)                /* function definition in traditional C style */
+  int n;
+{ /* Compute the solutions of the n-queens problem. Assume n>0, n<=nmax.
+     We look for a function D:{1,...,n} -> {1,...,n} such that
+     D, D+id, D-id are injective. We use backtracking on D(1),...,D(n).
+     We use three arrays which contain information about which values
+     are still available for D(i) resp. D(i)+i resp. D(i)-i. */
+  int dtab[nmax]; /* values D(1),...D(n) */
+  int freetab1[nmax+1]; /* contains 0 if available for D(i) in {1,...,n} */
+  int freetab2[2*nmax+1]; /* contains 0 if available for D(i)+i in {2,...,2n} */
+  int freetab3a[2*nmax-1]; /* contains 0 if available for D(i)-i in {-(n-1),...,n-1} */
+#define freetab3 (&freetab3a[nmax-1])
+  /* clear tables */
+  { int i; for (i=1; i<=n; i++) { freetab1[i] = 0; } }
+  { int i; for (i=2; i<=2*n; i++) { freetab2[i] = 0; } }
+  { int i; for (i=-(n-1); i<n; i++) { freetab3[i] = 0; } }
+ {int counter = 0;
+  int i = 0; /* recursion depth */
+  int* Dptr = &dtab[0]; /* points to next free D(i) */
+  entry: /* enter recursion */
+    i++;
+    if (i > n)
+      { counter++; }
+      else
+      { int try;
+        for (try = 1; try <= n; try++)
+          { if (freetab1[try]==0 && freetab2[try+i]==0 && freetab3[try-i]==0)
+              { freetab1[try]=1; freetab2[try+i]=1; freetab3[try-i]=1;
+                *Dptr++ = try;
+                goto entry;
+                comeback:
+                try = *--Dptr;
+                freetab1[try]=0; freetab2[try+i]=0; freetab3[try-i]=0;
+      }   }   }
+    i--;
+    if (i>0) goto comeback;
+  return counter;
+}}
+================================================================================
+
+or
+
+================================= queens.d =====================================
+# Compute the number of solutions to the n-queens problem on a nxn checkboard.
+
+#include "lispbibl.c"
+
+# dynamic data structures not needed for such a simple problem
+#define nmax 100
+
+global uintL queens (n)        # function definition in traditional C style
+  var uintC n;                 # use `var', n needs only 16 bit
+{ # Compute the solutions of the n-queens problem. Assume n>0, n<=nmax.
+  # We look for a function D:{1,...,n} -> {1,...,n} such that
+  # D, D+id, D-id are injective. We use backtracking on D(1),...,D(n).
+  # We use three arrays which contain information about which values
+  # are still available for D(i) resp. D(i)+i resp. D(i)-i.
+  var uintC dtab[nmax]; # values D(1),...D(n)
+  var uintB freetab1[nmax+1]; # contains 0 if available for D(i) in {1,...,n}
+  var uintB freetab2[2*nmax+1]; # contains 0 if available for D(i)+i in {2,...,2n}
+  var uintB freetab3a[2*nmax-1]; # contains 0 if available for D(i)-i in {-(n-1),...,n-1}
+  #define freetab3 (&freetab3a[nmax-1])  # indent this correctly
+  # clear tables
+  { var uintC count;
+    var uintB* ptr = &freetab1[1];
+    dotimespC(count,n, { *ptr++ = 0; } ); # clear n>0 array elements
+  }
+  { var uintC count;
+    var uintB* ptr = &freetab2[2];
+    dotimespC(count,2*n-1, { *ptr++ = 0; } ); # clear 2n-1>0 array elements
+  }
+  { var uintC count;
+    var uintB* ptr = &freetab3[-(n-1)];
+    dotimespC(count,2*n-1, { *ptr++ = 0; } ); # clear 2n-1>0 array elements
+  }
+ {var uintL counter = 0; # may need 32 bits for the counter
+  var uintC i = 0; # recursion depth
+  var uintC* Dptr = &dtab[0]; # points to next free D(i)
+  entry: # enter recursion
+    i++;
+    if (i > n)
+      { counter++; }
+      else
+      { var uintC try;
+        for (try = 1; try <= n; try++)
+          { if (freetab1[try]==0 && freetab2[try+i]==0 && freetab3[try-i]==0)
+              { freetab1[try]=1; freetab2[try+i]=1; freetab3[try-i]=1;
+                *Dptr++ = try;
+                goto entry;
+                comeback:
+                try = *--Dptr;
+                freetab1[try]=0; freetab2[try+i]=0; freetab3[try-i]=0;
+      }   }   }
+    i--;
+    if (i>0) goto comeback;
+  return counter;
+}}
+================================================================================
+
+or on 68000 based Unix machines:
+
+================================= queens.S =====================================
+! Processor: 680x0
+! Parameter passing: on the stack sp@(4), sp@(8), ...
+! Return value: in d0
+! Registers a0-a1,d0-d1 may be used freely.
+! Registers a2-a4,d2-d7 must be saved when used.
+
+#define nmax 100
+
+           .text
+           .globl _queens
+_queens:   moveml a2-a3/d2-d6,sp@-   ! save registers
+           movel sp@(28+4),d6        ! n
+           subw #7*nmax+2,sp         ! make space in the stack: 7*nmax+1 bytes
+           leal sp@(2*nmax),a1       ! freetab1
+           leal a1@(nmax+1),a2       ! freetab2
+           leal a2@(3*nmax),a3       ! freetab3
+           ! clear tables:
+           leal a1(1),a0             ! &freetab1[1]
+           movew d6,d0
+           bras q12
+q11:         clrb a0@+
+q12:         dbra d0,q11
+           leal a2(1),a0             ! &freetab2[1]
+           movew d6,d0
+           bras q22
+q21:         clrb a0@+
+             clrb a0@+
+q22:         dbra d0,q21
+           movel a3,a0
+           movew d6,d0
+           subqw #1,d0
+           subw d0,a0                ! &freetab3[-(n-1)]
+           addw d6,d0
+           bras q32
+q31:         clrb a0@+
+q32:         dbra d0,q31
+           clrl d7                   ! counter := 0
+           clrw d5                   ! i := 0
+           leal sp@(0),a0            ! dptr := dtab
+entry:     ! enter recursion
+           addqw #1,d5               ! i++
+           cmpw d6,d5
+           bhis count                ! i > n ?
+           moveq #1,d1               ! try := 1
+tryup:       movew d1,d2
+             movew d1,d3
+             addw d5,d2              ! try + i
+             subw d5,d3              ! try - i
+             moveb a1@(d1.w),d0
+             orb a2@(d2.w),d0
+             orb a3@(d3.w),d0
+             bnes skip
+             st a1@(d1.w)
+             st a2@(d2.w)
+             st a3@(d3.w)
+             movew d1,a0@+
+             bras entry
+comeback:    movew a0@-,d1
+             movew d1,d2
+             movew d1,d3
+             addw d5,d2              ! try + i
+             subw d5,d3              ! try - i
+             clrb a1@(d1.w)
+             clrb a2@(d2.w)
+             clrb a3@(d3.w)
+skip:        addqw #1,d1             ! try++
+             cmpw d6,d1
+             blss tryup              ! try <= n ?
+return:    subqw #1,d5
+           bnes comeback
+           movel d4,d0               ! return counter;
+           addw #7*nmax+2,sp
+           moveml sp@+,a2-a3/d2-d6   ! restore registers
+           rts
+count:     addql #1,d4               ! counter++
+           bras return
+================================================================================
+
+We furthermore need an interface:
+
+============================== callqueens.d ====================================
+# Interface to the queens() function
+
+#include "lispbibl.c"
+
+# Conditionalize, such that we don't lose the ability to build CLISP without
+# the QUEENS function. The flag -DQUEENS must be given to the C compiler.
+
+#ifdef QUEENS
+
+#define nmax 100
+
+# extern declaration
+extern int queens (int n); # use this one if using queens.c above
+extern uintL queens (uintC n); # use this one if using queens.d above
+extern uintL queens (uintL n); # use this one if using queens.S above
+
+# (LISP:QUEENS n) returns the number of solutions to the n-queens problem.
+# n ought to be an integer > 0, <= nmax. Otherwise it returns NIL.
+LISPFUNN(queens,1)
+{ # No garbage collection is a problem. So we get the argument from the
+  # STACK immediately.
+
+  var object arg = popSTACK(); # clean up STACK at the same time
+  # If arg is an integer > 0, <= 100, ist must be a nonnegative fixnum.
+  # We do the argument check in two steps: 1. check whether arg is a
+  # nonnegative fixnum. 2. Extract its value. 3. Check its value.
+  if (!posfixnump(arg)) goto bad_arg;
+ {var uintL n = posfixnum_to_L(arg);
+  if (!(n>0 && n<=nmax)) goto bad_arg;
+
+  # Arguments are checked. Do our job:
+  { var uintL result;
+    begin_call(); # not needed when using queens.d above
+    result = queens(n); # call external function
+    end_call(); # not needed when using queens.d above
+    # Assume result is >=0 and <2^32 (which is guaranteed by the type
+    # of problem we have and the amount of time queens() may have run).
+    # So an uintL is enough, and the following call is appropriate.
+    value1 = UL_to_I(result); # convert result to nonnegative integer
+    mv_count=1; # no "multiple" values
+  }
+  return;
+ }
+
+  bad_arg:
+    # We could issue an error. We prefer to return NIL here.
+    value1 = NIL; mv_count=1; return;
+}
+
+#endif # QUEENS
+================================================================================
+
+To subr.d we add the lines
+
+# ---------- CALLQUEENS ----------
+#ifdef QUEENS
+LISPFUNN(queens,1)
+#endif
+
+To constsym.d we add the lines
+
+# ---------- CALLQUEENS ----------
+#ifdef QUEENS
+LISPSYM(queens,"QUEENS",lisp) # put it into the LISP package (quick and dirty)
+                              # such that it will be visible in the USER package
+#endif
+
+That's all. After having built a new CLISP you will be able to call (QUEENS 8).
+

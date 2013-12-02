@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="wildcard"><title>The Wildcard Module</title>
+
+<para>Wildcards, also called <quote>&path-match; Notation</quote>,
+describe sets of file names.</para>
+
+<simpara>When this module is present, &features-var;
+ contains the symbol <constant>:WILDCARD</constant>.</simpara>
+
+<para>The <quote role="package">WILDCARD</quote> package exports the
+ following two symbols:</para>
+
+<formalpara id="wildcard-match"><title><code>(WILDCARD:MATCH &pattern-r;
+   &string-r; &key-amp; &start-k; &end-k; :case-insensitive)</code></title>
+<para>This function returns a non-&nil; value if the &string-r; matches
+ the &pattern-r;.</para></formalpara>
+
+<formalpara id="wildcard-matcher"><title><code>(WILDCARD:WILDCARD-MATCHER
+   &pattern-r;)</code></title>
+ <para>This function is a valid value for &apropos-matcher;.
+</para></formalpara>
+
+<section id="wildcard-syntax"><title>Wildcard Syntax</title>
+
+<variablelist>
+ <varlistentry><term><keysym>*</keysym></term>
+  <listitem><simpara>Matches any zero or more characters.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><keysym>?</keysym></term>
+  <listitem><simpara>Matches any one character.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><keysym>[&string-r;]</keysym></term>
+  <listitem><simpara>Matches exactly one character that is a member of
+    the &string-t; &string-r;.
+    This is called a <quote>character class</quote>.
+    As a shorthand, &string-r; may contain ranges, which consist of two
+    characters with a dash between them.
+    For example, the class <replaceable>[a-z0-9_]</replaceable>
+    matches a lowercase letter, a number, or an underscore.
+    You can negate a class by placing a <keysym>#\!</keysym>
+    or <keysym>#\^</keysym> immediately after the opening bracket.
+    Thus, <replaceable>[^A-Z@]</replaceable> matches any character
+    except an uppercase letter or an at sign.
+</simpara></listitem></varlistentry>
+ <varlistentry><term><keysym>\</keysym></term>
+  <listitem><simpara>Removes the special meaning of the character that
+    follows it.  This works even in character classes.
+ </simpara></listitem></varlistentry>
+</variablelist>
+<note><para>Slash characters have no special significance in the
+  wildcard matching, unlike in the shell (&sh;),
+  in which wildcards do not match them.
+  Therefore, a pattern <replaceable>foo*bar</replaceable>
+  can match a file name <filename>foo3/bar</filename>,
+  and a pattern <replaceable>./sr*sc</replaceable>
+  can match a file name <filename>./src/misc</filename>.</para></note>
+</section>
+</section>

@@ -1,0 +1,31 @@
+<mockup version="1.0" skin="sketch" measuredW="258" measuredH="170">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::Link" x="54" y="45" w="-1" h="-1" measuredW="156" measuredH="25" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Link%201%20to%20previous%20frame</text>
+        <href>BonniePlay0.bmml</href>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Link" x="54" y="70" w="-1" h="-1" measuredW="43" measuredH="25" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Link%202</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Link" x="54" y="101" w="-1" h="-1" measuredW="43" measuredH="25" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Link%203</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Button" x="54" y="132" w="-1" h="-1" measuredW="116" measuredH="28" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Previous%20Frame</text>
+        <href>BonniePlay0.bmml</href>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Button" x="157" y="132" w="-1" h="-1" measuredW="91" measuredH="28" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Stay%20Here</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

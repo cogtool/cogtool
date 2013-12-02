@@ -1,0 +1,21 @@
+This directory contains CLX (a Common Lisp interface to the X window system).
+
+The original version of this is distributed at ftp://beta.xerox.com/pub/pcl/.
+The files have been renamed to CLISP conventions (.txt for miscellaneous text),
+and some CLISP specific patches have been applied.
+
+To build CLX for CLISP:
+  cd clx
+  make
+To test it:
+  clisp -M clx.mem -m 4MB
+  (cd "demo/")
+  (load "hello")
+  (xlib::hello-world "")
+  (load "menu")
+  (xlib::just-say-lisp "")
+To install it, edit Makefile and do
+  make install
+
+Bruno Haible 1993-09-07, 2000-03-31
+

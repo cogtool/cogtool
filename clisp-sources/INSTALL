@@ -1,0 +1,69 @@
+This is the source distribution of CLISP, an ANSI Common Lisp implementation.
+Available from <ftp://cvs2.cons.org/pub/lisp/clisp/source/latest/> and
+<ftp://ftp.gnu.org/pub/gnu/clisp/latest/>.
+More information at <http://clisp.cons.org/>, <http://www.clisp.org/>,
+<http://clisp.sf.net/> and <http://www.gnu.org/software/clisp/>.
+
+Contents:
+---------
+
+It consists of the following directories and files:
+
+Documentation:
+
+      INSTALL            this text
+      SUMMARY            description, summary
+      ANNOUNCE           announcement
+      COPYRIGHT          copyright notice
+      GNU-GPL            free software license
+
+Source:
+
+      src/FILES.1        source documentation
+      src/_README        README master
+      src/_clisp.1       manual page master
+      src/*.d            C source files
+      src/*.lisp         Lisp source files
+      doc/*              documentation
+
+Installation:
+
+      configure          main configuration script
+      src/configure      auxiliary configuration script
+      src/machine.*      auxiliary program
+      src/*.in           auxiliary files
+      utils/*            auxiliary programs
+      unix/              installing on Unix (including Mac OS/X)
+      win32msvc/         installing on Win32, using MSVC
+
+Other:
+
+      src/malloc/        a GNU malloc library routine
+      ffcall/            a foreign function call library
+      modules/clx/       the CLX library, an interface to X11,
+                         roughly equivalent to the libX11
+      modules/wildcard/  foreign language module for wildcard matching
+      modules/regexp/    foreign language module for Unix-style regular
+                         expression matching and searching
+      modules/queens/    sample external module for CLISP
+
+
+Installation:
+-------------
+
+For instruction on how to install CLISP
+* on Unix: see file unix/INSTALL.
+* on Win32 (Windows NT/2000/XP, Windows 95/98/ME): see file win32msvc/INSTALL.
+
+
+Authors:
+--------
+
+        Bruno Haible
+        Michael Stoll
+        Marcus Daniels
+        Pierpaolo Bernardi
+        Sam Steingold
+
+Email: <clisp-list@lists.sourceforge.net>
+

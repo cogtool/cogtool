@@ -1,0 +1,570 @@
+This file contains suggestions for further work.
+See also <https://sourceforge.net/tracker/?group_id=1355&atid=351355>
+
+URGENT PROBLEMS
+===============
+Should handle these soon.
+
+
+bind-eval.tst failure on Linux/amd64 [bruno]
+
+
+regression: [bruno]
+=============== script.lisp ==================
+(print (list 'script-args *args*))
+(print (list '*standard-input* *standard-input*))
+(print (list '*standard-output* *standard-output*))
+(print (list '*error-output* *error-output*))
+(print (list '*terminal-io* *terminal-io*))
+(print (list '*debug-io* *debug-io*))
+(print "tell me something...")
+(print (read-line *standard-input*))
+"first"
+(with-open-stream (in (make-stream :input))
+  (print in)
+  (print "tell me something else...")
+  (print (read-line in)))
+"second"
+(setf (stream-element-type *standard-input*) '(unsigned-byte 8))
+(print (list '*standard-input* *standard-input*))
+=============== script.lisp ==================
+$ cat script.lisp | clisp
+*** - (SETF STREAM-ELEMENT-TYPE) on #<IO TERMINAL-STREAM> is illegal
+$ clisp < script.lisp
+same + hangs instead of terminating.
+$ clisp script.lisp
+works fine.
+
+
+Readline interface problem:
+[2]> (macroexü
+*** - AREF: Index 9 für "(macroexü" ist zu groß.
+this appears to be a readline bug:
+Breakpoint 15, lisp_completion_matches (text=0x822c1d8 "macroexü", start=1,
+    end=10) at stream.d:9309
+(gdb) p strlen(text)
+$1 = 9
+
+
+Many pretty-printer ansi test failures.
+(sds - but bruno has to fix the risky-test in iofkts.tst first)
+
+
+<http://article.gmane.org/gmane.lisp.clisp.general:9893>:
+DIRECTORY, *PATHNAME-ENCODING*, and Denial-Of-Service attack
+I would call this an error in clisp: if it lists a directory
+over which a user has no control (e.g., /tmp), then it is trivial for
+an adversary to create a denial-of-service attack.
+Unix pathnames are not strictly in any particular character encoding:
+they are merely byte strings in which only slash and NUL have special
+significance.
+Should *PATHNAME-ENCODING* be 1:1?
+
+
+Inefficiency of class redefinition when old or new class is unfinalizable
+
+
+support perseverances also on write side
+change wr_by_array_iau8_buffered to use persev instead of persev_full
+
+
+binary stdio
+<http://article.gmane.org/gmane.lisp.clisp.devel:12268>
+one of the common issues with CLISP is
+*** - (SETF STREAM-ELEMENT-TYPE) on #<IO TERMINAL-STREAM> is illegal
+i.e., inability to use binary IO in stdio.
+it all boils down to regular_handle_p(FD):
+when the handle is found to be "regular", the appropriate
+*STANDARD-*PUT* stream becomes a handle stream whose element type can be
+changed, otherwise a TERMINAL-STREAM is used.
+Right now, `regular' means "file on disk", as in
+[unix] (S_ISREG(statbuf.st_mode) || S_ISBLK(statbuf.st_mode))
+[win32] (filetype == FILE_TYPE_DISK)
+what about pipes?
+while MAKE-STREAM should provide a universal solution to these issues,
+it still might make sense to change regular_handle_p().
+Note that this runs into the FRESH-LINE/same_handle_p issues.
+Maybe (SETF STREAM-ELEMENT-TYPE) should work on TERMINAL-STREAMs?
+Maybe all streams should be bivalent?
+Related issue: LISTEN works on binary streams in all Lisps except CLISP.
+LISTEN should work on all streams and READ-CHAR-WILL-HANG-P should be
+merged with READ-BYTE-WILL-HANG-P into WILL-HANG-P.
+
+
+Embeddability: additional API in spvw.d; example.
+<https://sourceforge.net/tracker/index.php?func=detail&aid=423264&group_id=1355&atid=351355>
+
+
+Update PARI module: there is no global precision variable anymore.
+Many functions have been added since the module has been written.
+
+
+nested REQUIRE is broken
+<http://article.gmane.org/gmane.lisp.clisp.devel:13691>:
+suppose I have a library which consists of 10 files - which create
+packages, define macros &c.
+I create a special file foo.lisp:
+--- foo ---
+(load "foo0")
+(load "foo1")
+....
+(load "foo9")
+(provide "foo")
+--- foo ---
+then (require "foo") will load the whole library,
+but since foo.lib is _empty_, this won't work:
+--- bar ---
+(require "foo")
+(defun bar () (foo:with-foo (...) ...))
+--- bar ---
+when bar.lisp is compiled, the empty foo.lib is loaded and there is no
+package FOO, no macro WITH-FOO &c.
+to fix this we need to, first, replace LOAD with REQUIRE in foo.lisp,
+and, second, change c-REQUIRE to write the REQUIRE form into *.lib.
+unfortunately, this means that each foo?.lisp must PROVIDE "foo?" which
+is quite ugly.
+
+
+Review all macros and tighten the runtime interface of the macros.
+  check-redefinition
+
+
+(format nil "~G" 1d23) => "099999999999999990000000.0    "
+http://sourceforge.net/tracker/index.php?func=detail&aid=1389060&group_id=1355&atid=101355
+
+
+contagion warnings: engineering vs portability
+<http://sourceforge.net/mailarchive/message.php?msg_id=10935288>
+<http://article.gmane.org/gmane.lisp.clisp.devel:13758>
+*warn-on-floating-point-contagion*              engineering warning
+      the user is doing something mathematically unsound
+*warn-on-floating-point-rational-contagion*     "portability" warning
+      we don't like the standard requirement
+since our ANSI mode makes these portability concerns non-existent,
+logically, either this variable should be removed,
+or every *...-ansi* variable should have a corresponding *warn-...* variable
+   (e.g., warn on (pathname "foo:bar") and (print #\space))
+or there should be a single variable *enable-portability-warnings*
+the last option is best: simple and inobtrusive.
+(setq *ansi* t) should also disable *enable-portability-warnings*.
+initially, *warn-on-floating-point-contagion* and *enable-portability-warnings*
+should be T.
+
+
+Cannot remove symbolic links to directories
+with either DELETE-FILE or DELETE-DIR.
+<http://article.gmane.org/gmane.lisp.clisp.devel:13452>
+the case of symlinks to directories, there is absolutely no way out.
+you cannot get the name of the link,
+you cannot delete it (with either delete-file or delete-dir),
+and you cannot even probe it! (with either probe-file or probe-directory)
+(note BTW a naming inconsistency between probe-directory and delete-dir).
+
+
+--with-dynamic-modules ==> link errors:
+gcc -I. -fPIC -x none -Wl,-export-dynamic -shared -o dynmod/lib-i18n.dll gettext.o
+gettext.o(.text+0x7f):i18n/gettext.c:2296: undefined reference to `_I_to_L'
+gettext.o(.text+0xcb):i18n/gettext.c:2301: undefined reference to `_STACK'
+gettext.o(.text+0xd2):i18n/gettext.c:2301: undefined reference to `_symbol_tab_data'
+These errors mean that the lisp run time must be compiled into lisp.so,
+not lisp.a, and dynmod/lib-i18n.dll should be linked against it.
+So, this all goes in the same direction as embeddability
+and elimination of lisp.run in favor of a driver launching the right dll.
+Also, --with-dynamic-modules should _NOT_ make BASE_MODULES dynamic.
+
+
+CLISP_LANGUAGE=german LC_ALL=C clisp -q
+> (/ 0)
+=> endless loop
+*** - Character #\u00F6 cannot be represented in the character set
+      CHARSET:ASCII
+
+
+Fix unintuitive behaviour of REPL introduced on 2003-01-21:
+[1]> (read-char)
+abcdef
+#\a
+[2]>
+*** - EVAL: variable BCDEF has no value
+Mögliche Optionen:
+USE-VALUE      :R1      Sie dürfen einen Ersatzwertfür BDEF eingeben.
+STORE-VALUE    :R2      Sie dürfen einen neuen Wert für BDEF eingeben.
+ABORT          :R3      ABORT
+
+Break 1 [3]>
+
+
+Make the *KEYBOARD-STREAM* recognize all kinds of function keys in Linux
+console and xterm again.
+
+
+Reentrancy: remove the static filestatus variable from pathname.d.
+
+
+Better error checking in get-setf-expansion for long defsetf
+
+
+Better error report when calling a foreign function with not enough
+arguments. So far, it says it needs one more argument than it
+was given, instead of telling the precise number the function wants.
+E.g. > (linux:qsort)
+*** - FFI::FOREIGN-CALL-OUT: Too few arguments (0 instead of at least 1) given
+      to #<FOREIGN-FUNCTION "qsort" #x080511C8>
+A solution might involve moving the count-inarguments code from *.lisp
+to foreign.d, see
+http://sourceforge.net/tracker/index.php?func=detail&aid=654718&group_id=1355&atid=101355
+
+
+for Emacs: GC root macro, YETANOTHER macro
+           [sds: what does this mean?]
+
+
+(directory "/proc/self/*" :full t )
+((#P"/proc/self/status" #P"/proc/self/status" (6 44 0 1 4 1999) 0)
+  (#P"/proc/self/mem" #P"/proc/self/mem" (6 44 0 1 4 1999) 0)
+  (#P"/proc/self/environ" #P"/proc/self/environ" (6 44 0 1 4 1999) 0)
+  (#P"/proc/self/cmdline" #P"/proc/self/cmdline" (6 44 0 1 4 1999) 0)
+  (#P"/proc/self/stat" #P"/proc/self/stat" (6 44 0 1 4 1999) 0)
+  (#P"/proc/self/statm" #P"/proc/self/statm" (6 44 0 1 4 1999) 0)
+  (#P"/proc/self/maps" #P"/proc/self/maps" (6 44 0 1 4 1999) 0)
+
+
+(directory "/proc/self/fd/*")
+
+stat("/proc", {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
+stat("/proc/self", {st_mode=S_IFDIR|0555, st_size=0, ...}) = 0
+stat("/proc/self/fd", {st_mode=S_IFDIR|0500, st_size=0, ...}) = 0
+stat("/proc/self/fd/.", {st_mode=S_IFDIR|0500, st_size=0, ...}) = 0
+open("/proc/self/fd/.", O_RDONLY)       = 6
+fcntl(6, F_SETFD, FD_CLOEXEC)           = 0
+getdents(6, /* 9 entries */, 1024)      = 112
+stat("/proc/self/fd/0", {st_mode=S_IFCHR|0620, st_rdev=makedev(3, 2), ...}) = 0
+lstat("/proc/self/fd/0", {st_mode=S_IFLNK|0700, st_size=64, ...}) = 0
+readlink("/proc/self/fd/0", "[0303]:39982", 64) = 12
+readlink("/proc/self/fd/0", "[0303]:39982", 12) = 12
+readlink("/proc", 0xbfffd498, 4094)     = -1 EINVAL (Invalid argument)
+readlink("/proc/self", "1108", 4094)    = 5
+lstat("/proc/1108/fd/[0303]:39982", 0x8138260) = -1 ENOENT (No such file or directory)
+
+
+Problem is the call to assure_dir_exists(TRUE,FALSE); where in fact not
+all links are resolved in the directory!
+
+
+print-readably for interpreted closures and #<specdecl> ?
+
+
+parse_namestring: split_name_type(1), und bei make_pathname
+Klein->Großschreibung umwandeln, so dass (make-pathname :type "fas") immer geht.
+
+
+Should reject invalid format string:
+> (format t "abc~,'*Sdef" '(a b c))
+abc(A B C)def
+> (format t (formatter "abc~,'*Sdef") '(a b c))
+abc*(A B C)def
+Similarly "abc~3W"
+how about a compile-time format string check to warn about
+ (format t "~A" a b) and (format t "~A ~B ~C" a b)
+
+
+If you (TRACE generic-function) and then reload the file defining that
+function, you got an error saying that #<CLOSURE TRACED-xxx> is not a generic
+function. Now the function is silently untraced, which is just as bad. For
+non-generic functions, DEFUN untraces the function, but at least gives a
+warning. The desired behaviour is:
+  1. no difference between non-generic and generic functions,
+  2. a custom:*untrace-upon-redefinition* variable, default value nil,
+  3. if custom:*untrace-upon-redefinition* is true, redefining a function
+     removes the trace wrapper but gives a warning,
+  4. if custom:*untrace-upon-redefinition* is false, redefining a function
+     keeps the trace wrapper and replaces the "inner" function inside the
+     wrapper.
+A documented API should be provided for the trace wrapper, so that profilers
+etc. can do the same as TRACE without needing to hack clisp's TRACE, COMPILE,
+DISASSEMBLE, DEFUN, DEFGENERIC.
+<http://article.gmane.org/gmane.lisp.clisp.devel:12837>
+Such a def-fwrapper is what we need, so that profilers
+etc. that are ported to ACL can be ported to clisp with minimal effort.
+<http://www.franz.com/support/documentation/6.2/doc/fwrappers-and-advice.htm>
+
+
+clean up and modularize spvw.d
+
+
+Add fast unicode attribute accessors (like CHAR-NUMERIC-P and CHAR-DECOMPOSE)
+[bruno] Agreed, this is a binding it my libunistring
+and augment the reader to return 168 from
+ (let ((*read-base* 16))
+   (read-from-string
+     (concatenate 'string
+       (string #\MATHEMATICAL_BOLD_CAPITAL_A)
+       (string #\MATHEMATICAL_BOLD_DIGIT_EIGHT))))
+[bruno] better not. It was argued in comp.lang.lisp that the behaviour of
+        the Lisp reader should remain based on the traditional notion of
+        "digit". (ANSI CL is ambiguous in its definition of "digit". Unexpected
+        behaviour in this area can lead to security issues.)
+
+
+error recovery
+<https://sourceforge.net/tracker/index.php?func=detail&aid=946463&group_id=1355&atid=351355>
+The ability not to lose the computation on error is
+crucial for any serious task.
+Therefore, we need to be able to recover from ALL errors.
+There are two independent issues here:
+1. "retry" restart on i/o, see
+<https://sourceforge.net/mailarchive/message.php?msg_id=7607066>
+2. "return-from" restart that will return the specified
+values from the given function on the stack. we
+already have that in interpreted functions, but we must
+also have it in compiled functions.
+<http://thread.gmane.org/gmane.lisp.clisp.devel/11448>
+
+
+GENERATIONAL_GC on Cygwin
+<http://sourceforge.net/tracker/index.php?func=detail&aid=1104677&group_id=1355&atid=101355>
+the mmap() autoconf test fails but maybe one can work around it?
+
+
+GC/Memory Management:
+1. Better post-mortem on segfault
+   <http://article.gmane.org/gmane.lisp.clisp.devel:13211>
+2. More GC generations as a build-time option
+3. Better TIME/ROOM GC statistics reporting (per generation stats)
+   <http://article.gmane.org/gmane.lisp.clisp.devel:13207>
+   <http://article.gmane.org/gmane.lisp.clisp.devel:13209>
+   <http://article.gmane.org/gmane.lisp.clisp.devel:13212>
+4. Ability to "tenure" a specific object (with all its references!)
+   or the whole current heap (also untenure the object).
+
+
+local function (LABEL/FLET) calls waste heap (COPY-CLOSURE).
+ use STACK instead?
+
+
+LAUNCH/RUN-PROGRAM:
+CLISP has now 6 built-ins for launching external executables:
+SHELL, EXECUTE, MAKE-PIPE-*-STREAM, LAUNCH.
+We need to have just _one_ such built-in, with many more options,
+like CMUCL's RUN-PROGRAM
+<http://common-lisp.net/project/cmucl/doc/cmu-user/extensions.html#toc46>
+We now have LAUNCH which is a good start.  More work is needed.
+[bruno]:
+A possible outcome is just two facilities:
+  1) A type PROCESS, which describes the result of an asynchronous launch,
+     and a function which returns a process. (Similar to the Java API. The
+     .NET API, where you set the input parameters through an object, is
+     more confusing.) This is powerful but difficult to use.
+  2) A simple to use facility which doesn't produce a PROCESS object, but
+     rather returns stream(s) directly. Like RUN-PROGRAM with fewer options.
+SHELL, EXECUTE, MAKE-PIPE-*-STREAM can then become shorthands for facility #2.
+Of course, facility #2 should be based on facility #1, otherwise porting and
+testing becomes twice as time consuming.
+[sds]: (1) is an overkill, (2) is not needed if (1) is simplified:
+ when :WAIT is T (synchronous launch), the return value is the exit code.
+ when :WAIT is NIL (asynchronous), the return values are streams, and
+      the number and type of the return values is determined by the
+      :INPUT and :OUTPUT arguments.
+   This is Lisp, not C or Java, and the return type can depend on arguments!
+ (this, of course, can be implemented via several internal functions
+ which even use a _C_ struct clisp_process, but the user does not need that)
+
+
+Debugger:
+- Think about the function call traces on the STACK and SP. Which stack
+  should be used for which purpose?
+- Turn the <n> entries of show-stack into normal entries, with equal rights
+  as the other entries. Remove the <n>, as it's no information.
+  * actually, these entries specify control flow (function calls)
+    rather than local data (the other entries), they are "headers",
+    so they should be printed differently and counted separately
+- Devise a better variety of stack traces, maybe one without args and one with
+  args?
+
+
+MAYBE
+=====
+
+Still have to think about these, whether they are good ideas or not.
+
+
+Try to increase the string size limit, to get rid of
+"*** - string too long: desired length 6553600 exceeds the supported maximum
+       length" errors
+instead, the string size limit just went down!
+http://sourceforge.net/tracker/index.php?func=detail&aid=1308440&group_id=1355&atid=101355
+
+
+Add highlight/underline/etc. capability to the output side of *terminal-io*.
+
+
+Optimize REPLACE so that (replace v v :start1 10 :end1 30 :start2 0 :end2 20)
+doesn't cons. (vectors only, not lists)
+
+
+CLOSE :ABORT T maybe do something on file streams.
+
+
+Having two different handlings of Ctrl-C (once as a serious-condition, once
+directly through tast_break(), bypassing ERROR and SIGNAL) is horrible.
+Introduce a class of SERIOUS-CONDITION and then remove BATCHMODE-BREAK-DRIVER.
+
+
+Distribute impnotes.html in the form of CLAHS, as an annotation against
+Harlequin's HyperSpec. See http://clisp.cons.org/~haible/clahs/.
+
+
+FFI: Actually support :language :cc/:gcc by passing appropriate flags
+to the avcall/vacall macros. The default should be the same compiler
+as the one used to compile clisp.
+
+
+(read-char *keyboard-input*) is still not perfect. Under Linux, it
+returns the following key sequences for some keystrokes:
+
+Under xterm:
+Shift F1 --> F11
+Shift F2 --> F12
+Shift F3 --> Escape [ 2 5 ~
+Shift F4 --> Escape [ 2 6 ~
+Shift F5 --> Escape [ 2 8 ~
+Shift F6 --> Escape [ 2 9 ~
+Shift F7 --> Escape [ 3 1 ~
+Shift F8 --> Escape [ 3 2 ~
+Shift F9 --> F9
+Shift F10 --> F10
+Shift F11 --> F11
+Shift F12 --> F12
+
+Under console:
+Shift F1 --> F11
+Shift F2 --> F12
+Shift F3 --> Escape [ 2 5 ~
+Shift F4 --> Escape [ 2 6 ~
+Shift F5 --> Escape [ 2 8 ~
+Shift F6 --> Escape [ 2 9 ~
+Shift F7 --> Escape [ 3 1 ~
+Shift F8 --> Escape [ 3 2 ~
+Shift F9 --> Escape [ 3 3 ~
+Shift F10 --> Escape [ 3 4 ~
+Shift F11 --> F11
+Shift F12 --> F12
+Ctrl-Alt-Q --> nothing at all
+
+
+Looks at GCL CLCS (debugger.lsp top-patches.lsp condition-definitions.lsp)
+whether it contains something clisp could profit from.
+
+
+Debugger (reploop.lisp, debug.d): Implement backtrace-? commands with a limit,
+such that  BACKTRACE-1 20  will show the 20 newest frames. Good for people
+without an xterm with logging. sys::debug-backtrace already takes a limit
+as optional argument; the hard part is to make the debugger accept commands
+with arguments, instead of just single-word commands.
+
+
+More CLtL2 compliance:
+; List of X3J13 votes that may be implemented in CLISP
+;
+; Number: from CLtL2, Index of X3J13 Votes.
+; Status: indicates whether CLISP currently supports code that makes use of
+; this vote.
+;
+; Number Title                               Status          Files affected
+;
+;  <24>  compiler diagnostics                no              compiler.lisp
+;  <85>  FORMAT & pretty print               yes             format.lisp
+;                                            no: ~E, ~F, ~G, ~$ also bind *PRINT-BASE* to 10 and *PRINT-RADIX* to NIL
+; <110>  LOAD & objects                      no              loadform.lisp
+; <127>  package function consistency        no              package.d
+; <129>  pathname: component value           no              pathname.d
+; <133>  pathname: subdirectory list         no              pathname.d
+; <134>  pathname: symbol                    no              pathname.d, stream.d
+; <136>  pathname: unspecific component      no              pathname.d
+; <139>  pretty-print interface              no              xp.lisp
+; <153>  REMF & destruction: unspecified     no for NRECONC  list.d
+;                                            yes for anything else
+
+
+The completion in user2.lisp does bad things with respect to upper case and
+lower case of symbols. Assume the symbols |TMP|, |TMP structure class|
+are interned. Then type a tab in the following situations:
+> (symbol-plist '\Tmp
+> 'tm
+> '|
+
+
+Optimize the compiler or the LOOP expander so that
+  (macroexpand '(loop for (a b c) = (multiple-value-list (foo))))
+contains
+  (MULTIPLE-VALUE-SETQ (A B C) (FOO))
+
+
+NOT TO DO
+=========
+
+These have been in my mind, but are probably bad ideas.
+
+
+upgrade to newest CLN, but still big-endian and without gmp
+
+intgcd
+
+* Speed up the functions `cl_I gcd (const cl_I&, const cl_I&)' and
+  `cl_I xgcd (const cl_I&, const cl_I&, cl_I*, cl_I*)' by a factor
+  of 1.5. Simple trick.
+Why is there no cl_gcd_double_threshold in xgcd, only in gcd??
+
+lfloat
+
+* Speed up multiplication and division of large long-floats by small integers.
+
+realtran
+
+* Speed up the internal computation of ln(2) and ln(10) by about 20%.
+
+* Speed up the computation of exp (for 1000 digits or more) by about 10%.
+
+* Speed up the computation of the elementary transcendental functions:
+  exp, sinh, cosh, asinh, atanh (for 100 digits) by about 30%,
+  log (for 100 digits) by about 25%,
+  sin, cos (for 1000 or 10000 digits) by about 20%,
+  asin, acos, atan (for 1000 digits) by about 25%.
+
+* Speed up the computation of pi, e, exp, log, sin, cos, tan, sinh, cosh, tanh,
+  asin, acos, atan, asinh, acosh, atanh.
+  All of them are now computed with asymptotically fast algorithms, of
+  bit complexity O(log(N)^2*M(N)) = O(N^(1+epsilon)) for N digits.
+
+It's not worth the effort: Most people really interested in fast numerics are
+already using CLN, NTL, or a similar library. CLISP is already the champion
+among the Common Lisp implementations regarding bignum performance.
+
+
+Block the signals SIGHUP SIGPIPE SIGTERM SIGXCPU SIGXFSZ during GC, and
+when they occur outside of GC, do a quit(1); .
+
+Programs that deal too much with signals tend to be unfriendly. I hate
+programs which stay alive when I try to kill them.
+
+
+CLtL2 issue
+; <162>  sharp-comma confusion               no              io.d
+
+Backward compatibility to CLtL2. Doesn't cost much.
+
+
+CLtL2 issue
+; <174>  syntactic environment access        no
+
+It never made it into ANSI CL.
+
+
+CLtL2 issue
+; <176>  :TEST-NOT, -IF-NOT                  no              sequence.d, list.d
+
+It's a bad idea because REMOVE-IF-NOT is a kind of "positive filter", which
+is more confusing when expressed as REMOVE of COMPLEMENT. Also, COMPLEMENT
+is harder to understand than XXX-IF-NOT because COMPLEMENT is a function
+returning a function.
+

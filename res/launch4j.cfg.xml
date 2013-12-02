@@ -1,0 +1,38 @@
+<launch4jConfig>
+  <headerType>0</headerType>
+  <jar>..\dist\CogTool.jar</jar>
+  <outfile>..\dist\CogTool.exe</outfile>
+  <errTitle>CogTool</errTitle>
+  <jarArgs></jarArgs>
+  <chdir>.</chdir>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon>.\CogTool.ico</icon>
+  <jre>
+    <path>.\jre</path>
+    <minVersion>1.4.0</minVersion>
+    <maxVersion></maxVersion>
+    <initialHeapSize>32</initialHeapSize>
+    <maxHeapSize>512</maxHeapSize>
+    <args>-Djava.library.path=&quot;&quot;./lib&quot;&quot; -Dcogtool.version=&quot;&quot;VERSION&quot;&quot; -Dcogtool.revision=&quot;&quot;REVISION&quot;&quot; -Dcogtool.build=&quot;&quot;BUILDTIME&quot;&quot; -Xmx400000000</args>
+    <opt>-D32</opt>
+  </jre>
+  <splash>
+    <file>.\CogTool_Splash.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>90</timeout>
+    <timeoutErr>false</timeoutErr>
+  </splash>
+  <versionInfo>
+    <fileVersion>EXEVERS</fileVersion>
+    <txtFileVersion>VERSION</txtFileVersion>
+    <fileDescription>CogTool VERSION</fileDescription>
+    <copyright>(c) 2005 Carnegie Mellon University, HCI Institute</copyright>
+    <productVersion>EXEVERS</productVersion>
+    <txtProductVersion>VERSION</txtProductVersion>
+    <productName>CogTool</productName>
+    <companyName>Carnegie Mellon University, HCI Institute</companyName>
+    <internalName>CogTool</internalName>
+    <originalFilename>CogTool.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

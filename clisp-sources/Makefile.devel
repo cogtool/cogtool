@@ -1,0 +1,452 @@
+# -*- makefile -*-
+# This is the developer's makefile, not the user's makefile.
+# Do not use it unless you know exactly what you are doing!
+
+
+# Some important programs:
+SHELL = /bin/sh
+MAKE = make
+PERL = perl
+GROFF = nroff -man
+# GROFF = groff -mandoc
+
+# Assume tar/bzip2/gzip are present
+# set this if you are using GNU tar
+EXCLUDE=--exclude CVS --exclude \*.fas --exclude \*.lib --exclude \*.obj   \
+        --exclude \*.exe --exclude \*.mem --exclude \*.o --exclude build   \
+        --exclude .cvsignore --exclude \*~ --exclude .\#\*                 \
+        --exclude $(AUTOCONF_CACHE) --exclude tmp --exclude queued         \
+        `sed "s/^/--exclude /" doc/.cvsignore`                             \
+        --exclude TAGS --exclude \*.elc --exclude \*.orig --exclude \*.rej
+
+# The distribution's top directory is called TOPDIR here.
+# Use clisp-YYYY-MM-DD where DD.MM.YYYY is the date.
+TOPDIR = clisp
+T = $(TOPDIR)
+
+SOURCES1 = $T/ANNOUNCE $T/COPYRIGHT $T/GNU-GPL $T/INSTALL $T/SUMMARY $T/clisp.spec $T/clisp.lsm $T/configure
+SOURCES2 = $T/src
+SOURCES4 = $T/ffcall $T/libcharset $T/utils
+SOURCES5 = $T/unix $T/win32msvc $T/nextapp
+SOURCES6 = $T/modules
+# for developers only: $T/benchmarks $T/sacla-tests $T/ansi-tests
+SOURCES7 = $T/tests $T/emacs $T/doc $T/Makefile.devel
+
+SOURCES = $(SOURCES1) $(SOURCES2) $(SOURCES4) $(SOURCES5) $(SOURCES6) $(SOURCES7)
+
+all : makefiles check-configures update-ansi-tests update-docbook-utils     \
+	fixperms                                                            \
+	potfiles                                                            \
+	src/version.h                                                       \
+	src/uninames.h src/asmi386.h src/ari80386.msvc.c src/sp80386.msvc.c \
+	ffcall/avcall/avcall.h.msvc ffcall/vacall/config.h.msvc             \
+	ffcall/vacall/vacall.h.msvc ffcall/trampoline/config.h.msvc         \
+	ffcall/callback/vacall_r/config.h.msvc                              \
+	ffcall/callback/vacall_r/vacall_r.h.msvc                            \
+	ffcall/callback/trampoline_r/config.h.msvc                          \
+	htmldoc
+
+ffcall-i386 : ffcall/avcall/avcall-i386-msvc.c          \
+	ffcall/vacall/vacall-i386-msvc.c                \
+	ffcall/callback/vacall_r/vacall-i386-msvc.c
+
+htmldoc:
+	cd doc && make all && make html && cd ..;
+
+makefiles :                                                                \
+	win32msvc/makefile.msvc7                                           \
+	win32msvc/makefile.msvc6 win32msvc/makefile.msvc6d                 \
+	win32msvc/makefile.msvc5 win32msvc/makefile.msvc5d                 \
+	win32msvc/makefile.msvc4
+
+win32msvc/makefile.msvc4 : makemake
+	./makemake --with-dynamic-ffi \
+		win32msvc msvc4 > win32msvc/makefile.msvc4
+
+win32msvc/makefile.msvc5 : makemake
+	./makemake --with-dynamic-ffi \
+		win32msvc msvc5 > win32msvc/makefile.msvc5
+
+win32msvc/makefile.msvc5d : makemake
+	./makemake --with-dynamic-ffi \
+		win32msvc msvc5 debug > win32msvc/makefile.msvc5d
+
+win32msvc/makefile.msvc6 : makemake
+	./makemake --with-dynamic-ffi \
+		win32msvc msvc6 > win32msvc/makefile.msvc6
+
+win32msvc/makefile.msvc6d : makemake
+	./makemake --with-dynamic-ffi \
+		win32msvc msvc6 debug > win32msvc/makefile.msvc6d
+
+win32msvc/makefile.msvc7 : makemake
+	./makemake --with-dynamic-ffi \
+		win32msvc msvc7 > win32msvc/makefile.msvc7
+
+makemake : src/makemake.in version.sh
+	. version.sh; { \
+	echo "#!/bin/sh" ; \
+	sed "s/@PACKAGE_VERSION@/$${VERSION_NUMBER}/g" src/makemake.in ; \
+	} > makemake
+	chmod a+x makemake
+
+CURDIR=$(shell pwd)
+
+MODULES=berkeley-db clx/new-clx dirkey fastcgi i18n oracle pari pcre \
+	postgresql rawsock readline regexp syscalls wildcard zlib
+MOD_CONFIGURES=$(patsubst %,modules/%/configure,$(MODULES))
+MOD_CONFIG_H_IN=$(patsubst %,modules/%/config.h.in,$(MODULES))
+CLISP_CONFIGURES=src/configure $(MOD_CONFIGURES)
+FFCALL=avcall vacall trampoline callback callback/vacall_r callback/trampoline_r
+FFCALL_CONFIGURES=ffcall/configure $(patsubst %,ffcall/%/configure,$(FFCALL))
+CONFIGURES = $(CLISP_CONFIGURES) utils/hln/configure libcharset/configure \
+	${FFCALL_CONFIGURES}
+
+CONFIG_H_IN = $(MOD_CONFIG_H_IN) src/unixconf.h.in
+
+configures : ffcall/autoconf/aclocal.m4 $(CONFIGURES) $(CONFIG_H_IN)
+
+src/autoconf/aclocal.m4 : $(wildcard src/m4/*.m4) \
+			$(addsuffix .in,$(CLISP_CONFIGURES))
+	egrep '(AC_INIT|AC_PREREQ)' src/configure.in > configure.ac
+	echo AC_GNU_SOURCE >> configure.ac
+	cat $(addsuffix .in,$(CLISP_CONFIGURES)) | \
+	egrep -v -e 'AC_(INIT|PREREQ|CANONICAL_|GNU_SOURCE|CONFIG_HEADER|OUTPUT)' \
+		-e 'AC_CONFIG_FILE.*(Makefile|link\.sh)' >> configure.ac
+	echo AC_OUTPUT >> configure.ac
+	aclocal -I `pwd`/src/m4 --output=src/autoconf/aclocal.m4
+	$(RM) configure.ac
+
+AUTOCONF_FILES = src/autoconf/aclocal.m4
+AUTOCONF = autoconf
+AUTOCONF_CACHE = autom4te.cache
+AUTOHEADER = autoheader
+
+$(CLISP_CONFIGURES) utils/hln/configure: %/configure : \
+			%/configure.in $(AUTOCONF_FILES) version.sh
+	cd $*; $(AUTOCONF) --include=$(CURDIR)/src/autoconf --include=$(CURDIR)
+
+$(MOD_CONFIG_H_IN) : %/config.h.in : %/configure.in $(AUTOCONF_FILES)
+	cd $*; $(AUTOHEADER) --include=$(CURDIR)/src/autoconf
+
+src/unixconf.h.in : src/configure.in $(AUTOCONF_FILES)
+	cd src ; $(AUTOHEADER) --include=autoconf
+
+ffcall/autoconf/aclocal.m4 : src/autoconf/aclocal.m4
+	cd ffcall ; $(MAKE) -f Makefile.devel autoconf/aclocal.m4
+
+$(FFCALL_CONFIGURES) : %/configure : %/configure.in \
+			ffcall/autoconf/aclocal.m4 $(AUTOCONF_FILES)
+	cd ffcall ; $(MAKE) -f Makefile.devel $(patsubst ffcall/%,%,$@)
+
+libcharset/configure : libcharset/configure.in libcharset/autoconf/aclocal.m4 $(AUTOCONF_FILES)
+	cd libcharset ; $(MAKE) -f Makefile.devel configure
+
+
+# syntax check
+check-configures : $(CONFIGURES) $(CONFIG_H_IN)
+	set -e; for f in $(CONFIGURES); do bash -x -n $$f; done
+	rm -rf `find . -name $(AUTOCONF_CACHE)`;
+
+
+ANSITESTS_CVS_ROOT = :ext:anoncvs@savannah.gnu.org:/cvsroot/gcl
+ANSITESTS_CVS_REPOSITORY = gcl/ansi-tests
+update-ansi-tests:
+	if test -d ansi-tests; then \
+	  cd ansi-tests && \
+	  cvs update -d -P; \
+	else \
+	  cvs -d "$(ANSITESTS_CVS_ROOT)" checkout $(ANSITESTS_CVS_REPOSITORY); \
+	  mv $(ANSITESTS_CVS_REPOSITORY) ansi-tests; \
+	  rm -rf `echo $(ANSITESTS_CVS_REPOSITORY) | sed -e 's,/.*,,'`; \
+	fi
+
+
+DOCBOOK_XML_DOWNLOAD = http://www.docbook.org/xml/4.3/docbook-xml-4.3.zip
+update-docbook-utils:
+	if test ! -d utils/docbook; then \
+	  mkdir utils/docbook && \
+	  cd utils/docbook && \
+	  wget -O docbook-xml.zip $(DOCBOOK_XML_DOWNLOAD) && \
+	  unzip -x docbook-xml.zip && \
+	  rm -f docbook-xml.zip; \
+	fi
+
+CLISP=$(CURDIR)/build/clisp
+potfiles :
+	cd src/po && CLISP='$(CLISP)' $(MAKE) -f Makefile.devel && $(MAKE) -f Makefile.devel clean
+
+fixperms :
+	./utils/fix-perms.sh
+
+
+view-man :
+	grep -v '^#[ie]' doc/_clisp.1 | $(GROFF) -Tascii | less
+
+view-html :
+	grep -v '^#[ie]' doc/_clisp.html > /tmp/clisp.html
+	netscape /tmp/clisp.html &
+	lynx /tmp/clisp.html
+
+
+src/version.h: version.sh
+	. version.sh ; \
+	{ echo "/* generated by Makefile.devel from version.sh */" ; \
+	  echo "#define PACKAGE_NAME \"GNU CLISP\"" ; \
+	  echo "#define PACKAGE_TARNAME \"clisp\"" ; \
+	  echo "#define PACKAGE_VERSION \"$$VERSION_NUMBER ($$RELEASE_DATE)\"" ; \
+	  echo "#define PACKAGE_STRING \"GNU CLISP $$VERSION_NUMBER ($$RELEASE_DATE)\"" ; \
+	  echo "#define PACKAGE_BUGREPORT \"http://clisp.cons.org/\""; \
+	} > src/version.h
+
+src/uninames.h : utils/unicode/UnicodeDataFull.txt utils/gen-uninames
+	$(CLISP) utils/gen-uninames utils/unicode/UnicodeDataFull.txt src/uninames.h
+
+src/asmi386.h : src/asmi386.hh
+	sed -e 's,//.*$$,,' < src/asmi386.hh > src/asmi386.h
+
+src/ari80386.msvc.c : src/ari80386.d src/asmi386.sh
+	src/asmi386.sh -no-C < src/ari80386.d > src/ari80386.msvc.c
+
+src/sp80386.msvc.c : src/sp80386.d src/asmi386.sh
+	src/asmi386.sh -no-C < src/sp80386.d > src/sp80386.msvc.c
+
+ffcall/avcall/avcall.h.msvc : ffcall/avcall/avcall.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel avcall/avcall.h.msvc
+
+ffcall/avcall/avcall-i386-msvc.c : ffcall/avcall/avcall-i386-macro.S ffcall/avcall/asmi386.sh
+	cd ffcall ; $(MAKE) -f Makefile.devel avcall/avcall-i386-msvc.c
+
+# ffcall/vacall/config.h.in , ffcall/trampoline/config.h.in,
+# all/callback/vacall_r/vacall_r.h.in, ffcall/callback/trampoline_r/config.h.in
+# are not auto-generated!
+ffcall/vacall/config.h.msvc : ffcall/vacall/config.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel vacall/config.h.msvc
+
+ffcall/vacall/vacall.h.msvc : ffcall/vacall/vacall.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel vacall/vacall.h.msvc
+
+ffcall/vacall/vacall-i386-msvc.c : ffcall/vacall/vacall-i386-macro.S ffcall/vacall/asmi386.sh
+	cd ffcall ; $(MAKE) -f Makefile.devel vacall/vacall-i386-msvc.c
+
+ffcall/trampoline/config.h.msvc : ffcall/trampoline/config.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel trampoline/config.h.msvc
+
+ffcall/callback/vacall_r/config.h.msvc : ffcall/callback/vacall_r/config.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel callback/vacall_r/config.h.msvc
+
+ffcall/callback/vacall_r/vacall_r.h.msvc : ffcall/callback/vacall_r/vacall_r.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel callback/vacall_r/vacall_r.h.msvc
+
+ffcall/callback/vacall_r/vacall-i386-msvc.c : ffcall/callback/vacall_r/vacall-i386-macro.S ffcall/callback/vacall_r/asmi386.sh
+	cd ffcall ; $(MAKE) -f Makefile.devel callback/vacall_r/vacall-i386-msvc.c
+
+ffcall/callback/trampoline_r/config.h.msvc : ffcall/callback/trampoline_r/config.h.in
+	cd ffcall ; $(MAKE) -f Makefile.devel callback/trampoline_r/config.h.msvc
+
+
+# Build and test all essential memory models on a Linux/x86 machine.
+MULTIBUILD_OPTIONS =
+MULTIBUILD_CFLAGS = -g
+
+multibuild-linux-x86: build-linux-x86-1 build-linux-x86-2 build-linux-x86-3 build-linux-x86-4 build-linux-x86-5 build-linux-x86-6 build-linux-x86-7 build-linux-x86-8 build-linux-x86-9 build-linux-x86-10
+build-linux-x86-1:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DCONS_HEAP_GROWS_UP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_blocks-staggered
+build-linux-x86-2:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DCONS_HEAP_GROWS_DOWN" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_blocks-opposite
+build-linux-x86-3:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DNO_VIRTUAL_MEMORY -DNO_TRIVIALMAP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_blocks-opposite-fixedmemsize
+build-linux-x86-4:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DNO_SINGLEMAP -DNO_TRIVIALMAP -DNO_MULTIMAP_FILE -DNO_MULTIMAP_SHM" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_pages
+build-linux-x86-5:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DCONS_HEAP_GROWS_UP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_blocks-staggered
+build-linux-x86-6:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DCONS_HEAP_GROWS_DOWN" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_blocks-opposite
+build-linux-x86-7:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DNO_VIRTUAL_MEMORY -DNO_TRIVIALMAP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_blocks-opposite-fixedmemsize
+build-linux-x86-8:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DNO_SINGLEMAP -DNO_TRIVIALMAP -DNO_MULTIMAP_FILE -DNO_MULTIMAP_SHM" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_pages
+build-linux-x86-9:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DTYPECODES" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-spvw_pure_blocks
+build-linux-x86-10:
+	CFLAGS="-O -falign-functions=4 $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DWIDE" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-wide
+
+multibuild-darwin-powerpc: build-darwin-powerpc-1 build-darwin-powerpc-2 build-darwin-powerpc-3 build-darwin-powerpc-4 build-darwin-powerpc-5 build-darwin-powerpc-6 build-darwin-powerpc-7 build-darwin-powerpc-8 build-darwin-powerpc-9 build-darwin-powerpc-10
+build-darwin-powerpc-1:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DCONS_HEAP_GROWS_UP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_blocks-staggered
+build-darwin-powerpc-2:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DCONS_HEAP_GROWS_DOWN" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_blocks-opposite
+build-darwin-powerpc-3:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DNO_VIRTUAL_MEMORY -DNO_TRIVIALMAP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_blocks-opposite-fixedmemsize
+build-darwin-powerpc-4:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DSTANDARD_HEAPCODES -DNO_SINGLEMAP -DNO_TRIVIALMAP -DNO_MULTIMAP_FILE -DNO_MULTIMAP_SHM" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-standard-spvw_mixed_pages
+build-darwin-powerpc-5:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DCONS_HEAP_GROWS_UP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_blocks-staggered
+build-darwin-powerpc-6:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DCONS_HEAP_GROWS_DOWN" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_blocks-opposite
+build-darwin-powerpc-7:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DNO_VIRTUAL_MEMORY -DNO_TRIVIALMAP" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_blocks-opposite-fixedmemsize
+build-darwin-powerpc-8:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DLINUX_NOEXEC_HEAPCODES -DNO_SINGLEMAP -DNO_TRIVIALMAP -DNO_MULTIMAP_FILE -DNO_MULTIMAP_SHM" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-noexec-spvw_mixed_pages
+build-darwin-powerpc-9:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DTYPECODES" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-spvw_pure_blocks
+build-darwin-powerpc-10:
+	CFLAGS="-O $(MULTIBUILD_CFLAGS)" \
+	CPPFLAGS="-DWIDE" \
+	  ./configure --build $(MULTIBUILD_OPTIONS) \
+	              build-wide
+
+# Bootstrap SBCL.
+SBCL_VERSION = 0.8.15
+SBCL_SOURCE_FILE = sbcl-$(SBCL_VERSION)-source.tar.bz2
+SBCL_SOURCE_URL = http://www.haible.de/bruno/$(SBCL_SOURCE_FILE)
+check-sbcl:
+	./configure --build build-for-sbcl
+	test -f $(SBCL_SOURCE_FILE) || wget $(SBCL_SOURCE_URL)
+	rm -rf sbcl-$(SBCL_VERSION)
+	bunzip2 -c < $(SBCL_SOURCE_FILE) | tar xvf -
+	clisp=`pwd`/build-for-sbcl/clisp; \
+	cd sbcl-$(SBCL_VERSION) && sh make.sh $$clisp
+
+
+# Build a GCC from source.
+# Note that this requires ca. 1 GB of disk space.
+GCC_VERSION = 3.4.3
+GCC_SOURCE_FILE = gcc-$(GCC_VERSION).tar.bz2
+GCC_SOURCE_URL = http://ftp.gnu.org/gnu/gcc/gcc-$(GCC_VERSION)/$(GCC_SOURCE_FILE)
+# Put here the --prefix that you would like to use for installing gcc.
+# It should *not* be the same --prefix as you use for other programs.
+GCC_INSTALL_DIR = $(shell dirname $$(dirname $$(which clisp | head -1)))/inst-gcc-$(GCC_VERSION)
+install-gcc:
+	test -f $(GCC_SOURCE_FILE) || wget $(GCC_SOURCE_URL)
+	rm -rf gcc-$(GCC_VERSION) gcc-$(GCC_VERSION)-build
+	bunzip2 -c < $(GCC_SOURCE_FILE) | tar xvf -
+	mkdir gcc-$(GCC_VERSION)-build
+	gcc_install_dir='$(GCC_INSTALL_DIR)' ; \
+	cd gcc-$(GCC_VERSION)-build && ../gcc-$(GCC_VERSION)/configure --prefix="$$gcc_install_dir" --enable-shared --enable-threads `if grep __GLIBC__ /usr/include/features.h > /dev/null 2>/dev/null; then echo --enable-__cxa_atexit; fi` --enable-version-specific-runtime-libs --enable-languages=c,c++ --enable-nls
+	cd gcc-$(GCC_VERSION)-build && make bootstrap
+	cd gcc-$(GCC_VERSION)-build && make install
+	rm -rf gcc-$(GCC_VERSION)-build
+	rm -rf gcc-$(GCC_VERSION)
+
+
+distrib : fixperms src-distrib doc-distrib
+
+## Pre-release TODO:
+# echo URL-tar.bz2| mail -s "clisp-`cat VERSION`" translation@IRO.UMontreal.CA
+## RELEASE TODO:
+# Before doing a "make src-distrib":
+# * update version.sh, src/NEWS, src/HISTORY
+# * update clisp.lsm, clisp.spec
+# * "make -f Makefile.devel all"
+# web pages to be updated:
+# * www/index.php, www/impnotes.html, www/clisp.html, www/impnotes/
+# dates to be updated:
+# * banner in spvw.d
+# * COPYRIGHT
+# * doc/impnotes.xml.in, doc/clisp.xml.in
+
+# CLISP release announcements go to:
+# clisp-announce@lists.sourceforge.net
+# info-gnu@gnu.org
+# news:comp.lang.lisp
+# news:comp.os.linux.announce (linux-announce@news.ornl.gov)
+# http://freshmeat.net/projects/clisp/
+# https://sourceforge.net/news/submit.php?group_id=1355
+
+VER=$(shell . version.sh ; echo $$VERSION_NUMBER)
+ARCHIVE=../archives/$(VER)
+SRC_DIST=$(ARCHIVE)/clisp-$(VER).tar.bz2
+SRC_DIST1=$(ARCHIVE)/clisp-$(VER).tar.gz
+DOC_DIST=$(ARCHIVE)/clisp-$(VER)-impnotes.zip
+UPLOAD=$(SRC_DIST) $(SRC_DIST1) $(DOC_DIST)
+SSHUP=podval:~/public_html/clisp/
+FTPUP=upload.sf.net:/incoming sunsite.unc.edu:/incoming/linux
+
+$(SRC_DIST1) : $(SRC_DIST)
+	bzcat -v $(SRC_DIST) | gzip -9 -v > $(SRC_DIST1)
+
+upload : $(SRC_DIST1) force
+	for h in $(SSHUP) ; do \
+	  scp $(UPLOAD) $${h}/latest/; scp src/NEWS $${h}; \
+	done
+	for h in $(FTPUP) ; do \
+	  lftp $${h} -e "mput clisp.lsm $(UPLOAD); quit"; \
+	done
+
+src-distrib : force
+	$(MAKE) -f Makefile.devel src--distrib TOPDIR=clisp-$(VER)
+
+src--distrib : force
+	mkdir -p $(ARCHIVE)
+	ln -s . $(TOPDIR)
+	tar cvfhj $(SRC_DIST) $(EXCLUDE) $(SOURCES)
+	rm -f $(TOPDIR)
+
+doc-distrib : force
+	$(MAKE) -f Makefile.devel doc--distrib TOPDIR=clisp-$(VER)
+
+doc--distrib : force
+	mkdir -p $(ARCHIVE)
+	ln -s . $(TOPDIR)
+	zip -9vor $(DOC_DIST) $(TOPDIR)/doc/html -x \*.cvsignore -x \*.symlinks -x \*CVS\*
+	rm -f $(TOPDIR)
+
+force :

@@ -1,0 +1,20 @@
+Here are listed the changes made to the ACT-R 6 source files to make
+it all fly correctly with CogTool. Modulo whatever changes or fixes
+are made in ACT-R itself, they will have to be propagated to any
+updated versions we take.
+
+There used to be a lot of changes required. Because (a) Dan has kindly
+merged much of what is needed to make ACT-R run under CLisp back into
+the main ACT-R sources, and (b) I've figured out more ways of fiddling
+what we emit to cope with things we used to change ACT-R to do differently,
+very few of these changes remain necessary. All that's left are:
+
+- directories we don't need are removed: docs, tutorial, test-models,
+  testing-modules and environment; and the acl and mcl subdirctories
+  of devices
+
+- remove environment-loader.lisp from the tools directory
+
+
+
+  

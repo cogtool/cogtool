@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE targetset
+          SYSTEM "http://docbook.sourceforge.net/release/xsl/current/common/targetdatabase.dtd" [
+  <!ENTITY man-targets SYSTEM "tdb-man.xml">
+  <!ENTITY imp-targets SYSTEM "tdb-pile.xml">
+]>
+<targetset>
+ <targetsetinfo>
+  cross-references between CLISP man page and implementation notes
+  http://www.sagehill.net/docbookxsl/Olinking.html
+  single pile version for source distribution
+ </targetsetinfo>
+
+ <document targetdoc="impnotes" baseuri="impnotes.html">&imp-targets;</document>
+ <document targetdoc="man" baseuri="clisp.html">&man-targets;</document>
+</targetset>

@@ -1,0 +1,37 @@
+dnl AUTOCONF configuration for regex
+dnl Bruno Haible 18.4.1995
+dnl Sam Steingold 2003-2005
+
+AC_PREREQ(2.57)
+AC_INIT(regexp, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(regexp.lisp)
+AC_CONFIG_AUX_DIR(../../src/build-aux)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([* Regexp (Checks)])
+AC_PROG_CC
+AC_PROG_CPP
+AC_GNU_SOURCE
+AC_HEADER_STDC
+AC_CHECK_HEADERS(string.h sys/types.h)
+AM_GNU_GETTEXT([external])
+gl_C_RESTRICT
+gl_FUNC_ALLOCA
+gl_REGEX
+
+# can we use the system-wide regex implementation?
+if test "$ac_use_included_regex" = no -a "$cl_cv_regexp" = yes; then
+  REGEX_H=""
+  REGEX_O=""
+  ALLOCA=""
+else
+  REGEX_H="regex.h"
+  REGEX_O="regex.o"
+fi
+AC_SUBST(REGEX_O)
+AC_SUBST(REGEX_H)
+AC_MSG_NOTICE([* Regexp (Output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([* Regexp (Done)])

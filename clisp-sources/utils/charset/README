@@ -1,0 +1,4 @@
+This subdirectory contains a few quick-and-dirty character set conversion
+utilities. A much more systematic approach, with a richer set of character
+set and more documentation, can be found in GNU libiconv 1.8.
+

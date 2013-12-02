@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cogtoolimport version="1">
+  <design name="Design 2">
+    <device>mouse</device>
+    <device>keyboard</device>
+    <frame name="Frame 1">
+      <topLeftOrigin x="35.0" y="37.0"/>
+      <widget name="Widget 1" type="button" shape="rectangle" w-is-standard="true">
+        <displayLabel><![CDATA[click]]></displayLabel>
+        <extent x="54.0" y="16.0" width="80.0" height="115.0"/>
+        <transition destinationFrameName="Frame 1" durationInSecs="0.0">
+          <action>
+            <mouseAction action="downUp" button="left">
+            </mouseAction>
+          </action>
+        </transition>
+      </widget>
+    </frame>
+  </design>
+</cogtoolimport>

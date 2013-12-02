@@ -1,0 +1,43 @@
+# Makefile for CLISP module set pari
+
+CC = @CC@
+PARICPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+INCLUDES = ..
+CLISP = clisp -q -norc
+
+LN = ln
+
+MAKE = make
+
+SHELL = /bin/sh
+
+DISTRIBFILES = cpari.o pari.o link.sh Makefile pari.lisp pari.fas preload.lisp
+distribdir =
+
+all : pari.o cpari.o pari.fas
+
+pari.fas pari.c : pari.lisp
+	$(CLISP) -c pari.lisp
+
+pari.o : pari.c $(INCLUDES)/clisp.h config.h
+	$(CC) $(CPPFLAGS) $(PARICPPFLAGS) $(CFLAGS) -I$(INCLUDES) -c pari.c
+
+cpari.o : cpari.c
+	$(CC) $(CPPFLAGS) $(PARICPPFLAGS) $(CFLAGS) -I$(INCLUDES) -c cpari.c
+
+# Make a module
+clisp-module : all
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+clean : force
+	rm -f core *.o *.a
+
+distclean : clean
+	rm -f *.dvi
+
+force :
+

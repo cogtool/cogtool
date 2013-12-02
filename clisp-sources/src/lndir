@@ -1,0 +1,77 @@
+#!/bin/sh
+# Copies a tree, like "cp -p -r" but through hard or symbolic links.
+# (Much like X11's "lndir" command, but X11's "lndir" always makes symbolic
+# links.)
+# Usage: lndir SRC DST
+
+# Abort in case something fails.
+set -e
+
+fail () {
+  echo "$*" 1>&2
+  exit 1
+}
+
+if test $# != 2; then
+  fail "Usage: $0 SRC DST"
+fi
+
+SRC="$1"
+DST="$2"
+
+# link FILE1 FILE2  is like `ln', but chooses the cheapest alternative:
+# hard link if FILE1 and FILE2 on the same disk, else symbolic link if the
+# system supports that, else file copy.
+link () {
+# Note: With some versions of "ln" this does not work if FILE2 is a symlink.
+rm -f "$2"
+if ln "$1" "$2" 2>/dev/null; then
+  :
+else
+  srcfile_dirname=`echo "$1" | sed -e 's,/[^/]*$,,'`
+  test -n "$srcfile_dirname" || srcfile_dirname='/'
+  srcfile_basename=`echo "$1" | sed -e 's,^.*/,,'`
+  srcfile_absdirname=`cd "$srcfile_dirname" > /dev/null; pwd`
+  ln -s "$srcfile_absdirname/$srcfile_basename" "$2" 2>/dev/null ||
+    ln "$srcfile_absdirname/$srcfile_basename" "$2" 2>/dev/null ||
+    cp -p "$srcfile_absdirname/$srcfile_basename" "$2"
+fi
+}
+
+# mkdirparent DIR creates the parent directory of DIR.
+# Synonymous to  mkdir -p `dirname DIR`
+# This is taken from Noah Friedman's mkinstalldirs script, with modifications.
+mkdirparent () {
+DIR="$1"
+DIR=`echo "$DIR" | sed -e 's,/*$,,'`
+defaultIFS='
+'
+IFS="${IFS-${defaultIFS}}"
+oIFS="${IFS}"
+IFS='%'
+set - `echo ${DIR} | sed -e 's,/,%,g' -e 's,^%,/,'`
+IFS="${oIFS}"
+pathcomp=''
+while test $# -gt 1 ; do
+  pathcomp="${pathcomp}${1}"
+  shift
+  test -d "${pathcomp}" || mkdir "${pathcomp}"
+  pathcomp="${pathcomp}/"
+done
+}
+
+test -r "$SRC" || fail "$0: source does not exist: $SRC"
+
+mkdirparent "$DST"
+
+for f in `cd "$SRC" > /dev/null ; find . -type d -print`; do
+  dir="$DST"`echo "$f" | sed -e 's,^\.,,'`;
+  test -d "${dir}" || mkdir "${dir}"
+done
+
+for f in `cd "$SRC" > /dev/null ; find . -type f -print`; do
+  f=`echo "$f" | sed -e 's,^\./,,'`
+  cmp -s "$SRC"/"$f" "$DST"/"$f" || link "$SRC"/"$f" "$DST"/"$f"
+done
+
+exit 0

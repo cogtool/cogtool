@@ -1,0 +1,148 @@
+dnl AUTOCONF configuration for readline
+dnl Sam Steingold 2005
+
+AC_PREREQ(2.57)
+AC_INIT(readline, 1.0, clisp-list)
+AC_CONFIG_SRCDIR(readline.lisp)
+AC_CONFIG_HEADERS(config.h)
+
+AC_MSG_NOTICE([ * READLINE (Tools)])
+AC_PROG_CC
+AC_PROG_CPP
+
+AC_MSG_NOTICE([ * READLINE (Headers, Variables & Functions)])
+CL_READLINE
+if test "$ac_cv_have_decl_rl_already_prompted" = "no"; then
+  AC_MSG_ERROR([cannot find a modern gnu readline])
+fi
+AC_CHECK_DECLS([rl_library_version, rl_readline_version, rl_editing_mode, dnl
+rl_insert_mode, rl_readline_state, rl_line_buffer, rl_point, rl_end, dnl
+rl_mark, rl_done, rl_num_chars_to_read, rl_pending_input, rl_dispatching, dnl
+rl_erase_empty_line, rl_prompt, rl_terminal_name, dnl
+rl_instream, rl_outstream, rl_last_func, rl_startup_hook, rl_pre_input_hook, dnl
+rl_event_hook, rl_getc_function],,,[#include <stdio.h>
+ #include <readline/readline.h>])
+AC_CHECK_FUNCS(dnl do not check readline() - redefines global HAVE_READLINE
+dnl Basic behavior
+rl_set_prompt dnl
+rl_initialize dnl
+rl_read_init_file dnl
+dnl Function naming
+rl_add_defun dnl
+dnl Keymaps
+rl_make_bare_keymap dnl
+rl_copy_keymap dnl
+rl_make_keymap dnl
+rl_discard_keymap dnl
+rl_get_keymap dnl
+rl_set_keymap dnl
+rl_get_keymap_by_name dnl
+dnl Binding Keys
+rl_bind_key dnl
+rl_bind_key_in_map dnl
+rl_bind_key_if_unbound dnl
+rl_bind_key_if_unbound_in_map dnl
+rl_unbind_key dnl
+rl_unbind_key_in_map dnl
+rl_unbind_function_in_map dnl
+rl_unbind_command_in_map dnl
+rl_bind_keyseq dnl
+rl_bind_keyseq_in_map dnl
+rl_bind_keyseq_if_unbound dnl
+rl_bind_keyseq_if_unbound_in_map dnl
+rl_generic_bind dnl
+rl_parse_and_bind dnl
+dnl Associating Function Names and Bindings
+rl_named_function dnl
+rl_function_of_keyseq dnl
+rl_invoking_keyseqs dnl
+rl_invoking_keyseqs_in_map dnl
+rl_function_dumper dnl
+rl_list_funmap_names dnl
+rl_funmap_names dnl
+rl_add_funmap_entry dnl
+dnl Allowing undoing
+rl_begin_undo_group dnl
+rl_end_undo_group dnl
+rl_add_undo dnl
+rl_free_undo_list dnl
+rl_do_undo dnl
+rl_modifying dnl
+dnl Redisplay
+rl_redisplay dnl
+rl_forced_update_display dnl
+rl_on_new_line dnl
+rl_on_new_line_with_prompt dnl
+rl_reset_line_state dnl
+rl_crlf dnl
+rl_show_char dnl
+rl_message dnl
+rl_clear_message dnl
+rl_save_prompt dnl
+rl_restore_prompt dnl
+rl_expand_prompt dnl
+dnl Modifying text
+rl_insert_text dnl
+rl_delete_text dnl
+rl_copy_text dnl
+rl_kill_text dnl
+rl_push_macro_input dnl
+dnl Character input
+rl_read_key dnl
+rl_getc dnl
+rl_stuff_char dnl
+rl_execute_next dnl
+rl_clear_pending_input dnl
+rl_set_keyboard_input_timeout dnl
+dnl Terminal management
+rl_prep_terminal dnl
+rl_deprep_terminal dnl
+rl_tty_set_default_bindings dnl
+rl_reset_terminal dnl
+dnl Utility
+rl_replace_line dnl
+rl_extend_line_buffer dnl
+rl_ding dnl
+rl_display_match_list dnl
+dnl Miscellaneous functions
+rl_variable_bind dnl
+rl_macro_dumper dnl
+rl_variable_dumper dnl
+rl_set_paren_blink_timeout dnl
+rl_get_termcap dnl
+dnl Signal Handling
+rl_resize_terminal dnl
+rl_set_screen_size dnl
+rl_get_screen_size dnl
+dnl Alternate interface
+rl_callback_handler_install dnl
+rl_callback_read_char dnl
+rl_callback_handler_remove dnl
+dnl history
+using_history dnl
+add_history dnl
+clear_history dnl
+stifle_history dnl
+unstifle_history dnl
+history_is_stifled dnl
+dnl Information About the History List
+where_history dnl
+history_total_bytes dnl
+dnl Moving Around the History List
+history_set_pos dnl
+dnl Searching the History List
+history_search dnl
+history_search_prefix dnl
+history_search_pos dnl
+dnl Managing the History File
+read_history dnl
+read_history_range dnl
+write_history dnl
+append_history dnl
+history_truncate_file)
+
+AC_MSG_NOTICE([ * READLINE (Output)])
+AC_CONFIG_FILES(Makefile link.sh)
+AC_OUTPUT
+
+AC_MSG_NOTICE([ * READLINE (Done)])

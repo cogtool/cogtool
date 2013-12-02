@@ -1,0 +1,173 @@
+#!/usr/local/bin/clisp -C
+
+;;; Extraction of internationalized messages (normally done by "xgettext")
+;;; for clisp.
+;;; Bruno Haible 26.3.1997, 5.4.1999
+;;; Sam Steingold 2002-01-03
+
+;; In the clisp .d sources internationalized messages are recognized through
+;; the following constructs:
+;;
+;;    GETTEXT(string)
+;;    GETTEXTL(string)
+;;    CLSTEXT(string)
+;;    CLOTEXT(string)
+;;    The string may consist of multiple pieces
+;;        (ANSI C string concatenation),
+;;    and some of the pieces may be the token NLstring
+;;        (to be replaced by "\n").
+;;
+;; We present to the translator:
+;; - One translation. This is the english translation because it is expected
+;;   that the french and german translation are not as widely understood.
+;; - The string is broken up into multiple lines after each "\n".
+
+(defun main (filename destdir)
+ (declare (type string filename destdir))
+ #+UNICODE (setq *default-file-encoding* charset:utf-8)
+ (with-open-file (file filename :direction :input)
+  (with-open-file (pot (concatenate 'string destdir "/" filename ".pot")
+                       :direction :output
+                       #+UNICODE :external-format #+UNICODE charset:iso-8859-1)
+   (with-open-file (pot2 (concatenate 'string destdir "/" filename ".pot2")
+                        :direction :output
+                        #+UNICODE :external-format #+UNICODE charset:iso-8859-1)
+      (let ((allpots (make-broadcast-stream pot pot2))
+            (lineno 0) ; number of the line (usually = (1- (sys::line-number file)))
+            (line nil) (pos nil))
+       (labels ((goto-line (no)
+                  (cond ((< no lineno)
+                         (error "cannot go backwards: ~A:~S -> ~S" filename lineno no))
+                        ((= no lineno))
+                        ((> no lineno)
+                         (dotimes (i (- no lineno))
+                           (setf line (read-line file))
+                           (incf lineno)
+                           (setf pos 0)
+                ) )     ))
+                (d-parse-string (&aux (accu ""))
+                  (loop
+                    (cond ((>= pos (length line))
+                           (setf line (read-line file))
+                           (incf lineno)
+                           (setf pos 0))
+                          ((member (char line pos) '(#\Space #\\ #\?))
+                           (incf pos))
+                          ((and (<= (+ pos 2) (length line))
+                                (string= line "*/" :start1 pos :end1 (+ pos 2)))
+                           (incf pos 2))
+                          ((eql (char line pos) #\")
+                           (let ((string (make-array 0 :element-type 'character
+                                                       :fill-pointer t
+                                                       :adjustable t)))
+                             (loop
+                               (incf pos)
+                               (case (char line pos)
+                                 (#\" (incf pos) (return))
+                                 (#\\
+                                    (incf pos)
+                                    (let ((c (char line pos)))
+                                      (cond ((eq c #\n) (setq c #\Newline)))
+                                      (vector-push-extend c string)))
+                                 (t (vector-push-extend (char line pos) string))))
+                             (setq accu (concatenate 'string accu string))
+                          ))
+                          ((and (<= (+ pos 8) (length line))
+                                (string= line "NLstring" :start1 pos :end1 (+ pos 8)))
+                           (incf pos 8)
+                           (setq accu (concatenate 'string accu (string #\Newline)))
+                          )
+                          ((member (char line pos) '(#\: #\, #\)))
+                           (return accu))
+                          (t
+                           (warn "no string found at ~A:~S" filename lineno)
+                           (return nil))
+                ) ) )
+                (output-string (string stream &aux (l (length string)))
+                  ; write a msgid/msgstr string, converting newlines to "\n"
+                  ; and splitting the string at newline points.
+                  (write-char #\" stream)
+                  (when (case (count #\Newline string)
+                          (0 nil)
+                          (1 (not (and (plusp l) (eql (char string (1- l)) #\Newline))))
+                          (t t)
+                        )
+                    (write-char #\" stream)
+                    (write-char #\Newline stream)
+                    (write-char #\" stream)
+                  )
+                  (do ((i 0 (1+ i)))
+                      ((>= i l))
+                    (let ((c (char string i)))
+                      (cond ((or (eql c #\\) (eql c #\"))
+                             (write-char #\\ stream)
+                             (write-char c stream))
+                            ((eql c #\Newline)
+                             (write-char #\\ stream)
+                             (write-char #\n stream)
+                             (write-char #\" stream)
+                             (unless (= i (1- l))
+                               (write-char #\Newline stream)
+                               (write-char #\" stream)))
+                            ((< (char-code c) 32)
+                             (write-char #\\ stream)
+                             (format stream "~3,'0O" (char-code c)))
+                            (t (write-char c stream))
+                  ) ) )
+                  (unless (and (plusp l) (eql (char string (1- l)) #\Newline))
+                    (write-char #\" stream)
+                ) )
+                (output-hunk (no msgid with-2)
+                  (let ((ostream (if with-2 allpots pot)))
+                    (format ostream "~%#: ~A:~D~%" filename no)
+                    (when (or (search "~S" msgid) (search "~C" msgid))
+                      (format ostream "#, lisp-format~%"))
+                    (format ostream "msgid ")
+                    (output-string msgid ostream)
+                    (format ostream "~%msgstr ")
+                    (output-string "" ostream)
+                    (format ostream "~%")
+                ) )
+                (do-one-file (&key all-grepper keys string-parser)
+                  (let ((grep
+                          (make-pipe-input-stream
+                            (concatenate 'string all-grepper filename)
+                        ) )
+                        (eof "EOF"))
+                    (loop
+                      (let ((grep-line (read-line grep nil eof)))
+                        (when (eq grep-line eof) (return))
+                        (let* ((colon (position #\: grep-line))
+                               (grep-no (parse-integer grep-line :end colon))
+                               (grep-line (subseq grep-line (1+ colon)))
+                               (found-a-key nil))
+                          (goto-line grep-no)
+                          (dolist (key keys)
+                            (let ((key-pos (search key grep-line)))
+                              (when key-pos
+                                (setq found-a-key t)
+                                (setq pos (+ key-pos (length key)))
+                                (let ((found-string (funcall string-parser)))
+                                  (when found-string
+                                    (output-hunk grep-no found-string (equal key "GETTEXTL("))
+                                    (return)
+                          ) ) ) ) )
+                          (unless found-a-key
+                            (error "None of keys ~S found in line ~S" keys grep-line)
+                    ) ) ) )
+                    (close grep)
+                ) )
+               )
+         (cond ((search ".d$" (concatenate 'string filename "$"))
+                ;; Extract strings from a .d file
+                (do-one-file :all-grepper "grep -n '\\(GETTEXT(\\|GETTEXTL(\\|CLSTEXT(\\|CLOTEXT(\\)' "
+                             :keys '("GETTEXT(" "GETTEXTL("
+                                     "CLSTEXT(" "CLOTEXT(")
+                             :string-parser #'d-parse-string
+               ))
+               (t (error "unknown file type: ~S" filename))
+         )
+      ))
+))))
+
+(main (first *args*) (second *args*))

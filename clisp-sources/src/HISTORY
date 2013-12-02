@@ -1,0 +1,252 @@
+Version  Date            New features
+
+2.38     2006-01-24      SAVEINITMEM creates standalone executables.
+
+2.37     2006-01-02      SOCKET-SERVER/:BACKLOG:INTERFACE, fixed SETENV.
+
+2.36     2005-12-04      OPEN-HTTP, NOTSPECIAL, DEF-C-CONST, BASE64,
+                         new-clx/demos/foch, spvw_sigterm.d
+
+2.35     2005-08-29      COMPILED-FILE-P, CHAR-INVERTCASE, STRING-INVERTCASE,
+                         NSTRING-INVERTCASE, STREAM-OPTIONS;
+                         close all FDs before exec()
+
+2.34     2005-07-20      MOP, weak structures, case sensitive symbols,
+                         global error handlers.
+                         New modules: matlab, rawsock, zlib, i18n, pari.
+
+2.33.2   2004-06-02      portability: RedHat Fedora Linux/x86
+
+2.33.1   2004-05-22      bug-fixes, portability: gcc 3.4
+
+2.33     2004-03-17      CUSTOM:*APROPOS-MATCHER*, EXT:MOD-EXPT, EXT:ARGV,
+                         GRAY:STREAM-POSITION, DEFINE-METHOD-COMBINATION,
+                         portability: removed Acorn/Amiga/OS2, fixed UNIXes
+
+2.32     2003-12-29      LFS, Berkeley-DB, PCRE
+
+2.31     2003-09-01      fastcgi, dirkey, syscalls, bindings/win32, netica;
+                         modules on win32; Unicode 3.2; new BACKQUOTE;
+                         many ANSI compliance fixes; more FFI functionality
+
+2.30     2002-09-15      no libiconv, gettext, readline, libsigsegv
+                         UCS-4, *PARSE-NAMESTRING-DOT-FILE*, Oracle,
+                         SOCKET-STREAM-SHUTDOWN, STREAM-LOCK, COPY-FILE,
+                         DUPLICATE-HANDLE
+
+2.29     2002-07-25      bug-fix/portability: gcc 3.1 &c
+
+2.28     2002-03-03      ANSI CL Pretty-Printer
+                         MAKE-LOAD-FORM, MAKE-LOAD-FORM-SAVING-SLOTS
+                         weak hash-tables; FCASE, GETTEXT
+
+2.27     2001-07-17      install.bat; setfable GETENV
+
+2.26     2001-05-23      dropped CLtL1, added #+LISP=CL to *FEATURES*
+                         DEFINE-COMPILER-MACRO, UPGRADED-COMPLEX-PART-TYPE
+                         RUN-SHELL-COMMAND, RUN-PROGRAM :WAIT
+                         compiler checks funcall signatures
+
+2.25.1   2001-04-06      bug-fixes only
+
+2.25     2001-03-15      INSPECT, CLHS,
+                         CONVERT-STRING-FROM-BYTES, CONVERT-STRING-TO-BYTES,
+                         READ-BYTE-LOOKAHEAD, STREAM-READ-BYTE-LOOKAHEAD,
+                         READ-BYTE-WILL-HANG-P, STREAM-READ-BYTE-WILL-HANG-P,
+                         READ-BYTE-NO-HANG, STREAM-READ-BYTE-NO-HANG,
+                         Win32 improvements (UNC pathnames, registry, SCREEN)
+
+2.24     2000-03-06      READ-FLOAT, WRITE-FLOAT, WITH-COMPILATION-UNIT,
+                         CHAR-WIDTH, STRING-WIDTH
+
+2.23     1999-07-22      PostgreSQL, Unicode, CHARSET, *DEFAULT-FILE-ENCODING*,
+                         *PATHNAME-ENCODING*, *TERMINAL-ENCODING*,
+                         *MISC-ENCODING*, FFI:*FOREIGN-ENCODING*,
+                         AFFI:*FOREIGN-ENCODING*, STREAM-EXTERNAL-FORMAT,
+                         WITH-PACKAGE-ITERATOR, ALLOCATE-INSTANCE,
+                         MAKE-WEAK-POINTER, WEAK-POINTER-P, WEAK-POINTER-VALUE,
+                         READ-INTEGER, WRITE-INTEGER, FUNDAMENTAL-STREAM,
+                         FUNDAMENTAL-INPUT-STREAM, FUNDAMENTAL-OUTPUT-STREAM,
+                         FUNDAMENTAL-CHARACTER-STREAM,
+                         FUNDAMENTAL-BINARY-STREAM,
+                         FUNDAMENTAL-CHARACTER-INPUT-STREAM,
+                         FUNDAMENTAL-CHARACTER-OUTPUT-STREAM,
+                         FUNDAMENTAL-BINARY-INPUT-STREAM,
+                         FUNDAMENTAL-BINARY-OUTPUT-STREAM, STREAM-READ-CHAR,
+                         STREAM-UNREAD-CHAR, STREAM-READ-CHAR-NO-HANG,
+                         STREAM-PEEK-CHAR, STREAM-LISTEN,
+                         STREAM-READ-CHAR-WILL-HANG-P,
+                         STREAM-READ-CHAR-SEQUENCE, STREAM-READ-LINE,
+                         STREAM-CLEAR-INPUT, STREAM-WRITE-CHAR,
+                         STREAM-LINE-COLUMN, STREAM-START-LINE-P,
+                         STREAM-WRITE-CHAR-SEQUENCE, STREAM-WRITE-STRING,
+                         STREAM-TERPRI, STREAM-FRESH-LINE,
+                         STREAM-FINISH-OUTPUT, STREAM-FORCE-OUTPUT,
+                         STREAM-CLEAR-OUTPUT, STREAM-ADVANCE-TO-COLUMN,
+                         STREAM-READ-BYTE, STREAM-READ-BYTE-SEQUENCE,
+                         STREAM-WRITE-BYTE, STREAM-WRITE-BYTE-SEQUENCE,
+                         SIMPLE-CONDITION-FORMAT-CONTROL
+
+2.22     1999-01-08      BASE-CHAR, EXTENDED-CHAR, BASE-STRING,
+                         SIMPLE-BASE-STRING, GET-SETF-EXPANSION,
+                         DEFINE-SETF-EXPANDER, PARSE-ERROR, READER-ERROR,
+                         UNBOUND-SLOT-INSTANCE, SOCKET-STREAM-LOCAL,
+                         SOCKET-SERVER-HOST
+
+2.21     1998-09-09      *WARN-ON-FLOATING-POINT-CONTAGION*,
+                         *FLOATING-POINT-CONTAGION-ANSI*, PROBE-DIRECTORY,
+                         *PRINT-RIGHT-MARGIN*, BOOLEAN,
+                         ENSURE-DIRECTORIES-EXIST, ARRAY-DISPLACEMENT,
+                         COPY-STRUCTURE, GENERIC-FUNCTION, STRUCTURE-OBJECT,
+                         CLASS, METHOD, SPECIAL-OPERATOR-P,
+                         FLOATING-POINT-INEXACT,
+                         FLOATING-POINT-INVALID-OPERATION
+
+2.20.1   1997-12-06
+
+2.20     1997-09-25      *READ-EVAL*, SPACE
+
+2.19     1997-08-07      CLX
+
+2.18     1997-05-03      DEFLANGUAGE, DEFINTERNATIONAL, DEFLOCALIZED,
+                         *LOAD-COMPILING*
+
+2.17     1996-07-22
+2.17     1996-07-21      SOCKET-SERVER, SOCKET-SERVER-CLOSE,
+                         SOCKET-SERVER-PORT, SOCKET-WAIT, SOCKET-ACCEPT,
+                         SOCKET-CONNECT, SOCKET-STREAM-HOST,
+                         SOCKET-STREAM-PORT, SOCKET-SERVICE-PORT,
+                         SOCKET-STREAM-PEER-HOST
+
+2.16     1995-06-23      COMPLEMENT, WITH-STANDARD-IO-SYNTAX,
+                         WITH-HASH-TABLE-ITERATOR, HASH-TABLE-REHASH-SIZE,
+                         HASH-TABLE-REHASH-THRESHOLD, HASH-TABLE-SIZE,
+                         HASH-TABLE-TEST, DYNAMIC-EXTENT, LAMBDA, IGNORABLE,
+                         CONSTANTLY
+
+2.15     1995-04-25      WILDCARD, REGEXP, FORMATTER, FILE-STREAM,
+                         SYNONYM-STREAM, BROADCAST-STREAM, CONCATENATED-STREAM,
+                         TWO-WAY-STREAM, ECHO-STREAM, STRING-STREAM,
+                         OPEN-STREAM-P, SYNONYM-STREAM-SYMBOL,
+                         BROADCAST-STREAM-STREAMS, CONCATENATED-STREAM-STREAMS,
+                         TWO-WAY-STREAM-INPUT-STREAM,
+                         TWO-WAY-STREAM-OUTPUT-STREAM,
+                         ECHO-STREAM-INPUT-STREAM, ECHO-STREAM-OUTPUT-STREAM,
+                         PRINT-NOT-READABLE, PRINT-NOT-READABLE-OBJECT,
+                         FINALIZE
+
+2.14     1995-04-04      ROW-MAJOR-AREF, DELETE-PACKAGE, FFI, MUFFLE-CERRORS,
+                         APPEASE-CERRORS, EXIT-ON-ERROR
+
+2.13.1   1995-01-01
+
+2.13     1994-10-26      WILD-PATHNAME-P, PATHNAME-MATCH-P, TRANSLATE-PATHNAME,
+                         LOGICAL-PATHNAME, LOGICAL-PATHNAME-TRANSLATIONS,
+                         TRANSLATE-LOGICAL-PATHNAME,
+                         LOAD-LOGICAL-PATHNAME-TRANSLATIONS,
+                         COMPILE-FILE-PATHNAME
+
+2.12.1   1994-09-01
+
+2.12     1994-08-23      generational garbage collection,
+                         DESTRUCTURING-BIND, UNCOMPILE
+
+2.11     1994-07-04      LOOP, LOOP-FINISH, MAP-INTO,
+                         LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT,
+                         LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT,
+                         LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT,
+                         LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT,
+                         LEAST-POSITIVE-NORMALIZED-DOUBLE-FLOAT,
+                         LEAST-NEGATIVE-NORMALIZED-DOUBLE-FLOAT,
+                         LEAST-POSITIVE-NORMALIZED-LONG-FLOAT,
+                         LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT
+
+2.10     1994-06-22      READ-CHAR-SEQUENCE, WRITE-CHAR-SEQUENCE,
+                         READ-BYTE-SEQUENCE, WRITE-BYTE-SEQUENCE,
+                         MAKE-GENERIC-STREAM, GENERIC-STREAM-CONTROLLER,
+                         GENERIC-STREAM-P, GENERIC-STREAM-READ-CHAR,
+                         GENERIC-STREAM-READ-BYTE, GENERIC-STREAM-LISTEN,
+                         GENERIC-STREAM-WRITE-CHAR, GENERIC-STREAM-WRITE-BYTE,
+                         GENERIC-STREAM-WRITE-STRING,
+                         GENERIC-STREAM-CLEAR-INPUT,
+                         GENERIC-STREAM-CLEAR-OUTPUT,
+                         GENERIC-STREAM-FINISH-OUTPUT,
+                         GENERIC-STREAM-FORCE-OUTPUT, GENERIC-STREAM-CLOSE
+
+2.9      1994-01-08
+2.9      1994-01-07      DEFINE-CONDITION, IGNORE-ERRORS, HANDLER-CASE,
+                         HANDLER-BIND, RESTART-CASE, WITH-RESTARTS,
+                         WITH-SIMPLE-RESTART, RESTART-BIND,
+                         WITH-CONDITION-RESTARTS, RESTART, CONDITION,
+                         SERIOUS-CONDITION, ERROR, PROGRAM-ERROR,
+                         CONTROL-ERROR, ARITHMETIC-ERROR, DIVISION-BY-ZERO,
+                         FLOATING-POINT-OVERFLOW, FLOATING-POINT-UNDERFLOW,
+                         CELL-ERROR, UNBOUND-VARIABLE, UNDEFINED-FUNCTION,
+                         TYPE-ERROR, PACKAGE-ERROR, STREAM-ERROR, END-OF-FILE,
+                         FILE-ERROR, STORAGE-CONDITION, WARNING,
+                         SIMPLE-CONDITION, SIMPLE-ERROR, SIMPLE-TYPE-ERROR,
+                         SIMPLE-WARNING, MAKE-CONDITION, SIGNAL,
+                         COMPUTE-RESTARTS, FIND-RESTART, INVOKE-RESTART,
+                         INVOKE-RESTART-INTERACTIVELY, ABORT, CONTINUE,
+                         MUFFLE-WARNING, STORE-VALUE, USE-VALUE,
+                         INVOKE-DEBUGGER, RESTART-NAME,
+                         ARITHMETIC-ERROR-OPERATION, ARITHMETIC-ERROR-OPERANDS,
+                         CELL-ERROR-NAME, TYPE-ERROR-DATUM,
+                         TYPE-ERROR-EXPECTED-TYPE, PACKAGE-ERROR-PACKAGE,
+                         STREAM-ERROR-STREAM, FILE-ERROR-PATHNAME,
+                         SIMPLE-CONDITION-FORMAT-STRING,
+                         SIMPLE-CONDITION-FORMAT-ARGUMENTS, *BREAK-ON-SIGNALS*,
+                         *DEBUGGER-HOOK*, *PRINT-READABLY*
+
+2.8      1993-11-08      STDWIN, COMMON-LISP, COMMON-LISP-USER
+
+2.7      1993-09-27      top-level forms, DECLAIM
+
+2.6.1    1993-09-01
+
+2.6      1993-08-22      CLOS package, DEFCLASS, DEFMETHOD, DEFGENERIC,
+                         GENERIC-FUNCTION, GENERIC-FLET, GENERIC-LABELS,
+                         WITH-SLOTS, WITH-ACCESSORS,FIND-CLASS,
+                         (SETF FIND-CLASS), CLASS-OF, CLASS-NAME,
+                         (SETF CLASS-NAME), SLOT-VALUE, SLOT-BOUNDP,
+                         SLOT-MAKUNBOUND, SLOT-EXISTS-P, CALL-NEXT-METHOD,
+                         NEXT-METHOD-P, NO-APPLICABLE-METHOD,
+                         NO-PRIMARY-METHOD, NO-NEXT-METHOD, FIND-METHOD,
+                         ADD-METHOD, REMOVE-METHOD, COMPUTE-APPLICABLE-METHODS,
+                         METHOD-QUALIFIERS, FUNCTION-KEYWORDS, SLOT-MISSING,
+                         SLOT-UNBOUND, PRINT-OBJECT, DESCRIBE-OBJECT,
+                         MAKE-INSTANCE, INITIALIZE-INSTANCE,
+                         REINITIALIZE-INSTANCE, SHARED-INITIALIZE
+
+2.5.1    1993-07-17      immutable objects
+
+2.5      1993-06-29      SETF function names, SYMBOL-MACROLET,
+                         PRINT-UNREADABLE-OBJECT
+
+2.4      1993-05-24      DEFPACKAGE, FUNCTION-LAMBDA-EXPRESSION, SCREEN
+
+2.3.1    1993-04-05
+
+2.3      1993-03-30      LOAD-TIME-VALUE, DEFAULT-DIRECTORY
+
+2.2.2    1993-03-19      EDITOR-TEMPFILE
+
+2.2.1    1993-03-04
+
+2.2      1993-02-21      Add test suite.
+
+2.1.3    1993-02-03
+
+2.1.2    1993-02-01
+
+2.1.1    1993-01-11
+
+2.1      1993-01-01      First portable release, with source, under GPL.
+                         Supported platforms: Atari ST, Amiga 500-2000,
+                         DOS (emx, djgpp), OS/2 (emx), Unix (Linux, Sun4,
+                         Sun386, HP9000/800).
+
+2.0      1992-10-09      comp.os.linux announcement (Linux binaries only)
+
+1   April 1987 - July 1992   for Atari ST only,
+                             written in 68000 assembly language and Common Lisp

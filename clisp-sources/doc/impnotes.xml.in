@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V@DTDVER@//EN"
+          "@DTD@" [
+  <!-- http://article.gmane.org/gmane.text.docbook.misc:5091
+       allow alt in acronym -->
+  <!ENTITY % local.word.char.mix "|alt">
+  <!ENTITY % cl-entities-file SYSTEM "cl-ent.xml">
+  %cl-entities-file;
+  <!ENTITY % imp-entities-file SYSTEM "impent.xml">
+  %imp-entities-file;
+  <!ENTITY % unix-entities-file SYSTEM "unix-ent.xml">
+  %unix-entities-file;
+  <!ENTITY % mop-entities-file SYSTEM "mop-ent.xml">
+  %mop-entities-file;
+  <!ENTITY imp-body-file SYSTEM "impbody.xml">
+  <!ENTITY imp-issues-file SYSTEM "impissue.xml">
+  <!ENTITY gray-sec-file SYSTEM "gray.xml">
+  <!ENTITY mop-sec-file SYSTEM "mop.xml">
+  <!ENTITY imp-ext-file SYSTEM "impext.xml">
+  <!ENTITY imp-byte-file SYSTEM "impbyte.xml">
+  <!ENTITY faq-file SYSTEM "faq.xml">
+  <!ENTITY % ent-bdb-file SYSTEM "../modules/berkeley-db/ent-bdb.xml">
+  %ent-bdb-file;
+  <!ENTITY berkeley-db-file SYSTEM "../modules/berkeley-db/berkeley-db.xml">
+  <!ENTITY dirkey-file SYSTEM "../modules/dirkey/dirkey.xml">
+  <!ENTITY fastcgi-file SYSTEM "../modules/fastcgi/fastcgi.xml">
+  <!ENTITY i18n-file SYSTEM "../modules/i18n/i18n.xml">
+  <!ENTITY matlab-file SYSTEM "../modules/matlab/matlab.xml">
+  <!ENTITY netica-file SYSTEM "../modules/netica/netica.xml">
+  <!ENTITY oracle-file SYSTEM "../modules/oracle/oracle.xml">
+  <!ENTITY pari-file SYSTEM "../modules/pari/pari.xml">
+  <!ENTITY pcre-file SYSTEM "../modules/pcre/pcre.xml">
+  <!ENTITY postgresql-file SYSTEM "../modules/postgresql/postgresql.xml">
+  <!ENTITY rawsock-file SYSTEM "../modules/rawsock/rawsock.xml">
+  <!ENTITY readline-file SYSTEM "../modules/readline/readline.xml">
+  <!ENTITY regexp-file SYSTEM "../modules/regexp/regexp.xml">
+  <!ENTITY syscalls-file SYSTEM "../modules/syscalls/syscalls.xml">
+  <!ENTITY wildcard-file SYSTEM "../modules/wildcard/wildcard.xml">
+  <!ENTITY zlib-file SYSTEM "../modules/zlib/zlib.xml">
+  <!ENTITY gfdl-file SYSTEM "http://www.gnu.org/licenses/fdl.xml">
+  <!ENTITY gpl-file SYSTEM "http://www.gnu.org/licenses/gpl.xml">
+]>
+
+<book id="impnotes-top"><title>Implementation Notes for &gnu; &clisp;</title>
+<titleabbrev>&clisp; impnotes</titleabbrev>
+
+<bookinfo id="book-info-title-page">
+ <title>Implementation Notes for &gnu; &clisp;</title>
+ <subtitle>These notes document &clisp; version @VERSION@</subtitle>
+ <corpauthor><inlinemediaobject><imageobject><imagedata fileref="clisp.png"/>
+ </imageobject></inlinemediaobject></corpauthor>
+ <date>Last modified: @TODAY@</date>
+ &bruno; &sds;
+ <abstract><para>These notes describe the &gnu; &clisp; - an &ansi-cl;
+   implementation.</para>
+  <para>Bugs both in these notes and in &clisp; itself should be
+   reported to the mailing list &clisp-list;.</para></abstract>
+ <copyright><year>1992-2006</year><holder>Bruno Haible</holder></copyright>
+ <copyright><year>1998-2006</year><holder>Sam Steingold</holder></copyright>
+
+ <legalnotice id="legalese"><title>Legal Status of the &clisp;
+   Implementation Notes</title>
+  <para>These notes are dually licensed under &gnu; &gfdl; and &gnu; &gpl;.
+   This means that you can redistribute this document under
+   either of these two licenses, at your choice.</para>
+  <formalpara><title>These notes are covered by the &gnu; &gfdl;</title>
+   <para>Permission is granted to copy, distribute and/or modify this
+    document under the terms of the GNU Free Documentation License
+    (&gfdl;), either version 1.2 of the License, or (at your option) any
+    later version published by the &fsf;;
+    with no Invariant Sections,
+    with no Front-Cover Text, and
+    with no Back-Cover Texts.
+    A copy of the license is included in <xref linkend="gfdl"/>.
+  </para></formalpara>
+  <formalpara><title>These notes are covered by the &gnu; &gpl;</title>
+   <para>This document documents free software; you can redistribute it
+    and/or modify it under the terms of the GNU General Public License
+    (&gpl;), either version 2 of the License, or (at your option) any
+    later version published by the &fsf;.
+    A copy of the license is included in <xref linkend="gpl"/>.
+  </para></formalpara>
+ </legalnotice>
+ <keywordset>
+   <keyword>Lisp</keyword>
+   <keyword>Common Lisp</keyword>
+   <keyword>CLISP</keyword>
+ </keywordset>
+</bookinfo>
+
+<preface id="overview"><title>Overview</title>
+
+<para>These notes discuss the &clisp; implementation of &cl; by &bruno;
+ and &stoll;. The current maintainers are &bruno; and &sds;.</para>
+
+<para>This implementation is mostly conforming to the &ansi-cl;
+ available on-line as the &hyperspec; (but the printed ANSI document
+ remains the authoritative source of information).  &ansi-cl; supersedes
+ the earlier specifications &cltl1; and &cltl2;.</para>
+
+<para>The first part of these notes, <xref linkend="clhs-chapters"/>,
+ is indexed in parallel to the &hyperspec; and documents how &clisp;
+ implements the standard &ansi-cl;.</para>
+
+<para>The second part, <xref linkend="extensions"/>, documents the
+ &clisp; extensions, i.e., the functionality that goes beyond the
+ &ansi-cl; requirements.
+ It includes widely portable common extensions, e.g.,
+ <xref linkend="mop-chap"/>, as well as &clisp;-specific extensions,
+ e.g., <xref linkend="socket"/>.</para>
+
+<para>The third part, <xref linkend="internals"/>, is intended mostly
+ for developers as it documents the &clisp; internals, e.g., &gc;ion,
+ adding new built-ins, and the &bytecode;s generated by the compiler
+ (i.e., what is printed by &disassemble;).</para>
+
+</preface>
+
+<preface id="conventions"><title>Conventions</title>
+<para>The following is the mark-up notations used in this document:
+ <informaltable frame="all">
+  <tgroup cols="2" colsep="1" rowsep="1" align="center">
+   <thead><row><entry>Object Kind</entry><entry>Example</entry></row></thead>
+   <tbody><row><entry>Function</entry><entry>&car;</entry></row>
+    <row><entry>Variable</entry><entry>&load-paths;</entry></row>
+    <row><entry>Formal Argument</entry><entry>&x-r;</entry></row>
+    <row><entry>Keyword</entry><entry>&eof-k;</entry></row>
+    <row><entry>Number</entry><entry>&zero;</entry></row>
+    <row><entry>Character</entry><entry>&nl-s;</entry></row>
+    <row><entry>Class, type</entry><entry>&match-t;</entry></row>
+    <row><entry>Format instruction</entry><entry>&format-a;</entry></row>
+    <row><entry>&lalist; keyword</entry><entry>&key-amp;</entry></row>
+    <row><entry>Declaration</entry><entry>&ftype-dec;</entry></row>
+    <row><entry>Package</entry><entry>&clu-pac;</entry></row>
+    <row><entry>Real file</entry><entry>&config-lisp;</entry></row>
+    <row><entry>Abstract file</entry><entry>&c-file;</entry></row>
+    <row><entry>Code (you are likely to type it)</entry>
+     <entry><code>(&cons; 1 2)</code></entry></row>
+    <row><entry>Data (&clisp; is likely to print it)</entry>
+     <entry><literal role="data">#(1 2 3)</literal></entry></row>
+    <row><entry>Program listing</entry><entry><programlisting language="lisp">
+(defun cycle-length (n &optional-amp; (len 1) (top 0))
+  (cond ((= n 1) (values len top))
+        ((evenp n) (cycle-length (ash n -1) (1+ len) (max top n)))
+        (t (let ((next (1+ (* 3 n))))
+             (cycle-length next (1+ len) (max top next))))))
+    </programlisting></entry></row>
+    <row><entry>Bytecode instruction</entry><entry><literal
+      role="byte">(STOREV &k-r; &m-r;)</literal></entry></row>
+    <row><entry>first mention of an entity</entry>
+     <entry><firstterm>firstterm</firstterm></entry></row>
+</tbody></tgroup></informaltable></para></preface>
+
+<part id="clhs-chapters"><title>Chapters or the &hyperspec;</title>
+
+&imp-body-file;
+
+&imp-issues-file;
+
+</part>
+
+<part id="extensions"><title>Extensions</title>
+
+<chapter id="ext-standard"><title>Standard Widely Portable Extensions</title>
+&mop-sec-file;
+&gray-sec-file;
+</chapter>
+
+&imp-ext-file;
+
+<chapter id="ext-modules"><title>Extensions Implemented as Modules</title>
+&matlab-file;
+&netica-file;
+&dirkey-file;
+&berkeley-db-file;
+&regexp-file;
+&pari-file;
+&pcre-file;
+&postgresql-file;
+&i18n-file;
+&readline-file;
+&syscalls-file;
+&oracle-file;
+&fastcgi-file;
+&rawsock-file;
+&wildcard-file;
+&zlib-file;
+</chapter>
+
+</part>
+
+&imp-byte-file;
+
+<part id="appendices"><title>Appendices</title>
+
+&faq-file;
+&gfdl-file;
+&gpl-file;
+
+</part>
+
+<index id="idx"/>
+
+<bibliography id="references">
+ <title>References</title>
+ <bibliodiv id="ref-books"><title>Books</title>
+  &cltl1-bib;
+  &cltl2-bib;
+  &amop-bib;
+ </bibliodiv>
+ <bibliodiv id="ref-ansi"><title>ANSI standard documents</title>
+  &ansi-cl-bib;
+  &hyperspec-bib;
+ </bibliodiv>
+</bibliography>
+
+</book>

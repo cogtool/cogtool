@@ -1,0 +1,8 @@
+For those systems with absolutely deficient C compiler preprocessors
+here is the GNU-C preprocessor from the gcc-1.42 distribution.
+
+For now this is used on the following systems:
+  Coherent386 4.0.1 with cc
+  DEC Ultrix with cc
+  Win32 with MSVC.
+

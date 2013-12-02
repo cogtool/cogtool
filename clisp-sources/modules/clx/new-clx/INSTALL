@@ -1,0 +1,99 @@
+ Installation instructions for CLX
+-----------------------------------
+
+Basically CLX comes as a module, which should make things easy.
+
+1. Fetch the clx distribution 
+
+    ftp://clisp.cons.org/pub/lisp/clisp/packages/nclx-1997-06-12.tar.gz
+
+   You probably had done this already, since you are reading this file!
+
+2. Unpack the distribution
+
+     % cd somewhere/clisp-YYYY-MM-DD/src/
+     % tar zxf nclx-1997-06-12.tar.gz
+
+   This creates a directory clx-1997-06-12, which contains the module set and
+   the demos.
+
+3. Then attempt to create the link set:
+
+     % clisp-link add-module-set clx-1997-06-12 base base+clx
+
+  If everything works then you want to try out the two demos. Otherwise read
+  the 'Problems' section below.
+
+
+ Problems
+----------
+
+Some problem I had, or I could think of:
+
+- Really bad thing: You probably need gcc to compile CLX, since I used
+  gccism some times. I expect that I fix that very soon.
+
+- To compile CLX correctly you need a CLISP, which has the foreign pointer
+  data type. Under some circumstances it is there, under some other it not
+  there. If it is not there, then a quick hack will do: Edit the makefile in
+  your CLISP source tree and add '-DFOREIGN=void*' to the CFLAGS make
+  variable and rebuild your CLISP. The source barks itself.
+
+- The outlook of the DYNAMIC_ARRAY macro from lispbibl.d change somewhen
+  between the 1996-05-30 and the 1996-07-22 release of CLISP, so you might
+  want to toggle the argument to '#if' near the start in 'clx.e'. Just grep
+  for DYNAMIC_ARRAY, there is comment in clx.e at the right spot.
+
+- You may not want or have the xpm lib. So just switch it off. 
+  Go into clx-1997-06-12/Makefile and change
+
+    WANTS = -DWANT_XSHAPE=1 -DWANT_XPM=1
+
+  into
+
+    WANTS = -DWANT_XSHAPE=1 -DWANT_XPM=0
+  
+  Then you need to edit clx-1997-06-12/link.sh and remove '-lXpm' from the
+  NEW_LIBS variable.
+
+- You may not want or have the shape extension. Same thing as above -- switch
+  it off. Go into clx-1997-06-12/Makefile and change
+
+    WANTS = -DWANT_XSHAPE=1 -DWANT_XPM=1
+
+  into
+
+    WANTS = -DWANT_XSHAPE=0 -DWANT_XPM=1
+  
+  Then you need to edit clx-1997-06-12/link.sh and remove '-lXext' from the
+  NEW_LIBS variable.
+
+- Usage of comment5 is hard coded in the Makefile, because I do not know how
+  to do it the right way. I want to fix this soon.
+
+- Be expected to do some things of the built process by hand. The whole
+  module stuff seems to be somewhat fragile, that was whoever my
+  experience. [Very strange things happened this morning.]
+
+- [all Linux stuff]
+  Beginning this week I had a heisenbug. It costs me several hours to find
+  the reason. Most time I was trying to recapture the bug, one little change
+  in the code and the bug disappeared. I nailed it down to a realloc call,
+  which modified my data (err not mine, more Bruno's since it was in the
+  garbage collector.) I graped the libc sources from the net to go into the
+  realloc routine to see what is going on. But all variant of recompiled
+  libc refused to show the bug. Finally I decided to believe, that the new
+  malloc in libc (They have a new one now, not the old gnu one and I trust
+  Brunos code) is broken. So I encourage to use the gnu malloc library if
+  you see strange things happen. [This was libc-5.3.9 and 5.4.7 was even
+  worse]
+
+I tried the module stuff with a clean 1996-07-22 version of CLISP. Using the
+1996-05-30 version, where most of my development were done, I was not able
+to perform a proper clisp-link. I have a total different layout and
+different Makefile for building clx. Lots files of my development tree are
+heavily hacked here and there.
+
+-------
+Fri Oct 11 1996
+Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>

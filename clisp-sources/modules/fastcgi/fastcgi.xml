@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="fastcgi"><title>The &fastcgi-link; Interface</title>
+
+<simpara>
+The &fastcgi-link; module speeds up &clisp; CGI
+scripts launched by a Web server.  Working with a
+&fastcgi-link;-enabled Web server such as &apache; with
+&mod-fastcgi;, a &clisp; program using the &fastcgi-link;
+protocol will run many times faster than a conventional CGI program.
+The performance improvements stem from the fact that the script's
+process remains running across &http; requests, eliminating startup
+overhead and allowing for caching of data structures and other resources.  This
+is the same approach used is in other languages (e.g., <ulink
+url="http://perl.apache.org">mod_perl</ulink> for Perl).  </simpara>
+
+<simpara>When this module is present, &features-var; contains the
+ symbol <constant>:FASTCGI</constant>.</simpara>
+
+<section id="fcgi-overview"><title>Overview of &fastcgi-link;</title>
+
+<para>
+Traditional CGI programs work by doing input/output with the Web
+server via the following channels:
+<orderedlist>
+<listitem><simpara>
+Examining environment variables; e.g., <envar>HTTP_USER_AGENT</envar> is the
+variable set by the Web server to name the browser used
+</simpara></listitem>
+<listitem><simpara>
+Reading from standard input.  E.g., to get input data in a "method=POST" request
+</simpara></listitem>
+<listitem><simpara>
+Writing an &http; response document (usually "Content-type:
+text/html") to the standard output, for eventual transmission
+back to the browser client
+</simpara></listitem>
+<listitem><simpara>
+Writing error messages to the standard error, usually captured
+by the Web server and logged in its log files.
+</simpara></listitem>
+</orderedlist>
+</para>
+
+<simpara>
+&fastcgi-link; involves replacing calls the standard routines to do
+the above with calls in the <quote role="package">FASTCGI</quote> package.  These calls will then
+work exactly as before when the program is invoked as a CGI, but will
+also work when invoked by a &fastcgi-link;-enabled Web server.
+</simpara>
+<simpara>
+&fastcgi-link; programs persist across &http; requests, and thus incur
+startup overhead costs only once.  For Lisp Web programs, this overhead
+can be substantial: code must be
+compiled and loaded, files and databases must be opened, etc.  Further,
+because the program stays running from &http; request to &http; request,
+it can cache information in memory such as database connections
+or large in-memory data structures.
+
+</simpara>
+
+</section>
+
+
+<section id="fcgi-functionality"><title>Functions in Package <quote role="package">FASTCGI</quote></title>
+<para>Access to
+&fastcgi-link; is via these functions in package <quote role="package">FASTCGI</quote>.
+
+<variablelist>
+
+	<!-- IS-CGI -->
+<varlistentry><term><code>(FASTCGI:IS-CGI)</code></term>
+<listitem><simpara>
+Returns &t; if the &clisp; program has been launched as a traditional
+CGI rather than in &fastcgi-link;.  In traditional CGI, program I/O is
+via operating system environment variables and standard file streams.
+Under &fastcgi-link;, I/O is done directly with the Web server via
+the &fastcgi-link; protocol.
+</simpara></listitem></varlistentry>
+
+	<!-- ACCEPT -->
+<varlistentry><term>
+<code>(FASTCGI:ACCEPT)</code> <replaceable>cgi-forms</replaceable>
+<code>(FASTCGI:FINISH)</code>
+</term>
+<listitem>
+<simpara>
+In &fastcgi-link; mode, the program loops,
+<function>ACCEPT</function>ing to begin the execution of an &http;
+request, and <function>FINISH</function>ing to signal that the script
+is finished writing its response to the &http; request.  <function>ACCEPT</function>
+blocks until the next &http; request comes in, returning &t; if there is
+a new request to handle, and &nil; if no more &http; requests will
+occur, usually because the Web server itself has terminated, in which
+case the &fastcgi-link; server loop should also exit.
+</simpara>
+<para>
+A typical &fastcgi-link; top-level server loop looks like:
+<programlisting language="lisp">
+(do ()
+    ((not (fastcgi:accept)))
+  (run-my-script)
+  (fastcgi:finish))
+</programlisting>
+
+</para></listitem></varlistentry>
+
+	<!-- GETENV -->
+<varlistentry><term><code>(FASTCGI:GETENV
+<replaceable>varname</replaceable>)</code></term>
+<listitem><simpara>
+Use in place of &getenv; to get the value of the environment variable
+named <replaceable>varname</replaceable>, which should be a string.
+Unlike &getenv;, which accesses the actual host operating system environment,
+<function>FASTCGI:GETENV</function> obtains its environment via
+the Web server, over its FastCGI communications channel.
+For more information, see the &fastcgi-link; Web site.
+Returns &nil; if <replaceable>varname</replaceable> is not defined in
+the operating system environment.  See <ulink
+url="http://www.cgi101.com/class/ch3/text.html">here</ulink> for a
+list of useful variables.  You must first have called
+<function>ACCEPT</function> and not yet have called
+<function>FINISH</function>.  </simpara></listitem></varlistentry>
+
+	<!-- WRITE-STDOUT -->
+<varlistentry><term><code>(FASTCGI:WRITE-STDOUT
+&string-r;)</code></term>
+<listitem><simpara>
+Use in place of standard Lisp calls which print to standard output
+(i.e., as part of the &http; response).
+You must first have called <function>ACCEPT</function> and not yet have
+called <function>FINISH</function>.
+</simpara></listitem></varlistentry>
+
+	<!-- WRITE-STDERR -->
+<varlistentry><term><code>(FASTCGI:WRITE-STDERR
+&string-r;)</code></term>
+<listitem><simpara>
+Use in place of standard Lisp calls which print to
+standard error. Rather than being part of
+the &http; response, data written to standard error are usually
+collected by the Web server in its error log.  This is useful
+for diagnostic purposes.
+</simpara></listitem></varlistentry>
+
+	<!-- SLURP-STDIN -->
+<varlistentry><term><code>(FASTCGI:SLURP-STDIN)</code></term>
+<listitem><simpara>
+Reads in the entirety of standard input and returns it as a string.
+This is usually done for &http; requests with
+<literal>METHOD="post"</literal>, when the data are passed to the CGI
+script via standard input rather than via the environment variable
+<envar>QUERY_STRING</envar>.  There is no way to read standard input
+in pieces, which could be a problem, say, for &http; uploads of very large files.
+</simpara></listitem></varlistentry>
+
+	<!-- OUT -->
+<varlistentry><term><code>(FASTCGI:OUT
+<replaceable>tree</replaceable>)</code></term>
+<listitem><simpara>
+Like <function>WRITE-STDOUT</function>, except that
+<replaceable>tree</replaceable>
+may be an arbitrarily nested list structure containing (at the leaves)
+numbers and strings.  For example,
+<literal>(FASTCGI:OUT '("foo" (" " 10 " " 20)))</literal>
+will write the string <literal>"foo 10 20"</literal>.  This function
+is useful when building strings in memory for display.
+</simpara></listitem></varlistentry>
+
+</variablelist>
+
+</para>
+
+</section>
+
+<section id="fcgi-example"><title>&fastcgi-link; Example</title>
+
+<para>
+
+Below is a simple example CGI script using &fastcgi-link;.
+
+<programlisting language="lisp">
+#!/usr/local/bin/clisp -q -K full
+
+(defun newline () (format nil "~%"))
+(do ((count 1 (1+ count)))
+	((not (fastcgi:accept)) nil)
+
+    (fastcgi:out "Content-type: text/plain" (newline) (newline))
+    (fastcgi:out
+     "I am running in mode: " (if (fastcgi:is-cgi) "CGI" "FastCGI") (newline)
+     "This is execution no.: " count (newline)
+     "The browser string is '" (fastcgi:getenv "HTTP_USER_AGENT") "'" (newline))
+
+    (fastcgi:finish))
+</programlisting>
+
+</para>
+</section>
+
+<section id="fcgi-build"><title>Building and configuring the
+  &fastcgi-link; Interface</title>
+<para>
+It is necessary to download the &fastcgi-link; developers' kit, build it,
+and install it, before building &clisp; with &fastcgi-link; support.
+You also need to upgrade your Web server to speak the &fastcgi-link;
+protocol.  For &apache; this means building in &mod-fastcgi;, either statically
+or dynamically, and then adding a line to your &apache; config like:
+<programlisting language="apache">
+     Addhandler fastcgi-script .fcgi
+</programlisting>
+After that, you can convert <filename>foo.cgi</filename> by linking it
+to a script names <filename>foo.fcgi</filename>.  Since a &fastcgi-link;
+script is also a valid CGI script, it can be run unmodified in either
+mode.
+</para>
+
+</section>
+
+
+</section>

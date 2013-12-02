@@ -1,0 +1,47 @@
+Instructions for building Lisp.app on Nextstep 3.2
+==================================================
+
+1.
+* Proceed as in unix/INSTALL up to and including
+      makemake ... > Makefile
+
+* After executing
+      makemake ... > Makefile ,
+  insert the line
+      .SUFFIXES:
+  somewhere in the  Makefile.
+
+* Then
+      make all modular
+
+2.
+* Add
+      -DNEXTAPP
+  to the  CFLAGS  in the  Makefile.
+
+* Remove the C object files:
+      rm *.o
+
+* Then
+      make modular
+  again.
+
+* Copy or link the files
+      lisp.a, libavcall.a, libvacall.a, libtrampoline.a, lispinit.mem
+  into the project directory  Lisp/ :
+      for file in lisp.a libavcall.a libvacall.a libtrampoline.a lispinit.mem
+      do
+        ln -s `/bin/pwd`/base/$file ../nextapp/Lisp/$file
+      done
+
+  If you are building Lisp.app with gettext support, then do the same for
+  libintl.a, and add libintl.a to the OTHER_LINKED variable in Lisp/PB.project.
+
+3.
+* Start Project Builder by double-clicking on  Lisp/PB.project
+  and build  Lisp.app .
+
+
+Michael Stoll
+<michael@rhein.iam.uni-bonn.de>
+

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="dir-key"><title>Directory Access</title>
+
+<para>This module provides some directory access from lisp,
+ in package &ldap-pac;.  3 types of directory keys
+ may exist, depending on the compilation environment.</para>
+
+<variablelist id="dir-key-type"><title>valid directory key types</title>
+ <varlistentry><term>:win32</term>
+  <listitem><simpara>&win32; registry access
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>:gnome</term>
+  <listitem><simpara><ulink url="http://developer.gnome.org/doc/API/libgnome/gnome-gnome-config.html">gnome-config</ulink> access
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>:ldap</term>
+  <listitem><simpara>LDAP interface via
+   <ulink url="http://www.openldap.org">OpenLDAP</ulink> or compatible
+  </simpara></listitem></varlistentry>
+</variablelist>
+
+<para>The following functions and macros are exported (please note that
+these features are experimental and the API may be modified in the
+future).</para>
+
+<variablelist>
+ <varlistentry id="dir-key-open"><term><code>(&dkey-open;
+   &dkey-r; &path-r; &key-amp; (&direction-k; &input-k;)
+   &if-does-not-exist;)</code></term>
+  <listitem><simpara>Open the directory key under &dkey-r;, which should
+   be either an open directory key or a valid &dk-t;.
+   The meaning of the &direction-k; and &if-does-not-exist; keyword
+   arguments is the same as for &open;.</simpara></listitem></varlistentry>
+ <varlistentry id="dir-key-close"><term><code>(&dkey-close;
+    &dkey-r;)</code></term>
+  <listitem><simpara>Close the directory key.  The preferred way is to
+   use the &wdkey-open; macro.</simpara></listitem></varlistentry>
+ <varlistentry id="with-dir-key-open"><term><code>(&wdkey-open; (&var-r;
+    &dkey-r; &path-r; &rest-amp; {&option-r;}*) &body-amp;
+    &body-r;)</code></term>
+  <listitem><simpara>Open the directory key (by calling &dkey-open;
+   on &dkey-r;, &path-r; and &option-r;s), bind it to &var-r;,
+   execute &body-r;, then close it with &dkey-close;.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-TYPE</function>
+    &dkey-r;)</code></term>
+  <listitem><simpara>Return the &dk-t; of the directory key
+  </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-PATH</function>
+                &dkey-r;)</code></term>
+  <listitem><simpara>Return the path of this directory key, which is the
+   &path-r; argument of &dkey-open; if &dkey-r; was a &dk-t; or the
+   concatenation of the &path-r; argument and the
+   <function>ldap:dir-key-path</function> of &dkey-r;.
+   </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-DIRECTION</function>
+    &dkey-r;)</code></term>
+  <listitem><simpara>One of &input-k;, &output-k; and &io-k;, indicating
+   the permitted operation on this key and its derivatives.
+   </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-CLOSED-P</function>
+    &dkey-r;)</code></term>
+  <listitem><simpara>Check whether the key has been closed.
+   It is not an error to close a closed key.
+   </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-SUBKEY-DELETE</function>
+     &dkey-r; <replaceable>subkey</replaceable>)</code>
+   <code>(<function>LDAP:DIR-KEY-VALUE-DELETE</function>
+     &dkey-r; <replaceable>attribute</replaceable>)</code></term>
+  <listitem><simpara>Delete the specified subkey or attribute.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-SUBKEY</function>
+    &dkey-r;)</code>
+  <code>(<function>LDAP:DIR-KEY-ATTRIBUTES</function> &dkey-r;)</code></term>
+  <listitem><simpara>Return the list of the subkeys or attributes.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-VALUE</function> &dkey-r;
+    <replaceable>attribute</replaceable> &optional-amp;
+    <replaceable>default</replaceable>)</code></term>
+  <listitem><simpara>Return the value of the specified attribute,
+   similar to &gethash; and &setf;able just like &gethash;.
+   </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>LDAP:DIR-KEY-INFO</function>
+    &dkey-r;)</code></term>
+  <listitem><simpara>Return some information about the directory key.
+   This is highly platform-dependent and will probably be removed or
+   replaced or modified in the future.</simpara></listitem></varlistentry>
+ <varlistentry id="with-dir-key-search"><term><code>(&wdkey-search;
+    (<replaceable>key-iter</replaceable>
+    <replaceable>atribute-iter</replaceable>
+    &dkey-r; &path-r; &key-amp; <constant>:scope</constant>)
+    &body-amp; &body-r;)</code></term>
+  <listitem><simpara>This is the main way to iterate over the subtree
+   under the key &dkey-r;+&path-r;.</simpara>
+   <simpara><replaceable>key-iter</replaceable> is a non-&nil; symbol
+    and is bound via &macrolet; to a macro, each call of which returns
+    the next subkey.</simpara>
+   <simpara><replaceable>atribute-iter</replaceable> is a symbol and is
+    bound, when non-&nil;, to a macro, each call of which returns two
+   values - the next attribute and its value.</simpara>
+   <para>The <constant>:scope</constant> keyword argument specifies the
+    scope of the search and can be
+   <variablelist>
+    <varlistentry><term><constant>:self</constant></term>
+     <listitem><simpara>iterate over the key itself
+     </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:level</constant></term>
+     <listitem><simpara>iterate over the children of the key
+     </simpara></listitem></varlistentry>
+    <varlistentry><term><constant>:tree</constant></term>
+     <listitem><simpara>iterate over the subtree
+     </simpara></listitem></varlistentry></variablelist></para>
+   <simpara>&wdkey-search; is used to implement
+    <function>LDAP:DIR-KEY-VALUES</function>,
+    <function>LDAP:DIR-KEY-CHILDREN</function> and
+    <function>LDAP:DIR-KEY-DUMP-TREE</function> in
+    <filename role="clisp-cvs">modules/dirkey/dirkey.lisp</filename>.
+    </simpara></listitem></varlistentry>
+</variablelist>
+
+</section>

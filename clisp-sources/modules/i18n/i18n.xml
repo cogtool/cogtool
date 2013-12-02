@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="i18n-mod"><title>Internationalization of User Programs</title>
+
+<section id="ggettext"><title>The &ggettext;</title>
+
+<para>&ggettext; is a set of functions, included in &clisp; or the
+&c-lang; library, which permit looking up translations of strings
+through message catalogs. It is also a set of tools which makes the
+translation maintenance easy for the translator and the program
+maintainer.</para>
+
+<para>The &ggettext; functions are available in &clisp; in the
+&i18n-pac; package, which is &re-export;ed from the &ext-pac;
+package.</para>
+&base-module;
+<simpara>When this module is present, &features-var;
+ contains the symbol <constant>:I18N</constant>.</simpara>
+
+<variablelist>
+ <varlistentry id="gettext"><term><code>(&gettext;
+    &msgid; &optional-amp; &domain; &category;)</code></term>
+  <listitem><simpara>returns the translation of the message &msgid;,
+    in the given &domain;, depending on the given &category;.
+    &msgid; should be an &ascii; string, and is normally the English message.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="ngettext"><term><code>(&ngettext;
+    &msgid; <replaceable>msgid_plural</replaceable>
+    &n-r; &optional-amp; &domain; &category;)</code></term>
+  <listitem><simpara>returns the plural form of the translation for of
+    &msgid; and &n-r; in the given &domain;, depending on the given
+    &category;.  &msgid; and <replaceable>msgid_plural</replaceable>
+    should be &ascii; strings, and are normally the English singular and
+    English plural variant of the message, respectively.
+ </simpara></listitem></varlistentry>
+</variablelist>
+
+<section id="domain"><title>Domain</title>
+ <para>The &domain; is a string identifier denoting the program that
+is requesting the translation.  The pathname of the message catalog
+depends on the &domain;: usually it is located at
+<filename>TEXTDOMAINDIR/l/LC_MESSAGES/domain.mo</filename>, where
+&l-r; is the <ulink url="http://www.loc.gov/standards/iso639-2/">ISO
+ 639-2</ulink> code of the language.
+The notion of &domain; allows several Lisp programs running in the same
+image to request translations independently of each other.</para>
+
+<formalpara id="textdomain"><title>Function &textdomain;</title>
+<para><code>(&textdomain;)</code> is a &place; that returns the default
+ &domain;, used when no &domain; argument is passed to the &gettext; and
+ &ngettext; functions.  It is &setf;able.
+<code>(&setf; &textdomain;)</code> is usually used
+during the startup phase of a program.
+Note that the default &domain; is not saved in a &mem-image;.
+The use of <code>(&setf; &textdomain;)</code> is
+recommended only for programs that are so simple that they will never
+need more than one &domain;.</para></formalpara>
+
+<formalpara id="textdomaindir"><title>Function &textdomaindir;</title>
+<para><code>(&textdomaindir; &domain;)</code>
+is a &place; that returns the base directory, called
+<filename>TEXTDOMAINDIR</filename> above, where the message
+catalogs for the given &domain; are assumed to be installed.
+It is &setf;able.
+<code>(&setf; &textdomaindir;)</code> is usually used
+during the startup phase of a program, and should be used because only
+the program knows where its message catalogs are installed.
+Note that the <filename>TEXTDOMAINDIR</filename>s
+are not saved in a &mem-image;.</para></formalpara>
+
+</section>
+
+<section id="category"><title>Category</title>
+<para>The &category; argument of the &gettext; and &ngettext;
+functions denotes which &locale; facet the result should depend on.
+The possible values are a platform-dependent subset of
+<simplelist type="inline">
+<member><constant>:LC_ADDRESS</constant></member>
+<member><constant>:LC_ALL</constant></member>
+<member><constant>:LC_COLLATE</constant></member>
+<member><constant>:LC_CTYPE</constant></member>
+<member><constant>:LC_IDENTIFICATION</constant></member>
+<member><constant>:LC_MEASUREMENT</constant></member>
+<member><constant>:LC_MESSAGES</constant></member>
+<member><constant>:LC_MONETARY</constant></member>
+<member><constant>:LC_NAME</constant></member>
+<member><constant>:LC_NUMERIC</constant></member>
+<member><constant>:LC_PAPER</constant></member>
+<member><constant>:LC_TELEPHONE</constant></member>
+<member><constant>:LC_TIME</constant></member></simplelist>
+The use of these values is useful for users who have a
+character/time/collation/money handling set differently from the usual
+message handling.
+Note that when a &category; argument is used, the message catalog
+location depends on the &category;: it will be expected at
+<filename>TEXTDOMAINDIR/ll/category/domain.mo</filename>.</para>
+</section>
+
+<section id="i18n-example"><title>Internationalization Example</title>
+
+<para>A non-internationalized program simulating a restaurant dialogue
+might look as follows.</para>
+
+<formalpara id="i18n-non-i"><title>prog.lisp</title>
+<para><programlisting language="lisp">
+(setq n (parse-integer (first &args;)))
+
+(format t "~A~%" "'Your command, please?', asked the waiter.")
+
+(format t "~@?~%"
+          (if (= n 1) "a piece of cake" "~D pieces of cake")
+          n)
+</programlisting></para></formalpara>
+
+<para>After being internationalized, all strings are wrapped in
+&gettext; calls, and &ngettext; is used for plurals.
+Also, &textdomaindir; is assigned a value; in our case, for simplicity,
+the current directory.</para>
+
+<formalpara id="i18n-i"><title>prog.lisp</title>
+<para><programlisting language="lisp">
+(setf (textdomain) "prog")
+(setf (textdomaindir "prog") "./")
+
+(setq n (parse-integer (first &args;)))
+
+(format t "~A~%"
+          (gettext "'Your command, please?', asked the waiter."))
+
+(format t "~@?~%"
+          (ngettext "a piece of cake" "~D pieces of cake" n)
+          n)
+</programlisting></para></formalpara>
+
+<para>For ease of reading, it is customary to define an abbreviation
+for the &gettext; function.  An underscore is customary.</para>
+
+<formalpara id="i18n-i-abbrev"><title>prog.lisp</title>
+<para><programlisting language="lisp">
+(setf (textdomaindir "prog") "./")
+(defun _ (msgid) (gettext msgid "prog"))
+
+(setq n (parse-integer (first &args;)))
+
+(format t "~A~%"
+          (_"'Your command, please?', asked the waiter."))
+
+(format t "~@?~%"
+          (ngettext "a piece of cake" "~D pieces of cake" n "prog")
+          n)
+</programlisting></para></formalpara>
+
+<para>Now the program's maintainer creates a message catalog template
+through the command
+<screen>
+bash$ xgettext -o prog.pot prog.lisp
+</screen>
+<note><title>Note</title>
+ <para>xgettext version 0.11 or higher is required here.</para></note></para>
+
+<para>The message catalog template looks roughly like this.</para>
+
+<formalpara id="i18n-pot"><title>prog.pot</title>
+<para><programlisting language="pot">
+msgid "'Your command, please?', asked the waiter."
+msgstr ""
+
+msgid "a piece of cake"
+msgid_plural "%d pieces of cake"
+msgstr[0] ""
+msgstr[1] ""
+</programlisting></para></formalpara>
+
+<para>Then a French translator creates a French message catalog</para>
+
+<formalpara id="i18n-fr-po"><title>prog.fr.po</title>
+<para><programlisting language="po">
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Plural-Forms: nplurals=2; plural=(n &gt; 1);\n"
+
+msgid "'Your command, please?', asked the waiter."
+msgstr "&laquo;Votre commande, s'il vous plait&raquo;, dit le gar&ccedil;on."
+
+# Les gateaux allemands sont les meilleurs du monde.
+msgid "a piece of cake"
+msgid_plural "%d pieces of cake"
+msgstr[0] "un morceau de gateau"
+msgstr[1] "%d morceaux de gateau"
+</programlisting></para></formalpara>
+
+<para>and sends it to the program's maintainer.</para>
+
+<para>The program's maintainer compiles the catalog as follows:
+<screen>
+bash$ mkdir -p ./fr/LC_MESSAGES
+bash$ msgfmt -o ./fr/LC_MESSAGES/prog.mo prog.fr.po
+</screen></para>
+
+<para>When a user in a french &locale; then runs the program
+<screen>
+bash$ clisp prog.lisp 2
+</screen>
+she will get the output
+<screen>
+    &laquo;Votre commande, s'il vous plait&raquo;, dit le gar&ccedil;on.
+    2 morceaux de gateau
+</screen>
+</para>
+</section>
+
+</section>
+
+<section id="i18n-locale"><title>Locale</title>
+
+<variablelist>
+<varlistentry id="set-locale"><term><code>(&set-locale;
+   &optional-amp; &category; &locale;)</code></term>
+ <listitem><simpara>This is an interface to
+   <function role="unix">setlocale</function>.</simpara>
+  <simpara>When &locale; is missing or &nil;, return the current one.</simpara>
+  <simpara>When &category; is missing or &nil;, return all categories
+   as a &list-t;.</simpara></listitem></varlistentry>
+
+<varlistentry id="locale-conv"><term><code>(&locale-conv;)</code></term>
+ <listitem><simpara>This is an interface to
+   <function role="unix">localeconv</function>.</simpara>
+  <simpara>Returns a <type>I18N:LOCALE-CONV</type>
+   structure.</simpara></listitem></varlistentry>
+
+<varlistentry id="lang-info"><term><code>(&lang-info;
+   &optional-amp; &item-r;)</code></term>
+ <listitem><simpara>This is an interface to
+   <function role="unix">nl_langinfo</function> (&unix;)
+   and <function role="win32">GetLocaleInfo</function> (&win32;).</simpara>
+  <simpara>When &item-r; is missing or &nil;,
+   return all available information as a &list-t;.</simpara>
+</listitem></varlistentry></variablelist>
+
+</section>
+</section>

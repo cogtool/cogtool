@@ -1,0 +1,14 @@
+file_list='cpari.o'
+mod_list=''
+if test -r pari.c; then
+  file_list="$file_list"' pari.o'
+  mod_list="$mod_list"' pari'
+fi
+make clisp-module \
+     CC="${CC}" CPPFLAGS="${CPPFLAGS}" CFLAGS="${CFLAGS}" \
+     INCLUDES="$absolute_linkkitdir"
+NEW_FILES="$file_list"
+NEW_LIBS="$file_list @LIBS@"
+NEW_MODULES="$mod_list"
+TO_LOAD='pari'
+TO_PRELOAD='preload.lisp'

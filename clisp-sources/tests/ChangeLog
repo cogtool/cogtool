@@ -1,0 +1,2150 @@
+2006-01-22  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: test opening files with too long names
+
+2006-01-18  Sam Steingold  <sds@gnu.org>
+
+	* socket.tst (*server*): socket-server-close
+
+2006-01-08  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: test open :direction :output :if-exists :append
+
+2006-01-07  Sam Steingold  <sds@gnu.org>
+
+	* time.tst: check that early 1900-01-01 GMT (which is 1899-12-31
+	EST) is correctly handled by ENCODE-UNIVERSAL-TIME
+
+2006-01-03  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (pretty-compare@sequence): handle the case when the
+	only difference between sequences is type (content is identical)
+
+2006-01-03  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: test GETENV
+
+2006-01-01  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: test 1d23 output
+
+2006-01-01  Sam Steingold  <sds@gnu.org>
+
+	* time.tst: added a test for a crash on woe32 in localtime
+
+2005-12-25  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst: disabled the lambda-parameters-limit test on win32/g++
+	as a work-around for bug 1390134
+
+2005-12-22  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: test EXT:!
+
+2005-12-22  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: sint64+uint64 testcases. Let's hear about the bugs
+
+2005-12-16  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst (constructor): check that funcallable instances can be
+	described
+
+2005-12-15  Sam Steingold  <sds@gnu.org>
+
+	* streamslong.tst: check opening the same file twice
+
+2005-12-14  Sam Steingold  <sds@gnu.org>
+
+	* socket.tst: test socket-stream-local & socket-stream-peer
+
+2005-12-13  Sam Steingold  <sds@gnu.org>
+
+	* socket.tst: make some interactive tests work in batch
+
+2005-12-11  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst: added a test example from mop.xml#mop-sa-funcallable
+
+2005-12-06  Sam Steingold  <sds@gnu.org>
+
+	* type.tst: test SUBTYPEP on ENCODINGs
+	* encoding.tst: check charset:iso-8859-1 == code-char/char-code
+	test from "Treatment of Newline during Input and Output"
+
+2005-12-03  Sam Steingold  <sds@gnu.org>
+
+	* encoding.tst (sys::charset-range): test charset:base64
+
+2005-12-02  Sam Steingold  <sds@gnu.org>
+
+	* time.tst (check-universal-time): simplified
+	(time-loop): more informative log
+
+2005-11-30  Sam Steingold  <sds@gnu.org>
+
+	* time.tst: enabled check-universal-time checks for default TZ
+
+2005-11-30  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst: test that invalid slot :ALLOCATION does not cause segfault
+
+2005-11-29  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: test LOAD-LOGICAL-PATHNAME-TRANSLATIONS
+
+2005-11-26  Sam Steingold  <sds@gnu.org>
+
+	* socket.tst: check that EOF is detected when the other end is shutdown
+
+2005-11-26  Sam Steingold  <sds@gnu.org>
+
+	* encoding.tst: test CHARSET:BASE64
+
+2005-11-21  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst: test user-defined :allocation :hash
+	* hash-classes.lisp: new file
+
+2005-11-19  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst: test macroexpansion of def-c-var and def-c-const
+
+2005-11-18  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst (boole-n-vector): added a test from
+	http://www.lisp.org/HyperSpec/Body/fun_boole.html#boole
+
+2005-11-18  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: test non-class-naming TYPE arguments to MAKE-CONDITION
+
+2005-11-17  Sam Steingold  <sds@gnu.org>
+
+	* symbol10.tst (clrvar) [clisp]: use (proclaim `(ext:notspecial var))
+
+2005-11-17  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst (clhs-root): redefine to return NIL to make sure
+	that DESCRIBE does not try to look up CLHS documentation
+
+2005-11-15  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (*run-test-truename*): new variable
+	(run-test): bind it to the test file's truename
+	(macro8, mop, clos): use it to make tests directory-independent
+
+2005-11-14  Sam Steingold  <sds@gnu.org>
+
+	* type.tst: check (subtypep '(or/and ...) ...) for standard-classes
+
+2005-11-14  Sam Steingold  <sds@gnu.org>
+
+	* array.tst: check adjust-array+initial-element on strings
+
+2005-11-14  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst: check reference disentangling in array input
+
+2005-11-07  Sam Steingold  <sds@gnu.org>
+
+	* Makefile (tests.fas): new target
+	(tests, complete): depend on it
+
+2005-11-07  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (*test-result-in-file*): new variable
+	(do-test): respect it
+	(*run-test-type*, *run-test-erg*): new variables
+	(run-test): use them instead of literals; return (name tot# err#)
+	(with-accumulating-errors, run-files): removed
+	(report-results): new function
+	(run-some-tests): use it instead of RUN-FILES
+	(run-all-tests): use REPORT-RESULTS
+
+2005-11-07  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): also report the number of test files
+
+2005-11-07  Sam Steingold  <sds@gnu.org>
+
+	* socket.tst: added some batch tests
+	* tests.lisp (run-all-tests) [CLISP & SOCKETS]: run "socket"
+
+2005-10-29  Sam Steingold  <sds@gnu.org>
+
+	* pack11.tst: test CONTINUEability of bad *PACKAGE* error
+
+2005-10-21  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): enable defhash tests unconditionally
+
+2005-10-20  Sam Steingold  <sds@gnu.org>
+
+	* defhash.tst: STRING-EQUAL is incompatible with SXHASH
+
+2005-10-20  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): use disable-risky instead of
+	comments to disable bind/eval
+
+2005-10-14  Sam Steingold  <sds@gnu.org>
+
+	* listeners.lisp: do something extra while the system waits for input
+	* clos.tst: load it
+
+2005-10-06  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst [clisp]: test module-info
+
+2005-10-06  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: test FILE-WRITE-DATE and FILE-LENGTH
+	vs (DIRECTORY ... :FULL T)
+
+2005-09-30  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (libc): removed variable, (:library :default) is always OK
+
+2005-09-23  Sam Steingold  <sds@gnu.org>
+
+	* hashtable.tst: added read/write consistency tests
+
+2005-09-21  Sam Steingold  <sds@gnu.org>
+
+	* lambda.tst: test (FUNCTION-LAMBDA-EXPRESSION #'(SETF FOO))
+
+2005-09-21  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (do-test, do-errcheck): fixed format string
+
+2005-09-21  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (type-error-handler): new function
+
+2005-09-06  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst: check that WRITE-TO-STRING binds variables for
+	supplied keyword arguments
+	remove global definitions at the end of file
+
+2005-08-15  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: more feedback on failure
+
+2005-08-15  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: test (DESCRIBE NIL)
+
+2005-08-10  Sam Steingold  <sds@gnu.org>
+
+	* strings.tst: test EXT:STRING-INVERTCASE
+
+2005-08-05  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: test EXT:COMPILED-FILE-P
+
+2005-08-03  Sam Steingold  <sds@gnu.org>
+
+	* time.tst: check docstring preservation under compilation; add cleanup
+
+2005-08-02  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): run "time"
+	* time.tst: new file
+
+2005-08-02  Sam Steingold  <sds@gnu.org>
+
+	* restarts.tst: test CHECK-FUNCTION-NAME in DOCUMENTATION
+	* setf.tst, alltest.tst: DOCUMENTATION is now in SYMBOL-PLIST
+
+2005-08-02  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst: unlock "CLOS" when defining a
+	CLOS:FINALIZE-INHERITANCE method
+
+2005-08-02  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (show): moved here from the individual test files
+
+2005-07-25  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): disable bind-eval because of amd64 issues
+
+2005-07-22  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: when "foo" is a file, (directory "foo/") must return NIL
+
+2005-07-21  Sam Steingold  <sds@gnu.org>
+
+	* encoding.tst: test SYS::GET-CHARSET-RANGE (was in src/subtypep.lisp)
+
+2005-07-07  Sam Steingold  <sds@gnu.org>
+
+	* setf.tst: check that GET-SETF-EXPANSION accepts NIL environment arg
+
+2005-07-06  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: use -X- and -F- instead of *X* and *F* to avoid
+	conflict with globally special variables defined elsewhere
+
+2005-06-28  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: test circular lists in code
+
+2005-06-26  Sam Steingold  <sds@gnu.org>
+
+	* macros8.tst: test (cond (t)) compilation
+
+2005-06-22  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-test): print logfile's truename when there are errors
+
+2005-06-22  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: 6 more MACROLET tests inspired by ansi-tests
+
+2005-06-22  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that the "SYS" logical host works
+
+2005-06-09  Bruno Haible  <bruno@clisp.org>
+
+	* conditions.tst: Mark a test as clisp-only.
+
+2005-06-09  Bruno Haible  <bruno@clisp.org>
+
+	* bin-io.tst: Update for cmucl-19b-pre1.
+	* clos.tst: Likewise.
+	* encoding.tst: Likewise.
+	* eval20.tst: Likewise.
+	* excepsit.tst: Likewise.
+	* iofkts.tst: Likewise.
+	* macro8.tst: Likewise.
+	* path.tst: Likewise.
+	* streams.tst: Likewise.
+	* streamslong.tst: Likewise.
+	* type.tst: Likewise.
+	* weakptr.tst: Likewise.
+	* tests.lisp (run-test, run-all-tests): Likewise.
+
+2005-06-09  Bruno Haible  <bruno@clisp.org>
+
+	Move lots of CLISP-only tests to a separate file.
+	* conditions.tst: Move restart tests out to restarts.tst.
+	* lists152.tst: Likewise.
+	* restarts.tst: New file.
+	* tests.lisp (run-all-tests): Run it after conditions.tst.
+
+2005-06-08  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: 5 more tests
+
+2005-06-04  Bruno Haible  <bruno@clisp.org>
+
+	* path.tst: Use UNKNOWN, not FIXME, for not-yet-determined values in
+	other implementations.
+
+2005-05-29  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Adjust numbering of last patch. Add a little sharper test.
+
+2005-05-29  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Add tests for DOCUMENTATION and (SETF DOCUMENTATION) on
+	interpreted functions and macros.
+
+2005-05-29  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Fix placement and comments of last patch.
+
+2005-05-29  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: On LISPWORKS, use the (gc) substitute.
+
+2005-05-25  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst (PROCLAIM): forbid dotted declaration-specifier lists
+
+2005-05-25  Sam Steingold  <sds@gnu.org>
+
+	* setf.tst: check that (DOCUMENTATION (COMPILE NIL (LAMBDA () ...)))
+	does not persist from one LAMBDA to another
+
+2005-05-20  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that *COMPILE-FILE-PATHNAME* is what it should be
+
+2005-05-16  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that LOAD can handle invalid streams
+
+2005-05-16  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check COMPILE-FILE-PATHNAME
+	with :OUTPUT-FILE LOGICAL-PATHNAME
+
+2005-05-16  Sam Steingold  <sds@gnu.org>
+
+	* setf.tst: check that (DOCUMENTATION (LAMBDA () ...)) does not
+	persist from one LAMBDA to another
+
+2005-05-16  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that COMPILE-FILE returns the truename
+
+2005-05-15  Sam Steingold  <sds@gnu.org>
+
+	* clos.tst: added a test from
+	<http://article.gmane.org/gmane.lisp.clisp.general:9582>
+
+2005-05-11  Bruno Haible  <bruno@clisp.org>
+
+	* alltest.tst: Update for very large fixnum sizes.
+	* array.tst: Likewise.
+
+2005-05-13  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: more meaningful diagnostics for FILE-WRITE-DATE
+
+2005-05-12  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (check-ignore-errors): new macro (checks condition slots)
+	(do-errcheck): use it instead of IGNORE-ERRORS
+
+2005-05-11  Bruno Haible  <bruno@clisp.org>
+
+	* strings.tst: Add tests for reallocated simple-strings in make-array.
+
+2005-05-12  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: check that COMPILE-FILE
+	can accept a closed file as :OUTPUT-FILE
+
+2005-05-11  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that we can compile files in ansi mode
+
+2005-05-11  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: check that READER-ERROR has slot :STREAM
+
+2005-05-10  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst: added a FLET LAMBDA-PARAMETERS-LIMIT test from the
+	ANSI suite that crashes on GCTRIGGER_IF/handler_args under
+	mingw/g++ but not linux/g++
+
+2005-05-10  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst: 4 *READ-SUPPRESS* tests from ANSI suite
+
+2005-05-10  Sam Steingold  <sds@gnu.org>
+
+	* type.tst (check-type-error): new macro;
+	use it to check type errors
+
+2005-05-09  Sam Steingold  <sds@gnu.org>
+
+	* path.tst (path=): new function; test ENOUGH-NAMESTRING
+
+2005-05-09  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: test merging with NIL defaults
+
+2005-05-08  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp: Update for LispWorks 4.4.5.
+	* alltest.tst: Update for LispWorks. Mark sys::coerced-subseq tests as
+	clisp-only.
+	* array.tst: Update for LispWorks. Add test for array-total-size-limit's
+	value.
+	* backquot.tst: Mark a test as clisp-only.
+	* characters.tst: Update for LispWorks. Mark sys::char-invertcase test
+	as clisp-only.
+	* clos.tst: Update for LispWorks.
+	* conditions.tst: Update for LispWorks.
+	* format.tst: Update for LispWorks. Mark elastic-newline tests as
+	clisp-only.
+	* hashlong.tst: Update for LispWorks.
+	* iofkts.tst: Update for LispWorks. Move a misplaced test.
+	* lambda.tst: Update for LispWorks.
+	* lists152.tst: Update for LispWorks.
+	* lists153.tst: Update for LispWorks.
+	* lists154.tst: Update for LispWorks.
+	* lists155.tst: Update for LispWorks.
+	* lists156.tst: Update for LispWorks.
+	* macro8.tst: Update for LispWorks. Use defparameter instead of defvar.
+	Mark specialized-lambda-list test as clisp-only. Change
+	constant-folding test to use double-floats instead of single-floats.
+	* map.tst: Update for LispWorks.
+	* mop.tst: Update for LispWorks.
+	* pack11.tst: Update for LispWorks. Mark package-case tests as
+	clisp-only.
+	* setf.tst: Update for LispWorks.
+	* steele7.tst: Update for LispWorks.
+	* streams.tst: Update for LispWorks.
+	* streamslong.tst: Update for LispWorks.
+	* strings.tst: Update for LispWorks.
+	* symbol10.tst: Update for LispWorks.
+	* symbols.tst: Update for LispWorks.
+	* type.tst: Update for LispWorks. Unintern symbol BAR before defining
+	it as a class name.
+
+2005-05-06  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst: test STRUCTURE-DIRECT-SLOTS
+	and absence of slot accessor redefinition warnings
+
+2005-05-06  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: #p"" ==> :DIRECTORY NIL
+
+2005-05-03  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (pretty-compare): new generic function
+	the SEQUENCE method extracted from DO-TEST
+	the new PATHNAME method implemented
+	(do-test): use it
+
+2005-05-02  Sam Steingold  <sds@gnu.org>
+
+	* pack11.tst: check that REQUIRE accepts a CHARACTER
+	check that PROVIDE does not case-convert symbols
+
+2005-05-02  Sam Steingold  <sds@gnu.org>
+
+	* type.tst: PLISTs must be properly checked for being proper
+
+2005-05-02  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that we can pass logical pathnames to LOAD
+
+2005-05-02  Sam Steingold  <sds@gnu.org>
+
+	* mop.tst: test SLOT-DEFINITION-READERS for DEFSTRUCT
+
+2005-04-28  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add a test for update of specializers -> methods lists.
+
+2005-04-22  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst: check that one cannot redefine EXT:!
+
+2005-04-24  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: check some TYPE-ERRORs with COERCE
+
+2005-04-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test that defmethod calls remove-method.
+
+2005-04-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test that defmethod calls add-method.
+	Reported by Pascal Costanza <pc@p-cos.net>.
+
+2005-04-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Fix an add-method method.
+
+2005-04-18  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-files): fixed output indentation
+
+2005-04-12  Bruno Haible  <bruno@clisp.org>
+
+	* weak.tst: Update for change :either -> :key-and-value,
+	:both -> :key-or-value.
+	* weakhash.tst: Likewise.
+	* weakhash2.tst: Likewise.
+
+2005-04-10  Bruno Haible  <bruno@clisp.org>
+
+	* weakhash.tst: Test long chains of weak hash tables.
+
+2005-04-02  Bruno Haible  <bruno@clisp.org>
+
+	* weakhash.tst: New file.
+	* weakhash2.tst: Renamed from hashweak.tst.
+	* tests.lisp (run-all-tests): Update.
+
+2005-03-31  Bruno Haible  <bruno@clisp.org>
+
+	* weakptr.tst: Portability to ACL 6.2 and LispWorks 4.3.
+	* hashweak.tst: Portability to LispWorks 4.3.
+	* tests.lisp (run-all-tests): Run weakptr.tst also on ACL, CMUCL, SBCL,
+	LispWorks. Run hashweak.tst also on LispWorks.
+
+2005-03-28  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-self): test the :DOCUMENTATION option to DEF-CALL-OUT
+
+2005-03-26  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst ("sys:foo.bar."): fixed the test (parse-namestring
+	-> parse-error, logical-pathname -> type-error)
+
+2005-03-22  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: bug 1167991 (SP-DEPTH <0)
+
+2005-03-08  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst: check that RANDOM does not accept RATIOs
+
+2005-03-06  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: added (DEBUG 1) to OPTIMIZE
+
+2005-02-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add a test for method-function.
+
+2005-02-20  Bruno Haible  <bruno@clisp.org>
+
+	* number2.tst: Add tests for exactness of some realparts and
+	imagpart of transcendental functions. Add test for accuracy of CIS.
+
+2005-02-14  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that we can load "foo.lisp"
+	when "foo/" is also present
+
+2005-02-14  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: check that declaration processing does not modify code
+
+2005-02-14  Bruno Haible  <bruno@clisp.org>
+
+	* streams.tst: Test FINISH-OUTPUT and FORCE-OUTPUT as well.
+
+2005-02-13  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (do-test): Print a blank line after the "Differ"
+	paragraph, not before.
+
+2005-02-13  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp: Updates for GCL.
+	* clos.tst: Likewise.
+	* format.tst: Likewise.
+	* iofkts.tst: Likewise.
+	* mop.tst: Likewise.
+	* setf.tst: Likewise.
+	* streamslong.tst: Likewise.
+	* type.tst: Likewise.
+
+2005-02-13  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: test CLEAR-INPUT and CLEAR-OUTPUT
+
+2005-02-10  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: check that SAFETY declarations are respected
+
+2005-02-10  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: call PRINC-ERROR instead of ignoring conditions
+
+2005-02-08  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Add some tests for SUBTYPEP and FUNCTION types.
+
+2005-02-05  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: always activate all SPECIAL declarations
+
+2005-01-27  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test for class-prototype result on built-in classes.
+
+2005-02-02  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: check that DIRECTORY returns TRUENAMEs
+
+2005-01-22  Bruno Haible  <bruno@clisp.org>
+
+	* bind.tst: Add tests for MACROLET expander environments.
+
+2005-01-27  Bruno Haible  <bruno@clisp.org>
+
+	* path.tst: Add test for (logical-pathname ":").
+
+2005-01-26  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Add a test for SETF VALUES-LIST.
+
+2005-01-21  Bruno Haible  <bruno@clisp.org>
+
+	* alltest.tst: At the end, clean up symbols affected by side-effects.
+	* backquot.tst: Likewise.
+	* eval20.tst: Likewise.
+	* format.tst: Likewise.
+	* lists152.tst: Likewise.
+	* macro8.tst: Likewise.
+	* map.tst: Likewise.
+	* pack11.tst: Likewise.
+	* setf.tst: Likewise.
+
+2005-01-23  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Rename some classes to avoid collisions with other tests.
+
+2005-01-20  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: added LOCALLY tests
+
+2005-01-19  Bruno Haible  <bruno@clisp.org>
+
+	* bind.tst: Add more tests with global variables.
+
+2005-01-19  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: added tests of interaction with global specials
+
+2005-01-19  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (my-eval): Compare the two results with EQUALP, not EQUAL,
+	for consistency with do-test.
+	(run-test): Accept :logname argument.
+	(run-all-tests): Add bind.tst.
+
+2005-01-19  Bruno Haible  <bruno@clisp.org>
+
+	* strings.tst: Clean up after test added on 2001-12-04.
+
+2005-01-18  Bruno Haible  <bruno@clisp.org>
+
+	* bind.tst: Fix a test and add some more tests.
+
+2005-01-13  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (with-ignored-errors): use princ-error
+	use newline convention B consistently
+
+2005-01-13  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (princ-error): moved here from...
+	* conditions.tst: here
+	* bind.tst: use it instead of print-cond
+
+2005-01-13  Sam Steingold  <sds@gnu.org>
+
+	allow compilation instead/in addition to evaluation of test forms
+	* tests.lisp (*eval-method*, *test-ignore-errors*): new variables
+	(my-eval): new function
+	(do-test, do-errcheck): not accept accept optional parameters, use
+	*TEST-IGNORE-ERRORS* instead; use MY-EVAL instead of EVAL
+	(*run-test-ignore-errors*) : removed
+	(run-test, run-some-tests, run-all-tests): accept keyword instead
+	of optional parameters
+
+2005-01-13  Sam Steingold  <sds@gnu.org>
+
+	* bind.tst: new file: test non-global special bindings
+
+2005-01-05  Bruno Haible  <bruno@clisp.org>
+
+	* macro8.tst: Add tests for global symbol-macros.
+
+2004-12-24  Bruno Haible  <bruno@clisp.org>
+
+	* streams.tst: Adjust a test, taking into account that WARN now
+	prints an elastic newline after and none before the warning.
+
+2004-12-24  Bruno Haible  <bruno@clisp.org>
+
+	* format.tst: Add some tests for elastic-newline.
+
+2005-01-04  Sam Steingold  <sds@gnu.org>
+
+	* type.tst: check that there are no unnecessary warnings on
+	predicate-accessor conflict
+
+2004-12-24  Bruno Haible  <bruno@clisp.org>
+
+	* ffi.tst: Add a few tests for conversion of strings and arrays with
+	element-type CHARACTER.
+
+2004-12-19  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Add test against broken PUSH implementation.
+
+2004-12-19  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Add some tests for the quality of some macroexpansions.
+
+2004-12-19  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Check that dotted lists give an error.
+
+2004-12-19  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a test for call-next-method.
+
+2004-12-19  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: test USER-HOMEDIR-PATHNAME
+
+2004-12-18  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: test (setf readtable-case)
+
+2004-12-18  Sam Steingold  <sds@gnu.org>
+
+	* pack11.tst: tests for setfable package case properties
+
+2004-12-12  Bruno Haible  <bruno@clisp.org>
+
+	* characters.tst: Add test of sys::char-invertcase.
+
+2004-12-08  Bruno Haible  <bruno@clisp.org>
+
+	* eval20.tst: Add more constantp tests.
+
+2004-12-11  Bruno Haible  <bruno@clisp.org>
+
+	* streams.tst: Make a that looks at the textual output of WARN work
+	in non-English environments.
+
+2004-12-08  Bruno Haible  <bruno@clisp.org>
+
+	* array.tst: Test error behaviour of (SETF ROW-MAJOR-AREF).
+
+2004-12-07  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: test that COMPILE always returns 3 values
+
+2004-12-06  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst (princ-error): new function
+	added a test to check that PROGV does not modify the source code
+
+2004-12-05  Bruno Haible  <bruno@clisp.org>
+
+	* alltest.tst: Add tests for sequence constructing functions with types
+	like (or (vector t 5) (vector t 10)).
+
+2004-12-05  Bruno Haible  <bruno@clisp.org>
+
+	* number2.tst: Add a comparison which used to trigger overflow or a
+	GC-safety bug.
+
+2004-11-26  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: check that run-time errors are not turned into
+	compile-time errors
+
+2004-11-20  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add a test for finalize-inheritance invocations.
+
+2004-11-22  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add support for Allegro CL 6.2. Make some tests more
+	portable.
+	* mop.tst: Likewise.
+	* mop-aux.lisp: Add support for Allegro CL.
+
+2004-11-21  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add support for Lispworks 4.3. Use class name
+	'abstract-position' instead of 'position'.
+	* mop.tst: Add support for Lispworks 4.3.
+
+2004-11-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Update for CMUCL.
+
+2004-11-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Restrict the tests that require
+	compute-effective-slot-definition-initargs to CLISP, CMUCL, SBCL.
+
+2004-11-21  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add support for OpenMCL 0.14.2.
+	* mop-aux.lisp: Likewise.
+
+2004-11-21  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a method-combination test that fails in SBCL 0.8.16.
+
+2004-11-20  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (lisp-implementation): Renamed from
+	lisp-implementation-type. Needed because of SBCL's package locks.
+	* clos.tst: Move tests which use MOP symbols to mop.tst. Fix syntax
+	of foo129, foo130 tests.
+	* mop.tst: New tests from clos.tst. Add clos: package prefix in some
+	places. Improve portability.
+
+2004-11-19  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Test the forward-referenced-class behaviour with both
+	settings of *forward-referenced-class-misdesign*.
+	* mop.tst: Likewise.
+
+2004-11-23  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: test COMPILE+LOAD-TIME-VALUE inside COMPILE-FILE
+
+2004-11-17  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add some tests for symbols naming forward-referenced
+	classes.
+	* mop.tst: Add some tests for forward-referenced classes.
+
+2004-11-22  Sam Steingold  <sds@gnu.org>
+
+	* setf.tst (foo22): quote (values)
+
+2004-11-22  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Don't use the symbol 'foo' in too many contexts.
+
+2004-11-21  Sam Steingold  <sds@gnu.org>
+
+	* setf.tst: check that long DEFSETF permit missing store variables
+
+2004-11-13  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Test for the generic-function-class' default-initargs use in
+	defgeneric.
+
+2004-11-13  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Test for the metaclass' default-initargs use in defclass.
+
+2004-11-08  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Remove special caution in initialize-instance method for
+	virtual-generic-function.
+
+2004-11-17  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add clos: package prefixes.
+
+2004-11-09  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add more tests for notification of generic functions from
+	defclass.
+
+2004-11-15  Bruno Haible  <bruno@clisp.org>
+
+	* mop-aux.lisp: New file.
+	* mop.tst: Load it. Rely on it to define
+	clos::compute-effective-method-as-function.
+
+2004-11-07  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add tests for notification of generic functions from
+	defclass.
+
+2004-11-07  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a test for notification of generic functions from
+	change-class.
+
+2004-11-07  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test for notification upon change-class of a
+	generic-function.
+
+2004-11-07  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test for notification upon change-class of a method.
+
+2004-11-10  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Comment out the print-object method return value test.
+
+2004-10-27  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test for compute-direct-slot-definition-initargs.
+
+2004-10-31  Bruno Haible  <bruno@clisp.org>
+
+	* socket.tst: New file.
+
+2004-10-24  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Update for changed compute-effective-method-as-function
+	calling conventions.
+
+2004-10-23  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add virtual-dispatch generic functions example.
+
+2004-10-23  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test of compute-effective-slot-definition-initargs.
+	Add test for slots with one value per subclass.
+
+2004-11-07  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (do-test): Fix another out-of-bounds array access
+	introduced on 2004-10-20.
+
+2004-10-31  Bruno Haible  <bruno@clisp.org>
+
+	* lambda.tst: On BeOS, disable tests that fail on BeOS.
+	* excepsit.tst: Likewise.
+	* ffi.tst: Likewise.
+
+2004-10-29  Bruno Haible  <bruno@clisp.org>
+
+	* conditions.tst: Override outermost handlers.
+
+2004-10-17  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Add a defstruct test.
+	* mop.tst: Add tests for interoperability of defstruct with defclass.
+
+2004-10-29  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (do-test): Fix out-of-bounds array access introduced on
+	2004-10-20.
+
+2004-10-29  Sam Steingold  <sds@gnu.org>
+
+	* loop.tst: test accumulation clause compatibility check
+
+2004-10-27  Bruno Haible  <bruno@clisp.org>
+
+	* conditions.tst: Check that after a Ctrl-D (EOF), assert without
+	places is not retried.
+
+2004-10-26  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add test against multiple execution of initialize-instance.
+
+2004-10-22  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Make the auto-accessors test portable.
+
+2004-10-20  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (do-test): when both the expected and actual results
+	are sequences, print the position at which they differ
+
+2004-10-20  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: more fill-stream tests
+
+2004-10-10  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add test for custom method classes.
+
+2004-10-10  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add tests regarding extending methods.
+
+2004-10-09  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add test for invalid print-object methods warning.
+
+2004-10-09  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add tests for print-object on uninitialized metaobjects.
+
+2004-10-07  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Test behaviour of class redefinition w.r.t. direct slots.
+
+2004-10-07  Bruno Haible  <bruno@clisp.org>
+
+	* conditions.tst: Add a few tests for use-value in array functions.
+
+2004-10-07  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: test some restarts
+
+2004-10-06  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Fix unintended side effects caused by the typechecked-
+	reader/writer tests.
+
+2004-10-06  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: do not optimize (parse-c-type `(c-array ,foo ,len))
+
+2004-10-05  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: Test FOREIGN-VARIABLE and FOREIGN-FUNCTION constructors.
+
+2004-10-05  Sam Steingold  <sds@gnu.org>
+
+	* path.tst [win32]: check that ABSOLUTE-PATHNAME does not crash on
+	wild device
+
+2004-09-20  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add many new protocol tests.
+
+2004-09-28  Sam Steingold  <sds@gnu.org>
+
+	* pack11.tst: package locking should not interfere with SETQ
+	return value
+
+2004-09-28  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: bind *PRINT-PRETTY* in the FILL-STREAM test so that
+	S-expression output respects *PRINT-RIGHT-MARGIN*
+
+2004-09-28  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst (loop): check that (loop 42) is parsed as extended loop
+
+2004-09-28  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a couple of defgeneric tests.
+
+2004-09-23  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a few more defclass tests.
+
+2004-09-20  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Update for changed syntax of :fixed-slot-locations option.
+
+2004-09-22  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a few more defclass tests.
+
+2004-09-18  Bruno Haible  <bruno@clisp.org>
+
+	* number2.tst: Add two floating-point tests.
+	* alltest.tst: Update expected values of most/least-*tive-short-float.
+
+2004-09-20  Sam Steingold  <sds@gnu.org>
+
+	* path.tst (parse-namestring): check second return value for
+	displaced arguments
+
+2004-09-21  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: Test c-type '(c-pointer <c-type>)
+
+2004-08-05  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Disable two tests on LispWorks.
+
+2004-09-08  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): bind CUSTOM:*LOAD-PATHS* to NIL to
+	avoid SEARCH-FILE overhead and potential errors stemming from it
+	Suggested by Jörg Höhle
+
+2004-09-08  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* Makefile: %.erg shall not depend on ../lisp.run&../lispinit.mem
+
+2004-09-07  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* Makefile: target tests now works with MS-VC's nmake
+	nmake BD="..\\" LEXE=.exe RM=del tests
+	It's more portable to use $(dir)file than $(dir)/file
+
+2004-09-03  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-malloc, c-free): :LIBRARY argument is now evaluated
+
+2004-09-02  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst (parse-c-type compiler-macro): optimize
+	`(c-array[-max]	type ,foo) and primitive types.
+
+2004-08-31  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-malloc, c-free) [win32]: use :DEFAULT
+
+2004-06-24  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a test for ensure-generic-function.
+
+2004-08-30  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-malloc, c-free) [unix & !cygwin]: use RTLD_DEFAULT
+
+2004-08-28  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp, alltest.tst, array.tst, characters.tst, clos.tst:
+	* excepsit.tst, ffi.tst, format.tst, iofkts.tst, lambda.tst:
+	* lists152.tst, lists153.tst, lists154.tst, lists155.tst, lists156.tst:
+	* macro8.tst, map.tst, mop.tst, setf.tst, streams.tst, streamslong.tst:
+	* strings.tst, symbol10.tst, symbols.tst, type.tst: Update for OpenMCL
+	0.14.2.
+
+2004-08-29  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-malloc, c-free) [cygwin]: use cygwin1.dll
+
+2004-08-27  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-files): more thorough error reporting
+
+2004-08-27  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-malloc, c-free): use a full path to /lib/libc.so,
+	it appears that "c" is a cygwin-ism
+
+2004-06-23  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add 2 tests for ensure-generic-function.
+
+2004-06-20  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Check that GC reclaims forward pointers of reallocated
+	generic functions.
+
+2004-06-20  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add tests for custom generic-function-class.
+
+2004-08-20  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst (use-value-read): renamed from
+	use-value-string->symbol, use READ instead of INTERN,
+	handle SOURCE-PROGRAM-ERROR; added 2 tests that use it
+
+2004-08-11  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: disable tests that rely on lambda list errors
+	being TYPE-ERRORS (they are program errors now)
+	* excepsit.tst: updated the lambda list tests
+	* macro8.tst: new test for *DEFUN-ACCEPT-SPECIALIZED-LAMBDA-LIST*
+
+2004-08-11  Sam Steingold  <sds@gnu.org>
+
+	* ffi.tst (c-malloc, c-free): added a couple of poor-style tests
+
+2004-08-04  Bruno Haible  <bruno@clisp.org>
+
+	* alltest.tst, clos.tst, format.tst, hashlong.tst, symbol10.tst,
+	type.tst: Update for CMUCL 19a.
+	* macro8.tst: Fix CMUCL specific typo.
+	* mop.tst: Make some tests work on CMUCL and SBCL.
+
+2004-08-04  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Mark the :fixed-slot-locations tests as clisp-specific.
+	* streamslong.tst: Mark a test as clisp-specific.
+
+2004-08-07  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add one more test.
+
+2004-06-13  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Update SUBTYPEP test to match the fact that the user can
+	create subclasses of both STREAM and STANDARD-GENERIC-FUNCTION.
+
+2004-06-12  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add tests of set-funcallable-instance-function.
+
+2004-06-10  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: 12 new tests about user-defined methods.
+
+2004-07-28  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: composite streams operate on their
+	constituent streams, not themselves
+
+2004-07-22  Sam Steingold  <sds@gnu.org>
+
+	* bin-io.tst (clisp-test-bin-i/o): check output of negative
+	integers too
+
+2004-07-20  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Update a few tests after the CLOS internal API changed.
+
+2004-05-31  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Add a test for structure-class.
+
+2004-06-10  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Change expected result of positive-integer qualifiers test.
+
+2004-05-29  Bruno Haible  <bruno@clisp.org>
+
+	* mop.tst: Update: #+CLISP (:metaclass structure-class) no longer
+	needed.
+
+2004-05-21  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (run-all-tests): Reduce the number of weakptr runs to 20.
+
+2004-06-13  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: 3 new tests for DEFSETF.
+
+2004-06-06  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: 206 new method-combination tests.
+
+2004-06-04  Bruno Haible  <bruno@clisp.org>
+
+	* macro8.tst: Add 3 LOAD-TIME-VALUE tests.
+
+2004-05-15  Bruno Haible  <bruno@clisp.org>
+
+	* hashtable.tst: New file.
+	* tests.lisp (run-all-tests): Run also hashtable.tst.
+
+2004-06-09  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (with-ignored-errors): return the error message on
+	error as the second argument in the new definition too
+
+2004-05-25  Bruno Haible  <bruno@clisp.org>
+
+	* hashweak.tst: Add a test.
+
+2004-06-03  Sam Steingold  <sds@gnu.org>
+
+	* backquot.tst: CLISP now produces a much better result on one test
+
+2004-06-03  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: test all transcendental functions at #C(1 2)
+	* lists152.tst (last): check the list argument for circularity,
+	do not accept ATOMs
+
+2004-05-23  Bruno Haible  <bruno@clisp.org>
+
+	* backquot.tst: Add many tests.
+
+2004-06-02  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: test restartable i/o errors
+
+2004-06-01  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-test): bind *PRINT-CIRCLE* to T
+	* iofkts.tst (*PRINT-CIRCLE*): updated
+
+2004-06-01  Sam Steingold  <sds@gnu.org>
+
+	* lists152.tst (butlast): check for circular lists
+
+2004-05-23  Bruno Haible  <bruno@clisp.org>
+
+	* backquot.tst: Add test for vector element type.
+
+2004-05-20  Bruno Haible  <bruno@clisp.org>
+
+	Increase memory sizes for builds with fixed memory size.
+	* Makefile (LISP): Grant 30000 KW, since lists153 needs more than
+	25000 KW.
+
+2004-05-08  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Update a test.
+
+2004-05-25  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: ATANH blows up at -1 and 1
+
+2004-05-08  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (run-all-tests): Enable the hashweak test.
+
+2004-05-22  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: COS and COSH can return purely imaginary numbers
+
+2004-05-08  Bruno Haible  <bruno@clisp.org>
+
+	* weak.tst: New file.
+	* tests.lisp (run-all-tests): Also run weak.tst.
+
+2004-04-25  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Test documentation string on a class without proper name.
+
+2004-05-15  Bruno Haible  <bruno@clisp.org>
+
+	* setf.tst: Add test for inlinability.
+
+2004-05-05  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Change expected result of tests that depend on
+	upgraded-complex-part-type.
+
+2004-05-13  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: added a LOG test that fails on Solaris/Sparc64
+
+2004-04-25  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add one more CHANGE-CLASS test.
+
+2004-05-11  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst (test-function): be careful with transcendental
+	functions: do not call LOG on 0 &c.
+
+2004-04-30  Bruno Haible  <bruno@clisp.org>
+
+	* lists153.tst: Skip memory intensive test on 32-bit SPVW_PURE_BLOCKS
+	platforms.
+
+2004-04-24  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Use new slot-definition-* accessors.
+	* iofkts.tst: Likewise.
+
+2004-04-24  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add tests for :fixed-slot-locations defclass option.
+	* iofkts.tst: Change expected test result.
+
+2004-04-18  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Check that calling class-prototype doesn't declare a class
+	as being instantiated.
+
+2004-04-18  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add tests for error recovery in defclass.
+
+2004-05-02  Sam Steingold  <sds@gnu.org>
+
+	* pack11.tst: Add test for rename-package.
+
+2004-04-18  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add test that defclass removes old accessor methods.
+
+2004-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add tests regarding the update of the direct-subclasses
+	lists during redefinition of finalized and non-finalized classes.
+
+2004-04-25  Bruno Haible  <bruno@clisp.org>
+
+	* excepsit.tst: Invoke a nonexistent restart, instead of ABORT.
+
+2004-04-13  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add test for weakness of direct-subclasses list.
+
+2004-04-28  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (run-all-tests): Enable weakptr test and run it
+	repeatedly.
+
+2004-04-17  Bruno Haible  <bruno@clisp.org>
+
+	Add support for CMUCL 18e.
+	* tests.lisp, clos.tst, format.tst, iofkts.tst, lambda.tst, mop.tst,
+	streams.tst, streamslong.tst, symbols.tst, type.tst: Update for
+	CMUCL 18e/x86.
+
+2004-04-27  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests) [CLISP]: bind
+	CUSTOM:*WARN-ON-FLOATING-POINT-CONTAGION* and
+	CUSTOM:*WARN-ON-FLOATING-POINT-RATIONAL-CONTAGION* to NIL
+
+2004-04-17  Bruno Haible  <bruno@clisp.org>
+
+	Add support for SBCL.
+	* tests.lisp, alltest.tst, array.tst, bin-io.tst, characters.tst:
+	* conditions.tst, encoding.tst, eval20.tst, excepsit.tst, format.tst:
+	* hashlong.tst, iofkts.tst, lambda.tst, lists152.tst, lists154.tst:
+	* lists155.tst, lists156.tst, loop.tst, macro8.tst, map.tst, mop.tst:
+	* path.tst, setf.tst, streams.tst, streamslong.tst, strings.tst:
+	* symbol10.tst, symbols.tst, type.tst: Add results for SBCL 0.8.9 when
+	they are allowed by ANSI CL.
+
+2004-04-26  Sam Steingold  <sds@gnu.org>
+
+	* backquot.tst [enable-risky-tests]: added a test based on
+	mit-clx/input.lisp:declare-event/get-macro
+
+2004-04-17  Bruno Haible  <bruno@clisp.org>
+
+	* alltest.tst, array.tst, clos.tst, eval20.tst, hashlong.tst:
+	* iofkts.tst, lists152.tst, macro8.tst, map.tst, type.tst: Make many
+	tests independent of CLISP. Mark those which are dependent of CLISP
+	with #+CLISP.
+
+2004-04-12  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: New tests for class redefinition.
+
+2004-04-12  Bruno Haible  <bruno@clisp.org>
+
+	* tests.lisp (with-ignored-errors): Use portable definition instead of
+	the old CLISP hammer definition.
+	* clos.tst: Remove hack.
+
+	* number2.tst: Remove *break-on-warnings* setting.
+
+2004-04-20  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: added tests for non-wild pathnames returned by
+	DIRECTORY, correct :VERSION after MERGE-PATHNAMES &c
+
+2004-04-19  Sam Steingold  <sds@gnu.org>
+
+	* path.tst, excepsit.tst: added tests for
+	pathname.d:simplify_directory()
+
+2004-04-19  Sam Steingold  <sds@gnu.org>
+
+	* strings.tst: add a (NSTRING-UPCASE #A(NIL (0))) test
+	enable string un-realloc test (was risky)
+
+2004-04-10  Bruno Haible  <bruno@clisp.org>
+
+	* strings.tst: Add test for return value of NSTRING-UPCASE.
+
+2004-04-16  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst: (WRITE-STRING #A(nil (0))) must return
+	its argument, not NIL
+
+2004-04-16  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst (object-out): replaced with a PRINT-OBJECT method;
+	added a "risky test" of printing a list of objects
+
+2004-04-16  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst: check that transcendental functions keep the type
+	of the float argument (based on GCL ansi-tests)
+
+2004-04-16  Sam Steingold  <sds@gnu.org>
+
+	* streams.tst: test ext:fill-stream
+
+2004-04-10  Bruno Haible  <bruno@clisp.org>
+
+	* streams.tst: Update after sys::describe-stream was renamed to
+	sys::fill-stream.
+
+2004-04-03  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Many new SUBTYPEP tests.
+
+2004-04-04  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Test TYPEP on a structure with user-defined :TYPE.
+
+2004-04-04  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Test DEFSTRUCT :INITIAL-OFFSET option.
+
+2004-03-21  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Verify that SUBTYPEP works on not-yet-finalized classes.
+
+2004-03-21  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Verify that redefining a class doesn't change its identity.
+
+2004-04-01  Bruno Haible  <bruno@clisp.org>
+
+	* iofkts.tst (*print-readably*): Fix symbol printing test again.
+
+2004-03-27  Bruno Haible  <bruno@clisp.org>
+
+	* array.tst: array-total-size-limit and array-dimension-limit are
+	now = most-positive-fixnum.
+
+2004-03-23  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst (*print-readably*): fixed symbol printing test to
+	conform to the 2004-03-04 patch
+
+2004-03-23  Sam Steingold  <sds@gnu.org>
+
+	* type.tst (typeof-typep-subtype): streamlined TYPE-OF tests
+
+2004-03-22  Bruno Haible  <bruno@clisp.org>
+
+	* type.tst: Add some TYPE-OF tests.
+
+2004-03-07  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Change expected result of (class-of #A(NIL (10)) to
+	<string>, instead of <vector>.
+
+2004-03-19  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst (object-out): test CLOS/PPRINT-LOGICAL-BLOCK
+
+2004-02-16  Bruno Haible  <bruno@clisp.org>
+
+	* clos.tst: Add a test for removal of instance forward pointers
+	during garbage collection.
+
+2004-03-18  Bruno Haible  <bruno@clisp.org>
+
+	* Makefile (LISP): Add a -N option.
+
+2004-03-12  Bruno Haible  <bruno@clisp.org>
+
+	* excepsit.tst: Disable the /etc/passwd test on BeOS.
+
+2004-03-08  Bruno Haible  <bruno@clisp.org>
+
+	* hashlong.tst (symbole): Use DO-EXTERNAL-SYMBOLS, not DO-SYMBOLS.
+	* clos.tst: Add test for test-mc-standard-bad-qualifiers.
+
+2004-03-08  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst (check-mult): new test for FP multiplication
+
+2004-01-07  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (with-ignored-errors) [CLISP]: return the error
+	message on error as the second argument
+	(do-test): print the error messge into the log file
+
+2004-01-04  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-files, run-some-tests): new functions
+	(*run-test-tester*, *run-test-ignore-errors*): new variables
+	(run-test): tester and ignore-errors default to them
+
+2004-01-03  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (do-test, do-errcheck): fixed an off-by-one
+	error in total-count
+
+2004-01-02  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst (test-compiler): new function, used throughout the file
+
+2003-10-09  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): optional argument to disable risky tests
+	* Makefile (complete): new target, passes nil to RUN-ALL-TESTS
+
+2003-09-17  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: added a NOTINLINE declaration test
+
+2003-06-18  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests) [CLISP]: added weakptr
+	* weakptr.tst: new test file for weak pointers
+
+2003-05-13  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests) [CLISP]: run defhash
+	* defhash.tst: test DEFINE-HASH-TABLE-TEST
+
+2003-05-15  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (with-accumulating-errors): new macro
+	(run-all-tests, do-test, do-errcheck): count the total number of
+	tests in addition to the number of errors
+
+2003-05-14  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* format.tst: one of the few files that wants TAB characters
+	to test the Tilde Newline cases. I reintroduced them.
+
+2003-05-13  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: raised test coverage from 53 to 75% of foreign.d
+
+2003-04-29  Jörg Höhle  <hoehle@users.sourceforge.net>
+
+	* ffi.tst: Augmented FFI testsuite
+
+2003-04-18  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (with-ignored-errors) [CLISP]: bind *PRINT-READABLY*
+	and *PRINT-CIRCLE* to NIL when printing the error message
+
+2003-04-05  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (with-ignored-errors) [CLISP]: print error message
+
+2003-03-31  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	* backquot.tst: Added many new tests.
+
+2003-03-08  Sam Steingold  <sds@gnu.org>
+
+	* bin-io.tst (list->integer, integer->list): new functions
+
+2003-02-14  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (do-test, do-errcheck): return the number of errors
+	(run-test): print some sugar, return error count
+	(run-all-tests): print some sugar
+
+2003-02-13  Sam Steingold  <sds@gnu.org>
+
+	* iofkts.tst, path.tst, streams.tst, strings.tst: added tests for
+	displaced strings combined with :START/:END arguments
+
+2003-02-04  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests) [CLISP, FFI]: run "ffi"
+	* ffi.tst: new test file for the CLISP FFI
+
+2002-12-19  Sam Steingold  <sds@gnu.org>
+
+	* streamslong.tst: removed CLISP-specific binary i/o tests
+	* tests.lisp (run-all-tests) [CLISP]: added "bin-io"
+	* bin-io.tst: moved CLISP-specific binary i/o tests here
+
+2002-12-15  Sam Steingold  <sds@gnu.org>
+
+	* streamslong.tst (list->float, float->list): new functions
+
+2002-10-10  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (lisp-implementation-type): new variable
+	(do-test, do-errcheck): use it
+
+2002-09-30  Sam Steingold  <sds@gnu.org>
+
+	* steele7.tst: avoid local redefinition of system functions, like #'+
+	<http://www.lisp.org/HyperSpec/Body/sec_11-1-2-1-2.html>
+
+2002-09-14  Sam Steingold  <sds@gnu.org>
+
+	* excepsit.tst, streamslong.tst: use "./" instead of "/tmp/"
+	because some systems might not have that
+
+2002-09-11  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst, number2.tst: more transcendental function tests
+
+2002-08-23  Sam Steingold  <sds@gnu.org>
+
+	* lists154.tst: more SUBLIS tests: both key+test and from CLHS
+	<http://www.lisp.org/HyperSpec/Body/fun_subliscm_nsublis.html>
+
+2002-08-01  Sam Steingold  <sds@gnu.org>
+
+	* type.tst: Type COMPLEX now correctly uses UPGRADED-COMPLEX-PART-TYPE.
+
+2002-07-12  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst (DOUBLE-FLOAT-EPSILON, DOUBLE-FLOAT-NEGATIVE-EPSILON):
+	restored PRIN1-TO-STRING CLISP tests, similar to
+	MOST-NEGATIVE-DOUBLE-FLOAT and friends
+
+2002-06-19  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: more translate-pathname tests
+
+2002-06-07  Peter Burwood  <clisp@peterb.org.uk>
+
+	* encoding.tst: Handle error when encoding does not exist.
+
+2002-05-26  Bruno Haible  <bruno@clisp.org>
+
+	* alltest.tst [CLISP & UNICODE]: Change CHAR-CODE-LIMIT expected value
+	to 1114112.
+	* characters.tst [CLISP & UNICODE]: Likewise.
+
+2002-05-20  Bruno Haible  <bruno@clisp.org>
+
+	* strings.tst: Test checking of validity of CHAR index.
+
+2002-04-22  Sam Steingold  <sds@gnu.org>
+
+	* macro8.tst: test 3.2.2.1 Compiler Macros
+
+2002-04-16  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): added "encoding"
+	* encoding.tst: new file to test CLISP encodings
+
+2002-04-01  Sam Steingold  <sds@gnu.org>
+
+	check that CLOSE does not change INPUT-STREAM-P/OUTPUT-STREAM-P &c
+	* streams.tst (close-1): new function
+
+2002-03-27  Hoehle, Joerg-Cyril  <Joerg-Cyril.Hoehle@t-systems.com>
+
+	* type.tst: test (SUB-)TYPEP FFI:FOREIGN-*
+
+2002-03-17  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (merge-extension): merged the two versions
+
+2002-02-27  Sam Steingold  <sds@gnu.org>
+
+	* hashweak.tst: test weak hash tables
+	* tests.lisp (run-all-tests): added "hashweak"
+
+2002-02-23  Sam Steingold  <sds@gnu.org>
+
+	* clos.tst: test REINITIALIZE-INSTANCE
+
+2002-02-20  Sam Steingold  <sds@gnu.org>
+
+	* eval20.tst: added an EVAL-WHEN test
+
+2002-02-12  Sam Steingold  <sds@gnu.org>
+
+	* floeps.tst: new file to test float epsilons
+	based on code from Stefan Kain <smk@users.sourceforge.net>
+	* tests.lisp (run-all-tests): added "floeps"
+
+2002-02-11  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst: test (compile nil (lambda () (flet (()))))
+
+2001-12-22  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst (test-pos-epsilon, test-neg-epsilon): new functions
+
+2001-12-20  Sam Steingold  <sds@gnu.org>
+
+	* clos.tst: added WITH-SLOTS tests
+
+2001-12-04  Sam Steingold  <sds@gnu.org>
+
+	* array.tst, strings.tst: added REVERSE & NREVERSE tests
+
+2001-11-28  Sam Steingold  <sds@gnu.org>
+
+	* path.tst (foo): :case in MAKE-PATHNAME
+	applies only to strings, not pathnames in the :default arg
+	Reported by Kent M Pitman <pitman@world.std.com>
+
+2001-11-27  Sam Steingold  <sds@gnu.org>
+
+	* streamslong.tst (clisp-test-bin-i/o): new function to test
+	read-float, write-float, read-integer, write-integer
+
+2001-10-18  Sam Steingold  <sds@gnu.org>
+
+	* clos.tst: test for initialize-instance returning junk
+
+2001-09-10  Sam Steingold  <sds@gnu.org>
+
+	* format.tst: test (format nil "~0f" 10)
+
+2001-08-29  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: many more tests, inspired by
+	<http://www-jcsu.jesus.cam.ac.uk/~csr21/pathname-tests.lisp>
+
+2001-08-27  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst (defstruct ice-cream-factory): added a keyword
+	argument with no defaults to the BOA constructor
+
+2001-08-17  Sam Steingold  <sds@gnu.org>
+
+	* symbols.tst: pretty-printer symbols are now present in CLISP
+	* excepsit.tst: ditto
+
+2001-08-16  Sam Steingold  <sds@gnu.org>
+
+	* loop.tst: one more test
+
+2001-08-04  Bruno Haible  <haible@clisp.cons.org>
+
+	* lambda.tst: Add more :ALLOW-OTHER-KEYS tests.
+
+2001-07-24  Sam Steingold  <sds@gnu.org>
+
+	* clos.tst: added a test for make-load-form
+
+2001-07-24  Sam Steingold  <sds@gnu.org>
+
+	* symbols.tst: CLISP known-missing: make-load-form,
+	make-load-form-saving-slots and *print-lines* are implemented
+
+2001-07-20  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: added a :case :common test
+
+2001-07-19  Sam Steingold  <sds@gnu.org>
+
+	* alltest.tst: added a ldiff/tailp test from CLHS
+
+2001-06-27  Sam Steingold  <sds@gnu.org>
+
+	* streamslong.tst (bin-stream-test): added binary stream checks
+
+2001-05-10  Sam Steingold  <sds@gnu.org>
+
+	* path.tst: more tests
+
+2001-05-09  Sam Steingold  <sds@gnu.org>
+
+	* symbols.tst: CLISP now implements compiler macros
+
+2001-05-04  Sam Steingold  <sds@gnu.org>
+
+	* strings.tst, array.tst: ELT should check FILL-POINTER and
+	CHAR and AREF should not
+
+2001-05-01  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst (handler-case): :NO-ERROR does not have to be the
+	last clause
+
+2001-05-01  Sam Steingold  <sds@gnu.org>
+
+	* format.tst (format "~5d" 'a): ANSI CL is not clear here whether
+	the width is ignored or not, but it makes more sense to print
+	non-numeric arguments properly alighned
+
+2001-04-23  Sam Steingold  <sds@gnu.org>
+
+	* number2.tst (check-xgcd): new function, used throughout the file
+
+2001-04-18  Sam Steingold  <sds@gnu.org>
+
+	* symbols.tst: check the external symbols of the COMMON-LISP package
+
+2001-04-05  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst (check-superclasses): return the list of
+	differences, not just a failure indicator
+
+2001-03-28  Sam Steingold  <sds@gnu.org>
+
+	* conditions.tst: `:no-error' clause must be last in `handler-case'
+	`simple-type-error' does not inherit from `simple-error'
+
+2001-03-27  Sam Steingold  <sds@gnu.org>
+
+	* tests.lisp (run-all-tests): modified the `run-test' "conditions"
+	call to fit the previous patch
+	(do-errcheck): added ignored optional second arg
+
+2001-03-26  Sam Steingold  <sds@gnu.org>
+
+	more transparent debugging interface
+	* tests.lisp (run-test): added `ignore-errors' optional arg,
+	pass it to `tester'
+	(with-ignored-errors): ignore unused `ARGS'
+
+2001-03-26  Sam Steingold  <sds@gnu.org>
+
+	* hash.tst, iofkts.tst, pack11.tst, streams.tst, symbol10.tst:
+	use strings instead of quoted symbols in `in-package' calls;
+	use ANSI-specified packages;
+	(symbol10.tst): use `special-operator-p' always
+
+2000-12-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* characters.tst: Add exhaustive test for char-name and name-char.
+
+2000-03-31  Bruno Haible  <haible@clisp.cons.org>
+
+	Renamed all *.lsp files to *.lisp.
+	* Makefile: Update.
+
+2000-03-07  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	Add support for ECL.
+	* array.tst, characters.tst, eval20.tst, format.tst, hashlong.tst,
+	* iofkts.tst, lists152.tst, lists154.tst, lists155.tst, lists156.tst,
+	* map.tst, pack11.tst, streams.tst, strings.tst, symbol10.tst,
+	* symbols.tst, tests.lsp, type.tst: Add ECL conditionals. Based on
+	  patches by Juan Jose Garcia Ripoll <jjgarcia@ind-cr.uclm.es>.
+	* pack11.tst: Change  :use 'xxx	 to  :use '(xxx).
+
+1999-11-29  Sam Steingold  <sds@goems.com>
+
+	* path.tst: test `translate-logical-pathname' and
+	`logical-pathname-translations'.
+
+1999-06-15  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* lists152.tst: Update for changed NRECONC behaviour.
+
+1999-06-09  Sam Steingold  <sds@goems.com>
+
+	* macro8.tst: test Issue MACRO-FUNCTION-ENVIRONMENT:YES.
+
+1999-06-05  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* genstream.tst (generic-stream-controller-class): Subclass of
+	  generic-stream-controller, so the predefined methods apply.
+	(generic-stream-read-char-status): Remove method.
+	(generic-stream-peek-char, generic-stream-read-char-will-hang-p):
+	  New methods.
+
+1999-05-10  Sam Steingold  <sds@goems.com>
+
+	* eval20.tst: (constantp '#(110)) is T unconditionally.
+
+1999-05-07  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* genstream.tst: Untabify.
+	(generic-stream-read-char-status): Renamed from
+	  generic-stream-listen.
+
+1999-05-07  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* conditions.tst: Use :format-control instead of :format-string.
+
+1999-05-02  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* stackovf.tst: New file.
+
+1999-04-29  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* steele7.tst: Add a check for binding of special-declared variables.
+
+1999-04-18  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	Add support for CMUCL 18a x86-linux 1.4.0.
+	* Makefile.cmucl: New file.
+	* tests.lsp (with-ignored-errors): Ignore-declaration.
+	(merge-extension): Support CMUCL.
+	(do-test, do-errcheck): English messages. Support CMUCL.
+	(run-test) [CMU]: Call `finish-output' to work around CMUCL bug.
+	(run-all-tests): Support CMUCL.
+	* alltest.tst, array.tst, characters.tst, conditions.tst, format.tst,
+	* iofkts.tst, lists152.tst, lists155.tst, lists156.tst, loop.tst,
+	* map.tst, setf.tst, steele7.tst, streams.tst, streamslong.tst,
+	* strings.tst, clos.tst, hashlong.tst, type.tst, symbols.tst,
+	* symbol10.tst: Support CMUCL.
+	* alltest.tst, characters.tst, iofkts.tst: Conditionally use
+	  CHARACTERP instead of STRING-CHAR-P.
+	* format.tst: Add test "~5D", related to "~5,3F".
+	* hashlong.tst (symbole): Fix typo.
+	* type.lsp: Change type specifiers like (FLOAT 0 2) to (FLOAT 0.0 2.0),
+	  for ANSI CL compliance. Wrap `remprop' results in `not null'.
+
+1999-04-03  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* hash.tst: Move hash-table-iterator test to alltest.tst.
+	* alltest.tst (test-hash-table-iterator): Moved to here.
+
+1999-03-16  Sam Steingold  <sds@gnu.org>
+
+	* hash.tst: added `test-hash-table-iterator'.
+	* pack11.tst: added `test-package-iterator'.
+
+1999-03-12  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* excepsit.tst: Add tests for READER-ERROR.
+
+1999-03-11  Sam Steingold  <sds@gnu.org>
+
+	* loop.tst: check for non-nreversing collecting.
+
+1999-02-27  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* alltest.tst: CHAR-CODE-LIMIT value now depends on UNICODE feature.
+	* characters.tst: Likewise.
+
+1999-01-13  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* alltest.tst: Add a test for GET-DISPATCH-MACRO-CHARACTER.
+
+1999-01-12  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* number2.tst: Add two more XGCD tests.
+
+1999-01-04  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* excepsit.tst: Delete some garbage "foo" files after creating them.
+	* Makefile: Don't delete them here.
+
+1999-01-03  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* conditions.tst: Check the superclasses of parse-error,
+	  floating-point-invalid-operation, floating-point-inexact,
+	  unbound-slot, print-not-readable, reader-error.
+
+1999-01-03  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* conditions.tst (style-warning): New test.
+
+1998-12-22  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* number2.tst: Add two XGCD tests.
+
+1998-12-21  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* number2.tst: Add a GCD test, which fails with egcs-1.1 on Sparc.
+
+1998-12-21  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* excepsit.tst: /etc/mtab does not exist on all systems, use
+	  /etc/passwd instead.
+
+1998-12-21  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* loop.tst: Added a test for `by' preceding `from' preserving the
+	  evaluation order.
+
+1998-12-18  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* excepsit.tst: Replaced the `delete-file' test (testing for EACCES
+	  or EPERM) by another one (testing for ENOTDIR), in order to avoid
+	  failure on Solaris, and in order not to upset people who mistakenly
+	  run it as root.
+
+1998-11-06  Sam Steingold  <sds@goems.com>
+
+	* loop.tst: added a test for `by' preceding `upto'.
+
+1998-11-06  Sam Steingold  <sds@goems.com>
+
+	* type.tst: added a test for (un)signed-byte as sybtype of
+	  integer.
+
+1998-11-01  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* alltest.tst, characters.tst, format.tst: Remove all tests of
+	  characters with font and bits.
+	(iofkts.tst): Reflect change in STREAM-ELEMENT-TYPE.
+
+1998-10-20  Sam Steingold  <sds@goems.com>
+
+	* alltest.tst: added tests for `ldiff' and `tailp' handling
+	  of dotted lists (HyperSpec/Body/fun_ldiffcm_tailp.html).
+
+1998-10-15  Sam Steingold  <sds@goems.com>
+
+	* Makefile: remove /tmp/foo*.*.
+
+1998-09-09  Sam Steingold  <sds@goems.com>
+
+	* setf.tst: added multiple values `defsetf', `shiftf' and
+	  `rotatef' tests.
+
+1998-06-25  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* excepsit.tst: New file.
+	* tests.lsp (do-test): New function, taken out of run-test.
+	(do-errcheck): New function.
+	(run-test): Take the tester function as optional argument.
+	(run-all-tests): Run the excepsit tests.
+
+1998-06-20  Bruno Haible  <bruno@linuix.mathematik.uni-karlsruhe.de>
+
+	* setf.tst: Don't use quoted lambda expressions.
+
+1998-06-04  Bruno Haible  <bruno@linuix.mathematik.uni-karlsruhe.de>
+
+	* conditions.tst (my-cpl): Support ACL 5.0 beta.
+
+1997-06-19  Pierpaolo Bernardi	<bernardp@cli.di.unipi.it>
+
+	* testsuite (characters.tst, macro8.tst): Added two simple tests
+	  which fail on ACL.
+
+1997-10-18  Bruno Haible  <bruno@linuix.mathematik.uni-karlsruhe.de>
+
+	* testsuite: Support ACL 4.3 for Linux (Allegro CL from Franz Inc).

@@ -1,0 +1,580 @@
+\input texinfo
+@setfilename regexp.info
+@comment @newindex {fn}
+
+
+@comment From the `ed' documentation.
+
+@chapter Regular expressions
+
+Regular expressions are patterns used in selecting text.
+
+In addition to a specifying string literals, regular expressions can
+represent classes of strings.  Strings thus represented are said to be
+matched by the corresponding regular expression.  If it is possible for
+a regular expression to match several strings in a line, then the
+left-most longest match is the one selected.
+
+The following symbols are used in constructing regular expressions:
+
+@table @code
+
+@item @var{c}
+Any character @var{c} not listed below, including @samp{@{}, @samp{@}},
+@samp{(}, @samp{)}, @samp{<} and @samp{>}, matches itself.
+
+@item \@var{c}
+Any backslash-escaped character @var{c}, other than @samp{@{},
+`@samp{@}}, @samp{(}, @samp{)}, @samp{<}, @samp{>}, @samp{b}, @samp{B},
+@samp{w}, @samp{W}, @samp{+} and @samp{?}, matches itself.
+
+Note that @samp{\} also has special meaning in the read syntax of Lisp
+strings, and must be quoted with @samp{\}.  For
+example, the regular expression that matches the @samp{\} character is
+@samp{\\}.  To write a Lisp string that contains the characters
+@samp{\\}, Lisp syntax requires you to quote each @samp{\} with another
+@samp{\}.  Therefore, the read syntax for a regular expression matching
+@samp{\} is @code{"\\\\"}.@refill
+
+@item .
+Matches any single character.
+
+@item [@var{char-class}]
+Matches any single character in @var{char-class}.  To include a @samp{]}
+in @var{char-class}, it must be the first character.  A range of
+characters may be specified by separating the end characters of the
+range with a @samp{-}, e.g., @samp{a-z} specifies the lower case
+characters.  The following literal expressions can also be used in
+@var{char-class} to specify sets of characters:
+
+@example
+[:alnum:] [:cntrl:] [:lower:] [:space:]
+[:alpha:] [:digit:] [:print:] [:upper:]
+[:blank:] [:graph:] [:punct:] [:xdigit:]
+@end example
+
+If @samp{-} appears as the first or last character of @var{char-class},
+then it matches itself.  All other characters in @var{char-class} match
+themselves.
+
+Patterns in
+@var{char-class}
+of the form:
+@example
+[.@var{col-elm}.]
+[=@var{col-elm}=]
+@end example
+
+@noindent
+where @var{col-elm} is a @dfn{collating element} are interpreted
+according to @code{locale (5)} (not currently supported).  See
+@code{regex (3)} for an explanation of these constructs.
+
+@item [^@var{char-class}]
+Matches any single character, other than newline, not in
+@var{char-class}.  @var{char-class} is defined as above.
+
+@item ^
+If @samp{^} is the first character of a regular expression, then it
+anchors the regular expression to the beginning of a line.  Otherwise,
+it matches itself.
+
+@item $
+If @samp{$} is the last character of a regular expression, it anchors
+the regular expression to the end of a line.  Otherwise, it matches
+itself.
+
+@item \(@var{re}\)
+Defines a (possibly null) subexpression @var{re}.
+Subexpressions may be nested.  A
+subsequent backreference of the form @samp{\@var{n}}, where @var{n} is a
+number in the range [1,9], expands to the text matched by the @var{n}th
+subexpression. For example, the regular expression @samp{\(a.c\)\1} matches
+the string @samp{abcabc}, but not @samp{abcadc}.
+Subexpressions are ordered relative to their left delimiter.
+
+@item *
+Matches the single character regular expression or subexpression
+immediately preceding it zero or more times.  If @samp{*} is the first
+character of a regular expression or subexpression, then it matches
+itself.  The @samp{*} operator sometimes yields unexpected results.  For
+example, the regular expression @samp{b*} matches the beginning of the
+string @samp{abbb}, as opposed to the substring @samp{bbb}, since a
+null match is the only left-most match.
+
+@item \@{@var{n,m}\@}
+@itemx \@{@var{n,}\@}
+@itemx \@{@var{n}\@}
+Matches the single character regular expression or subexpression
+immediately preceding it at least @var{n} and at most @var{m} times.  If
+@var{m} is omitted, then it matches at least @var{n} times.  If the
+comma is also omitted, then it matches exactly @var{n} times.
+If any of these forms occurs first in a regular expression or subexpression,
+then it is interpreted literally (i.e., the regular expression @samp{\@{2\@}}
+matches the string @samp{@{2@}}, and so on).
+
+@item \<
+@itemx \>
+Anchors the single character regular expression or subexpression
+immediately following it to the beginning (in the case of @samp{\<})
+or ending (in the case of @samp{\>}) of
+a @dfn{word}, i.e., in ASCII, a maximal string of alphanumeric characters,
+including the underscore (_).
+
+@end table
+
+The following extended operators are preceded by a backslash @samp{\} to
+distinguish them from traditional @code{ed} syntax.
+
+@table @code
+
+@item  \`
+@itemx \'
+Unconditionally matches the beginning @samp{\`} or ending @samp{\'} of a line.
+
+@item \?
+Optionally matches the single character regular expression or subexpression
+immediately preceding it.  For example, the regular expression @samp{a[bd]\?c}
+matches the strings @samp{abc}, @samp{adc} and @samp{ac}.
+If @samp{\?} occurs at the beginning
+of a regular expressions or subexpression, then it matches a literal @samp{?}.
+
+@item \+
+Matches the single character regular expression or subexpression
+immediately preceding it one or more times.  So the regular expression
+@samp{a+} is shorthand for @samp{aa*}.  If @samp{\+} occurs at the
+beginning of a regular expression or subexpression, then it matches a
+literal @samp{+}.
+
+@item \b
+Matches the beginning or ending (null string) of a word.  Thus the regular
+expression @samp{\bhello\b} is equivalent to @samp{\<hello\>}.
+However, @samp{\b\b}
+is a valid regular expression whereas @samp{\<\>} is not.
+
+@item \B
+Matches (a null string) inside a word.
+
+@item \w
+Matches any character in a word.
+
+@item \W
+Matches any character not in a word.
+
+@end table
+
+
+@comment From the `emacs' documentation.
+@comment The RE_SYNTAX_POSIX_BASIC syntax we use differs from the Emacs syntax
+@comment in the following bits:
+@comment RE_CHAR_CLASSES     ->  character classes are supported
+@comment RE_DOT_NEWLINE      ->  . matches newline
+@comment RE_DOT_NOT_NULL     ->  . doesn't match NUL
+@comment RE_INTERVALS        ->
+@comment RE_NO_EMPTY_RANGES  ->  [z-a] is invalid
+@comment RE_BK_PLUS_QM       ->  + and ? are operators, \+ and \? are literals
+
+@node Regular Expressions
+@chapter Regular Expressions
+@cindex regular expression
+@cindex regexp
+
+  A @dfn{regular expression} (@dfn{regexp}, for short) is a pattern that
+denotes a (possibly infinite) set of strings.  Searching for matches for
+a regexp is a very powerful operation.  This section explains how to write
+regexps; the following section says how to search for them.
+
+@menu
+* Syntax of Regexps::       Rules for writing regular expressions.
+* Regexp Examples::         Illustrates regular expression syntax.
+@end menu
+
+@node Syntax of Regexps
+@section Syntax of Regular Expressions
+
+  Regular expressions have a syntax in which a few characters are special
+constructs and the rest are @dfn{ordinary}.  An ordinary character is a
+simple regular expression which matches that character and nothing else.
+The special characters are @samp{$}, @samp{^}, @samp{.}, @samp{*},
+@samp{[}, @samp{]} and @samp{\}; no new special
+characters will be defined in the future.  Any other character appearing
+in a regular expression is ordinary, unless a @samp{\} precedes it.
+
+For example, @samp{f} is not a special character, so it is ordinary, and
+therefore @samp{f} is a regular expression that matches the string
+@samp{f} and no other string.  (It does @emph{not} match the string
+@samp{ff}.)  Likewise, @samp{o} is a regular expression that matches
+only @samp{o}.@refill
+
+Any two regular expressions @var{a} and @var{b} can be concatenated.  The
+result is a regular expression which matches a string if @var{a} matches
+some amount of the beginning of that string and @var{b} matches the rest of
+the string.@refill
+
+As a simple example, we can concatenate the regular expressions @samp{f}
+and @samp{o} to get the regular expression @samp{fo}, which matches only
+the string @samp{fo}.  Still trivial.  To do something more powerful, you
+need to use one of the special characters.  Here is a list of them:
+
+@need 1200
+@table @kbd
+@item .@: @r{(Period)}
+@cindex @samp{.} in regexp
+is a special character that matches any single character.
+Using concatenation, we can make regular expressions like @samp{a.b}, which
+matches any three-character string that begins with @samp{a} and ends with
+@samp{b}.@refill
+
+@item *
+@cindex @samp{*} in regexp
+is not a construct by itself; it is a suffix operator that means to
+repeat the preceding regular expression as many times as possible.  In
+@samp{fo*}, the @samp{*} applies to the @samp{o}, so @samp{fo*} matches
+one @samp{f} followed by any number of @samp{o}s.  The case of zero
+@samp{o}s is allowed: @samp{fo*} does match @samp{f}.@refill
+
+@samp{*} always applies to the @emph{smallest} possible preceding
+expression.  Thus, @samp{fo*} has a repeating @samp{o}, not a
+repeating @samp{fo}.@refill
+
+The matcher processes a @samp{*} construct by matching, immediately,
+as many repetitions as can be found.  Then it continues with the rest
+of the pattern.  If that fails, backtracking occurs, discarding some
+of the matches of the @samp{*}-modified construct in case that makes
+it possible to match the rest of the pattern.  For example, in matching
+@samp{ca*ar} against the string @samp{caaar}, the @samp{a*} first
+tries to match all three @samp{a}s; but the rest of the pattern is
+@samp{ar} and there is only @samp{r} left to match, so this try fails.
+The next alternative is for @samp{a*} to match only two @samp{a}s.
+With this choice, the rest of the regexp matches successfully.@refill
+
+@item [ @dots{} ]
+@cindex character set (in regexp)
+@cindex @samp{[} in regexp
+@cindex @samp{]} in regexp
+@samp{[} begins a @dfn{character set}, which is terminated by a
+@samp{]}.  In the simplest case, the characters between the two brackets
+form the set.  Thus, @samp{[ad]} matches either one @samp{a} or one
+@samp{d}, and @samp{[ad]*} matches any string composed of just @samp{a}s
+and @samp{d}s (including the empty string), from which it follows that
+@samp{c[ad]*r} matches @samp{cr}, @samp{car}, @samp{cdr},
+@samp{caddaar}, etc.@refill
+
+The usual regular expression special characters are not special inside a
+character set.  A completely different set of special characters exists
+inside character sets: @samp{]}, @samp{-} and @samp{^}.@refill
+
+@samp{-} is used for ranges of characters.  To write a range, write two
+characters with a @samp{-} between them.  Thus, @samp{[a-z]} matches any
+lower case letter.  Ranges may be intermixed freely with individual
+characters, as in @samp{[a-z$%.]}, which matches any lower case letter
+or @samp{$}, @samp{%} or a period.@refill
+
+The following literal expressions can also be used in
+@var{char-class} to specify sets of characters:
+
+@example
+[:alnum:] [:cntrl:] [:lower:] [:space:]
+[:alpha:] [:digit:] [:print:] [:upper:]
+[:blank:] [:graph:] [:punct:] [:xdigit:]
+@end example
+
+To include a @samp{]} in a character set, make it the first character.
+For example, @samp{[]a]} matches @samp{]} or @samp{a}.  To include a
+@samp{-}, write @samp{-} as the first character in the set, or put
+immediately after a range.  (You can replace one individual character
+@var{c} with the range @samp{@var{c}-@var{c}} to make a place to put the
+@samp{-}).  There is no way to write a set containing just @samp{-} and
+@samp{]}.
+
+To include @samp{^} in a set, put it anywhere but at the beginning of
+the set.
+
+@item [^ @dots{} ]
+@cindex @samp{^} in regexp
+@samp{[^} begins a @dfn{complement character set}, which matches any
+character except the ones specified.  Thus, @samp{[^a-z0-9A-Z]}
+matches all characters @emph{except} letters and digits.@refill
+
+@samp{^} is not special in a character set unless it is the first
+character.  The character following the @samp{^} is treated as if it
+were first (thus, @samp{-} and @samp{]} are not special there).
+
+Note that a complement character set can match a newline, unless
+newline is mentioned as one of the characters not to match.
+
+@item ^
+@cindex @samp{^} in regexp
+@cindex beginning of line in regexp
+is a special character that matches the empty string, but only at
+the beginning of a line in the text being matched.  Otherwise it fails
+to match anything.  Thus, @samp{^foo} matches a @samp{foo} which occurs
+at the beginning of a line.
+
+When matching a string, @samp{^} matches at the beginning of the string
+or after a newline character @samp{\n}.
+
+@item $
+@cindex @samp{$} in regexp
+is similar to @samp{^} but matches only at the end of a line.  Thus,
+@samp{x+$} matches a string of one @samp{x} or more at the end of a line.
+
+When matching a string, @samp{$} matches at the end of the string
+or before a newline character @samp{\n}.
+
+@item \
+@cindex @samp{\} in regexp
+has two functions: it quotes the special characters (including
+@samp{\}), and it introduces additional special constructs.
+
+Because @samp{\} quotes special characters, @samp{\$} is a regular
+expression which matches only @samp{$}, and @samp{\[} is a regular
+expression which matches only @samp{[}, and so on.
+
+Note that @samp{\} also has special meaning in the read syntax of Lisp
+strings, and must be quoted with @samp{\}.  For
+example, the regular expression that matches the @samp{\} character is
+@samp{\\}.  To write a Lisp string that contains the characters
+@samp{\\}, Lisp syntax requires you to quote each @samp{\} with another
+@samp{\}.  Therefore, the read syntax for a regular expression matching
+@samp{\} is @code{"\\\\"}.@refill
+@end table
+
+For the most part, @samp{\} followed by any character matches only
+that character.  However, there are several exceptions: characters
+which, when preceded by @samp{\}, are special constructs.  Such
+characters are always ordinary when encountered on their own.  Here
+is a table of @samp{\} constructs:
+
+@table @kbd
+@item \+
+@cindex @samp{\+} in regexp
+is a suffix operator similar to @samp{*} except that the preceding
+expression must match at least once.  So, for example, @samp{ca+r}
+matches the strings @samp{car} and @samp{caaaar} but not the string
+@samp{cr}, whereas @samp{ca*r} matches all three strings.
+
+@item \?
+@cindex @samp{\?} in regexp
+is a suffix operator similar to @samp{*} except that the preceding
+expression can match either once or not at all.  For example,
+@samp{ca?r} matches @samp{car} or @samp{cr}, but does not match anyhing
+else.
+
+@item \|
+@cindex @samp{|} in regexp
+@cindex regexp alternative
+specifies an alternative.
+Two regular expressions @var{a} and @var{b} with @samp{\|} in
+between form an expression that matches anything that either @var{a} or
+@var{b} matches.@refill
+
+Thus, @samp{foo\|bar} matches either @samp{foo} or @samp{bar}
+but no other string.@refill
+
+@samp{\|} applies to the largest possible surrounding expressions.  Only a
+surrounding @samp{\( @dots{} \)} grouping can limit the grouping power of
+@samp{\|}.@refill
+
+Full backtracking capability exists to handle multiple uses of @samp{\|}.
+
+@item \( @dots{} \)
+@cindex @samp{(} in regexp
+@cindex @samp{)} in regexp
+@cindex regexp grouping
+is a grouping construct that serves three purposes:
+
+@enumerate
+@item
+To enclose a set of @samp{\|} alternatives for other operations.
+Thus, @samp{\(foo\|bar\)x} matches either @samp{foox} or @samp{barx}.
+
+@item
+To enclose an expression for a suffix operator such as @samp{*} to act
+on.  Thus, @samp{ba\(na\)*} matches @samp{bananana}, etc., with any
+(zero or more) number of @samp{na} strings.@refill
+
+@item
+To record a matched substring for future reference.
+@end enumerate
+
+This last application is not a consequence of the idea of a
+parenthetical grouping; it is a separate feature which happens to be
+assigned as a second meaning to the same @samp{\( @dots{} \)} construct
+because there is no conflict in practice between the two meanings.
+Here is an explanation of this feature:
+
+@item \@var{digit}
+matches the same text which matched the @var{digit}th occurrence of a
+@samp{\( @dots{} \)} construct.
+
+In other words, after the end of a @samp{\( @dots{} \)} construct.  the
+matcher remembers the beginning and end of the text matched by that
+construct.  Then, later on in the regular expression, you can use
+@samp{\} followed by @var{digit} to match that same text, whatever it
+may have been.
+
+The strings matching the first nine @samp{\( @dots{} \)} constructs
+appearing in a regular expression are assigned numbers 1 through 9 in
+the order that the open parentheses appear in the regular expression.
+So you can use @samp{\1} through @samp{\9} to refer to the text matched
+by the corresponding @samp{\( @dots{} \)} constructs.
+
+For example, @samp{\(.*\)\1} matches any newline-free string that is
+composed of two identical halves.  The @samp{\(.*\)} matches the first
+half, which may be anything, but the @samp{\1} that follows must match
+the same exact text.
+
+@item \w
+@cindex @samp{\w} in regexp
+matches any word-constituent character.
+
+@item \W
+@cindex @samp{\W} in regexp
+matches any character that is not a word-constituent.
+@end table
+
+  These regular expression constructs match the empty string---that is,
+they don't use up any characters---but whether they match depends on the
+context.
+
+@table @kbd
+@item \`
+@cindex @samp{\`} in regexp
+matches the empty string, but only at the beginning
+of the buffer or string being matched against.
+
+@item \'
+@cindex @samp{\'} in regexp
+matches the empty string, but only at the end of
+the buffer or string being matched against.
+
+@item \b
+@cindex @samp{\b} in regexp
+matches the empty string, but only at the beginning or
+end of a word.  Thus, @samp{\bfoo\b} matches any occurrence of
+@samp{foo} as a separate word.  @samp{\bballs?\b} matches
+@samp{ball} or @samp{balls} as a separate word.@refill
+
+@item \B
+@cindex @samp{\B} in regexp
+matches the empty string, but @emph{not} at the beginning or
+end of a word.
+
+@item \<
+@cindex @samp{\<} in regexp
+matches the empty string, but only at the beginning of a word.
+
+@item \>
+@cindex @samp{\>} in regexp
+matches the empty string, but only at the end of a word.
+@end table
+
+@kindex invalid-regexp
+  Not every string is a valid regular expression.  For example, a string
+with unbalanced square brackets is invalid (with a few exceptions, such
+as @samp{[]]}, and so is a string that ends with a single @samp{\}.  If
+an invalid regular expression is passed to any of the search functions,
+an @code{invalid-regexp} error is signaled.
+
+@node Regexp Examples
+@chapter Examples
+@section Complex Regexp Example
+
+  Here is a complicated regexp, used by Emacs to recognize the end of a
+sentence together with any whitespace that follows.  It is the value of
+the variable @code{sentence-end}.
+
+  First, we show the regexp as a string in C syntax to distinguish
+spaces from tab characters.  The string constant begins and ends with a
+double-quote.  @samp{\"} stands for a double-quote as part of the
+string, @samp{\\} for a backslash as part of the string, @samp{\t} for a
+tab and @samp{\n} for a newline.
+
+@example
+"[.?!][]\"')@}]*\\($\\| $\\|\t\\|  \\)[ \t\n]*"
+@end example
+
+  In contrast, in Lisp, you have to type the tab as Ctrl-V Ctrl-I, producing
+the following:
+
+@example
+@group
+sentence-end
+@result{}
+"[.?!][]\"')@}]*\\($\\| $\\|  \\|  \\)[
+]*"
+@end group
+@end example
+
+@noindent
+In this output, tab and newline appear as themselves.
+
+  This regular expression contains four parts in succession and can be
+deciphered as follows:
+
+@table @code
+@item [.?!]
+The first part of the pattern consists of three characters, a period, a
+question mark and an exclamation mark, within square brackets.  The
+match must begin with one of these three characters.
+
+@item []\"')@}]*
+The second part of the pattern matches any closing braces and quotation
+marks, zero or more of them, that may follow the period, question mark
+or exclamation mark.  The @code{\"} is C or Lisp syntax for a double-quote in
+a string.  The @samp{*} at the end indicates that the immediately
+preceding regular expression (a character set, in this case) may be
+repeated zero or more times.
+
+@item \\($\\|@ \\|\t\\|@ @ \\)
+The third part of the pattern matches the whitespace that follows the
+end of a sentence: the end of a line, or a tab, or two spaces.  The
+double backslashes mark the parentheses and vertical bars as regular
+expression syntax; the parentheses mark the group and the vertical bars
+separate alternatives.  The dollar sign is used to match the end of a
+line.
+
+@item [ \t\n]*
+Finally, the last part of the pattern matches any additional whitespace
+beyond the minimum needed to end a sentence.
+@end table
+
+@node Common Regexps
+@section Common Regular Expressions Used in Editing
+@cindex regexps used standardly in editing
+@cindex standard regexps used in editing
+
+  This section describes some common regular expressions
+used for certain purposes in editing:
+
+Page delimiter:
+This is the regexp describing line-beginnings that separate pages.  A good
+value is @code{(string #\Page)}.
+
+Paragraph separator:
+This is the regular expression for recognizing the beginning of a line
+that separates paragraphs.  A good value is (in C syntax) @code{"^[
+\t\f]*$"}, which is a line that consists entirely of spaces, tabs, and
+form feeds.
+
+Paragraph start:
+This is the regular expression for recognizing the beginning of a line
+that starts @emph{or} separates paragraphs.  A good value is (in C syntax)
+@code{"^[ \t\n\f]"}, which matches a line starting with a space, tab,
+newline, or form feed.
+
+Sentence end:
+This is the regular expression describing the end of a sentence.  (All
+paragraph boundaries also end sentences, regardless.)  A good value
+is (in C syntax, again):
+
+@example
+"[.?!][]\"')@}]*\\($\\|\t\\| \\)[ \t\n]*"
+@end example
+
+This means a period, question mark or exclamation mark, followed by a
+closing brace, followed by tabs, spaces or new lines.
+
+@bye
+

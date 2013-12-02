@@ -1,0 +1,30 @@
+INSTALLDIR = "$(HOME)/Apps";
+APPICON = Lisp3.tiff;
+GENERATEMAIN = YES;
+DOCICONFILES = ();
+FILESTABLE = {
+    M_FILES = (Lisp_main.m, nxterminal.m);
+    OTHER_LINKED = (lisp.a, libavcall.a, libvacall.a, libtrampoline.a);
+    H_FILES = (BreakManager.h, CommandScroll.h, Coordinator.h, LispPreferencesPanel.h, LispServer.h, LispText.h, modules.h, MyPanel.h);
+    CLASSES = (BreakManager.m, CommandScroll.m, Coordinator.m, LispPreferencesPanel.m, LispServer.m, LispText.m, MyPanel.m);
+    IMAGES = (down.tiff, Lisp3.tiff, up.tiff);
+    PSW_FILES = ();
+    C_FILES = ();
+    OTHER_RESOURCES = (lispinit.mem);
+    OTHER_SOURCES = ();
+    SUBPROJECTS = ();
+    PSWM_FILES = ();
+    SOUNDS = ();
+    OTHER_LIBS = (Media_s, NeXT_s, termcap);
+    INTERFACES = (InfoPanel.nib, Lisp.nib, LispWindow.nib);
+};
+APPCLASS = Application;
+MAINNIB = Lisp;
+DOCEXTENSIONS = ();
+PROJECTTYPE = Application;
+PROJECTVERSION = 1.1;
+LOCALIZABLE_FILES = {
+};
+PROJECTNAME = Lisp;
+SYSTEMEXTENSIONS = ();
+LANGUAGE = German;

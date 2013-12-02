@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="syscalls"><title>System Calls</title>
+
+<para>The &posix-pac; module makes some system calls available from lisp.
+ Not all of these system calls are actually POSIX, so this package has a
+ nickname <quote role="package">OS</quote>.</para>
+&base-module;
+<simpara>When this module is present, &features-var;
+ contains the symbol <constant>:SYSCALLS</constant>.</simpara>
+
+<variablelist>
+ <varlistentry id="resolve-host"><term><code>(&resolve-host;
+    &optional-amp; &host-r;)</code></term>
+ <listitem><para>Returns the <type>HOSTENT</type> structure:
+   <variablelist><varlistentry><term><structfield>name</structfield></term>
+     <listitem><simpara>host name</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>aliases</structfield></term>
+     <listitem><simpara>&list-t; of aliases</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>addr-list</structfield></term>
+     <listitem><simpara>&list-t; of IP addresses as dotted quads (for IPv4) or
+       coloned octets (for IPv6)</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>addrtype</structfield></term>
+     <listitem><simpara>&integer-t; address type (IPv4 or IPv6)
+   </simpara></listitem></varlistentry></variablelist>
+   When &host-r; is omitted or &default-k;, return the data for the
+   current host. When &host-r; is &nil;, all the
+   host database is returned as a list (this would be the contents of the
+   <filename>/etc/hosts</filename> file on a &unix; system or
+   <filename>${windir}/system32/etc/hosts</filename> on a &win32; system).
+  </para><simpara>This is an interface
+   to <function role="unix">gethostent</function>,
+   <function role="unix">gethostbyname</function>,
+   and <function role="unix">gethostbyaddr</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="service"><term><code>(<function>OS:SERVICE</function>
+    &optional-amp; <replaceable>service-name</replaceable>
+    &proto-r;)</code></term>
+ <listitem><simpara>A convenience function for looking up a port given
+   the service name, such as <quote>WWW</quote> or <quote>FTP</quote>.
+   It returns the <type>SERVICE</type> structure
+   (name, list of aliases, port, protocol) for the given
+   <replaceable>service-name</replaceable> and &proto-r;,
+   or all services as a &list-t; if <replaceable>service-name</replaceable>
+   is missing or &nil;.</simpara></listitem></varlistentry>
+ <varlistentry id="file-stat"><term><code>(<function>POSIX:FILE-STAT</function>
+    &path-r; &optional-amp; <replaceable>link-p</replaceable>)</code></term>
+  <listitem><para>Return the <type>FILE-STAT</type> structure.
+   &path-r; can be a &stream-t;, a &pathname-t;, a &string-t; or a
+   &number-t; (on a &unix; system, meaning &file-des;).
+   The first slot of the structure returned is the string or the
+   number on which <function role="unix">stat</function>,
+   <function role="unix">fstat</function>,
+   or <function role="unix">lstat</function> was called.
+   The other slots are numbers, members of the <type>struct stat</type>:
+    <variablelist>
+     <varlistentry><term><structfield>dev</structfield></term>
+      <listitem><simpara>Device ID of device containing file.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>ino</structfield></term>
+      <listitem><simpara>File serial number.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>mode</structfield></term>
+      <listitem><simpara>Mode of file.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>nlink</structfield></term>
+      <listitem><simpara>Number of hard links to the file.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>uid</structfield></term>
+      <listitem><simpara>User ID of file.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>gid</structfield></term>
+      <listitem><simpara>Group ID of file.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>rdev</structfield></term>
+      <listitem><simpara>Device ID (if file is character or block
+        special).</simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>size</structfield></term>
+      <listitem><simpara>For regular files, the file size in bytes.
+        For symbolic links, the length in bytes of the pathname contained
+        in the symbolic link.
+        For a shared memory object, the length in bytes.
+        For a typed memory object, the length in bytes.
+        For other file types, the use of this field is unspecified.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>atime</structfield></term>
+      <listitem><simpara>&uni-time; of last access.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>mtime</structfield></term>
+      <listitem><simpara>&uni-time; of last data modification.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>ctime</structfield></term>
+      <listitem><simpara>&uni-time; of last status change
+        (on &win32; - creation time).</simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>blksize</structfield></term>
+      <listitem><simpara>A file system-specific preferred I/O block size
+        for this object.  In some file system types, this may vary from
+        file to file.</simpara></listitem></varlistentry>
+     <varlistentry><term><structfield>blocks</structfield></term>
+      <listitem><simpara>Number of blocks allocated for this object.
+     </simpara></listitem></varlistentry></variablelist>
+    All slots are read-only.</para>
+   <simpara>If the system does not support a particular field (e.g.,
+    &win32; prior to 2000 does not have hard links), &nil; (or the
+    default, like 1 for the number of hard links for old &win32;) is
+    returned.</simpara>
+   <note><title>&win32-only;</title>
+    <para>Normally, one would expect <code>(POSIX:FILE-STAT
+      "foo")</code> and <code>(POSIX:FILE-STAT (&open; "foo"))</code> to
+     return <quote>similar</quote> objects (&open;ing a file changes its
+     access time though).  This is &not-e; the case on &win32;,
+     where <function role="unix">stat</function>
+     works but <function role="unix">fstat</function> does &not-e;.
+     Specifically, <function role="unix">fstat</function> requires
+     an <type>int</type> argument of an unknown nature,
+     and it is not clear how do deduce it from the &win32; file handle.
+     Therefore, instead of always failing on open &file-stream-t; arguments,
+     this function calls
+     <function role="win32">GetFileInformationByHandle</function> and
+     fills the <type>FILE-STAT</type> return value based on that.
+ </para></note></listitem></varlistentry>
+ <varlistentry id="set-file-stat">
+  <term><code>(<function>POSIX:SET-FILE-STAT</function> &path-r;
+    &key-amp; :ATIME :MTIME :MODE :UID :GID)</code></term>
+  <listitem><simpara>Set some file attributes using
+    <function role="unix">chmod</function>,
+    <function role="unix">chown</function>,
+    and <function role="unix">utime</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="stat-vfs"><term><code>(<function>POSIX:STAT-VFS</function>
+    &path-r;)</code></term>
+ <listitem><para>Return a <type>STAT-VFS</type> structure.
+   &path-r; can be a &stream-t;, a &pathname-t;, a &string-t; or a
+   &number-t; (on a &unix; system, meaning &file-des;).
+   The first slot of the structure returned is the string
+   or the number on which <function role="unix">statvfs</function> or
+   <function role="unix">fstatvfs</function> was called.
+   The other slots are members of the <type>struct statvfs</type>:
+   <variablelist>
+    <varlistentry><term><structfield>bsize</structfield></term>
+     <listitem><simpara>File system block size.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>frsize</structfield></term>
+     <listitem><simpara>Fundamental file system block size.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>blocks</structfield></term>
+     <listitem><simpara>Total number of blocks on file system in units of
+       <structfield>frsize</structfield>.</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>bfree</structfield></term>
+     <listitem><simpara>Total number of free blocks.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>bavail</structfield></term>
+     <listitem><simpara>Number of free blocks available to
+       non-privileged processes.</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>files</structfield></term>
+     <listitem><simpara>Total number of file serial numbers.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>ffree</structfield></term>
+     <listitem><simpara>Total number of free file serial numbers.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>favail</structfield></term>
+     <listitem><simpara>Number of file serial numbers available to
+       non-privileged processes.</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>fsid</structfield></term>
+     <listitem><simpara>File system ID.</simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>flag</structfield></term>
+     <listitem><simpara>List of platform-dependent values, such as &ro-k;.
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>namemax</structfield></term>
+     <listitem><simpara>Maximum filename length.
+   </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>vol-name</structfield></term>
+     <listitem><simpara>Volume name (&win32; only).
+   </simpara></listitem></varlistentry>
+    <varlistentry><term><structfield>fs-type</structfield></term>
+     <listitem><simpara>File system type (&win32; only).
+   </simpara></listitem></varlistentry></variablelist>
+   All slots are read-only.
+ </para></listitem></varlistentry>
+ <varlistentry id="file-info"><term><code>(<function>OS:FILE-INFO</function>
+    &path-r; &optional-amp; all)</code></term>
+  <listitem><para>Return the <type>FILE-INFO</type> structure.
+    &path-r; should be a &path-des;. The 7 slots are<simplelist columns="1">
+     <member><structfield>attributes</structfield></member>
+     <member><structfield>ctime</structfield></member>
+     <member><structfield>atime</structfield></member>
+     <member><structfield>wtime</structfield></member>
+     <member><structfield>size</structfield></member>
+     <member><structfield>name</structfield></member>
+     <member><structfield>name-short</structfield></member>
+    </simplelist>When &path-r; is wild, returns just the first match,
+    unless the second (optional) argument is non-&nil;, in which case a
+    &list-t; of objects is returned, one for each match.
+ </para></listitem></varlistentry>
+ <varlistentry id="user-info"><term><code>(<function>POSIX:USER-INFO</function>
+    &optional-amp; <replaceable>user</replaceable>)</code></term>
+ <listitem><simpara>Return the <type>USER-INFO</type> structure (name,
+   encoded password, UID, GID, full name, home directory, shell).
+   <replaceable>user</replaceable> should be a &string-t; or a &number-t;.
+   When <replaceable>user</replaceable> is missing or &nil;, return all users.
+   When <replaceable>user</replaceable> is &default-k;,
+   return the information about the current user.</simpara>
+  <simpara>&unix-only;</simpara></listitem></varlistentry>
+<varlistentry id="group-info"><term><code>(<function>POSIX:GROUP-INFO</function>
+    &optional-amp; <replaceable>group</replaceable>)</code></term>
+ <listitem><simpara>Return the <type>GROUP-INFO</type> structure (name,
+   GID, member list). <replaceable>group</replaceable> should be a
+   &string-t; or a &number-t;. When <replaceable>group</replaceable> is
+   missing or &nil;, return all groups.</simpara>
+  <simpara>&unix-only;</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>POSIX:UNAME</function>)</code></term>
+  <listitem><simpara>Return a structure describing the OS, derived from
+    <function role="unix">name</function>.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(<function>POSIX:SYSCONF</function>
+    &optional-amp; &what-r;)</code></term>
+  <term><code>(<function>POSIX:CONFSTR</function>
+    &optional-amp; &what-r;)</code></term>
+  <listitem><simpara>Return the specified configuration parameter or a
+    list of all available parameters (when &what-r; is missing or
+    &nil;), by calling <function role="unix">sysconf</function>
+    and <function role="unix">confstr</function> respectively.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="rlimit"><term><code>(&rlimit;
+    &optional-amp; &what-r;)</code></term>
+  <listitem><simpara>Return the current and the maximal limits as two
+    values when &what-r; is specified or the &alist; of all available
+    limits (as an <type>RLIMIT</type> structure) when &what-r; is
+    missing or &nil;, by calling <function role="unix">getrlimit</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="set-rlimit"><term><code>(&setf; (&rlimit; &what-r;)
+    (&values; cur max))</code></term>
+  <term><code>(&setf; (&rlimit; &what-r;) rlimit)</code></term>
+  <term><code>(&setf; (&rlimit;) rlimit-alist)</code></term>
+  <listitem><para>Set the limits using
+    <function role="unix">setrlimit</function>.<orderedlist>
+     <listitem><simpara>In the first form, <replaceable>cur</replaceable>
+       and <replaceable>max</replaceable> are numbers
+       (or &nil; for <constant>RLIM_INFINITY</constant>).</simpara></listitem>
+     <listitem><simpara>In the second form, <replaceable>rlimit</replaceable>
+       is an <type>RLIMIT</type> structure.</simpara></listitem>
+     <listitem><simpara>In the third form,
+       <replaceable>rlimit-alist</replaceable> is an &alist;, as returned by
+       <code>(&rlimit;)</code>.</simpara></listitem>
+ </orderedlist></para></listitem></varlistentry>
+ <varlistentry id="usage">
+  <term><code>(<function>POSIX:USAGE</function>)</code></term>
+  <listitem><simpara>Return 2 structures describing the resource usage
+    by the lisp process and its children, using
+    <function role="unix">getrusage</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry>
+   <term><code>(<function>POSIX:ERF</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:ERFC</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:J0</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:J1</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:JN</function> &int-r; &real-r;)</code></term>
+   <term><code>(<function>POSIX:Y0</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:Y1</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:YN</function> &int-r; &real-r;)</code></term>
+   <term><code>(<function>POSIX:GAMMA</function> &real-r;)</code></term>
+   <term><code>(<function>POSIX:LGAMMA</function> &real-r;)</code></term>
+ <listitem><simpara>Compute the error functions, Bessel functions and
+   Gamma.  These functions are required by the POSIX standard and should
+   be available in <filename>libm.so</filename>.</simpara>
+  <warning><simpara>Please note that these functions do not provide
+    lisp-style error handling and precision, and do all the computations
+    at the &double-float-t; level.</simpara></warning>
+ </listitem></varlistentry>
+ <varlistentry id="stream-lock"><term>
+   <code>(<function>POSIX:STREAM-LOCK</function> &stream-r;
+    <replaceable>lock-p</replaceable> &key-amp;
+    (:BLOCK &t;) (:SHARED &nil;) (:START 0) (:END &nil;))</code></term>
+  <listitem><simpara>Set or remove a file lock for the (portion of the)
+    file associated with &stream-r;,
+    depending on <replaceable>lock-p</replaceable>.
+    When <replaceable>block</replaceable> is &nil;, the call is non-blocking,
+    and when locking fails, it returns &nil;.
+    When <replaceable>shared</replaceable> is non-&nil;,
+    then lock can be shared between several callers.
+    Several processes can set a <replaceable>shared</replaceable>
+    (i.e., <emphasis>read</emphasis>) lock, but only one can set
+    an <replaceable>exclusive</replaceable> (i.e., <emphasis>write</emphasis>,
+    or non-<replaceable>shared</replaceable>) lock.
+    Uses <function role="unix">fcntl</function>
+    or <function role="win32">LockFileEx</function>.</simpara>
+   <warning><simpara>&unix; and &win32; differ on locking 0-length files: on
+     &win32;, two processes can have exclusive locks on it!</simpara></warning>
+   <warning><simpara>&win32; locks are <emphasis>mandatory</emphasis>:
+     if you lock a file, others will not be able to open it!
+     &unix; locks are usually <emphasis>advisory</emphasis>: a process
+     is free to ignore it, but on some &unix; systems one can mount some
+     file system with <emphasis>mandatory</emphasis> locks.</simpara></warning>
+ </listitem></varlistentry>
+ <varlistentry id="with-stream-lock"><term>
+   <code>(<function>POSIX:WITH-STREAM-LOCK</function> (&stream-r;
+    &rest-amp; &options-r;) &body-amp; &body-r;)</code></term>
+  <listitem><simpara>Lock the &stream-r;, execute the &body-r;, unlock
+    the &stream-r;.  Pass &options-r; to
+    <link linkend="stream-lock"><function>POSIX:STREAM-LOCK</function></link>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="fcntl"><term><code>(<function>POSIX:STREAM-OPTIONS</function>
+    &stream-r; &command-r; &optional-amp; &value-r;)</code></term>
+  <listitem><simpara>Call <function role="unix">fcntl</function>,
+    &command-r; can be <constant>:FD</constant> or <constant>:FL</constant>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="mknod"><term><code>(<function>POSIX:MKNOD</function>
+    &path-r; &type-r; &mode-r;)</code></term>
+ <listitem><simpara>Create a special file using
+   <function role="unix">mknod</function>.
+   Use <constant>:FIFO</constant> to create pipes
+   and <constant>:SOCK</constant> to create sockets.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="convert-modes">
+  <term><code>(<function>POSIX:CONVERT-MODE</function> &mode-r;)</code></term>
+  <listitem><simpara>Convert between numeric, (e.g., <literal>0644</literal>)
+    and symbolic (e.g., <literal role="data">(:RUSR :WUSR :RGRP
+     :ROTH)</literal>) file modes.</simpara></listitem></varlistentry>
+ <varlistentry id="umask"><term><code>(<function>UMASK</function>
+    &mode-r;)</code></term>
+ <listitem><simpara>Change process mask using
+   <function role="unix">umask</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="copy-file"><term>
+   <code>(<function>POSIX:COPY-FILE</function> &source-r; &dest-r;
+    &key-amp; :METHOD :PRESERVE :IF-EXISTS :IF-DOES-NOT-EXIST)</code></term>
+  <listitem><simpara>This is an interface to
+    <function role="unix">symlink</function>
+    (when &method-r; is <constant>:SYMLINK</constant>),
+    <function role="unix">link</function>
+    (when it is <constant>:HARDLINK</constant>),
+    and <function role="unix">rename</function>
+    (when it is <constant>:RENAME</constant>) system calls, as well as,
+    you guessed it, a generic file copy utility (when &method-r; is &copy-k;).
+   </simpara><simpara>Both &source-r; and &dest-r; may be wild.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="dup-handle"><term>
+   <code>(<function>POSIX:DUPLICATE-HANDLE</function>
+    <replaceable>fd1</replaceable>
+    &optional-amp; <replaceable>fd2</replaceable>)</code></term>
+  <listitem><simpara>This is an interface to the
+    <function role="unix">dup</function> system calls on
+    &unix; systems and to <function role="win32">DuplicateHandle</function>
+    system call on &win32;.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(OS:SHORTCUT-INFO &path-r;)</code></term>
+  <listitem><simpara>Return information about a &win32; shortcut
+    (<filename>#P".lnk"</filename>) file contents in a
+    <type>SHORTCUT-INFO</type> structure.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(OS:MAKE-SHORTCUT &path-r; &key-amp;
+    :WORKING-DIRECTORY :ARGUMENTS :SHOW-COMMAND :ICON :DESCRIPTION
+    :HOT-KEY :PATH)</code></term>
+  <listitem><simpara>Create (or modify the properties of an existing one)
+    a &win32; shortcut (<filename>#P".lnk"</filename>) file.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term><code>(OS:SYSTEM-INFO)</code></term>
+  <listitem><simpara>Return &win32; system information in a
+    <type>SYSTEM-INFO</type> structure.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(OS:VERSION)</code></term>
+  <listitem><simpara>Return &win32; version information in a
+    <type>VERSION</type> structure.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(OS:MEMORY-STATUS)</code></term>
+  <listitem><simpara>Return &win32; memory status information in a
+    <type>MEMORY-STATUS</type> structure.</simpara></listitem></varlistentry>
+ <varlistentry><term><code>(OS:FILE-PROPERTIES filename set
+    &key-amp; :INITID &allow-other-keys-amp;)</code></term>
+  <listitem><para>Wrapper for the &win32;
+    <function role="win32">IPropertyStorage</function> functionality.
+    <variablelist><varlistentry><term>&filename-r;</term>
+      <listitem><simpara>name of a compound file (where properties are stored)
+      or (on NTFS) name of any file (properties are stored in the filesystem).
+      For compound files on NTFS, file storage is preferred.
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><replaceable>set</replaceable></term>
+      <listitem><simpara>property set, either <constant>:BUILT-IN</constant>
+        or <constant>:USER-DEFINED</constant>
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><constant>:INITID</constant>
+       <replaceable>init-id</replaceable></term>
+      <listitem><simpara>set the <replaceable>init-id</replaceable>
+     </simpara></listitem></varlistentry>
+     <varlistentry><term><replaceable>specifier value</replaceable></term>
+      <listitem><para><variablelist>
+         <varlistentry><term><replaceable>specifier</replaceable></term>
+          <listitem><para>the property specifier: an &integer-t;,
+            &keyword-t;, &string-t; or a &list-t; of an &integer-t; or a
+            &keyword-t; and a &string-t;.
+            <variablelist><varlistentry><term>&integer-t;</term>
+              <listitem><simpara>a property identifier
+             </simpara></listitem></varlistentry>
+             <varlistentry><term>&keyword-t;</term>
+              <listitem><para>Predefined &keyword-t; IDs are
+                <simplelist columns="4">
+                 <member><constant>:APPNAME</constant></member>
+                 <member><constant>:AUTHOR</constant></member>
+                 <member><constant>:CHARCOUNT</constant></member>
+                 <member><constant>:CODEPAGE</constant></member>
+                 <member><constant>:COMMENTS</constant></member>
+                 <member><constant>:CREATE-DTM</constant></member>
+                 <member><constant>:DOC-SECURITY</constant></member>
+                 <member><constant>:EDITTIME</constant></member>
+                 <member><constant>:KEYWORDS</constant></member>
+                 <member><constant>:LASTAUTHOR</constant></member>
+                 <member><constant>:LASTPRINTED</constant></member>
+                 <member><constant>:LASTSAVE-DTM</constant></member>
+                 <member><constant>:LOCALE</constant></member>
+                 <member><constant>:PAGECOUNT</constant></member>
+                 <member><constant>:REVNUMBER</constant></member>
+                 <member><constant>:SUBJECT</constant></member>
+                 <member><constant>:TEMPLATE</constant></member>
+                 <member><constant>:THUMBNAIL</constant></member>
+                 <member><constant>:TITLE</constant></member>
+                 <member><constant>:WORDCOUNT</constant></member>
+             </simplelist></para></listitem></varlistentry>
+             <varlistentry><term>&string-t;</term>
+              <listitem><simpara>string property specifier.
+                If no match is found, the first ID &gt;= init-id
+                (which defaults to 2) is associated with the
+                string and its value is replaced with new value.
+             </simpara></listitem></varlistentry>
+             <varlistentry><term>(&integer-t;|&keyword-t;
+               &string-t;)</term>
+              <listitem><simpara>the first element is used as
+                a specifier, the string is associated with this ID.
+            </simpara></listitem></varlistentry></variablelist>
+           </para></listitem></varlistentry>
+         <varlistentry><term>&value-r;</term>
+          <listitem><para>the new value of the property, a suitable Lisp
+            object, &nil; or a &list-t; of a &keyword-t; and the value
+            itself.  If &value-r; is &nil;, no assignment is done.
+            <constant>:EMPTY</constant> and <constant>:NULL</constant>
+            correspond to the <type>VT_EMPTY</type>
+            and <type>VT_NULL</type> data types.
+            &keyword-t; in the &list-t; specifies the desired type of
+            the property being set.
+            Supported types are<simplelist columns="4">
+             <member><constant>:BOOL</constant></member>
+             <member><constant>:BSTR</constant></member>
+             <member><constant>:DATE</constant></member>
+             <member><constant>:ERROR</constant></member>
+             <member><constant>:FILETIME</constant></member>
+             <member><constant>:I1</constant></member>
+             <member><constant>:I2</constant></member>
+             <member><constant>:I4</constant></member>
+             <member><constant>:I8</constant></member>
+             <member><constant>:LPSTR</constant></member>
+             <member><constant>:LPWSTR</constant></member>
+             <member><constant>:R4</constant></member>
+             <member><constant>:R8</constant></member>
+             <member><constant>:UI1</constant></member>
+             <member><constant>:UI2</constant></member>
+             <member><constant>:UI4</constant></member>
+             <member><constant>:UI8</constant></member>
+             <member><constant>:UINT</constant></member></simplelist>
+            <type>FILETIME</type>s are converted to/from the universal
+            time format, while <type>DATE</type>s are not.
+       </para></listitem></varlistentry></variablelist>
+    </para></listitem></varlistentry></variablelist>
+    Returns the property contents before assignment as multiple values.
+ </para></listitem></varlistentry>
+ <varlistentry><term><code>(POSIX:CRYPT &key-r;
+    <replaceable>salt</replaceable>)</code></term>
+  <listitem><simpara>Call <function role="unix">crypt</function>,
+    arguments are &string-t;s.</simpara></listitem></varlistentry>
+ <varlistentry id="encrypt">
+  <term><code>(POSIX:ENCRYPT <replaceable>block</replaceable>
+    <replaceable>decrypt-p</replaceable>)</code></term>
+  <term><code>(POSIX:SETKEY &key-r;)</code></term>
+  <listitem><simpara>Call <function role="unix">encrypt</function>
+    and <function role="unix">setkey</function>, respectively.
+    <replaceable>block</replaceable> and &key-r; are of type
+    <literal role="type">(&vector; (&unsigned-byte-t; 8) 8)</literal>.
+    <replaceable>decrypt-p</replaceable> is &boolean-t;.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="phys-mem"><term><code>(OS:PHYSICAL-MEMORY)</code></term>
+  <listitem><simpara>Return 2 values: total and available physical memory.
+   </simpara><simpara>&unix-w32-only;</simpara></listitem></varlistentry>
+ <varlistentry id="file-owner"><term><code>(OS:FILE-OWNER
+    &filename-r;)</code></term>
+  <listitem><simpara>Return the owner of the file.</simpara>
+   <simpara>&unix-w32-only;</simpara></listitem></varlistentry>
+ <varlistentry id="priority"><term><code>(OS:PRIORITY &pid-r;
+    &optional-amp; &what-r;)</code></term>
+  <listitem><para>Return the process priority, platform-dependent
+    &integer-t; or platform-independent &symbol-t;, one of
+    <simplelist columns="3">
+     <member><constant>:REALTIME</constant></member>
+     <member><constant>:HIGH</constant></member>
+     <member><constant>:ABOVE-NORMAL</constant></member>
+     <member><constant>:NORMAL</constant></member>
+     <member><constant>:BELOW-NORMAL</constant></member>
+     <member><constant>:LOW</constant></member>
+     <member><constant>:IDLE</constant></member></simplelist>
+    On &unix; calls <function role="unix">getpriority</function>, on
+    &win32; calls <function role="win32">GetPriorityClass</function>.</para>
+   <simpara>&setf;able using <function role="unix">setpriority</function> and
+    <function role="win32">SetPriorityClass</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="process-id"><term><code>(OS:PROCESS-ID)</code></term>
+  <listitem><simpara>Return the process ID
+    (on &unix; calls <function role="unix">getpid</function>,
+    on &win32; calls <function role="win32">GetCurrentProcessId</function>)
+ </simpara></listitem></varlistentry>
+ <varlistentry id="openlog"><term><code>(POSIX:OPENLOG ident &key-amp;
+    :PID :CONS :NDELAY :ODELAY :NOWAIT :FACILITY)</code></term>
+  <listitem><simpara>calls <function role="unix">openlog</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="setlogmask"><term><code>(POSIX:SETLOGMASK
+    maskpri)</code></term>
+  <listitem><simpara>calls <function role="unix">setlogmask</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="syslog"><term><code>(POSIX:SYSLOG severity facility
+    &fmt-r; &rest-amp; &args-r;)</code></term>
+  <listitem><simpara>calls <function role="unix">syslog</function> on
+    <code>(&apply; &format; &nil; &fmt-r; &args-r;)</code></simpara>
+   <simpara>No <literal role="data">%</literal> conversion is performed,
+    you must do all formatting in Lisp.</simpara></listitem></varlistentry>
+ <varlistentry id="closelog"><term><code>(POSIX:CLOSELOG)</code></term>
+  <listitem><simpara>calls <function role="unix">closelog</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="kill"><term><code>(POSIX:KILL &pid-r; &sig-r;)</code></term>
+  <listitem><simpara>calls <function role="unix">kill</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="getpgrp"><term><code>(POSIX:GETPGRP &pid-r;)</code></term>
+  <listitem><simpara>calls <function role="unix">getpgrp</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="setpgrp"><term><code>(POSIX:SETPGRP)</code></term>
+  <listitem><simpara>calls <function role="unix">setpgrp</function>;
+    on non-POSIX systems where it requires 2 arguments (legacy
+    BSD-style), it is called as <code>setpgrp(0,0)</code>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="getsid"><term><code>(POSIX:GETSID &pid-r;)</code></term>
+  <listitem><simpara>calls <function role="unix">getsid</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="setsid"><term><code>(POSIX:SETSID)</code></term>
+  <listitem><simpara>calls <function role="unix">setsid</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="setpgid"><term><code>(POSIX:SETPGID
+    &pid-r; <replaceable>pgid</replaceable>)</code></term>
+  <listitem><simpara>calls <function role="unix">setpgid</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="endutxent"><term><code>(POSIX:ENDUTXENT)</code></term>
+  <listitem><simpara>calls <function role="unix">endutxent</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="getutxent"><term><code>(POSIX:GETUTXENT
+    &optional-amp; utmpx)</code></term>
+  <listitem><simpara>calls <function role="unix">getutxent</function>,
+    returns a &structure-object-t; of
+    type <type>POSIX:UTMPX</type>, which can be passed to subsequent calls to
+    this function and re-used.</simpara></listitem></varlistentry>
+ <varlistentry id="getutxid"><term><code>(POSIX:GETUTXID id)</code></term>
+  <listitem><simpara>calls <function role="unix">getutxid</function>,
+    the argument is filled and returned</simpara></listitem></varlistentry>
+ <varlistentry id="getutxline"><term><code>(POSIX:GETUTXLINE line)</code></term>
+  <listitem><simpara>calls <function role="unix">getutxline</function>,
+    the argument is filled and returned</simpara></listitem></varlistentry>
+ <varlistentry id="pututxline"><term><code>(POSIX:PUTUTXLINE
+    utmpx)</code></term>
+  <listitem><simpara>calls <function role="unix">pututxline</function>,
+    the argument is filled and returned</simpara></listitem></varlistentry>
+ <varlistentry id="setutxent"><term><code>(POSIX:SETUTXENT)</code></term>
+  <listitem><simpara>calls <function role="unix">setutxent</function>
+ </simpara></listitem></varlistentry>
+ <varlistentry id="getuid"><term><code>(POSIX:GETUID)</code></term>
+  <term><code>(&setf; (POSIX:GETUID) &uid-r;)</code></term>
+  <listitem><simpara>Call <function role="unix">getuid</function> and
+   <function role="unix">setuid</function>.</simpara></listitem></varlistentry>
+ <varlistentry id="getgid"><term><code>(POSIX:GETGID)</code></term>
+  <term><code>(&setf; (POSIX:GETGID) &gid-r;)</code></term>
+  <listitem><simpara>Call <function role="unix">getgid</function> and
+   <function role="unix">setgid</function>.</simpara></listitem></varlistentry>
+ <varlistentry id="geteuid"><term><code>(POSIX:GETEUID)</code></term>
+  <term><code>(&setf; (POSIX:GETEUID) &uid-r;)</code></term>
+  <listitem><simpara>Call <function role="unix">geteuid</function> and
+   <function role="unix">seteuid</function>.</simpara></listitem></varlistentry>
+ <varlistentry id="getegid"><term><code>(POSIX:GETEGID)</code></term>
+  <term><code>(&setf; (POSIX:GETEGID) &gid-r;)</code></term>
+  <listitem><simpara>Call <function role="unix">getegid</function> and
+   <function role="unix">setegid</function>.</simpara></listitem></varlistentry>
+ <varlistentry id="strtime"><term><code>(OS:STRING-TIME &fmt-r;
+    &optional-amp; &object-r; timezone)</code></term>
+  <listitem><simpara>When &object-r; is a &string-t;, is is parsed
+    according to &fmt-r; by <function role="unix">strptime</function>.
+    When it is an &integer-t;, it is formatted according to &fmt-r;
+    by <function role="unix">strftime</function>.
+    &object-r; defaults to <code>(&get-universal-time;)</code>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="mkstemp"><term><code>(POSIX:MKSTEMP &filename-r;
+    &key-amp; &direction-k; &eltype; &extfmt; &buffered;)</code></term>
+  <listitem><simpara>calls <function role="unix">mkstemp</function>,
+    returns a &file-stream-t;.</simpara>
+   <simpara>&direction-k; should allow output.</simpara>
+   <simpara>When <function role="unix">mkstemp</function> is missing,
+    use <function role="unix">tempnam</function>.
+    On &win32; use <function role="win32">GetTempFileName</function>.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="mkdtemp"><term><code>(POSIX:MKDTEMP
+    &filename-r;)</code></term>
+  <listitem><simpara>calls <function role="unix">mkdtemp</function>
+    (similar to <function role="unix">mkstemp</function> but not in POSIX),
+    returns the namestring of a new empty temporary directory.
+ </simpara></listitem></varlistentry>
+ <varlistentry id="sync"><term><code>(POSIX:SYNC &optional-amp;
+    &stream-r;)</code></term>
+  <listitem><simpara>calls <function role="unix">fsync</function>
+    (<function role="win32">FlushFileBuffers</function> on &win32;)
+    on the &file-des; associated with &stream-r;,
+    or <function role="unix">sync</function>
+    when &stream-r; is not supplied</simpara></listitem></varlistentry>
+ <varlistentry id="mk-xterm-io"><term>(&mk-xterm-io; &key-amp; title)</term>
+  <listitem><para>When running under the &X;, you can create a &bidi-s;,
+    which uses a new dedicated xterm, using the function &mk-xterm-io;:
+<programlisting language="lisp">
+  (&setq; &error-output-var;
+        (&setq; &debug-io-var;
+             (&mk-xterm-io; :title "clisp errors and debug")))
+</programlisting></para><simpara>&unix-only;</simpara></listitem>
+</varlistentry></variablelist>
+
+</section>

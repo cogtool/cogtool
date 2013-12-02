@@ -1,0 +1,52 @@
+# Makefile for CLISP module set wildcard
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+INCLUDES= ..
+FNMATCH_H = @FNMATCH_H@
+FNMATCH_O = @FNMATCH_O@
+
+CLISP = clisp -q -norc
+
+LN = ln
+
+MAKE = make
+
+SHELL = /bin/sh
+
+DISTRIBFILES = wildcard.o $(FNMATCH_O) link.sh Makefile README wildcard.lisp wildcard.xml wildcard.dvi
+distribdir =
+
+all : wildcard.o $(FNMATCH_O)
+
+wildcard.c : wildcard.lisp
+	$(CLISP) -c wildcard.lisp
+
+wildcard.o : wildcard.c $(FNMATCH_H) $(INCLUDES)/clisp.h config.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(INCLUDES) -c wildcard.c
+
+fnmatch.o : fnmatch.c fnmatch_loop.c fnmatch.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -I. -DHAVE_CONFIG_H -c fnmatch.c
+
+fnmatch.h : fnmatch_.h
+	cp fnmatch_.h fnmatch.h-t
+	mv fnmatch.h-t fnmatch.h
+
+# Make a module
+clisp-module : all
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+clean : force
+	rm -f core *.o *.a
+	rm -f fnmatch.h fnmatch.h-t
+	rm -f *.aux *.cp *.fn *.ky *.log *.pg *.toc *.tp *.vr
+
+distclean : clean
+	rm -f *.dvi
+
+force :
+

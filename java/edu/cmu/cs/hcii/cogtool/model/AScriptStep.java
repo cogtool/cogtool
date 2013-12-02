@@ -1,0 +1,908 @@
+/*******************************************************************************
+ * CogTool Copyright Notice and Distribution Terms
+ * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * This software is distributed under the terms of the FSF Lesser
+ * Gnu Public License (see LGPL.txt). 
+ * 
+ * CogTool is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ * 
+ * CogTool is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with CogTool; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * 
+ * CogTool makes use of several third-party components, with the 
+ * following notices:
+ * 
+ * Eclipse SWT
+ * Eclipse GEF Draw2D
+ * 
+ * Unless otherwise indicated, all Content made available by the Eclipse 
+ * Foundation is provided to you under the terms and conditions of the Eclipse 
+ * Public License Version 1.0 ("EPL"). A copy of the EPL is provided with this 
+ * Content and is also available at http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * CLISP
+ * 
+ * Copyright (c) Sam Steingold, Bruno Haible 2001-2006
+ * This software is distributed under the terms of the FSF Gnu Public License.
+ * See COPYRIGHT file in clisp installation folder for more information.
+ * 
+ * ACT-R 6.0
+ * 
+ * Copyright (c) 1998-2007 Dan Bothell, Mike Byrne, Christian Lebiere & 
+ *                         John R Anderson. 
+ * This software is distributed under the terms of the FSF Lesser
+ * Gnu Public License (see LGPL.txt).
+ * 
+ * Apache Jakarta Commons-Lang 2.1
+ * 
+ * This product contains software developed by the Apache Software Foundation
+ * (http://www.apache.org/)
+ * 
+ * jopt-simpler
+ * 
+ * Copyright (c) 2004-2013 Paul R. Holser, Jr.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * Mozilla XULRunner 1.9.0.5
+ * 
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/.
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * The J2SE(TM) Java Runtime Environment
+ * 
+ * Copyright 2009 Sun Microsystems, Inc., 4150
+ * Network Circle, Santa Clara, California 95054, U.S.A.  All
+ * rights reserved. U.S.  
+ * See the LICENSE file in the jre folder for more information.
+ ******************************************************************************/
+
+package edu.cmu.cs.hcii.cogtool.model;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import edu.cmu.cs.hcii.cogtool.util.GlobalAttributed;
+import edu.cmu.cs.hcii.cogtool.util.IAttributeOverride;
+import edu.cmu.cs.hcii.cogtool.util.IAttributed;
+import edu.cmu.cs.hcii.cogtool.util.L10N;
+import edu.cmu.cs.hcii.cogtool.util.ObjectLoader;
+import edu.cmu.cs.hcii.cogtool.util.ObjectSaver;
+
+/**
+ * A single step in a Script.
+ * For the three state flags, the allowed configurations are:
+ *     INITIALLY_GENERATED   INSERTED_BY_USER   DEMONSTRATED
+ * (1)      true                 false             false
+ * (2)      false                true              true
+ * (3)      false                false             true
+ * (4)      false                false             false
+ *
+ * (1) is any step generated by the initial state or start frame
+ *     (e.g., an IHearStep)
+ *
+ * (2) is any step demonstrated directly by the user
+ *
+ * (3) is any step considered to be "demonstrated" that was inserted
+ *     due to the rules associated with Standard widgets
+ *     (e.g. when a Submenu IWidget is traversed)
+ *
+ * (4) is any step generated by the ICognitiveModelGenerator
+ *     as a result of any demonstrated step (either (2) or (3)),
+ *     such as a MoveMouse or HomeKeyboard/Mouse.
+ *
+ * Version 2: to effect rearchitecture changes
+ * Incremented to Version 1 Dec 16th
+ *      adds validScriptStep boolean.
+ *
+ * @author alexeiser
+ */
+public abstract class AScriptStep extends GlobalAttributed
+                                  implements DemonstrationState,
+                                             IAttributeOverride
+{
+    /**
+     * Support for finding the owner of the next generated AScriptStep
+     * when duplicating an Script.  IMPORTANT: Currently assumes that a
+     * script's step states are duplicated IN ORDER!
+     */
+    public static interface GeneratedStepDuplicateScope
+    {
+        public AScriptStep getOwner(AScriptStep originalOwner);
+    }
+
+    /**
+     * Visitor pattern for AScriptStep.
+     * For each AScriptStep subclass, add a visit method here.
+     * @author alexeiser
+     */
+     public static class ScriptStepVisitor
+    {
+        public void visit(TapScriptStep tss)
+        {
+            // do nothing
+        }
+        public void visit(TransitionScriptStep ss)
+        {
+            // do nothing
+        }
+        public void visit(ActionScriptStep ss)
+        {
+            // do nothing
+        }
+        public void visit(DelayScriptStep delayss)
+        {
+            // do nothing
+        }
+        public void visit(DriveScriptStep drivess)
+        {
+            // do nothing
+        }
+        public void visit(LookAtScriptStep lass)
+        {
+            // do nothing
+        }
+        public void visit(ThinkScriptStep tss)
+        {
+            // do nothing
+        }
+        public void visit(TextActionSegment tss)
+        {
+            // do nothing
+        }
+        public void visit(HearScriptStep hss)
+        {
+            // do nothing
+        }
+        public void visit(TransitionDelayScriptStep tdss)
+        {
+            // do nothing
+        }
+    }
+
+    public static final int edu_cmu_cs_hcii_cogtool_model_AScriptStep_version = 2;
+
+    // insertedByUserVAR is also used by subclasses
+    protected static final String ownerVAR = "owner";
+    protected static final String currentFrameVAR = "currentFrame";
+    protected static final String insertedByUserVAR = "insertedByUser";
+    protected static final String demonstratedVAR = "demonstrated";
+    protected static final String initiallyGeneratedVAR = "initiallyGenerated";
+    protected static final String invalidCountVAR = "invalidCount";
+    protected static final String obsoleteCountVAR = "obsoleteCount";
+    protected static final String overridesVAR = "overrides";
+
+    // needed to load old .cgt files
+    protected static final String validScriptStepVAR = "validScriptStep";
+
+    protected AScriptStep owner = null; // set later
+    protected Frame currentFrame = null;
+
+    /**
+     * Script step is invalid if the invalidCount is positive.
+     */
+    protected int invalidCount = 0;   // was validScriptStep previously
+
+    /**
+     * Script step is obsolete if valid but the obsoleteCount is positive.
+     */
+    protected int obsoleteCount = 0;
+
+    /**
+     * It is possible for an "owned" step to be inserted by the user,
+     * such as the last TextActionSegment that partitions a sequence.
+     */
+    protected boolean insertedByUser = false;
+
+    /**
+     * Some steps are now generated from the initial state and the start
+     * frame (e.g., the HearStep due to the start frame having a speaker
+     * specification).
+     */
+    protected boolean initiallyGenerated = false;
+
+    /**
+     * Whether or not the step represents something demonstrated by the user;
+     * it is possible for generated steps to be "demonstrated" if they
+     * correspond to standard, automatic widgets.
+     */
+    protected boolean demonstrated = false;
+
+    protected Map<IAttributed, IAttributed> overrides = null;
+
+    private static ObjectSaver.IDataSaver<AScriptStep> SAVER =
+        new ObjectSaver.ADataSaver<AScriptStep>() {
+            @Override
+            public int getVersion()
+            {
+                return edu_cmu_cs_hcii_cogtool_model_AScriptStep_version;
+            }
+
+            @Override
+            public void saveData(AScriptStep v, ObjectSaver saver)
+                throws java.io.IOException
+            {
+                saver.saveObject(v.owner, ownerVAR);
+                saver.saveObject(v.currentFrame, currentFrameVAR);
+                saver.saveInt(v.invalidCount, invalidCountVAR);
+                saver.saveInt(v.obsoleteCount, obsoleteCountVAR);
+                saver.saveObject(v.overrides, overridesVAR);
+
+                // These two are saved last so that they can override
+                // the computation used to determine their values for
+                // older .cgt files.
+                saver.saveBoolean(v.insertedByUser, insertedByUserVAR);
+                saver.saveBoolean(v.demonstrated, demonstratedVAR);
+
+                saver.saveBoolean(v.initiallyGenerated, initiallyGeneratedVAR);
+            }
+        };
+
+    public static void registerSaver()
+    {
+        ObjectSaver.registerSaver(AScriptStep.class.getName(), SAVER);
+    }
+
+    private static ObjectLoader.IObjectLoader<AScriptStep> LOADER_v1 =
+        new ObjectLoader.AObjectLoader<AScriptStep>() {
+            @Override
+            public void set(AScriptStep target, String variable, Object value)
+            {
+                final String resultStateVAR = "resultState";
+
+                if (variable != null) {
+                    if (variable.equals(currentFrameVAR)) {
+                        target.currentFrame = (Frame) value;
+                    }
+                    else if (variable.equals(resultStateVAR)) {
+                        // Invert the step-state relationship
+                        ((DefaultModelGeneratorState) value).setScriptStep(target);
+                    }
+                }
+            }
+//          no longer saved: isParent, resultState
+
+            @Override
+            public void set(AScriptStep target, String variable, boolean value)
+            {
+                final String isParentVAR = "isParent";
+
+                if (variable != null) {
+                    if (variable.equals(insertedByUserVAR)) {
+                        target.insertedByUser = value;
+
+                        if (value) {
+                            target.owner = target;
+                            target.demonstrated = true;
+                        }
+                    }
+                    else if (variable.equals(isParentVAR)) {
+                        // IGNORE; we no longer care if it can be a parent.
+                    }
+                    else if (variable.equals(validScriptStepVAR)) {
+                        if (! value) {
+                            // TODO:mlh insure against generated steps?
+                            target.invalidCount++;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public Map<?, ?> createMap(AScriptStep target,
+                                       String variable,
+                                       int size)
+            {
+                if (variable != null) {
+                    if (variable.equals(overridesVAR)) {
+                        target.overrides =
+                            new HashMap<IAttributed, IAttributed>();
+
+                        return target.overrides;
+                    }
+                }
+
+                return null;
+            }
+        };
+
+    private static ObjectLoader.IObjectLoader<AScriptStep> LOADER =
+        new ObjectLoader.AObjectLoader<AScriptStep>() {
+            @Override
+            public void set(AScriptStep target, String variable, Object value)
+            {
+                if (variable != null) {
+                    if (variable.equals(currentFrameVAR)) {
+                        target.currentFrame = (Frame) value;
+                    }
+                    else if (variable.equals(ownerVAR)) {
+                        target.owner = (AScriptStep) value;
+
+                        if (target.owner == target) {
+                            target.insertedByUser = true;
+                            target.demonstrated = true;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void set(AScriptStep target, String variable, int value)
+            {
+                if (variable != null) {
+                    if (variable.equals(invalidCountVAR)) {
+                        target.invalidCount = value;
+                    }
+                    else if (variable.equals(obsoleteCountVAR)) {
+                        target.obsoleteCount = value;
+                    }
+                }
+            }
+
+            @Override
+            public void set(AScriptStep target, String variable, boolean value)
+            {
+                if (variable != null) {
+                    if (variable.equals(insertedByUserVAR)) {
+                        target.insertedByUser = value;
+                    }
+                    else if (variable.equals(demonstratedVAR)) {
+                        target.demonstrated = value;
+                    }
+                    else if (variable.equals(initiallyGeneratedVAR)) {
+                        target.initiallyGenerated = value;
+                    }
+                }
+            }
+
+            @Override
+            public Map<?, ?> createMap(AScriptStep target,
+                                       String variable,
+                                       int size)
+            {
+                if (variable != null) {
+                    if (variable.equals(overridesVAR)) {
+                        target.overrides = new HashMap<IAttributed, IAttributed>();
+
+                        return target.overrides;
+                    }
+                }
+
+                return null;
+            }
+       };
+
+    public static void registerLoader()
+    {
+        ObjectLoader.registerLoader(AScriptStep.class.getName(),
+                                    edu_cmu_cs_hcii_cogtool_model_AScriptStep_version,
+                                    LOADER);
+
+        ObjectLoader.registerLoader(AScriptStep.class.getName(),
+                                    1,
+                                    LOADER_v1);
+
+        // Register the v1 loader with the 0 version number, this works
+        // because just a variable was added in version 1.
+        ObjectLoader.registerLoader(AScriptStep.class.getName(),
+                                    0,
+                                    LOADER_v1);
+    }
+
+    protected static final String MOVE_AND_PREFIX =
+        L10N.get("DMGS.MoveAnd", "Move and");
+
+    /**
+     * Constructor for loading
+     */
+    protected AScriptStep()
+    {
+        // Nothing to do.
+    }
+
+    /**
+     * Constructor for "owned" steps (i.e., inserted "automatically"
+     * by an ICognitiveModelGenerator, not the user).
+     *
+     * @param ownerDemoStep
+     */
+    public AScriptStep(AScriptStep ownerDemoStep, boolean isDemonstrated)
+    {
+        owner = ownerDemoStep;
+        currentFrame = owner.getCurrentFrame();
+        insertedByUser = false;
+        demonstrated = isDemonstrated;
+    }
+
+    /**
+     * Constructor for steps inserted (and therefore "demonstrated") by the user
+     */
+    public AScriptStep(Frame inFrame)
+    {
+        this(inFrame, false);
+    }
+
+    /**
+     * Constructor for "owned" steps that is initially generated.
+     * If not initially generated, then the step is assumed to be
+     * demonstrated and inserted by the user.
+     */
+    public AScriptStep(Frame inFrame, boolean isInitiallyGenerated)
+    {
+        owner = this;
+        currentFrame = inFrame;
+
+        initiallyGenerated = isInitiallyGenerated;
+
+        insertedByUser = ! isInitiallyGenerated;
+        demonstrated = ! isInitiallyGenerated;
+    }
+
+    /**
+     * Get the AScriptStep from which this step was generated.
+     */
+    public AScriptStep getOwner()
+    {
+        return owner;
+    }
+
+    /**
+     * Only used by Script version 0 or 1 evolution.
+     */
+    public void setOwner(AScriptStep newOwner)
+    {
+        owner = newOwner;
+    }
+
+    /**
+     * Utility to fetch the associated action with this step, if one.
+     * Up to subclasses to override.
+     */
+    protected AAction getStepAction()
+    {
+        return null;
+    }
+
+    /**
+     * Textual description of the script step
+     */
+    public String getLocalizedString()
+    {
+        return "";  // return empty string
+    }
+
+    /**
+     * Textual description of the script step with 'MOVE AND' prepended
+     * if necessary based on the given previous moved-to widget.
+     */
+    public String getLocalizedActionString(String localizedStr,
+                                           IWidget lastMovedToWidget)
+    {
+        AAction action = getStepAction();
+
+        if (action != null) {
+            ActionType actionType = action.getType();
+
+            if ((actionType == ActionType.MoveMouse) ||
+                (actionType == ActionType.KeyPress) ||
+                (actionType == ActionType.Voice))
+            {
+                return localizedStr;
+            }
+        }
+
+        TransitionSource src = getStepFocus();
+
+        if ((src instanceof IWidget) &&
+            ! ((IWidget) src).sameLocation(lastMovedToWidget))
+        {
+            return MOVE_AND_PREFIX + " " + localizedStr;
+        }
+
+        return localizedStr;
+    }
+
+    /**
+     * Get whether this step was demonstrated directly by the user.
+     * If not, then the step was added by the ICognitiveModelGenerator
+     * during generation based on the "owner" script step.
+     */
+    public boolean isInsertedByUser()
+    {
+        return insertedByUser;
+    }
+
+    /**
+     * Get whether the step is generated by the initial state of the
+     * start frame.  If this returns true, then isInsertedByUser and
+     * isDemonstrated must return false.
+     */
+    public boolean isInitiallyGenerated()
+    {
+        return initiallyGenerated;
+    }
+
+    /**
+     * Get whether this step represents an action demonstrated by the user;
+     * it may not have be directly inserted, if it was generated as part
+     * of a standard, automatic widget.  This must return true if
+     * the method isInsertedByUser returns true.
+     */
+    public boolean isDemonstrated()
+    {
+        return demonstrated;
+    }
+
+    /**
+     * Get the focus on which this script step performs.  May return
+     * <code>null</code> if the action is independent of any focus.
+     */
+    public TransitionSource getStepFocus()
+    {
+        // By default, no focus
+        return null;
+    }
+
+    /**
+     * Textual description of the step's focus.  If an input,
+     * corresponds to the ITransitionSource's title or name.
+     * If an output, then it corresponds to the device type's
+     * name.  Otherwise, "" should be returned.
+     */
+    public String getLocalizedFocusString()
+    {
+        TransitionSource src = getStepFocus();
+
+        return (src != null) ? src.getNameLabel() : "";
+    }
+
+    /**
+     * Fetch the Frame that is "active" when this step is performed.
+     */
+    public Frame getCurrentFrame()
+    {
+        return currentFrame;
+    }
+
+    /**
+     * Fetch the Frame that becomes the next to be "active" once this
+     * step has been performed.  This should be the same Frame as
+     * getSourceFrame() if no transition occurs as a result
+     * of performing the step's "action".
+     */
+    public Frame getDestinationFrame()
+    {
+        // Generated steps should not change the Frame, so the "result"
+        // frame for such steps should be the same as the "start" frame.
+        return getCurrentFrame();
+    }
+
+    /**
+     * Determines if this step uses the given Frame (used by a Project
+     * to invalidate results when the given object changes).
+     */
+    public boolean usesFrame(Frame frame)
+    {
+        return getCurrentFrame() == frame;
+    }
+
+    /**
+     * Checks to see if this step uses the given Widget (used by a
+     * Project to invalidate results when the given object changes).
+     */
+    public boolean usesWidget(IWidget widget)
+    {
+        TransitionSource stepFocus = getStepFocus();
+
+        if (stepFocus == widget) {
+            return true;
+        }
+
+        while (stepFocus instanceof ChildWidget) {
+            stepFocus = ((ChildWidget) stepFocus).getParent();
+
+            if (stepFocus == widget) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check to see if this step uses the given Transition (used by a
+     * Project to invalidate results when the given object changes).
+     */
+    public boolean usesTransition(Transition transition)
+    {
+        // By default, no transition
+        return false;
+    }
+
+    /**
+     * If this object uses the given frame, alter its state based on
+     * whether the edit is invalidating or obsoleting.  Return a non-null
+     * value if this object uses the given frame.
+     */
+    public DemonstrationState noteFrameEdit(Frame frame,
+                                             boolean invalidating)
+    {
+        if (usesFrame(frame)) {
+            noteEdit(invalidating);
+            return this;
+        }
+
+        return null;
+    }
+
+    /**
+     * If this object uses the given widget, alter its state based on
+     * whether the edit is invalidating or obsoleting.  Return a non-null
+     * value if this object uses the given widget.
+     */
+    public DemonstrationState noteWidgetEdit(IWidget widget,
+                                              boolean invalidating)
+    {
+        if (usesWidget(widget)) {
+            noteEdit(invalidating);
+            return this;
+        }
+
+        return null;
+    }
+
+    /**
+     * If this object uses the given transition, alter its state based on
+     * whether the edit is invalidating or obsoleting.  Return a non-null
+     * value if this object uses the given transition.
+     */
+    public DemonstrationState noteTransitionEdit(Transition transition,
+                                                  boolean invalidating)
+    {
+        if (usesTransition(transition)) {
+            noteEdit(invalidating);
+            return this;
+        }
+
+        return null;
+    }
+
+    /**
+     * Alter this object's state to revert an edit that is invalidating
+     * or obsoleting.  The state parameter should be one returned by a
+     * previous noteXxxEdit call.
+     */
+    public void revertEdit(DemonstrationState state, boolean invalidating)
+    {
+        if (invalidating) {
+            invalidCount--;
+        }
+        else {
+            obsoleteCount--;
+        }
+    }
+
+    public void noteEdit(boolean invalidating)
+    {
+        if (invalidating) {
+            invalidCount++;
+        }
+        else {
+            obsoleteCount++;
+        }
+    }
+
+    /**
+     * Reset so that all saved obsoleting counts are set to zero.
+     * If the state is still obsolete, it should be added to the given
+     * set to support undo/redo; the count is no longer pertinent.
+     *
+     * @param obsoleteStates holds those states that had saved obsolete counts
+     */
+    public void restoreConformance(Set<DemonstrationState> obsoleteStates)
+    {
+        if (obsoleteCount > 0) {
+            obsoleteStates.add(this);
+            obsoleteCount = 0;
+        }
+    }
+
+    public boolean isInvalid()
+    {
+        return invalidCount > 0;
+    }
+
+    public boolean isObsolete()
+    {
+        return obsoleteCount > 0;
+    }
+
+    public void copyState(DemonstrationState fromState)
+    {
+        invalidCount = fromState.invalidatingCount();
+        obsoleteCount = fromState.obsoletingCount();
+
+        copyAttributes(fromState);
+    }
+
+    public int invalidatingCount()
+    {
+        return invalidCount;
+    }
+
+    public int obsoletingCount()
+    {
+        return obsoleteCount;
+    }
+
+    /**
+     * Create a "deep" copy of this script step of an Demonstration.
+     * <p>
+     * It is the responsibility of the caller to "place" the copy
+     * (usually by adding it to an Demonstration).
+     *
+     * @param duplicateScope used to find design components referred to by the
+     *                       step duplicate
+     * @return the script step copy
+     * @author mlh
+     */
+    public AScriptStep duplicate(TaskApplication.DemoDuplicateScope duplicateScope)
+    {
+        throw new IllegalStateException("This step is always generated");
+    }
+
+    /**
+     * Create a "deep" copy of this generated script step (i.e., one that is
+     * not an owner itself.
+     * <p>
+     * It is the responsibility of the caller to "place" the copy
+     * (usually by adding it to an Demonstration).
+     *
+     * @param duplicateScope used to find design components referred to by the
+     *                       step duplicate
+     * @param ownerScope used to find the owner of the duplicate generated step
+     * @return the script step copy
+     * @author mlh
+     */
+    public AScriptStep duplicate(TaskApplication.DemoDuplicateScope duplicateScope,
+                                 AScriptStep.GeneratedStepDuplicateScope ownerScope)
+    {
+        throw new IllegalStateException("This step is never generated");
+    }
+
+    public void overrideAttribute(IAttributed attributed,
+                                  String attrName,
+                                  Object value)
+    {
+        IAttributed override;
+
+        if (attributed == getStepFocus()) {
+            override = this;
+        }
+        else {
+            if (overrides == null) {
+                overrides = new HashMap<IAttributed, IAttributed>();
+            }
+
+            override = overrides.get(attributed);
+
+            if (override == null) {
+                override = new GlobalAttributed();
+                overrides.put(attributed, override);
+            }
+        }
+
+        override.setAttribute(attrName, value);
+
+        attributed.raiseAlert(new OverrideChange(this, attrName, true));
+    }
+
+    public void undoOverride(IAttributed attributed, String attrName)
+    {
+        IAttributed override;
+
+        if (attributed == getStepFocus()) {
+            override = this;
+        }
+        else {
+            override = overrides.get(attributed);
+
+            if (override == null) {
+                throw new IllegalStateException("Missing override");
+            }
+        }
+
+        override.unsetAttribute(attrName);
+
+        attributed.raiseAlert(new OverrideChange(this, attrName, false));
+    }
+
+    public Object getAttribute(IAttributed attributed, String attrName)
+    {
+        if (attributed == getStepFocus()) {
+            return getAttribute(attrName);
+        }
+
+        if (overrides != null) {
+            IAttributed override = overrides.get(attributed);
+
+            if (override != null) {
+                return override.getAttribute(attrName);
+            }
+        }
+
+        // No override; simply fetch from the given attributed
+        return attributed.getAttribute(attrName);
+    }
+
+    public boolean overrides(IAttributed attributed, String attrName)
+    {
+        if (attributed == getStepFocus()) {
+            return getDefiner(attrName) != null;
+        }
+
+        if (overrides != null) {
+            IAttributed override = overrides.get(attributed);
+
+            if (override != null) {
+                return override.getDefiner(attrName) != null;
+            }
+        }
+
+        // No override
+        return false;
+    }
+
+    public IAttributed overridesAttributes(IAttributed attributed)
+    {
+        if (attributed == getStepFocus()) {
+            return this;
+        }
+
+        if ((overrides != null) && overrides.containsKey(attributed))
+        {
+            return overrides.get(attributed);
+        }
+
+        return null;
+    }
+
+    /**
+     * Accept the visitor for this scriptStep.
+     * @param visitor
+     */
+    abstract public void accept(AScriptStep.ScriptStepVisitor visitor);
+}

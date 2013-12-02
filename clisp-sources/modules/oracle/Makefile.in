@@ -1,0 +1,68 @@
+#
+# Makefile.in for CLISP module set oracle
+#
+# $Id: Makefile.in,v 1.6 2004/08/12 14:38:34 sds Exp $
+
+# This will come from the environment
+# ORACLE_HOME = /usr/local/oracle
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+CLISP = clisp -q -norc
+
+# Get Oracle OCI library headers
+#
+# Oracle likes to move their header files around ... locations by
+# release are below.  $H is the Oracle home.
+#
+#  File       8.0.5               8.1.7
+#
+#  oci.h      $H/rdbms/demo       $H/rdbms/demo
+#  ociextp.h  $H/plsql/demo       $H/rdbms/public
+#  nzt.h      $H/network/public   $H/rdbms/public
+#
+#
+# So, we'll just supply the union of all these and that should work
+# across releases.  Until they move them again. ;)
+
+ORA_INCLUDES = -I.. -I ${ORACLE_HOME}/rdbms/demo -I ${ORACLE_HOME}/rdbms/public -I ${ORACLE_HOME}/plsql/demo -I ${ORACLE_HOME}/network/public
+
+LN = ln
+
+MAKE = make
+
+SHELL = /bin/sh
+
+DISTRIBFILES = oracle.o orafns.o oiface.o link.sh Makefile oracle.lisp
+distribdir =
+
+all : orafns.o oracle.o oiface.o
+
+oracle.c:       oracle.lisp
+	$(CLISP) -c oracle.lisp
+
+oracle.o:       oracle.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(ORA_INCLUDES) -c oracle.c
+
+orafns.o:       orafns.c oiface.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(ORA_INCLUDES) -c orafns.c
+
+oiface.o:       oiface.c oiface.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) $(ORA_INCLUDES) -c oiface.c
+
+# Make a module
+clisp-module : all
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+clean : force
+	rm -f core *.o *.a
+	rm -f *.aux *.cp *.fn *.ky *.log *.pg *.toc *.tp *.vr
+
+distclean : clean
+
+force :
+

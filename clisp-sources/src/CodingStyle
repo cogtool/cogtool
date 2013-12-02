@@ -1,0 +1,272 @@
+                   -*- mode: text; coding: utf-8 -*-
+                   ---------------------------------
+
+                       CLISP sources coding style
+                       ==========================
+
+Lisp developers are individuals, and every individual tends to have his
+own preferred coding style. Nevertheless, on projects like CLISP where
+several people come together to hack the same source, it is necessary to
+adhere to a common coding style, so that other developers enjoy reading
+your code.
+
+A common coding style is a compromise for all participants, and it is also
+an exercise in tolerance. When I contribute code to Linux, I adhere to the
+Linux coding style (/usr/src/linux/Documentation/CodingStyle - very
+recommended reading). When I contribute to GCC, I follow the GNU coding style
+("info standards"), although I get nauseas when I look at the result.
+When I write for XFree86, I follow their style; it's a somewhat neutral one.
+
+As a general rule, don't reformat entire files other people have written;
+that will make the other developers spit. Instead, adhere to the particular
+file's predominant style (even if it is not the same as the general style
+used in the project).
+
+A lot of good advice about naming conventions and placement and contents of
+comments can be found in other places; therefore I skip these issues here.
+I'll mention only one rule about
+
+                           Special variables
+                           -----------------
+
+All variables which are subject to 'defvar', 'defparameter' or 'declare
+special' (even if only locally in a function) must be surrounded by asterisks.
+I had once in a program a special variable called 'line', and it caused me
+an hour of debugging time at least. I will not make this mistake again...
+
+                                  Tabs
+                                  ----
+
+In CLISP source, except for Makefiles and ChangeLog files, we don't use tabs.
+This is because they have no functional advantage, and make "diff" output
+harder to read and understand. And also, because some editors on Windows have
+a default tab width of 4, whereas on Unix, the common consensus is a tab width
+of 8. If you are using Emacs and want to contribute to CLISP, the best way to
+ensure that you don't send us tabs by mistake is to add the following lines
+to your $HOME/.emacs file:
+
+    ;; Tabs are anachronistic.
+    (setq-default indent-tabs-mode nil)
+
+               Lisp indentation and parentheses placement
+               ------------------------------------------
+
+We try to keep things in 79 columns, because that's the default width of
+Emacs windows.  We urge you to use the Emacs 21 lisp-mode to indent
+your lisp code, see file <clisp/emacs/clisp-indent.el>.
+
+Parentheses should be set in the mainstream style (used in CLtL1, CLtL2
+and the ANSI CL spec), with the closing parens at the end of the last
+line, like this:
+
+(defun get-funname-symbol (funname)
+  (if (atom funname)
+    funname
+    (get-setf-symbol (second funname))))
+
+Elements of a list are indented by 2 spaces relative to the list, except
+- for arguments of function calls, which often can be aligned to the first
+  argument,
+- for elements of COND-clauses, which are usually indented by 1 space.
+
+Some of the CLISP code still uses the "Bruno style". Its characteristic
+is that closing parentheses are located either on the same line as the
+corresponding opening paren, or on extra lines containing only closing
+parentheses:
+
+(defun get-funname-symbol (funname)
+  (if (atom funname)
+    funname
+    (get-setf-symbol (second funname))
+) )
+
+Please avoid adding code in this style.
+
+                                C style
+                                -------
+
+Most of the C code of CLISP is stored in files with extension '.d'. It _is_
+C code, but the file will be preprocessed a bit.
+
+A comment until end of line is introduced by '# '.  Other '#' signs, not
+followed by a space, have the usual C meaning.  Please avoid adding new
+comments in this style, use the normal /* C comments */.
+
+Preprocessor commands can start at any column, not necessarily at the first
+column of a line.
+
+These 'var' symbols that you encounter in every function introduce variable
+declarations. We use one variable per declaration; the C syntax rules make
+declarations of multiple variables on the same line hard to read and hard
+to edit. 'var' is a preprocessor symbol which expands to nothing. Writing
+'var' not only makes it human reader to understand the code; it also allows
+you to mix declarations and statements freely, without the need for
+additional braces.
+
+We have a few macros defined in lispbibl.d: 'elif' means 'else if',
+'until' means 'while not' (both are now deprecated).
+'loop' introduces a loop which can be exited only via 'break'; it's
+equivalent to 'for(;;)'.  It is deprecated as well.  Use 'for (;;)',
+not 'while (1)', instead.
+
+                             C indentation
+                             -------------
+
+The general style is similar to K&R style or Linux kernel style, with a
+tab width of 2 spaces. A typical 'if' or 'while' statement looks like this:
+
+      while (consp(keylistr)) {
+        if (eq(item,Car(keylistr)))
+          goto found;
+        keylistr = Cdr(keylistr);
+      }
+
+When statements have to span lines, split them before the operator; this
+is what the GNU standards recommend:
+
+            if (mconsp(Car(alist)) && simple_string_p(Car(Car(alist)))
+                && string_equal(line,Car(Car(alist)))) {
+
+Use <clisp/emacs/d-mode.el> to make Emacs indent and fontify your *.d files.
+
+                                Comments
+                                --------
+
+Comments in front of a function definition describe the function's
+specification, i.e. all a caller of the function needs to know. Describe
+the function's behavior in a sentence with implicit subject "this
+function", not as a command. For algorithmic functions with non obvious
+complexity, the (worst-case) complexity (= running time) is part of the
+function's specification.
+
+Comments about the inner working of a function belong inside the function.
+
+Example:
+
+      ;; (isqrt x) returns the largest integer <= x^(1/2).
+      ;; x must be an integer >= 0.
+      ;; Complexity: O(M(n) log n) if x has n digits.
+      (defun isqrt (x)
+        ;; Use Newton's algorithm.
+        (let ((y (ash 1 (ash (integer-length x) -1))))
+          (loop (when (= y (setq y (ash (+ y (floor x y)) -1))) (return)))
+          y))
+
+Comments about a variable belong in front of the variable.
+
+                            German comments
+                            ---------------
+
+When CLISP was written, it was not anticipated to have wide distribution.
+We are sorry about the German comments. If you are a native German
+speaker, you are welcome to faithfully translate them to English.
+If not, please leave them alone and wait for someone to translate them
+to English.  Many files have been already translated by Stefan Kain;
+you may ask him (on <clisp-list>) to translate the file you need.
+
+German variable and function names are probably even more disturbing
+than the comments, and much harder to handle.  Use babelfish.
+Remember: "fehler" == "error"; "zustand" == "state"
+(this is where the 'z' suffix often comes from).
+
+                             Variable names
+                             --------------
+
+Use descriptive variable names. Don't use names like "ll", "tem", "stri",
+"comp"; if you want to participate in an obfuscated Lisp code contest, you
+may, but don't put the resulting code into CLISP.
+
+                        Variable initializations
+                        ------------------------
+
+If you want to access a variable's value, first initialize it.
+
+In Lisp, to initialize a list to be empty, write
+
+      (let ((l '()))
+not
+      (let ((l nil)) ; this doesn't tell whether l is a list, boolean etc.
+or
+      (let (l) ; worse - looks like an uninitialized variable.
+
+In Lisp, if keyword arguments have a non-obvious default, write it down:
+
+      (defun f (sequence &key (start 0) (end nil))
+not
+      (defun f (sequence &key (start 0) end)
+
+In C, to initialize a static variable to 0, write
+
+             static int flag = 0;
+not
+             static int flag;
+
+To many people this advice seems obvious; I am sorry that I have to repeat
+it here.
+
+                              Macros and ABI
+                              --------------
+
+Macro expanders must not perform side effects; only the execution of the
+macro expansion may perform side effects.
+
+If a macro expansion needs to perform complex actions, try to move as much
+of it as possible into functions that are then called from the macro
+expansion. In particular, don't put literal strings into macro expansions.
+This helps 1. keeping the size of compiled .fas files small, 2. reducing
+the probability that O(version) needs to be bumped when you change the
+effect of the macro.
+
+Macros expansions can refer to documented symbols and functions from public
+packages (COMMON-LISP, CLOS, EXT, FFI), as well as undocumented, unexported
+functions. Both kinds of functions, together with their calling conventions,
+form the ABI (= Application Binary Interface) of .fas files. When the ABI
+changes, O(version) needs to be bumped, thus declaring previously compiled
+.fas files as invalid. The second kind of function should be marked as
+"; ABI" in the *.lisp source code or "/* ABI */" in constsym.d, to make the
+developers aware.
+
+                             Newline Output
+                             --------------
+
+All output by the system must start with a fresh-line and must be terminated
+with an elastic newline. See doc/Newline-Convention.txt for the rationale.
+
+                            Change Management
+                            -----------------
+
+Even though CLISP is kept under the CVS, all functional changes require
+a ChangeLog entry.  If there is no ChangeLog file in the current
+directory, the entry goes into <clisp/src/ChangeLog>; you should refer
+to the recent entries there for good examples of ChangeLog entries.
+One should always use a high-level overview of the change (1-2 lines)
+in the beginning of the entry, and use it as the CVS log message.
+The file name should include a path relative to one of 3 "roots":
+clisp/, clisp/src/ or clisp/modules/.  E.g., <clisp/utils/clispload.lsp>
+is recorded as <utils/clispload.lsp>, <clisp/modules/pcre/cpcre.c> as
+<pcre/cpcre.c> and <clisp/src/lispbibl.d> as <lispbibl.d>.
+The main requirement is that the record must be unambiguous.
+
+We highly recommend using Emacs change-log mode with font-lock, as the
+highlighting will give many valuable suggestions about the right format.
+Use M-x add-change-log-entry RET to add an entry, and some information
+will be put there for you automagically.
+
+Never mix functional changes with formatting/translation changes!
+If you are fixing indentation or translating comments, make a separate
+CVS commit without a ChangeLog entry, then check in your functional
+changes and add the ChangeLog entry.
+
+You are encouraged to add a test case to a file in <clisp/tests/>
+whenever you add a feature or fix a bug, the more tests, the better.
+One requirement must be satisfied after every CVS commit:
+    $ cvs up -C; ./configure --build build-dir
+must pass all tests, the old and the new alike.
+
+Documentation changes do not need a ChangeLog entry.  Do not abbreviate
+function, variable and file names (e.g., using regular expressions).
+
+All functionality should be documented.
+When adding a new symbol, document it in the Implementation Notes and
+add an appropriate mapping from the symbol to its XML ID in the impnotes
+to the file doc/Symbol-Table.text (in the order of the impnotes' flow).

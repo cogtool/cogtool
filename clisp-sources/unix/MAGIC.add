@@ -1,0 +1,10 @@
+# Information for the file(1) command.
+# Add this to your /etc/magic or /usr/lib/magic or /usr/share/magic file.
+
+0	string	;;			Lisp/Scheme program text
+0	string	(SYSTEM::VERSION\040'	CLISP byte-compiled Lisp program text
+0	long	0x70768BD2		CLISP memory image data
+0	long	0xD28B7670		CLISP memory image data, other endian
+0	long	0xDE120495		GNU-format message catalog data
+0	long	0x950412DE		GNU-format message catalog data
+

@@ -1,0 +1,2621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<part id="internals"><title>Internals of the &clisp; Implementation</title>
+
+<chapter id="source-files"><title>The source files of &clisp;</title>
+
+<para>For files in &clisp; binary distributions,
+ see <olink targetdoc="man" targetptr="files"/>.</para>
+
+<section id="src-file-types"><title>File Types</title>
+
+<variablelist>
+<varlistentry><term><filename>#P"*.d"</filename></term>
+ <listitem><simpara>The source files for unpreprocessed &c-lang; code.
+</simpara></listitem></varlistentry>
+<varlistentry><term>&c-file;</term>
+ <listitem><simpara>The &c-lang; code after
+   <link linkend="src-preprocessing">preprocessing</link>;
+   also the result of compiling some &ffi-pac; forms (see &ffi-out-fun;).
+</simpara></listitem></varlistentry>
+<varlistentry><term>&lisp-file;</term>
+ <listitem><simpara>The source files for Lisp code.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename>#P"*.fas"</filename></term>
+ <listitem><simpara>Compiled lisp code (platform-independent &bytecode;s).
+</simpara></listitem></varlistentry>
+<varlistentry><term>&lib-file;</term>
+ <listitem><simpara>Lisp <quote>header</quote>, produced by
+   &compile-file; and used by &require;</simpara></listitem></varlistentry>
+</variablelist>
+</section>
+
+<section id="src-preprocessing"><title>Source Pre-Processing</title>
+<para>&c-lang; sources are pre-processed with the following tools
+   before being passed to the &c-lang; compiler:</para>
+<variablelist>
+<varlistentry>
+ <term><filename role="clisp-cvs">utils/comment5.c</filename></term>
+<listitem><simpara>Convert &sh;-style comments (lines starting
+  with <literal>"# "</literal>) to &c-lang;-style comments
+  (<literal>/**/</literal>).</simpara>
+ <warning><para>The use of &sh;-style comments is deprecated.</para></warning>
+</listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">utils/varbrace.d</filename></term>
+<listitem><simpara>Add braces to &c-lang; source code, so that variable
+  declarations (introduced with the pseudo-keyword <literal>var</literal>)
+  can be used within blocks, like in <command>C++</command>
+  and <command>C99</command>.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">utils/ccpaux.c</filename></term>
+<listitem><simpara>When &cpp; cannot handle indented directives, remove
+  the indentation.</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">utils/gctrigger.d</filename></term>
+<listitem><simpara>Add <function>GCTRIGGER</function> statements at the
+  head of function bodies (for functions marked with
+  the <literal>maygc</literal> pseudo-keyword).
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">utils/deema.c</filename></term>
+<listitem><simpara>When &cpp; cannot handle empty macro arguments,
+  insert <literal>_EMA_</literal> instead.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">utils/ccmp2c.c</filename></term>
+<listitem><simpara>For the <literal>new-clx</literal> module only.
+  Allows &cpp;-style preprocessing <emphasis>before</emphasis> &modprep;
+  processing.  Should be merged into &modprep; eventually.
+</simpara></listitem></varlistentry>
+<varlistentry id="modprep-file">
+ <term><filename role="clisp-cvs">utils/modprep.lisp</filename></term>
+<listitem><simpara>For some modules only, see <xref linkend="modprep"/>.
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+<section id="src-files"><title>Files</title>
+
+<section id="src-unpreproc-C"><title>Unpreprocessed &c-lang; code</title>
+
+<section id="src-includes"><title>Includes</title>
+
+<variablelist>
+<varlistentry><term><filename role="clisp-cvs">src/lispbibl.d</filename></term>
+ <listitem><simpara>main include file</simpara></listitem></varlistentry>
+<varlistentry id="fsubr-d">
+ <term><filename role="clisp-cvs">src/fsubr.d</filename></term>
+ <listitem><simpara>list of all built-in special forms
+</simpara></listitem></varlistentry>
+<varlistentry id="subr-d">
+ <term><filename role="clisp-cvs">src/subr.d</filename></term>
+ <listitem><simpara>list of all built-in functions
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/pseudofun.d</filename></term>
+ <listitem><simpara>list of all <quote>pseudo functions</quote>
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/constpack.d</filename></term>
+ <listitem><simpara>list of packages accessed by &c-lang; code
+</simpara></listitem></varlistentry>
+<varlistentry id="constsym-d"><term>
+  <filename role="clisp-cvs">src/constsym.d</filename></term>
+ <listitem><simpara>list of symbols accessed by &c-lang; code
+</simpara></listitem></varlistentry>
+<varlistentry id="constobj-d">
+ <term><filename role="clisp-cvs">src/constobj.d</filename></term>
+ <listitem><simpara>list of miscellaneous objects accessed by &c-lang; code
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/unix.d</filename></term>
+ <listitem><simpara>include file for the &unix; implementations
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/win32.d</filename></term>
+ <listitem><simpara>include file for the &win32; based versions
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/xthread.d</filename></term>
+ <listitem><simpara>include file for thread support
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/modules.h</filename></term>
+ <listitem><simpara>list of foreign &module;s
+</simpara></listitem></varlistentry>
+</variablelist>
+</section>
+
+<section id="src-modules"><title>Internal &c-lang; Modules</title>
+
+<variablelist>
+<varlistentry id="spvw-d">
+ <term><filename role="clisp-cvs">src/spvw.d</filename></term>
+ <listitem><para>Memory management (&gc;ion), startup; some OS interface.
+   <variablelist><varlistentry>
+     <term><filename role="clisp-cvs">src/avl.d</filename></term>
+     <listitem><simpara>An implementation of AVL (Adelson-Velskii and
+       Landis) trees.</simpara></listitem></varlistentry>
+    <varlistentry><term><filename role="clisp-cvs">src/sort.d</filename></term>
+     <listitem><simpara>A sorting routine.</simpara></listitem></varlistentry>
+    <varlistentry id="subrkw-d">
+     <term><filename role="clisp-cvs">src/subrkw.d</filename></term>
+     <listitem><simpara>The list of all built-in functions with keywords
+       in &lalist;.</simpara></listitem></varlistentry></variablelist>
+</para></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/spvwtabf.d</filename></term>
+ <listitem><simpara>The table of built-in special operators and functions.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/spvwtabs.d</filename></term>
+ <listitem><simpara>The table of all &symbol-t;s accessed by &c-lang; code.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/spvwtabo.d</filename></term>
+ <listitem><simpara>The table of miscellaneous objects accessed by
+   &c-lang; code.</simpara></listitem></varlistentry>
+<varlistentry id="eval-d">
+ <term><filename role="clisp-cvs">src/eval.d</filename></term>
+ <listitem><para>Evaluator (form interpreter) and &bytecode; interpreter.
+   <variablelist><varlistentry id="bytecode-d"><term>&bytecode-d;</term>
+     <listitem><simpara>List of &bytecode;s.</simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/control.d</filename></term>
+ <listitem><simpara>Special operator interpreter.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/pathname.d</filename></term>
+ <listitem><simpara>Pathnames, file- and directory-related functions.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/stream.d</filename></term>
+ <listitem><simpara>&stream-t;s of all kinds: &file-stream-t;s,
+   <link linkend="terminal">terminal</link> streams, &string-stream-t;s
+   etc.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/socket.d</filename></term>
+ <listitem><simpara>Opening sockets for TCP/IP and CLX.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/io.d</filename></term>
+ <listitem><simpara>The lisp reader (parser) and printer (also pretty
+   printer).</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/array.d</filename></term>
+ <listitem><simpara>Functions dealing with &array-t;s and &vector-t;s.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/hashtabl.d</filename></term>
+ <listitem><simpara>Functions dealing with &hash-table-t;s.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/list.d</filename></term>
+ <listitem><simpara>Functions dealing with &list-t;s.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/package.d</filename></term>
+ <listitem><simpara>Functions dealing with &package-t;s.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/record.d</filename></term>
+ <listitem><simpara>Functions dealing with records (structures, closures, etc.)
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/sequence.d</filename></term>
+ <listitem><simpara>The generic &sequence-t; functions.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/charstrg.d</filename></term>
+ <listitem><simpara>Functions dealing with &character-t;s and &string-t;s.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/debug.d</filename></term>
+ <listitem><simpara>Support for debugging and the &repl;
+   (see <xref linkend="debugger"/>).</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/error.d</filename></term>
+ <listitem><para>&error-t; handling and &signal;ing.
+   <variablelist><varlistentry>
+     <term><filename role="clisp-cvs">src/errunix.d</filename></term>
+     <listitem><simpara>&unix;-specific error messages.
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">src/errwin32.d</filename></term>
+     <listitem><simpara>&win32;-specific error messages.
+    </simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/misc.d</filename></term>
+ <listitem><simpara>Miscellaneous functions.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/time.d</filename></term>
+ <listitem><simpara>Timing functions.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/predtype.d</filename></term>
+ <listitem><simpara>Predicates, type tests.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/symbol.d</filename></term>
+ <listitem><simpara>Functions dealing with &symbol-t;s.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/unixaux.d</filename></term>
+ <listitem><simpara>Auxiliary functions (&unix; version only).
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/win32aux.d</filename></term>
+ <listitem><simpara>Auxiliary functions (&win32; version only).
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/foreign.d</filename></term>
+ <listitem><simpara>&ffi-pac; support.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/lisparit.d</filename></term>
+ <listitem><simpara>Functions dealing with numbers (arithmetic), see
+   <xref linkend="src-arith"/>.</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/noreadline.d</filename></term>
+ <listitem><simpara>Dummy plug-in for the &readline; library.
+</simpara></listitem></varlistentry>
+</variablelist>
+</section>
+
+<section id="src-arith"><title>Number system (arithmetic)</title>
+
+<variablelist>
+<varlistentry><term><filename role="clisp-cvs">src/lisparit.d</filename></term>
+ <listitem><simpara>initialization, input/output of numbers, lisp functions
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/aridecl.d</filename></term>
+ <listitem><simpara>declarations</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arilev0.d</filename></term>
+ <listitem><simpara>arithmetic at the machine level
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arilev1.d</filename></term>
+ <listitem><simpara>digit sequences</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arilev1c.d</filename></term>
+ <listitem><simpara>operations on digit sequences, written in &c-lang;
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arilev1i.d</filename></term>
+ <listitem><simpara>operations on digit sequences, as inline functions
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arilev1e.d</filename></term>
+ <listitem><simpara>operations on digit sequences, bindings to external
+   routines</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intelem.d</filename></term>
+ <listitem><simpara>&integer-t;s: elementary operations
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intlog.d</filename></term>
+ <listitem><simpara>&integer-t;s: logical connectives
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intplus.d</filename></term>
+ <listitem><simpara>&integer-t;s: addition and subtraction
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intcomp.d</filename></term>
+ <listitem><simpara>&integer-t;s: comparison
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intbyte.d</filename></term>
+ <listitem><simpara>&integer-t;s: byte operations &ldb;, &dpb;
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intmal.d</filename></term>
+ <listitem><simpara>&integer-t;s: multiplication
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intdiv.d</filename></term>
+ <listitem><simpara>&integer-t;s: division
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intgcd.d</filename></term>
+ <listitem><simpara>&integer-t;s: &gcd; and &lcm;
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/int2adic.d</filename></term>
+ <listitem><simpara>&integer-t;s: operations on 2-adic integers
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intsqrt.d</filename></term>
+ <listitem><simpara>&integer-t;s: square root, n-th root
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intprint.d</filename></term>
+ <listitem><simpara>subroutines for &integer-t; output
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intread.d</filename></term>
+ <listitem><simpara>subroutines for &integer-t; input
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/rational.d</filename></term>
+ <listitem><simpara>rational numbers (&ratio-t;s)
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/sfloat.d</filename></term>
+ <listitem><simpara>elementary operations for &short-float-t;s
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/ffloat.d</filename></term>
+ <listitem><simpara>elementary operations for &single-float-t;s
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/dfloat.d</filename></term>
+ <listitem><simpara>elementary operations for &double-float-t;s
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/lfloat.d</filename></term>
+ <listitem><simpara>elementary operations for &long-float-t;s
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/flo_konv.d</filename></term>
+ <listitem><simpara>conversions between &float-t;s
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/flo_rest.d</filename></term>
+ <listitem><simpara>general &float-t; operations
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/realelem.d</filename></term>
+ <listitem><simpara>elementary functions for &real-t; numbers
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/realrand.d</filename></term>
+ <listitem><simpara>random numbers
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/realtran.d</filename></term>
+ <listitem><simpara>transcendental functions for &real-t; numbers
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/compelem.d</filename></term>
+ <listitem><simpara>elementary functions for &complex-t; numbers
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/comptran.d</filename></term>
+ <listitem><simpara>transcendental functions for &complex-t; numbers
+</simpara></listitem></varlistentry>
+</variablelist>
+
+<section id="src-ari-asm"><title>External routines for the arithmetic
+  system, written in assembly language</title>
+<variablelist>
+<varlistentry><term><filename role="clisp-cvs">src/ari68000.d</filename></term>
+ <listitem><simpara>written in 68000 assembler, MIT syntax
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/ari68020.d</filename></term>
+ <listitem><simpara>written in 68020 assembler, MIT syntax
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arisparc.d</filename></term>
+ <listitem><simpara>written in SPARC assembler
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/arisparc64.d</filename></term>
+ <listitem><simpara>written in 64-bit SPARC assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/ari80386.d</filename></term>
+ <listitem><simpara>written in i386/i486 assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arimips.d</filename></term>
+ <listitem><simpara>written in MIPS assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arimips64.d</filename></term>
+ <listitem><simpara>written in 64-bit MIPS assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/arihppa.d</filename></term>
+ <listitem><simpara>written in HPPA-1.0 assembler
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/arivaxunix.d</filename></term>
+ <listitem><simpara>written in VAX assembler, Unix assembler syntax
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/ariarm.d</filename></term>
+ <listitem><simpara>written in ARM assembler
+</simpara></listitem></varlistentry>
+</variablelist></section>
+</section>
+
+<section id="src-asm-sp"><title>External routines for accessing the
+  stack, written in assembly language</title>
+
+<variablelist>
+<varlistentry><term><filename role="clisp-cvs">src/sp68000.d</filename></term>
+ <listitem><simpara>written in 68000 assembler, MIT syntax
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/spsparc.d</filename></term>
+ <listitem><simpara>written in SPARC assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/spsparc64.d</filename></term>
+ <listitem><simpara>written in 64-bit SPARC assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/sp80386.d</filename></term>
+ <listitem><simpara>written in i386/i486 assembler
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/spmips.d</filename></term>
+ <listitem><simpara>written in MIPS assembler
+</simpara></listitem></varlistentry>
+</variablelist></section>
+</section>
+
+<section id="src-asm-misc"><title>Other assembly language stuff</title>
+
+<variablelist>
+<varlistentry><term><filename role="clisp-cvs">src/asmi386.sh</filename></term>
+ <listitem><simpara>converts i386 assembler from MIT syntax to a macro syntax
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/asmi386.hh</filename></term>
+ <listitem><simpara>expands i386 assembler in macro syntax to either MIT
+   or Intel syntax</simpara></listitem></varlistentry>
+</variablelist>
+</section>
+
+<section id="src-lisp"><title>Lisp source files</title>
+
+<variablelist>
+<varlistentry id="init-lisp">
+ <term><filename role="clisp-cvs">src/init.lisp</filename></term>
+ <listitem><simpara>the first file to be loaded during bootstrapping,
+ loads everything else</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/defseq.lisp</filename></term>
+ <listitem><simpara>defines the usual sequence types for the generic
+   sequence functions</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/backquote.lisp</filename></term>
+ <listitem><simpara>implements the backquote read macro
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/defmacro.lisp</filename></term>
+ <listitem><simpara>implements &defmacro;</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/macros1.lisp</filename></term>
+ <listitem><simpara>the most important macros
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/macros2.lisp</filename></term>
+ <listitem><simpara>some other macros
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/defs1.lisp</filename></term>
+ <listitem><simpara>miscellaneous definitions
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/timezone.lisp</filename></term>
+ <listitem><simpara>site-dependent definition of time zone, except for
+   &unix; and &win32;.</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/places.lisp</filename></term>
+ <listitem><simpara>macros using &place;s, definitions of most standard
+   and extensiion &place;s</simpara></listitem></varlistentry>
+<varlistentry id="floatprint-lisp">
+ <term><filename role="clisp-cvs">src/floatprint.lisp</filename></term>
+ <listitem><simpara>defines <link linkend="write-float-decimal"><function>SYS::WRITE-FLOAT-DECIMAL</function></link>
+   for printing floating point numbers in base 10
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/type.lisp</filename></term>
+ <listitem><simpara>functions working with type specifiers: &typep;,
+   &subtypep;</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/defstruct.lisp</filename></term>
+ <listitem><simpara>implements the macro &defstruct;
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/format.lisp</filename></term>
+ <listitem><simpara>implements the function &format;
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/room.lisp</filename></term>
+ <listitem><simpara>implements the function &room;
+   (see also <xref linkend="room"/>)</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/savemem.lisp</filename></term>
+ <listitem><simpara>see <xref linkend="image"/>
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/keyboard.lisp</filename></term>
+ <listitem><simpara>implements the macro &with-kbd;
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/runprog.lisp</filename></term>
+ <listitem><simpara>implements the functions &run-prog;, &run-cmd; etc.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/query.lisp</filename></term>
+ <listitem><simpara>implements the functions &y-or-n-p; and &yes-or-no-p;
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/reploop.lisp</filename></term>
+ <listitem><simpara>support for debugging and the &repl;
+   (see <xref linkend="debugger"/>)</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/dribble.lisp</filename></term>
+ <listitem><simpara>implements the functions &dribble; and
+   <link linkend="dribble"><function>EXT:DRIBBLE-STREAM</function></link>
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/complete.lisp</filename></term>
+ <listitem><simpara>implements completion, see <xref linkend="terminal"/>.
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/describe.lisp</filename></term>
+ <listitem><simpara>implements functions &describe-my;, &apropos-my;,
+   &apropos-list;</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/trace.lisp</filename></term>
+ <listitem><simpara><link linkend="trace">tracer</link>
+</simpara></listitem></varlistentry>
+<varlistentry id="macros3-lisp">
+ <term><filename role="clisp-cvs">src/macros3.lisp</filename> (optional)</term>
+ <listitem><simpara>the macros &letf;, &letf-star; and &ethe;
+</simpara></listitem></varlistentry>
+<varlistentry id="config-lisp">
+ <term><filename role="clisp-cvs">src/config.lisp</filename></term>
+ <listitem><para>(user written) site-dependent configuration,
+   may be a link to one of the following:<variablelist>
+    <varlistentry>
+     <term><filename role="clisp-cvs">src/cfgsunux.lisp</filename></term>
+     <listitem><simpara>for &unix;, using SunOS
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">src/cfgunix.lisp</filename></term>
+     <listitem><simpara>for any other &unix;
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">src/cfgwin32.lisp</filename></term>
+     <listitem><simpara>for the &win32;
+    </simpara></listitem></varlistentry></variablelist>
+   See <xref linkend="customize"/>.</para></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/compiler.lisp</filename></term>
+ <listitem><simpara>compiles Lisp code to &bytecode;
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/disassem.lisp</filename></term>
+ <listitem><simpara>the function &disassemble;
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/defs2.lisp</filename></term>
+ <listitem><simpara>miscellaneous &ansi-cl; definitions
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/loop.lisp</filename></term>
+ <listitem><simpara>implements the &ansi-cl;-compatible &loop; macro
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/clos.lisp</filename></term>
+ <listitem><para>loads the various parts of the &clos;:<variablelist>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-package.lisp</filename></term>
+   <listitem><simpara>declares the imports and exports of the
+     &clos-pac; package</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-macros.lisp</filename></term>
+   <listitem><simpara>defines some internal macros used by the &clos;
+     implementation</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class0.lisp</filename></term>
+   <listitem><simpara>defines the <classname>class-version</classname>
+     structure</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-metaobject1.lisp</filename></term>
+   <listitem><simpara>defines the &metaobject-t; class
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-slotdef1.lisp</filename></term>
+   <listitem><simpara>defines the &slot-definition-t; class and its
+     subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-slotdef2.lisp</filename></term>
+   <listitem><simpara>defines &initialize-instance; methods for
+     &slot-definition-t; and its subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-slotdef3.lisp</filename></term>
+   <listitem><simpara>defines the generic functions that can be used on
+     &slot-definition-t; objects</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-stablehash1.lisp</filename></term>
+   <listitem><simpara>defines the &standard-stablehash; class
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-stablehash2.lisp</filename></term>
+   <listitem><simpara>defines &initialize-instance; methods for
+     &standard-stablehash;</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-specializer1.lisp</filename></term>
+   <listitem><simpara>defines the &specializer-t; class and its subclasses
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-specializer2.lisp</filename></term>
+   <listitem><simpara>defines &initialize-instance; methods for
+     &specializer-t; and its subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-specializer3.lisp</filename></term>
+   <listitem><simpara>defines the generic functions that can be used on
+     &specializer-t; objects</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class1.lisp</filename></term>
+   <listitem><simpara>defines the <classname>potential-class</classname>
+     class and its subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class2.lisp</filename></term>
+   <listitem><simpara>implements the mapping from class names to classes
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class3.lisp</filename></term>
+   <listitem><simpara>implements the &defclass; macro, class definition
+     and class redefinition</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class4.lisp</filename></term>
+   <listitem><simpara>defines &initialize-instance; methods
+     for <classname>potential-class</classname> and its
+     subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class5.lisp</filename></term>
+   <listitem><simpara>implements the special logic of &make-instance;,
+     &initialize-instance; etc.</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-class6.lisp</filename></term>
+   <listitem><simpara>defines the generic functions that can be used on
+     <classname>potential-class</classname> objects
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-method1.lisp</filename></term>
+   <listitem><simpara>defines the &method-t; class and its subclasses
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-method2.lisp</filename></term>
+   <listitem><simpara>implements the bulk of &defmethod;
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-method3.lisp</filename></term>
+   <listitem><simpara>defines the generic functions that can be used on
+     &method-t; objects</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-method4.lisp</filename></term>
+   <listitem><simpara>makes generic functions on &standard-method-t;
+     objects extensible</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-methcomb1.lisp</filename></term>
+   <listitem><simpara>defines the &method-combination-t; class
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-methcomb2.lisp</filename></term>
+   <listitem><simpara>implements method combination (part 2 of generic
+     function dispatch and execution) and the &define-method-combination; macro
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-methcomb3.lisp</filename></term>
+   <listitem><simpara>defines &initialize-instance; methods for
+     &method-combination-t;</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-methcomb4.lisp</filename></term>
+   <listitem><simpara>makes generic functions on &method-combination-t;
+     objects extensible</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-genfun1.lisp</filename></term>
+   <listitem><simpara>defines the &generic-function-t; class and its
+     metaclass, superclass and subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-genfun2a.lisp</filename></term>
+   <listitem><simpara>implements part 1 of generic function dispatch and
+     execution</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-genfun2b.lisp</filename></term>
+   <listitem><simpara>implements part 3 of generic function dispatch and
+     execution</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-genfun3.lisp</filename></term>
+   <listitem><simpara>implements creation of generic function objects,
+     &defmethod;, &defgeneric;</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-genfun4.lisp</filename></term>
+   <listitem><simpara>defines &initialize-instance; methods for
+     &generic-function-t; and its subclasses</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-genfun5.lisp</filename></term>
+   <listitem><simpara>makes generic functions on &generic-function-t;
+     objects extensible</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-slots1.lisp</filename></term>
+   <listitem><simpara>implements low-level slot access, &with-slots;,
+     &with-accessors;</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-slots2.lisp</filename></term>
+   <listitem><simpara>defines the generic functions that deal with slot access
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-dependent.lisp</filename></term>
+   <listitem><simpara>implements notification from metaobjects to
+     dependent objects</simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-print.lisp</filename></term>
+   <listitem><simpara>implements the function &print-object;
+  </simpara></listitem></varlistentry>
+  <varlistentry>
+   <term><filename role="clisp-cvs">src/clos-custom.lisp</filename></term>
+   <listitem><simpara>provides user customization of the &clos;
+  </simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/condition.lisp</filename></term>
+ <listitem><simpara>implements the &cl; Condition System (&clcs;)
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/gstream.lisp</filename></term>
+ <listitem><simpara>generic stream default methods
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/foreign1.lisp</filename></term>
+ <listitem><simpara>&ffi-pac; interface
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/screen.lisp</filename></term>
+ <listitem><simpara>the screen access package, see <xref linkend="screen"/>
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/edit.lisp</filename>
+  (optional)</term>
+ <listitem><simpara>the screen editor (&ed;), &uncompile;
+</simpara></listitem></varlistentry>
+<varlistentry id="inspect-lisp">
+ <term><filename role="clisp-cvs">src/inspect.lisp</filename></term>
+ <listitem><simpara>implements &inspect-my; (tty and &http; frontends)
+</simpara></listitem></varlistentry>
+<varlistentry id="clhs-lisp">
+ <term><filename role="clisp-cvs">src/clhs.lisp</filename></term>
+ <listitem><simpara>implements &open-http;, &browse-url;
+</simpara></listitem></varlistentry>
+<varlistentry id="exporting-lisp">
+ <term><filename role="clisp-cvs">src/exporting.lisp</filename></term>
+ <listitem><simpara>Macros that export their definienda,
+   see <xref linkend="exporting"/>.</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/threads.lisp</filename></term>
+ <listitem><simpara>MT interface</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/spanish.lisp</filename></term>
+ <term><filename role="clisp-cvs">src/german.lisp</filename></term>
+ <term><filename role="clisp-cvs">src/french.lisp</filename></term>
+ <term><filename role="clisp-cvs">src/russian.lisp</filename></term>
+ <term><filename role="clisp-cvs">src/dutch.lisp</filename></term>
+ <listitem><simpara><link linkend="i18n">i18n</link> user messages
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+<section id="src-ext-mod"><title>External Modules</title>
+
+<variablelist>
+<varlistentry><term><filename role="clisp-cvs">modules/</filename></term>
+ <listitem><simpara>individual external module sources
+</simpara></listitem></varlistentry>
+</variablelist></section>
+
+<section id="src-doc"><title>Documentation</title>
+
+<variablelist>
+<varlistentry id="src-news">
+ <term><filename role="clisp-cvs">src/NEWS</filename></term>
+ <listitem><simpara>the list of the user-visible changes
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/_README</filename></term>
+ <listitem><para>master for the distribution's README<variablelist>
+    <varlistentry>
+     <term><filename role="clisp-cvs">src/_README.en</filename></term>
+     <term><filename role="clisp-cvs">src/_README.de</filename></term>
+     <term><filename role="clisp-cvs">src/_README.es</filename></term>
+     <listitem><simpara>translations of
+       <filename role="clisp-cvs">src/_README</filename>
+    </simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">doc/clisp.xml.in</filename></term>
+ <listitem><simpara>&docbook;/&xml; sources for the &clisp;
+   <olink targetdoc="man" targetptr="clisp">manual page</olink>
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename><replaceable>build-dir</replaceable>/clisp.1</filename></term>
+ <listitem><simpara>the platform-specific
+   <command role="unix">man</command> manual page,
+   generated from <filename role="clisp-cvs">doc/clisp.xml.in</filename>
+   at <emphasis>build</emphasis> time</simpara></listitem></varlistentry>
+<varlistentry><term><filename><replaceable>build-dir</replaceable>/clisp.html</filename></term>
+ <listitem><simpara>the platform-specific &html; manual page,
+   generated from <filename role="clisp-cvs">doc/clisp.xml.in</filename>
+   at <emphasis>build</emphasis> time</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">doc/impnotes.xml.in</filename></term>
+ <listitem><para>the master &docbook;/&xml; file for these
+   implementation notes; includes the following files<variablelist>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/cl-ent.xml</filename></term>
+     <listitem><simpara>&clisp;-independent general &cl;-related entities
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/clhs-ent.xml</filename></term>
+     <listitem><simpara>generated list of &hyperspec; entities
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/impent.xml</filename></term>
+     <listitem><simpara>&clisp;-specific entities
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/unix-ent.xml</filename></term>
+     <listitem><simpara>&unix;-related entities
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/mop-ent.xml</filename></term>
+     <listitem><simpara>&mop;-related entities
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/impbody.xml</filename></term>
+     <listitem><simpara>most of <xref linkend="clhs-chapters"/>
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/impissue.xml</filename></term>
+     <listitem><simpara><xref linkend="issues"/>
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/gray.xml</filename></term>
+     <listitem><simpara><xref linkend="gray"/>
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/mop.xml</filename></term>
+     <listitem><simpara><xref linkend="mop-chap"/>
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/impext.xml</filename></term>
+     <listitem><simpara><xref linkend="ext-p-indep"/> and
+       <xref linkend="ext-platform"/></simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/impbyte.xml</filename></term>
+     <listitem><simpara>this <xref linkend="internals"/>
+    </simpara></listitem></varlistentry>
+    <varlistentry><term><filename>modules/**/*.xml</filename></term>
+     <listitem><simpara>individual external module documentation
+    </simpara></listitem></varlistentry>
+    <varlistentry>
+     <term><filename role="clisp-cvs">doc/Symbol-Table.text</filename></term>
+     <listitem><simpara>the mapping between lisp symbols and element IDs
+       in these notes (see &describe-my;).
+    </simpara></listitem></varlistentry>
+</variablelist></para></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">doc/impnotes.html</filename></term>
+ <listitem><simpara>these &html; implementation notes,
+   generated from <filename role="clisp-cvs">doc/impnotes.xml.in</filename>
+   at <emphasis>release</emphasis> time</simpara></listitem></varlistentry>
+</variablelist></section>
+
+<section id="src-i18n"><title>Internationalization</title>
+
+<variablelist>
+<varlistentry><term><filename>src/po/*.pot</filename></term>
+ <listitem><simpara>list of translatable messages (<quote>portable
+    object template</quote>)</simpara></listitem></varlistentry>
+<varlistentry><term><filename>src/po/*.po</filename></term>
+ <listitem><simpara>translated messages (<quote>portable objects</quote>)
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename>src/po/*.gmo</filename></term>
+ <listitem><simpara>translated messages (<quote>&gnu; format message
+    objects</quote>)</simpara></listitem></varlistentry>
+</variablelist></section>
+
+<section id="src-conf-unix"><title>Automatic configuration on &unix;</title>
+
+<variablelist>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/configure.in</filename></term>
+ <listitem><simpara>lists features to be checked
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/autoconf/autoconf.m4</filename></term>
+ <listitem><simpara><command>autoconf</command>'s driver macros.
+   Part of &autoconf; 2.57</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/m4/</filename></term>
+ <listitem><simpara>a repertoire of features.
+   Use with &autoconf; 2.57</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/configure</filename></term>
+ <listitem><simpara>configuration script, generated from
+   <filename role="clisp-cvs">src/configure.in</filename>
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/intparam.c</filename></term>
+ <listitem><simpara>figures out some machine parameters (word size,
+   endianness etc.)</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/floatparam.c</filename></term>
+ <listitem><simpara>figures out some floating point arithmetics parameters
+   (rounding, epsilons etc.)</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/unixconf.h.in</filename></term>
+ <listitem><simpara>header file master, generated
+   from <filename role="clisp-cvs">src/configure.in</filename>.
+   <filename><replaceable>build-dir</replaceable>/unixconf.h</filename>
+   contains the values of the features
+   discovered by <filename role="clisp-cvs">src/configure</filename>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/makemake.in</filename></term>
+ <listitem><simpara>makefile construction script master
+</simpara></listitem></varlistentry>
+<varlistentry><term><filename role="clisp-cvs">src/_clisp.c</filename></term>
+ <listitem><simpara>master for the distribution's driver program
+</simpara></listitem></varlistentry>
+<varlistentry>
+ <term><filename role="clisp-cvs">src/_distmakefile</filename></term>
+ <listitem><simpara>master for the distribution's Makefile
+</simpara></listitem></varlistentry>
+</variablelist></section>
+</section>
+</chapter>
+
+<chapter id="gc"><title>Overview of &clisp;'s Garbage Collection</title>
+
+ <abstract><simpara>These are internals, which are of interest only to the
+   &clisp; developers.  If you are not subscribed to &clisp-devel;, this
+   chapter is probably not for you.</simpara></abstract>
+
+<section id="internals-intro"><title>Introduction</title>
+
+<para>Knowing that most &malloc; implementations are buggy and/or slow,
+and because &clisp; needs to perform &gc;ion, &clisp; has its
+own memory management subsystem in files <filename>src/spvw*.d</filename>,
+see <xref linkend="src-modules"/>.</para>
+
+</section>
+
+<section id="lisp-obj-in-c"><title>Lisp objects in &clisp;</title>
+
+<orderedlist><title>Three kinds of storage are distinguished:</title>
+ <listitem><simpara>&clisp; data (the <quote>heap</quote>), i.e. storage
+  which contains &clisp; &object-t;s and is managed by the &gc;or.
+ </simpara></listitem>
+ <listitem><simpara>&clisp; stack (called &STACK;), contains &clisp;
+  &object-t;s visible to the &gc;or</simpara></listitem>
+ <listitem><simpara>&c-lang; data (including program text, data,
+  &malloc;ed memory)</simpara></listitem>
+</orderedlist>
+
+<para>A &clisp; object is one word, containing a tag (partial type
+information) and either immediate data or a pointer to storage.
+Pointers to &c-lang; data have tag = <literal>machine_type</literal> = 0,
+pointers to &clisp; stack have tag = <literal>system_type</literal>,
+most other pointers point to &clisp; data.</para>
+
+<variablelist id="immediate-o"><title>Immediate objects</title>
+<varlistentry><term>32-bit CPU</term>
+ <listitem><para><simplelist columns="1"><member>&fixnum-t;</member>
+    <member>&short-float-t;</member><member>&character-t;</member>
+</simplelist></para></listitem></varlistentry>
+<varlistentry><term>64-bit CPU</term>
+ <listitem><para>In addition to the above, <simplelist columns="1">
+    <member>&single-float-t; (with &typecodes;)</member>
+</simplelist></para></listitem></varlistentry>
+</variablelist>
+
+<para>Let us turn to those &clisp; objects that consume regular &clisp;
+memory.  Every &clisp; object has a size which is determined when the
+object is allocated (using one of the <function>allocate_*()</function>
+routines). The size can be computed from the type tag and - if necessary
+- the length field of the object's header. The length field always
+contains the number of elements of the object. The number of bytes is
+given by the function <function>objsize()</function>.</para>
+
+<para>&clisp; objects which contain exactly 2 &clisp; objects
+(i.e. &cons-t;es, &complex-t; numbers, &ratio-t;s) are
+stored in a separate area and occupy 2 words each.
+All other &clisp; objects have <quote>varying</quote> length
+(more precisely, not a fixed length) and include a word for &gc;ion
+purposes at their beginning.</para>
+
+<para>The garbage collector is invoked by
+ <function>allocate_*()</function> calls according to certain heuristics.
+It marks all objects which are "live" (may be reached from the "roots"),
+compacts these objects and unmarks them.  Non-live objects are lost;
+their storage is reclaimed.</para>
+
+<para>2-pointer objects are compacted by a simple hole-filling
+algorithm: fill the left-most object into the right-most hole, and so
+on, until the objects are contiguous at the right and the hole is
+contiguous at the left.</para>
+
+<para>Variable-length objects are compacted by sliding them down (their
+address decreases).</para>
+
+</section>
+
+<section id="typecodes"><title>Object Pointer Representations</title>
+
+<para>&clisp; implements two ways of representing object pointers.
+(An object pointer, &c-lang; type &object-t;, contains a
+pointer to the memory location of the object, or - for &immediate-o;
+ - all bits of the object itself.)
+Both of them have some things in common:
+<itemizedlist>
+ <listitem><simpara>There is a distinction between &immediate-o;s
+   (&character-t;s, &fixnum-t;s, &short-float-t;s, etc) and
+   heap allocated objects.</simpara></listitem>
+ <listitem><simpara>All object pointers are typed, i.e. contain a few
+   bits of information about the type of the pointed-to object. At a
+   minimum, these bits must allow to distinguish immediate and
+   heap-allocated objects.</simpara></listitem>
+ <listitem><simpara>Not all of the type information is contained in the
+   object pointer.  For example, &clos; objects can change their type
+   when &change-class; is called. To avoid scanning all the heap for
+   references when this happens, the class information is stored in the
+   heap allocated object, not in the object pointer.</simpara></listitem>
+</itemizedlist></para>
+
+<para>The &heapcodes; object representation has a minimum of type
+bits in the object pointer, namely, 2 bits. They allow to distinguish
+&immediate-o;s (which have some more type bits), &cons-t;es (which
+have no type bits in the heap, since they occupy just two words in the
+heap, with no header), other heap objects (many, from &simple-vector-t;s
+to &foreign-pointer-t;s), and <type>Subr</type>s. Most object types are
+distinguished by looking a the <structfield>rectype</structfield> field
+in the header of the heap object.</para>
+
+<para>The &typecodes; object representation has about two dozen of types
+encoded in 6 or 7 bits in the object pointer.
+Typically these are the upper 8 bits of a word (on a 32-bit machine) or
+the upper 16 bits or 32 bits of a word (on a 64-bit machine).
+The particular values of the typecodes allow many common operations to
+be performed with a single bit test (e.g. &consp; and &minusp; for a
+&real-t; are bit tests) or range check.
+However, the <structfield>rectype</structfield> field still exists for
+many types, because there are many built-in types which do not need a
+particularly fast type test.</para>
+
+<para>Which object representation is chosen is decided at build time
+depending on the available preprocessor definitions. You can define
+&typecodes; or &heapcodes; to force one or the other.</para>
+
+<para>One might expect that &typecodes; is faster than &heapcodes;
+because it does not need to make as many memory accesses. This effect
+is, however, hardly measurable in practice (certainly not more than 5%
+faster).  Apparently because, first, the situations where the type of an
+object is requested but then the object is not looked into are rare.
+It is much more common to look into an object, regardless of its type.
+Second, due to the existence of data caches in the CPU, accessing a heap
+location twice, once for the type test and then immediately afterwards
+for the data, is not significantly slower than just accessing the
+data.</para>
+
+<para>&typecodes; is problematic on 32-bit machines, when you want to
+use more than 16 MB of memory, because the type bits (at bit 31..24)
+interfere with the bits of a heap address. For this reason,
+&heapcodes; is the default on 32-bit platforms.</para>
+
+<para>&heapcodes; is problematic on platforms whose object alignment
+is less than 4. This affects only the mc680x0 CPU; however, here the
+alignment can usually be guaranteed through some &gcc; options.</para>
+
+</section>
+
+<section id="memory-models"><title>Memory Models</title>
+
+<para>There are 6 memory models. Which one is used, depends on the
+operating system and is determined at build time.</para>
+
+<variablelist><title>Memory Models</title>
+<varlistentry><term>SPVW_MIXED_BLOCKS_OPPOSITE</term>
+ <listitem><para>The heap consists of one block of fixed length
+  (allocated at startup).
+  The variable-length objects are allocated from the left, the 2-pointer
+  objects are allocated from the right.
+  There is a hole between them.
+  When the hole shrinks to 0, &gc; is invoked.
+  &gc; slides the variable-length objects to the left and concentrates
+  the 2-pointer objects at the right end of the block again.
+  When no more room is available, some reserve area beyond the right end
+  of the block is halved, and the 2-pointer objects are moved to the
+  right accordingly.
+  <variablelist>&advantages;
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Simple management.
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>No fragmentation at all.
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>(-)</term>
+    <listitem><simpara>The total heap size is limited.
+    </simpara></listitem></varlistentry></variablelist>
+ </para></listitem></varlistentry>
+
+<varlistentry><term>SPVW_MIXED_BLOCKS_OPPOSITE &amp; TRIVIALMAP_MEMORY</term>
+ <listitem><para>The heap consists of two big blocks, one for
+  variable-length objects and one for 2-pointer objects.
+  The former one has a hole to the right and is extensible to the right,
+  the latter one has a hole to the left and is extensible to the left.
+  Similar to the previous model, except that the hole is unmapped.
+  <variablelist>&advantages;
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Total heap size grows depending on the
+     application's needs.</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>No fragmentation at all.
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>(*)</term>
+    <listitem><simpara>Works only when SINGLEMAP_MEMORY is
+     possible as well.</simpara></listitem></varlistentry></variablelist>
+ </para></listitem></varlistentry>
+
+<varlistentry><term>SPVW_MIXED_BLOCKS_STAGGERED &amp; TRIVIALMAP_MEMORY</term>
+ <listitem><para>The heap consists of two big blocks, one for
+  variable-length objects and one for 2-pointer objects.
+  Both have a hole to the right, but are extensible to the right.
+  <variablelist>&advantages;
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Total heap size grows depending on the
+     application's needs.</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>No fragmentation at all.
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>(*)</term>
+    <listitem><simpara>Works only when SINGLEMAP_MEMORY is
+     possible as well.</simpara></listitem></varlistentry></variablelist>
+ </para></listitem></varlistentry>
+
+<varlistentry><term>SPVW_MIXED_PAGES</term>
+ <listitem><para>The heap consists of many small pages (usually around 8 KB).
+  There are two kinds of pages: one for 2-pointer objects, one for
+  variable-length objects.
+  The set of all pages of a fixed kind is called a "Heap".
+  Each page has its hole (free space) at its end.
+  For every heap, the pages are kept sorted according to the size of
+  their hole, using AVL trees.
+  The &gc;ion is invoked when the used space has grown by 25% since the
+  last GC; until that point new pages are allocated from the OS.
+  The GC compacts the data in each page separately:
+  data is moved to the left. Emptied pages are given back to the OS.
+  If the holes then make up more than 25% of the occupied storage, a
+  second GC turn moves objects across pages, from nearly empty ones to
+  nearly full ones, with the aim to free as many pages as possible.
+  <variablelist>&advantages;
+   <varlistentry><term>(-)</term>
+    <listitem><simpara>Every allocation requires AVL tree operations,
+     thus slower</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Total heap size grows depending on the
+     application's needs.</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Works on operating systems which do not provide
+     large contiguous areas.</simpara></listitem></varlistentry></variablelist>
+ </para></listitem></varlistentry>
+
+<varlistentry><term>SPVW_PURE_PAGES</term>
+ <listitem><para>Just like SPVW_MIXED_PAGES, except that every page
+  contains data of only a single type tag, i.e. there is a Heap for
+  every type tag.
+  <variablelist>&advantages;
+   <varlistentry><term>(-)</term>
+    <listitem><simpara>Every allocation requires AVL tree operations,
+     thus slower</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Total heap size grows depending on the
+     application's needs.</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Works on operating systems which do not provide
+     large contiguous areas.</simpara></listitem></varlistentry>
+   <varlistentry><term>(-)</term>
+    <listitem><simpara>More fragmentation because objects of different
+    type never fit into the same page.</simpara></listitem></varlistentry>
+ </variablelist></para></listitem></varlistentry>
+
+<varlistentry><term>SPVW_PURE_BLOCKS</term>
+ <listitem><para>There is a big block of storage for each type tag.
+  Each of these blocks has its data to the left and the hole to the
+  right, but these blocks are extensible to the right (because there is
+  enough room between them).
+  A &gc;ion is triggered when the allocation amount since the
+  last GC reaches 50% of the amount of used space at the last GC, but at
+  least 512 KB.
+  The &gc;ion cleans up each block separately: data is moved left.
+  <variablelist>&advantages;
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>Total heap size grows depending on the
+     application's needs.</simpara></listitem></varlistentry>
+   <varlistentry><term>(+)</term>
+    <listitem><simpara>No 16 MB total size limit.
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>(*)</term>
+    <listitem><simpara>Works only in combination with SINGLEMAP_MEMORY.
+    </simpara></listitem></varlistentry></variablelist>
+ </para></listitem></varlistentry></variablelist>
+
+<para>In page based memory models, an object larger than a page is the
+only object carried by its pages.
+There are no small objects in pages belonging to a big object.</para>
+
+<para>The following combinations of memory model and
+ <function role="unix">mmap</function> tricks are possible (the number
+ indicates the order in which the respective models have been
+ developed):</para>
+
+<table id="mem-models-comb-typecodes" frame="all">
+ <title>Memory models with &typecodes;</title>
+<tgroup cols="6" colsep="1" rowsep="1" align="center">
+<thead><row><entry/><entry><xref linkend="MMC-A"/></entry>
+ <entry><xref linkend="MMC-B"/></entry><entry><xref linkend="MMC-C"/></entry>
+ <entry><xref linkend="MMC-D"/></entry><entry><xref linkend="MMC-E"/></entry>
+</row></thead>
+<tbody><row><entry>SPVW_MIXED_BLOCKS_OPPOSITE</entry><entry>1</entry>
+      <entry>10</entry><entry/><entry>2</entry><entry>9</entry></row>
+<row><entry>SPVW_MIXED_BLOCKS_STAGGERED</entry>
+     <entry/><entry>7</entry><entry/><entry/><entry>8</entry></row>
+<row><entry>SPVW_PURE_BLOCKS</entry>
+     <entry/><entry/><entry>5</entry><entry/><entry>6</entry></row>
+<row><entry>SPVW_MIXED_PAGES</entry>
+     <entry>3</entry><entry/><entry/><entry/><entry/></row>
+<row><entry>SPVW_PURE_PAGES</entry>
+     <entry>4</entry><entry/><entry/><entry/><entry/></row>
+</tbody></tgroup></table>
+
+<table id="mem-models-comb-heapcodes" frame="all">
+ <title>Memory models with &heapcodes;</title>
+<tgroup cols="4" colsep="1" rowsep="1" align="center">
+<thead><row><entry/><entry><xref linkend="MMC-A"/></entry>
+ <entry><xref linkend="MMC-B"/></entry><entry><xref linkend="MMC-E"/></entry>
+</row></thead>
+<tbody><row><entry>SPVW_MIXED_BLOCKS_OPPOSITE</entry>
+      <entry>*</entry><entry>*</entry><entry>*</entry></row>
+<row><entry>SPVW_MIXED_BLOCKS_STAGGERED</entry>
+     <entry/><entry>*</entry><entry>*</entry></row>
+<row><entry>SPVW_MIXED_PAGES</entry><entry>*</entry><entry/><entry/></row>
+</tbody></tgroup></table>
+
+<orderedlist numeration="upperalpha"><title>Legend to
+  <xref linkend="mem-models-comb-typecodes"/> and
+  <xref linkend="mem-models-comb-heapcodes"/></title>
+ <listitem id="MMC-A"><simpara>no MAP_MEMORY</simpara></listitem>
+ <listitem id="MMC-B"><simpara>TRIVIALMAP_MEMORY</simpara></listitem>
+ <listitem id="MMC-C"><simpara>SINGLEMAP_MEMORY</simpara></listitem>
+ <listitem id="MMC-D"><simpara>MULTIMAP_MEMORY</simpara></listitem>
+ <listitem id="MMC-E"><simpara>GENERATIONAL_GC</simpara></listitem>
+</orderedlist>
+
+</section>
+
+<section id="gc-safety">
+ <title>The burden of &gc;ion upon the rest of &clisp;</title>
+
+<section id="gc-moves-data"><title>&object-t; pointer invalidation</title>
+
+<para>Every subroutine marked with <emphasis>can trigger GC</emphasis>
+may invoke &gc;ion.
+&gc; moves all the &clisp; non-&immediate-o;s and updates the pointers.
+But the &gc; looks only on the &STACK; and not in the &c-lang;
+variables. (Anything else would not be portable.)
+Therefore at every "unsafe" point, i.e. every call to such a subroutine,
+all the &c-lang; variables of type &object-t;
+<emphasis role="strong">MUST BE ASSUMED TO BECOME GARBAGE</emphasis>.
+(Except for &object-t;s that are known to be unmovable,
+ e.g. immediate data or <type>Subr</type>s.)
+Pointers inside &clisp; data (e.g. to the characters of a &string-t;
+or to the elements of a &simple-vector-t;) become
+<emphasis role="strong">INVALID</emphasis> as well.</para>
+
+<para>The workaround is usually to allocate all the needed &clisp; data
+first and do the rest of the computation with &c-lang; variables,
+without calling unsafe routines, and without worrying about &gc;.</para>
+
+<para>Run-time GC-safety checking is available when you build &clisp;
+ with a C++ compiler, e.g.:
+<screen id="clisp-config-gxx">
+&sh-prompt; CC=g++ ./configure --with-debug build-g-gxx
+</screen>
+When built like this, &clisp; will <function role="unix">abort</function>
+when you reference GC-unsafe data after an allocation (which could have
+triggered a &gc;ion), and &gdb; will pinpoint the trouble spot.</para>
+
+<para>Specifically, when &clisp; is configured
+ as <link linkend="clisp-config-gxx">above</link>, there is a
+global integer variable <varname>alloccount</varname> and the &object-t;
+structure contains an integer <structfield>allocstamp</structfield>
+slot. If these two integers are not the same, the &object-t; is invalid.
+By playing with &gdb;, you should be able to figure out the precise spot
+where an allocation increments <varname>alloccount</varname>
+<emphasis>after</emphasis> the object has been retrieved from a
+GC-visible location.</para>
+</section>
+
+<section id="gc-mem-prot"><title>Memory protection</title>
+
+<para>Generational &gc;or uses memory protection, so when passing pointers
+ into the lisp heap to &c-lang; functions, you may encounter errors
+ (<varname>errno</varname>=<constant>EFAULT</constant>) unless you call
+ <function>handle_fault_range(protection,region_start,region_end)</function>
+ on the appropriate memory region.  See files <simplelist>
+<member><filename role="clisp-cvs">src/unixaux.d</filename></member>
+<member><filename role="clisp-cvs">src/win32aux.d</filename></member>
+<member><filename role="clisp-cvs">modules/syscalls/calls.c</filename></member>
+<member><filename role="clisp-cvs">modules/rawsock/rawsock.c</filename></member>
+</simplelist> for examples.</para></section>
+
+</section>
+
+<section id="foreign-pointers"><title>Foreign Pointers</title>
+
+<para>Pointers to &c-lang; functions and to &malloc;ed data can be
+hidden in &clisp; objects of type machine_type; &gc; will not modify its
+value.  But one should not dare to assume that a &c-lang; stack pointer
+or the address of a &c-lang; function in a shared library satisfies the
+same requirements.</para>
+
+<para>If another pointer is to be viewed as a &clisp; object, it is best
+to box it, e.g. in a &simple-bit-vector-t; or in an
+<type>Fpointer</type> (using <function>allocate_fpointer()</function>.)</para>
+
+</section>
+</chapter>
+
+<chapter id="extend"><title>Extending &clisp;</title>
+
+<epigraph><attribution><ulink url="http://www.franz.com/~jkf/">John
+  Foderaro</ulink></attribution>
+ <para>&cl; is a <emphasis>programmable</emphasis>
+  programming language.</para></epigraph>
+
+<para>&clisp; can be easily extended the same way any other &cl;
+ implementation can: create a lisp file with your variables, functions,
+ macros, etc.; (optionally) compile it with &compile-file;; &load; it
+ into a running &clisp;, and save the &mem-image;.</para>
+
+<para>This method does not work when you need to use some functionality
+ not available in &clisp;, e.g., you want to call a &c-lang; function.
+ You are urged to use <link linkend="modules">External Modules</link>
+ instead of adding built-in functions.</para>
+<note><para>&clisp; comes with an &ffi-pac; which allows you
+ to access &c-lang; libraries in an easy way (including creating
+ &foreign-function;s dynamically).</para></note>
+
+<section id="add-fun"><title>Adding a built-in function</title>
+
+<para>In the rare cases when you really need to modify &clisp;
+ internals and add a truly built-in function, you should read the
+ &clisp; sources for inspiration and enlightenment, choose a file where
+ your brand-new built-in function should go to, and then ...
+ <itemizedlist><listitem><simpara>add the <function>LISPFUN</function>
+    form and the implementation there;</simpara></listitem>
+  <listitem><simpara>add the <function>LISPFUN</function> header to
+    file &subr-d;;</simpara></listitem>
+  <listitem><simpara>declare the function name in file
+    &constsym-d; in the appropriate package
+    (probably &ext-pac;, if there is no specific package);
+  </simpara></listitem>
+  <listitem><simpara>if your function accepts keyword arguments,
+    then an appropriate pair of forms must be added
+    to &subrkw-d; and you must make sure that the
+    keyword symbols are declared in &constsym-d;;
+  </simpara></listitem>
+  <listitem><simpara>export your function name from the appropriate
+    package in file &init-lisp;;</simpara></listitem>
+  <listitem><simpara>when you are done, you should run
+    <command role="unix">make check-sources</command> in your build directory:
+    this will check that the definitions (source files) and the declarations
+    (&subr-d;, &subrkw-d; and &fsubr-d;) are in sync.</simpara></listitem>
+</itemizedlist></para>
+
+<warning><para>Be very careful with the <emphasis>GC-unsafe</emphasis>
+  functions!  Always remember about <link linkend="gc-safety"
+  >GC-safety</link>!</para></warning>
+
+<para>These instructions are intentionally terse - you are encouraged to
+ use &module;s and/or &ffi-pac; instead of adding built-ins directly.
+</para></section>
+
+<section id="add-var"><title>Adding a built-in variable</title>
+
+<para>If you must be able to access the Lisp variable in the &c-lang;
+ code, follow these steps:
+ <itemizedlist><listitem><simpara>declare the variable name
+    in &constsym-d; in the appropriate package
+    (probably &custom-pac;, if there is no specific package);
+  </simpara></listitem>
+  <listitem><simpara>add a <function>define_variable()</function> call
+    in function <function>init_symbol_values()</function>
+    in file &spvw-d;;</simpara></listitem>
+  <listitem><simpara>export your variable name from the appropriate
+    package in file &init-lisp;;</simpara></listitem></itemizedlist></para>
+</section>
+
+<section id="recompile"><title>Recompilation</title>
+
+<para><emphasis>Any</emphasis> change that forces
+ <command role="unix">make</command> to remake &lisp-run;,
+ will force recompilation of all &lisp-file; files and
+ re-dumping of &lispinit;, which may be time-consuming.  This is not
+ always necessary, depending on what kind of change you introduced.
+</para>
+
+<para>On the other hand, if you change any of the following files:
+ <simplelist>
+  <member>&constobj-d;</member>
+  <member>&constsym-d;</member>
+  <member>&fsubr-d;</member>
+  <member>&subr-d;</member>
+  <member>&subrkw-d;</member></simplelist>
+ your &lispinit; will <emphasis>have</emphasis> to be re-dumped.</para>
+
+<warning id="byte-version"><para>If you change the signature of any
+ system function mentioned in the <varname>FUNTAB</varname> arrays in
+ file &eval-d;, all the &fasl-file; files will
+ become obsolete and will need to be recompiled.
+ You will need to add a note to that effect to
+ the &news; file
+ and augment the object <literal>version</literal> in
+ file &constsym-d;.
+  Please try to avoid this as much as possible.</para></warning>
+</section>
+
+</chapter>
+
+<chapter id="bytecode">
+ <chapterinfo><date>Last modified: 1998-09-19</date></chapterinfo>
+ <title>The &clisp; bytecode specification</title>
+
+<section id="byte-intro"><title>Introduction</title>
+
+<para>The &clisp; compiler compiles &cl; programs into instruction codes
+for a virtual processor.  This bytecode is optimized for saving space in
+the most common cases of &cl; programs.  The main advantages/drawbacks
+of this approach, compared to native code compilation, are:
+<itemizedlist>
+ <listitem><simpara>Bytecode compiled programs are a lot smaller than
+  when compiled to native code.  This results in better use of CPU
+  caches, and in less virtual memory paging. Users perceive this as good
+  responsiveness.</simpara></listitem>
+  <listitem><simpara>Maximum execution speed (throughput in tight loops)
+   is limited.</simpara></listitem>
+  <listitem><simpara>Since no bytecode instructions are provided for
+   <quote>unsafe</quote> operations (like unchecked array accesses,
+   or <quote>fast</quote> &car;/&cdr;), programs run with all safety
+   checks enabled even when compiled.</simpara></listitem>
+  <listitem><simpara>Execution speed of a program can easily be
+   understood by looking at the output of the &disassemble; function.
+   A rule of thumb is that every elementary instruction costs 1 time
+   unit, whereas a function call costs 3 to 4 time units.
+  </simpara></listitem>
+  <listitem><simpara>Needing to do no type inference, the compiler is
+   pretty straightforward and fast.  As a consequence, the definition of
+   &clos; generic functions, which needs to compile small pieces of
+   generated code, is not perceived to be slow.</simpara></listitem>
+  <listitem><simpara>The compiler is independent from the hardware CPU.
+   Different back-ends, one for each hardware CPU, are not needed.  As a
+   consequence, the compiler is fairly small (and would have been easily
+   maintainable if it were written in a less kludgey way...), and it is
+   impossible for the compiler writer to introduce CPU dependent bugs.
+ </simpara></listitem></itemizedlist>
+</para>
+</section>
+
+<section id="vm"><title>The virtual machine</title>
+
+<para>The bytecode can be thought of as being interpreted by a virtual
+processor.  The engine which interprets the bytecode (the
+ <quote>implementation of the virtual machine</quote>) is actually a
+&c-lang; function, but it could as well be a just-in-time compiler which
+translates a function's bytecode into hardware CPU instructions the
+first time said function is called.</para>
+
+<para>The virtual machine is a stack machine with two stacks:
+<variablelist>
+ <varlistentry><term>&STACK;</term>
+  <listitem><simpara>a stack for &clisp; objects and frames
+   (<quote>Lisp stack</quote>).</simpara></listitem></varlistentry>
+ <varlistentry><term>&SP;</term>
+  <listitem><simpara>a stack for other data and pointers
+   (<quote>Program stack</quote>).</simpara></listitem></varlistentry>
+</variablelist></para>
+
+<para>This two-stack architecture permits to save an unlimited number of
+&clisp; objects on the &STACK; (needed for handling of &cl; &mul-val;),
+without &consing;.  Also, in a world with a compacting no-ambiguous-roots
+garbage collector, &STACK; must only hold &clisp; objects, and &SP; can
+hold all the other data belonging to a frame, which would not fit into
+&STACK; without tagging/untagging overhead.</para>
+
+<para>The scope of &STACK; and &SP; is only valid for a given function
+invocation.  Whereas the amount of &STACK; space needed for executing a
+function (excluding other function calls) is unlimited, the amount of
+&SP; space needed is known a priori, at compile time.  When a function
+is called, no relation is specified between the caller's &STACK; and the
+callee's &STACK;, and between the caller's &SP; and the callee's &SP;.
+The bytecode is designed so that outgoing arguments on the caller's
+&STACK; can be shared by the caller's incoming arguments area (on the
+callee's &STACK;), but a virtual machine implementation may also copy
+outgoing arguments to incoming arguments instead of sharing them.</para>
+
+<para>The virtual machine has a special data structure,
+<varname>values</varname>, containing the <quote>top of stack</quote>,
+specially adapted to &cl; &mul-val;:
+<variablelist>
+ <varlistentry><term>&mv-count;</term>
+  <listitem><simpara>an unsigned integer.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>&value1;</term>
+  <listitem><simpara>the &pri-val;, a &clisp; object.
+  If &mv-count; = 0, this is &nil;.</simpara></listitem></varlistentry>
+ <varlistentry><term>&mv-space;</term>
+  <listitem><simpara>all values except the first one, an array of &clisp;
+  objects.</simpara></listitem></varlistentry>
+</variablelist></para>
+
+<para>The contents of <varname>values</varname> is short-lived.
+It does not survive a function call, not even a &gc;ion.</para>
+
+<para>The interpretation of some bytecode instructions depends on a
+constant, &jbs;.  This is a CPU-dependent number, the value of
+<varname>SYSTEM::*JMPBUF-SIZE*</varname>.  In &c-lang;, it is defined as
+<literal>ceiling(sizeof(jmp_buf),sizeof(void*))</literal>.</para>
+
+</section>
+
+<section id="comp-fun"><title>The structure of compiled functions</title>
+
+<para>A compiled function consists of two objects: The function itself,
+containing the references to all &clisp; objects needed for the bytecode,
+and a byte vector containing only immediate data, including the bytecode
+proper.</para>
+
+<para>Typically, the byte vector is about twice as large as the function
+vector.  The separation thus helps the garbage collector (since the byte
+vector does not need to be scanned for pointers).</para>
+
+<para>A function looks like this
+ (cf. the &c-lang; type <type>Cclosure</type>):
+<variablelist>
+ <varlistentry id="func-name"><term>name</term>
+  <listitem><simpara>This is the name of the function, normally a symbol
+   or a list of the form <code>(&setf; &symbol-r;)</code>.
+   It is used for printing the function and for error messages.
+   This field is immutable.</simpara></listitem></varlistentry>
+ <varlistentry id="func-codevec"><term>&codevec;</term>
+  <listitem><simpara>This is the byte-code vector, a &ubyte-vec;.
+    This field is immutable.</simpara></listitem></varlistentry>
+ <varlistentry><term>&consts;[]</term>
+  <listitem><simpara>The remaining fields in the function object are
+   references to other &clisp; objects.  These references are immutable,
+   which is why they are called <quote>constants</quote>.
+   (The referenced &clisp; objects can be mutable objects,
+    such as &cons-t;es or &vector-t;s, however.)
+ </simpara></listitem></varlistentry>
+</variablelist></para>
+
+<note><title>The Exception to the Immutability Rule</title>
+ <para>When a generic function's dispatch code is installed, the &codevec;
+  and &consts; fields are destructively modified.</para></note>
+
+<para>Some of the &consts; can play special roles.
+ A function looks like this, in more detail:
+<variablelist>
+ <varlistentry><term>name</term>
+  <listitem><simpara>see <xref linkend="func-name"/>.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term>&codevec;</term>
+  <listitem><simpara>see <xref linkend="func-codevec"/>.
+ </simpara></listitem></varlistentry>
+ <varlistentry><term>&venv-const;*</term>
+  <listitem><simpara>At most one object, representing the closed-up
+   variables, representing the variables of the &lex-env; in
+   which this function was defined.  It is a &simple-vector-t;, which
+   looks like this: <literal role="data">#(&next-r;
+   <replaceable>value&sub-1;</replaceable> ...
+   <replaceable>value&sub-n;</replaceable>)</literal>
+   where <replaceable>value&sub-1;</replaceable>, ...,
+   <replaceable>value&sub-n;</replaceable>
+   are the values of the closed-up variables,
+   and &next-r; is either &nil; or a &simple-vector-t; having the same
+   structure.</simpara></listitem></varlistentry>
+ <varlistentry><term>&block-const;*</term>
+  <listitem><simpara>Objects representing closed-up &block; tags,
+   representing the &block; tags of the &lex-env; in which
+   this function was defined.  Each is a &cons-t; containing in the
+   &cdr; part: either a frame pointer to the block frame, or &disabled;.
+   The &car; is the block's name, for error messages only.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>&tagbody-const;*</term>
+  <listitem><simpara>Objects representing closed-up &tagbody; tags,
+   representing the &tagbody; tags of the &lex-env; in which
+   this function was defined.  Each is a &cons-t; containing in the
+   &cdr; part: either a frame pointer to the &tagbody; frame, or
+   &disabled; if the &tagbody; has already been left.  The &car; is a
+   &simple-vector-t; containing the names of the &tagbody; tags,
+   for error messages only.</simpara></listitem></varlistentry>
+ <varlistentry><term>&keyword-const;*</term>
+  <listitem><simpara>If the function was defined with a &lalist;
+   containing &key-amp;, here come the symbols ("keywords"), in their
+   correct order.  They are used by the interpreter during function call.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>&other-const;*</term>
+  <listitem><simpara>Other objects needed by the function's bytecode.
+  </simpara></listitem></varlistentry>
+</variablelist>
+</para>
+
+<para>If &venv-const;, &block-const;, &tagbody-const; are all absent,
+the function is called <emphasis>autonomous</emphasis>.
+This is the case if the function does not refer to lexical variables,
+blocks or tags defined in compile code outside of the function.
+In particular, it is the case if the function is defined in a null
+&lex-env;.</para>
+
+<para>If some &venv-const;, &block-const;, or &tagbody-const; are
+present, the function (a <quote>closure</quote>) is created at runtime.
+The compiler only generates a prototype, containing &nil; values
+instead of each &venv-const;, &block-const;, &tagbody-const;.
+At runtime, a function is created by copying this prototype and
+replacing the &nil; values by the definitive ones.</para>
+
+<para>The list <literal role="data">(&keyword-const;*
+&other-const;*)</literal> normally does not contain duplicates, because
+the compiler removes duplicates when possible.  (Duplicates can occur
+nevertheless, through the use of &load-time-value;.)</para>
+
+<para>The &codevec; looks like this
+ (cf. the &c-lang; type <type>Codevec</type>):
+<variablelist>
+ <varlistentry><term><literal>spdepth_1</literal> (2 bytes)</term>
+  <listitem><simpara>The 1st part of the maximal &SP; depth.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term><literal>spdepth_jmpbufsize</literal> (2 bytes)</term>
+  <listitem><simpara>The &jbs; part of the maximal &SP; depth.
+   The maximal &SP; depth (precomputed by the compiler) is given by
+   <literal>spdepth_1 + spdepth_jmpbufsize * &jbs;</literal>.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>&numreq; (2 bytes)</term>
+  <listitem><simpara>Number of required parameters.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term><literal>numopt</literal> (2 bytes)</term>
+  <listitem><simpara>Number of optional parameters.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>&flags; (1 byte)</term>
+  <listitem><variablelist>
+   <varlistentry><term>bit 0</term>
+    <listitem><simpara>set if the function has the &rest-amp; parameter
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>bit 7</term>
+    <listitem><simpara>set if the function has &key-amp; parameters
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>bit 6</term>
+    <listitem><simpara>set if the function has &allow-other-keys-amp;
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>bit 4</term>
+    <listitem><simpara>set if the function is a generic function
+    </simpara></listitem></varlistentry>
+   <varlistentry><term>bit 3</term>
+    <listitem><simpara>set if the function is a generic function and its
+     effective method shall be returned (instead of being executed)
+    </simpara></listitem></varlistentry></variablelist></listitem>
+   </varlistentry>
+  <varlistentry><term><literal>signature</literal> (1 byte)</term>
+   <listitem><simpara>An abbreviation code depending on
+    &numreq;, <literal>numopt</literal>, &flags;.
+    It is used for speeding up the function
+    call.</simpara></listitem></varlistentry>
+  <varlistentry><term><literal>numkey</literal> (2 bytes, only if the
+     function has &key-amp;)</term>
+   <listitem><simpara>The number of &key-amp; parameters.
+   </simpara></listitem></varlistentry>
+  <varlistentry><term><literal>keyconsts</literal> (2 bytes, only if the
+     function has &key-amp;)</term>
+   <listitem><simpara>The offset of the &keyword-const; in the function.
+   </simpara></listitem></varlistentry>
+  <varlistentry><term><literal>byte</literal>* (any number of bytes)</term>
+   <listitem><simpara>The bytecode instructions.
+   </simpara></listitem></varlistentry>
+</variablelist></para>
+
+</section>
+
+<section id="intr-struct">
+   <title>The general structure of the instructions</title>
+
+<para>All instructions consist of one byte, denoting the opcode, and
+some number of operands.</para>
+
+<para>The conversion from a byte (in the range 0..255) to the opcode is
+performed by lookup in the table contained in the file &bytecode-d;.</para>
+
+<para>There are the following types of operands, denoted by different
+letters:
+<variablelist>
+ <varlistentry><term>&k-r;, &n-r;, &m-r;, &l-r;</term>
+  <listitem><simpara>A (nonnegative) numeric operand.
+   The next byte is read.
+   If its bit 7 is zero, then the bits 6..0 give the value (7 bits).
+   If its bit 7 is one, then the bits 6..0 and the subsequent byte
+   together form the value (15 bits).
+  </simpara></listitem></varlistentry>
+ <varlistentry><term>&b-r;</term>
+  <listitem><simpara>A (nonnegative) 1-byte operand.
+   The next byte is read and is the value.
+  </simpara></listitem></varlistentry>
+ <varlistentry><term><replaceable>label</replaceable></term>
+  <listitem><simpara>A label operand.
+   A signed numeric operand is read: The next byte is read.
+   If its bit 7 is zero, then the bits 6..0 give the value
+    (7 bits, sign-extended).
+   If its bit 7 is one, then the bits 6..0 and the subsequent byte
+    together form the value (15 bits, sign-extended).
+   If the latter 15-bit result is zero, then four more bytes are read
+    and put together (32 bits, sign-extended).
+   Finally, the bytecode pointer for the target is computed as the
+   current bytecode pointer (pointing after the operand just read), plus
+   the signed numeric operand.
+  </simpara></listitem></varlistentry>
+</variablelist></para>
+</section>
+
+<section id="intr-set"><title>The instruction set</title>
+
+<section id="instr-const"><title>Instructions for constants</title>
+<informaltable id="instr-const-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(&nil;)</literal></entry>
+      <entry>Load &nil; into values.</entry>
+      <entry>&value1; := &nil;, &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(PUSH-NIL &n-r;)</literal></entry>
+      <entry>Push &n-r; &nil;s into the &STACK;.</entry>
+      <entry>&n-r; times do: *--&STACK; := &nil;,
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(&t;)</literal></entry>
+      <entry>Load &t; into values.</entry>
+      <entry>&value1; := &t;, &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(CONST &n-r;)</literal></entry>
+      <entry>Load the function's &n-r;th constant into values.</entry>
+      <entry>&value1; := &consts;[&n-r;],
+             &mv-count; := 1</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-lex-var"><title>Instructions for lexical variables</title>
+<informaltable id="instr-lex-var-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(LOAD &n-r;)</literal></entry>
+      <entry>Load a directly accessible local variable into values.</entry>
+      <entry>&value1; := *(&STACK;+&n-r;),
+             &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(LOADI &k1-r; &k2-r; &n-r;)</literal></entry>
+      <entry>Load an indirectly accessible local variable into values.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+              &value1; := *(*(&SP;+&k-r;)+ &n-r;),
+              &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(LOADC &n-r; &m-r;)</literal></entry>
+      <entry>Load a closed-up variable, defined in the same function and
+             directly accessible, into values.</entry>
+      <entry>&value1; := &svref;(*(&STACK;+&n-r;),1+&m-r;),
+             &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(LOADV &k-r; &m-r;)</literal></entry>
+      <entry>Load a closed-up variable, defined in an outer function,
+             into values.</entry>
+      <entry>&v-r; := &venv-const;,
+             &m-r; times do: &v-r; := &svref;(&v-r;,0),
+             &value1; := &svref;(&v-r;,&m-r;),
+             &mv-count; := 1</entry></row>
+ <row><entry><literal
+         role="byte">(LOADIC &k1-r; &k2-r; &n-r; &m-r;)</literal></entry>
+      <entry>Load a closed-up variable, defined in the same function and
+             indirectly accessible, into values.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+             &value1; := &svref;(*(*(&SP;+&k-r;)+&n-r;),1+&m-r;),
+             &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(STORE &n-r;)</literal></entry>
+      <entry>Store values into a directly accessible local variable.</entry>
+      <entry>*(&STACK;+&n-r;) := &value1;,
+             &mv-count; := 1</entry></row>
+ <row><entry><literal
+         role="byte">(STOREI &k1-r; &k2-r; &n-r;)</literal></entry>
+      <entry>Store values into an indirectly accessible local variable.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+              *(*(&SP;+&k-r;)+ &n-r;) := &value1;,
+              &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(STOREC &n-r; &m-r;)</literal></entry>
+      <entry>Store values into a closed-up variable, defined in the same
+             function and directly accessible.</entry>
+      <entry>&svref;(*(&STACK;+&n-r;),1+m) := &value1;,
+             &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(STOREV &k-r; &m-r;)</literal></entry>
+      <entry>Store values into a closed-up variable, defined in an outer
+             function.</entry>
+      <entry>&v-r; := &venv-const;,
+             &m-r; times do: &v-r; := &svref;(&v-r;,0),
+             &svref;(&v-r;,&m-r;) := &value1;,
+             &mv-count; := 1</entry></row>
+ <row><entry><literal
+         role="byte">(STOREIC &k1-r; &k2-r; &n-r; &m-r;)</literal></entry>
+      <entry>Store values into a closed-up variable, defined in the same
+             function and indirectly accessible.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+             &svref;(*(*(&SP;+&k-r;)+&n-r;),1+&m-r;) := &value1;,
+             &mv-count; := 1</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-dyn-var"><title>Instructions for dynamic variables</title>
+<informaltable id="instr-dyn-var-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(GETVALUE &n-r;)</literal></entry>
+      <entry>Load a symbol's value into values.</entry>
+      <entry>&value1; := symbol-value(&consts;[&n-r;]),
+             &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(SETVALUE &n-r;)</literal></entry>
+      <entry>Store values into a symbol's value.</entry>
+      <entry>symbol-value(&consts;[&n-r;]) := &value1;,
+             &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(BIND &n-r;)</literal></entry>
+      <entry>Bind a symbol dynamically.</entry>
+      <entry>Bind the value of the symbol
+             &consts;[&n-r;] to &value1;,
+             implicitly &STACK; -= 3,
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(UNBIND1)</literal></entry>
+      <entry>Dissolve one binding frame.</entry>
+      <entry>Unbind the binding frame &STACK; is pointing to,
+             implicitly &STACK; += 3</entry></row>
+ <row><entry><literal role="byte">(UNBIND &n-r;)</literal></entry>
+      <entry>Dissolve &n-r; binding frames.</entry>
+      <entry>&n-r; times do:
+              Unbind the binding frame &STACK; is pointing to, thereby
+              incrementing &STACK;
+             Thus, &STACK; += 1+2*&n-r;</entry></row>
+ <row><entry><literal role="byte">(PROGV)</literal></entry>
+      <entry>Bind a set of symbols dynamically to a set of values.</entry>
+      <entry><replaceable>symbols</replaceable> := *&STACK;++,
+             *--&SP; := &STACK;,
+             build a single binding frame binding the symbols in
+             <replaceable>symbols</replaceable> to the values in &value1;,
+             values undefined</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-stack"><title>Instructions for stack operations</title>
+<informaltable id="instr-stack-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(PUSH)</literal></entry>
+      <entry>Push one object onto the &STACK;.</entry>
+      <entry>*--&STACK; := &value1;,
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(POP)</literal></entry>
+      <entry>Pop one object from the &STACK;, into values.</entry>
+      <entry>&value1; := *&STACK;++, &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(SKIP &n-r;)</literal></entry>
+      <entry>Restore a previous &STACK; pointer.
+             Remove &n-r; objects from the &STACK;.</entry>
+      <entry>&STACK; := &STACK; + &n-r;</entry></row>
+ <row><entry><literal role="byte">(SKIPI &k1-r; &k2-r; &n-r;)</literal></entry>
+      <entry>Restore a previous &STACK; pointer. Remove an unknown
+             number of objects from the &STACK;.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+             &STACK; := *(&SP;+&k-r;),
+             &SP; := &SP;+&k-r;+1,
+             &STACK; := &STACK; + &n-r;</entry></row>
+ <row><entry><literal role="byte">(SKIPSP &k1-r; &k2-r;)</literal></entry>
+      <entry>Restore a previous &SP; pointer.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+             &SP; := &SP;+&k-r;</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-jump"><title>Instructions for control flow, jumps</title>
+<informaltable id="instr-jump-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(SKIP&amp;RET &n-r;)</literal></entry>
+      <entry>Clean up the &STACK;, and return from the function.</entry>
+      <entry>&STACK; := &STACK;+&n-r;,
+            return from the function, returning values.</entry></row>
+ <row><entry><literal role="byte">(SKIP&amp;RETGF &n-r;)</literal></entry>
+      <entry>Clean up the &STACK;, and return from the generic
+             function.</entry>
+      <entry>If bit 3 is set in the function's &flags;,
+                then &STACK; := &STACK;+&n-r;, &mv-count; := 1,
+                     and return from the function.
+             Otherwise: if the current function has no &rest-amp; argument,
+                then &STACK; := &STACK;+&n-r;-&numreq;,
+                     apply &value1; to the &numreq; arguments
+                           still on the &STACK;, and
+                           return from the function.
+                Else &STACK; := &STACK;+&n-r;-&numreq;-1,
+                     apply &value1; to the &numreq; arguments and the
+                           &rest-amp; argument, all still on the &STACK;, and
+                           return from the function.</entry></row>
+ <row><entry><literal role="byte">(JMP &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;.</entry>
+      <entry>PC := &lab-r;.</entry></row>
+ <row><entry><literal role="byte">(JMPIF &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if &value1; is true.</entry>
+      <entry>If &value1; is not &nil;, PC := &lab-r;.</entry></row>
+ <row><entry><literal role="byte">(JMPIFNOT &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if &value1; is false.</entry>
+      <entry>If &value1; is &nil;, PC := &lab-r;.</entry></row>
+ <row><entry><literal role="byte">(JMPIF1 &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r; and forget secondary values,
+             if &value1; is true.</entry>
+      <entry>If &value1; is not &nil;,
+                &mv-count; := 1, PC := &lab-r;.</entry></row>
+ <row><entry><literal role="byte">(JMPIFNOT1 &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r; and forget secondary values,
+             if &value1; is false.</entry>
+      <entry>If &value1; is &nil;,
+                &mv-count; := 1, PC := &lab-r;.</entry></row>
+ <row><entry><literal role="byte">(JMPIFATOM &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if &value1; is not a cons.</entry>
+      <entry>If &value1; is not a cons, PC := &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPIFCONSP &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if &value1; is a cons.</entry>
+      <entry>If &value1; is a cons, PC := &lab-r;.
+                values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPIFEQ &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if &value1; is &eq; to the top-of-stack.</entry>
+      <entry>If eq(&value1;,*&STACK;++), PC := &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPIFNOTEQ &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if &value1; is not &eq;
+             to the top-of-stack.</entry>
+      <entry>If not eq(&value1;,*&STACK;++), PC := &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPIFEQTO &n-r; &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;,
+             if the top-of-stack is &eq; to a constant.</entry>
+      <entry>If eq(*&STACK;++,&consts;[&n-r;]), PC := &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPIFNOTEQTO &n-r; &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if the top-of-stack is not &eq;
+             to a constant.</entry>
+      <entry>If not eq(*&STACK;++,&consts;[&n-r;]), PC := &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPHASH &n-r; &lab-r;)</literal></entry>
+      <entry>Table-driven jump, depending on &value1;.</entry>
+      <entry>Lookup &value1; in the hash table &consts;[&n-r;].
+             (The hash table's test is either &eq; or &eql;.)
+             If found, the hash table value is a signed &fixnum-t;,
+             jump to it: PC := PC + value.  Else jump to &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPHASHV &n-r; &lab-r;)</literal></entry>
+      <entry>Table-driven jump, depending on &value1;,
+             inside a generic function.</entry>
+      <entry>Lookup &value1; in the hash table &svref;(&consts;[0],&n-r;).
+             (The hash table's test is either &eq; or &eql;.)
+             If found, the hash table value is a signed &fixnum-t;,
+             jump to it: PC := PC + value.  Else jump to &lab-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JSR &lab-r;)</literal></entry>
+      <entry>Subroutine call.</entry>
+      <entry>*--&STACK; := function. Then start interpreting the
+             bytecode at &lab-r;, with values undefined.
+             When a <literal role="byte">(RET)</literal> is encountered,
+             program execution is resumed at the instruction after
+             <literal role="byte">(JSR &lab-r;)</literal>.</entry></row>
+ <row><entry><literal role="byte">(JMPTAIL &m-r; &n-r;
+             &lab-r;)</literal></entry>
+      <entry>Tail subroutine call.</entry>
+      <entry>&n-r; &geq; &m-r;.
+             The &STACK; frame of size &n-r; is reduced to size &m-r;:
+             {*(&STACK;+&n-r;-&m-r;), ..., *(&STACK;+&n-r;-1)} :=
+               {*&STACK;, ..., *(&STACK;+&m-r;-1)}.
+             &STACK; += n-m.
+             *--&STACK; := function.
+             Then jump to &lab-r;, with values undefined.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-env"><title>Instructions for &lex-env;,
+   creation of closures</title>
+<informaltable id="instr-env-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(VENV)</literal></entry>
+      <entry>Load the &venv-const; into values.</entry>
+      <entry>&value1; := &consts;[0], &mv-count; := 1.</entry>
+  </row>
+ <row><entry><literal
+         role="byte">(MAKE-VECTOR1&amp;PUSH &n-r;)</literal></entry>
+      <entry>Create a &simple-vector-t; used for closed-up variables.</entry>
+      <entry>&v-r; := new &simple-vector-t; of size &n-r;+1.
+             &svref;(&v-r;,0) := &value1;.
+             *--&STACK; := &v-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(COPY-CLOSURE &m-r; &n-r;)</literal></entry>
+      <entry>Create a closure by copying the prototype and filling in
+             the &lex-env;.</entry>
+      <entry>&f-r; := copy-function(&consts;[&m-r;]).
+             For &i-r;=0,..,&n-r;-1:
+                 &f-r;_&consts;[i] := *(&STACK;+&n-r;-1-&i-r;).
+             &STACK; += &n-r;.
+             &value1; := &f-r;, &mv-count; := 1</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-funcall"><title>Instructions for function calls</title>
+<informaltable id="instr-funcall-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(CALL &k-r; &n-r;)</literal></entry>
+      <entry>Calls a constant function with &k-r; arguments.</entry>
+      <entry>The function &consts;[&n-r;] is called
+             with the arguments *(&STACK;+&k-r;-1), ..., *(&STACK;+0).
+             &STACK; += &k-r;.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALL0 &n-r;)</literal></entry>
+      <entry>Calls a constant function with 0 arguments.</entry>
+      <entry>The function &consts;[&n-r;] is called with 0 arguments.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALL1 &n-r;)</literal></entry>
+      <entry>Calls a constant function with 1 argument.</entry>
+      <entry>The function &consts;[&n-r;] is called with one argument *&STACK;.
+             &STACK; += 1. The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALL2 &n-r;)</literal></entry>
+      <entry>Calls a constant function with 2 arguments.</entry>
+      <entry>The function &consts;[&n-r;] is called
+             with two arguments *(&STACK;+1) and *(&STACK;+0).
+             &STACK; += 2. The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALLS1 &b-r;)</literal></entry>
+      <entry>Calls a system function with no &rest-amp;.</entry>
+      <entry>Calls the system function FUNTAB[&b-r;].
+             The right number of arguments is already on the &STACK;
+             (including &unbound;s in place of absent &optional-amp; or
+              &key-amp; parameters).
+             The arguments are removed from the &STACK;.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALLS2 &b-r;)</literal></entry>
+      <entry>Calls a system function with no &rest-amp;.</entry>
+      <entry>Calls the system function FUNTAB[256+&b-r;].
+             The right number of arguments is already on the &STACK;
+             (including &unbound;s in place of absent &optional-amp; or
+              &key-amp; parameters).
+             The arguments are removed from the &STACK;.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALLSR &m-r; &b-r;)</literal></entry>
+      <entry>Calls a system function with &rest-amp;.</entry>
+      <entry>Calls the system function FUNTABR[&b-r;].
+             The minimum number of arguments is already on the &STACK;,
+             and &m-r; additional arguments as well.
+             The arguments are removed from the &STACK;.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALLC)</literal></entry>
+      <entry>Calls a computed compiled function with no &key-amp;.</entry>
+      <entry>Calls the compiled function &value1;.
+             The right number of arguments is already on the &STACK;
+             (including &unbound;s in place of absent &optional-amp;
+              parameters).
+             The arguments are removed from the &STACK;.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(CALLCKEY)</literal></entry>
+      <entry>Calls a computed compiled function with &key-amp;.</entry>
+      <entry>Calls the compiled function &value1;.
+             The right number of arguments is already on the &STACK;
+             (including &unbound;s in place of absent &optional-amp;
+              or &key-amp; parameters).
+             The arguments are removed from the &STACK;.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(FUNCALL &n-r;)</literal></entry>
+      <entry>Calls a computed function.</entry>
+      <entry>Calls the function *(&STACK;+&n-r;)
+             with the arguments *(&STACK;+&n-r;-1), ..., *(&STACK;+0).
+             &STACK; += &n-r;+1.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(APPLY &n-r;)</literal></entry>
+      <entry>Calls a computed function with an unknown number of
+             arguments.</entry>
+      <entry>Calls the function *(&STACK;+&n-r;)
+             with the arguments *(&STACK;+&n-r;-1), ..., *(&STACK;+0)
+             and a list of additional arguments &value1;.
+             &STACK; += &n-r;+1.
+             The returned values go into values.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-optkey"><title>Instructions for optional
+  and keyword parameters</title>
+<informaltable id="instr-optkey-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(PUSH-UNBOUND &n-r;)</literal></entry>
+      <entry>Push &n-r; &unbound;s into the &STACK;.</entry>
+      <entry>&n-r; times do: *--&STACK; := &unbound;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(UNLIST &n-r; &m-r;)</literal></entry>
+      <entry>Destructure a proper &list-t;.</entry>
+      <entry>0 &le; &m-r; &le; &n-r;.
+             &n-r; times do: *--&STACK; := &car;(&value1;),
+             &value1; := &cdr;(&value1;).
+             During the last &m-r; iterations, the list &value1;
+             may already have reached its end;
+             in this case, *--&STACK; := &unbound;.
+             At the end, &value1; must be &nil;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(UNLIST* &n-r; &m-r;)</literal></entry>
+      <entry>Destructure a proper or dotted &list-t;.</entry>
+      <entry>0 &le; &m-r; &le; &n-r;, &n-r; &gt; 0.
+             &n-r; times do: *--&STACK; := &car;(&value1;),
+             &value1; := &cdr;(&value1;).
+             During the last &m-r; iterations, the list &value1;
+             may already have reached its end;
+             in this case, *--&STACK; := &unbound;.
+             At the end, after &n-r; &cdr;s, *--&STACK; := &value1;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(JMPIFBOUNDP &n-r; &lab-r;)</literal></entry>
+      <entry>Jump to &lab-r;, if a local variable is not unbound.</entry>
+      <entry>If *(&STACK;+&n-r;) is not &unbound;,
+                &value1; := *(&STACK;+&n-r;), &mv-count; := 1, PC := &lab-r;.
+             Else: values undefined.</entry></row>
+ <row><entry><literal role="byte">(BOUNDP &n-r;)</literal></entry>
+      <entry>Load &t; or &nil; into values, depending on whether a local
+             variable is bound.</entry>
+      <entry>If *(&STACK;+&n-r;) is not &unbound;,
+                &value1; := &t;, &mv-count; := 1.
+             Else: &value1; := &nil;, &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(UNBOUND->NIL &n-r;)</literal></entry>
+      <entry>If a local variable is unbound, assign a default value
+             &nil; to it.</entry>
+      <entry>If *(&STACK;+&n-r;) is &unbound;,
+             *(&STACK;+&n-r;) := &nil;.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-mulval"><title>Instructions for &mul-val;</title>
+<informaltable id="instr-mulval-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(VALUES0)</literal></entry>
+      <entry>Load no values into values.</entry>
+      <entry>&value1; := &nil;, &mv-count; := 0</entry>
+  </row>
+ <row><entry><literal role="byte">(VALUES1)</literal></entry>
+      <entry>Forget secondary values.</entry>
+      <entry>&mv-count; := 1</entry>
+  </row>
+ <row><entry><literal role="byte">(&STACK;-TO-MV &n-r;)</literal></entry>
+      <entry>Pop the first &n-r; objects from &STACK; into values.</entry>
+      <entry>Load values(*(&STACK;+&n-r;-1),...,*(&STACK;+0)) into
+             values. &STACK; += &n-r;.</entry></row>
+ <row><entry><literal role="byte">(MV-TO-&STACK;)</literal></entry>
+      <entry>Save values on &STACK;.</entry>
+      <entry>Push the &mv-count; values onto the &STACK;
+             (in order: &value1; comes first).
+             &STACK; -= &mv-count;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(NV-TO-&STACK; &n-r;)</literal></entry>
+      <entry>Save &n-r; values on &STACK;.</entry>
+      <entry>Push the first &n-r; values onto the &STACK;
+             (in order: &value1; comes first).
+             &STACK; -= &n-r;.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(MV-TO-LIST)</literal></entry>
+      <entry>Convert &mul-val; into a list.</entry>
+      <entry>&value1; := list of values, &mv-count; := 1</entry></row>
+ <row><entry><literal role="byte">(LIST-TO-MV)</literal></entry>
+      <entry>Convert a &list-t; into &mul-val;.</entry>
+      <entry>Call the function &values-list; with &value1; as argument.
+             The returned values go into values.</entry></row>
+ <row><entry><literal role="byte">(MVCALLP)</literal></entry>
+      <entry>Start a &multiple-value-call; invocation.</entry>
+      <entry>*--&SP; := &STACK;. *--&STACK; := &value1;.</entry></row>
+ <row><entry><literal role="byte">(MVCALL)</literal></entry>
+      <entry>Finish a &multiple-value-call; invocation.</entry>
+      <entry>newSTACK := *&SP;++.
+             Call the function *(newSTACK-1), passing it
+             *(newSTACK-2), ..., *(&STACK;+0) as arguments.
+             &STACK; := newSTACK.
+             The returned values go into values.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-block"><title>Instructions for
+   &block; and &return-from;</title>
+<informaltable id="instr-block-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(BLOCK-OPEN &n-r; &lab-r;)</literal></entry>
+  <entry>Create a &block; frame.</entry>
+  <entry>Create a &block; frame, &STACK; -= 3, &SP; -= 2+&jbs;.
+   The topmost (third) object in the block frame is
+   &cons;(&consts;[&n-r;],frame-pointer) (its &bc-r;).
+   Upon a &return-from; to this frame, execution will continue at &lab-r;.
+   values undefined.</entry></row>
+ <row><entry><literal role="byte">(BLOCK-CLOSE)</literal></entry>
+      <entry>Dissolve a &block; frame.</entry>
+      <entry>Dissolve the &block; frame at &STACK;, &STACK; += 3,
+             &SP; += 2+&jbs;. Mark the &bc-r; as invalid.</entry></row>
+ <row><entry><literal role="byte">(RETURN-FROM &n-r;)</literal></entry>
+      <entry>Leave a &block; whose &bc-r; is given.</entry>
+      <entry>&bc-r; := &consts;[&n-r;].
+             If &cdr;(&bc-r;) = &disabled;, an &err-sig;.
+             Else &cdr;(&bc-r;) is a frame-pointer.
+             Unwind the stack up to this frame, pass it values.</entry></row>
+ <row><entry><literal
+         role="byte">(RETURN-FROM-I &k1-r; &k2-r; &n-r;)</literal></entry>
+      <entry>Leave a &block; whose &bc-r; is indirectly accessible.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+             &bc-r; := *(*(&SP;+&k-r;)+&n-r;).
+             If &cdr;(&bc-r;) = &disabled;, an &err-sig;.
+             Else &cdr;(&bc-r;) is a frame-pointer.
+             Unwind the stack up to this frame, pass it values.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-tagbody"><title>Instructions for &tagbody; and &go;</title>
+<informaltable id="instr-tagbody-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(TAGBODY-OPEN &m-r;
+             <replaceable>label&sub-1;</replaceable> ...
+             <replaceable>label&sub-n;</replaceable>)</literal></entry>
+      <entry>Create a &tagbody; frame.</entry>
+      <entry>Fetch &consts;[&m-r;], this is a &simple-vector-t; with
+             &n-r; elements, then decode &n-r; label operands.
+             Create a &tagbody; frame, &STACK; -= 3+&n-r;, &SP; -= 1+&jbs;.
+             The third object in the &tagbody; frame is
+             &cons;(&consts;[&m-r;],frame-pointer) (the &tbc-r;)
+             Upon a &go; to tag &lab-r; of this frame, execution
+             will continue at <replaceable>label&sub-l;</replaceable>.
+             values undefined</entry></row>
+ <row><entry><literal role="byte">(TAGBODY-CLOSE-NIL)</literal></entry>
+      <entry>Dissolve a &tagbody; frame, and load &nil; into values.</entry>
+      <entry>Dissolve the &tagbody; frame at &STACK;,
+             &STACK; += 3+&m-r;, &SP; += 1+&jbs;.
+             Mark the &tbc-r; as invalid.
+             &value1; := &nil;, &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(TAGBODY-CLOSE)</literal></entry>
+      <entry>Dissolve a &tagbody; frame.</entry>
+      <entry>Dissolve the &tagbody; frame at &STACK;,
+             &STACK; += 3+&m-r;, &SP; += 1+&jbs;.
+             Mark the &tbc-r; as invalid.</entry></row>
+ <row><entry><literal role="byte">(GO &n-r; &lab-r;)</literal></entry>
+      <entry>Jump into a &tagbody; whose &tbc-r; is given.</entry>
+      <entry>&tbc-r; := &consts;[&n-r;].
+             If &cdr;(&tbc-r;) = &disabled;, an &err-sig;.
+             Else &cdr;(&tbc-r;) is a frame-pointer. Unwind the stack up
+             to this frame, pass it the number &lab-r;.</entry></row>
+ <row><entry><literal
+         role="byte">(GO-I &k1-r; &k2-r; &n-r; &lab-r;)</literal></entry>
+      <entry>Jump into a &tagbody; whose &tbc-r; is indirectly
+             accessible.</entry>
+      <entry>&k-r; := &k1-r; + &jbs; * &k2-r;,
+             &tbc-r; := *(*(&SP;+&k-r;)+&n-r;).
+             If &cdr;(&tbc-r;) = &disabled;, an &err-sig;.
+             Else &cdr;(&tbc-r;) is a frame-pointer. Unwind the stack up
+             to this frame, pass it the number &lab-r;.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-catch"><title>Instructions for &catch; and &throw;</title>
+<informaltable id="instr-catch-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(CATCH-OPEN &lab-r;)</literal></entry>
+      <entry>Create a &catch; frame.</entry>
+      <entry>Create a &catch; frame, with &value1; as tag.
+             &STACK; -= 3, &SP; -= 2+&jbs;.
+             Upon a &throw; to this tag execution continues at
+             &lab-r;.</entry></row>
+ <row><entry><literal role="byte">(CATCH-CLOSE)</literal></entry>
+      <entry>Dissolve a &catch; frame.</entry>
+      <entry>Dissolve the &catch; frame at &STACK;.
+             &STACK; += 3, &SP; += 2+&jbs;.</entry></row>
+ <row><entry><literal role="byte">(THROW)</literal></entry>
+      <entry>Non-local exit to a &catch; frame.</entry>
+      <entry>&tag-r; := *&STACK;++.
+             Search the innermost &catch; frame with tag
+             &tag-r; on the &STACK;, unwind the
+             stack up to it, pass it values.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-unwind"><title>Instructions for &unwind-protect;</title>
+<informaltable id="instr-unwind-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(UNWIND-PROTECT-OPEN
+             &lab-r;)</literal></entry>
+      <entry>Create an &unwind-protect; frame.</entry>
+      <entry>Create an &unwind-protect; frame.
+             &STACK; -= 2, &SP; -= 2+&jbs;.
+             When the stack will be unwound by a non-local exit,
+             values will be saved on &STACK;, and execution will be
+             transferred to &lab-r;.</entry></row>
+ <row><entry><literal
+         role="byte">(UNWIND-PROTECT-NORMAL-EXIT)</literal></entry>
+      <entry>Dissolve an &unwind-protect; frame, and start the cleanup
+             code.</entry>
+      <entry>Dissolve the &unwind-protect; frame at &STACK;.
+             &STACK; += 2, &SP; += 2+&jbs;.
+             *--&SP; := 0, *--&SP; := 0, *--&SP; := &STACK;.
+             Save the values on the &STACK;,
+             &STACK; -= &mv-count;.</entry></row>
+ <row><entry><literal role="byte">(UNWIND-PROTECT-CLOSE)</literal></entry>
+      <entry>Terminate the cleanup code.</entry>
+      <entry>newSTACK := *&SP;++. Load
+             values(*(newSTACK-1), ..., *(&STACK;+0)) into values.
+             &STACK; := newSTACK. SPword1 := *&SP;++, SPword2 := *&SP;++.
+             Continue depending on SPword1 and SPword2.
+             If both are 0, simply continue execution.
+             If SPword2 is 0 but SPword1 is nonzero, interpret it as a
+             label and jump to it.</entry></row>
+ <row><entry><literal role="byte">(UNWIND-PROTECT-CLEANUP)</literal></entry>
+      <entry>Dissolve an &unwind-protect; frame, and execute the cleanup
+             code like a subroutine call.</entry>
+      <entry>Dissolve the &unwind-protect; frame at &STACK;,
+             get &lab-r; out of the frame.
+             &STACK; += 2, &SP; += 2+&jbs;.
+             *--&SP; := 0, *--&SP; := PC, *--&SP; := &STACK;.
+             Save the values on the &STACK;, &STACK; -= &mv-count;.
+             PC := &lab-r;.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-handler"><title>Instructions for &handler-bind;</title>
+<informaltable id="instr-handler-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(HANDLER-OPEN &n-r;)</literal></entry>
+      <entry>Create a handler frame.</entry>
+      <entry>Create a handler frame, using &consts;[&n-r;] which
+             contains the &condition-t; types, the corresponding labels and
+             the current &SP; depth (= function entry &SP; - current &SP;).
+             </entry></row>
+ <row><entry><literal role="byte">(HANDLER-BEGIN&amp;PUSH)</literal></entry>
+      <entry>Start a handler.</entry>
+      <entry>Restore the same &SP; state as after the HANDLER-OPEN.
+             &value1; := the &condition-t; that was passed to the handler,
+             &mv-count; := 1.
+             *--&STACK; := &value1;.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-inline"><title>Instructions for some inlined
+  functions</title>
+<informaltable id="instr-inline-tab" frame="all">
+ <tgroup cols="3" colsep="1" rowsep="1" align="center">&mnem-desc-sem-header;
+<tbody>
+ <row><entry><literal role="byte">(NOT)</literal></entry>
+      <entry>Inlined call to &not-f;.</entry>
+      <entry>&value1; := not(&value1;), &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(EQ)</literal></entry>
+      <entry>Inlined call to &eq;.</entry>
+      <entry>&value1; := eq(*&STACK;++,&value1;),
+             &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(CAR)</literal></entry>
+      <entry>Inlined call to &car;.</entry>
+      <entry>&value1; := &car;(&value1;), &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(CDR)</literal></entry>
+      <entry>Inlined call to &cdr;.</entry>
+      <entry>&value1; := &cdr;(&value1;), &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(CONS)</literal></entry>
+      <entry>Inlined call to &cons;.</entry>
+      <entry>&value1; := cons(*&STACK;++,&value1;),
+             &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(SYMBOL-FUNCTION)</literal></entry>
+      <entry>Inlined call to &symbol-function;.</entry>
+      <entry>&value1; := &symbol-function;(&value1;),
+             &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(SVREF)</literal></entry>
+      <entry>Inlined call to &svref;.</entry>
+      <entry>&value1; := &svref;(*&STACK;++,&value1;),
+             &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(SVSET)</literal></entry>
+      <entry>Inlined call to <function>(&setf; &svref;</function>.</entry>
+      <entry><replaceable>arg1</replaceable> := *(&STACK;+1),
+             <replaceable>arg2</replaceable> := *(&STACK;+0), &STACK; += 2.
+             &svref;(<replaceable>arg2</replaceable>,&value1;) :=
+                  <replaceable>arg1</replaceable>.
+             &value1; := <replaceable>arg1</replaceable>,
+             &mv-count; := 1.</entry></row>
+ <row><entry><literal role="byte">(LIST &n-r;)</literal></entry>
+      <entry>Inlined call to &list;.</entry>
+      <entry>&value1; := &list;(*(&STACK;+&n-r;-1),...,*(&STACK;+0)),
+             &mv-count; := 1, &STACK; += &n-r;.</entry></row>
+ <row><entry><literal role="byte">(LIST* &n-r;)</literal></entry>
+      <entry>Inlined call to &list-star;.</entry>
+      <entry>&value1; := &list-star;(*(&STACK;+&n-r;-1),...,
+                                     *(&STACK;+0),&value1;),
+             &mv-count; := 1, &STACK; += &n-r;.</entry></row>
+</tbody></tgroup></informaltable>
+</section>
+
+<section id="instr-combo"><title>Combined instructions</title>
+
+<para>The most frequent short sequences of instructions have an
+equivalent combined instruction.  They are only present for space and
+speed optimization. The only exception is
+<literal role="byte">FUNCALL&amp;SKIP&amp;RETGF</literal>, which is needed for
+generic functions.</para>
+
+<informaltable id="instr-combo-tab" frame="all">
+ <tgroup cols="2" colsep="1" rowsep="1" align="center">
+ <thead><row><entry>mnemonic</entry><entry>equivalent</entry></row></thead>
+<tbody>
+ <row><entry><literal role="byte">(NIL&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(NIL) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(T&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(T) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CONST&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(CONST &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOADI&amp;PUSH &k1-r; &k2-r; &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOADI &k1-r; &k2-r; &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOADC&amp;PUSH &n-r; &m-r;)</literal></entry>
+      <entry><literal role="byte">(LOADC &n-r; &m-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOADV&amp;PUSH &k-r; &m-r;)</literal></entry>
+      <entry><literal role="byte">(LOADV &k-r; &m-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(POP&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(POP) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(GETVALUE&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(GETVALUE &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(JSR&amp;PUSH &lab-r;)</literal></entry>
+      <entry><literal role="byte">(JSR &lab-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(COPY-CLOSURE&amp;PUSH &m-r; &n-r;)</literal></entry>
+      <entry><literal role="byte">(COPY-CLOSURE &m-r; &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL&amp;PUSH &k-r; &n-r;)</literal></entry>
+      <entry><literal role="byte">(CALL &k-r; &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL1&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(CALL1 &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL2&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(CALL2 &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS1&amp;PUSH &b-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS1 &b-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS2&amp;PUSH &b-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS2 &b-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLSR&amp;PUSH &m-r; &n-r;)</literal></entry>
+      <entry><literal role="byte">(CALLSR &m-r; &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLC&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(CALLC) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLCKEY&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(CALLCKEY) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(FUNCALL&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(FUNCALL &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(APPLY&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(APPLY &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CAR&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(CAR) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CDR&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(CDR) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CONS&amp;PUSH)</literal></entry>
+      <entry><literal role="byte">(CONS) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LIST&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LIST &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LIST*&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LIST* &n-r;) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(NIL&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(NIL) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(T&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(T) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;STOREC &k-r; &n-r; &m-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &k-r;) (STOREC &n-r; &m-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS1&amp;STORE &b-r; &k-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS1 &b-r;) (STORE &k-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS2&amp;STORE &b-r; &k-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS2 &b-r;) (STORE &k-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLSR&amp;STORE &m-r; &n-r; &k-r;)</literal></entry>
+      <entry><literal role="byte">(CALLSR &m-r; &n-r;) (STORE &k-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;CDR&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CDR) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;CONS&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;+1) (CONS) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;INC&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CALL1 #'1+) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;DEC&amp;STORE &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CALL1 #'1-) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;CAR&amp;STORE &m-r; &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &m-r;) (CAR) (STORE &n-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL1&amp;JMPIF &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALL1 &n-r;) (JMPIF &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL1&amp;JMPIFNOT &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALL1 &n-r;) (JMPIFNOT &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL2&amp;JMPIF &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALL2 &n-r;) (JMPIF &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALL2&amp;JMPIFNOT &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALL2 &n-r;) (JMPIFNOT &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS1&amp;JMPIF &b-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS1 &b-r;) (JMPIF &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS1&amp;JMPIFNOT &b-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS1 &b-r;) (JMPIFNOT &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS2&amp;JMPIF &b-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS2 &b-r;) (JMPIF &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLS2&amp;JMPIFNOT &b-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALLS2 &b-r;) (JMPIFNOT &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLSR&amp;JMPIF &m-r; &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALLSR &m-r; &n-r;) (JMPIF &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CALLSR&amp;JMPIFNOT &m-r; &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(CALLSR &m-r; &n-r;) (JMPIFNOT &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;JMPIF &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (JMPIF &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;JMPIFNOT &n-r; &lab-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (JMPIFNOT &lab-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;CAR&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CAR) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;CDR&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CDR) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;INC&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CALL1 #'1+) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(LOAD&amp;DEC&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(LOAD &n-r;) (CALL1 #'1-) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CONST&amp;SYMBOL-FUNCTION &n-r;)</literal></entry>
+      <entry><literal role="byte">(CONST &n-r;) (SYMBOL-FUNCTION)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CONST&amp;SYMBOL-FUNCTION&amp;PUSH &n-r;)</literal></entry>
+      <entry><literal role="byte">(CONST &n-r;) (SYMBOL-FUNCTION) (PUSH)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(CONST&amp;SYMBOL-FUNCTION&amp;STORE &n-r; &k-r;)</literal></entry>
+      <entry><literal role="byte">(CONST &n-r;) (SYMBOL-FUNCTION) (STORE &k-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(APPLY&amp;SKIP&amp;RET &n-r; &k-r;)</literal></entry>
+      <entry><literal role="byte">(APPLY &n-r;) (SKIP&amp;RET &k-r;)</literal></entry>
+  </row>
+ <row><entry><literal role="byte">(FUNCALL&amp;SKIP&amp;RETGF &n-r; &k-r;)</literal></entry>
+      <entry><literal role="byte">(FUNCALL &n-r;) (SKIP&amp;RETGF &k-r;)</literal></entry>
+  </row>
+</tbody></tgroup></informaltable>
+
+</section>
+
+<section id="instr-shortcut"><title>Shortcut instructions</title>
+
+<para>There are special one-byte instructions (without explicit
+operands) for the following frequent instructions:</para>
+
+<informaltable id="instr-shortcut-tab" frame="all">
+ <tgroup cols="2" colsep="1" rowsep="1" align="center">
+ <thead><row><entry>mnemonic</entry><entry>operand range</entry></row></thead>
+<tbody>
+ <row><entry><literal role="byte">(LOAD &n-r;)</literal></entry>
+      <entry>0 &le; &n-r; &lt; 15</entry></row>
+ <row><entry><literal role="byte">(LOAD&amp;PUSH &n-r;)</literal></entry>
+      <entry>0 &le; &n-r; &lt; 25</entry></row>
+ <row><entry><literal role="byte">(CONST &n-r;)</literal></entry>
+      <entry>0 &le; &n-r; &lt; 21</entry></row>
+ <row><entry><literal role="byte">(CONST&amp;PUSH &n-r;)</literal></entry>
+      <entry>0 &le; &n-r; &lt; 30</entry></row>
+ <row><entry><literal role="byte">(STORE &n-r;)</literal></entry>
+      <entry>0 &le; &n-r; &lt; 8</entry></row>
+</tbody></tgroup></informaltable>
+
+</section>
+</section>
+
+<section id="bytecode-design"><title>Bytecode Design</title>
+
+<para>This section offers some insight into bytecode design in the form
+ of questions and answers.</para>
+
+<section id="byte-when-add-q"><title>When to add a new bytecode?</title>
+ <abstract><title>Question:</title>
+  <para>Does it make sense to define a new bytecode instruction for
+   &restart-case;? Why? Why not?</para></abstract>
+ <simplesect id="byte-when-add-a"><title>Answer: Is it speed critical?</title>
+  <para>&restart-case; is a glorified &let; binding
+   for <varname>SYSTEM::*ACTIVE-RESTARTS*</varname> and could well profit
+   from a separate bytecode: it would make it non-&consing;.
+   (Remember that &restart-t;s have dynamic extent and therefore do not
+   really need to be heap allocated.)</para>
+  <para>The reason &handler-bind; has its own bytecodes and
+   &restart-case; does not is that &handler-bind; can occur in inner
+   computation loops, whereas &restart-case; occurs only as part of
+   user-interface programming and therefore not in inner loops where its
+   consing could hurt much.</para></simplesect></section>
+<section id="byte-jmptail-q">
+  <title>Why <link linkend="instr-jump">JMPTAIL</link>?</title>
+  <abstract><title>Question:</title>
+   <para>Consider this function and its disassembly:<programlisting>
+ (defun foo (x y) (if (or (= x 0) (= y 0)) (+ x y) (foo y (1- x))))
+ (&disassemble; 'foo)
+8     (LOAD&amp;PUSH 1)
+9     (LOAD&amp;DEC&amp;PUSH 3)
+11    (JMPTAIL 2 5 L0)
+    </programlisting>
+    Why are the arguments pushed onto the &STACK;, just to be popped off of
+    it during the <literal role="byte">JMPTAIL</literal>?
+    Why not a sequence of <literal role="byte">LOAD</literal>,
+    <literal role="byte">STORE</literal> and
+    <literal role="byte">SKIP</literal> instructions
+    followed by a <literal role="byte">JMP</literal>?
+ </para></abstract>
+ <simplesect id="byte-jmptail-a">
+  <title>Answer: This is a shortcut for the most common use</title>
+  <para>Using <literal role="byte">JMPTAIL</literal> requires 3
+   instructions, <literal role="byte">JMP</literal> requires more.
+   When <literal role="byte">JMPTAIL</literal> needs to be called, we
+   usually have some stuff close to the top of the &STACK; which will
+   become the new arguments, and some junk between these new arguments
+   and the closure object.  <literal role="byte">JMPTAIL</literal>
+   removes the junk.  <literal role="byte">JMPTAIL</literal> is a
+   convenient shortcut which shortens the bytecode - because typically
+   one would really have to clean-up the &STACK; by hand or make the
+   calculations in <filename role="clisp-cvs">src/compiler.lisp</filename>
+   more complicated.</para></simplesect></section>
+
+</section>
+
+</chapter>
+</part>

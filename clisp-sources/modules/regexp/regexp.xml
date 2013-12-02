@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="regexp-mod"><title>POSIX Regular Expressions</title>
+
+<para>The &regexp-pac; module implements the
+ <ulink url="regexp.html">POSIX regular expressions</ulink>
+by calling the standard &c-lang; system facilities.
+The syntax of these &reg-exp;s is described in many places,
+such as your local <filename role="unix">regex.h</filename> manual
+and &emacs; info pages.</para>
+&base-module;
+<simpara>When this module is present, &features-var;
+ contains the symbol <constant>:REGEXP</constant>.</simpara>
+
+<section id="regexp-api"><title>Regular Expression API</title>
+<variablelist id="re-api">
+<varlistentry id="re-match"><term><code>(&re-match; &pattern-r;
+   &string-r; &key-amp; (&start-k; 0) &end-k; &re-cflags-opts;
+   &re-eflags-opts;)</code></term>
+ <listitem><para>This macro returns as first value a &match-t; structure
+  containing the indices of the start and end of the first match for the
+  &reg-exp; &pattern-r; in &string-r;; or &nil; if there is no match.
+  Additionally, a &match-t; structure is returned for every matched
+  <literal>"\(...\)"</literal> group in &pattern-r;, in the
+  order that the open parentheses appear in &pattern-r;.
+  If &start-r; is non-&nil;, the search starts at that index in &string-r;.
+  If &end-r; is non-&nil;, only <code>(&subseq; &string-r; &start-r;
+  &end-r;)</code> is considered.
+  <example id="ex-re-match"><title>&re-match;</title>
+   <programlisting>
+(&re-match; "quick" "The quick brown fox jumped quickly.")
+<computeroutput>#S(&match-t; :START 4 :END 9)</computeroutput>
+(&re-match; "quick" "The quick brown fox jumped quickly." :start 8)
+<computeroutput>#S(&match-t; :START 27 :END 32)</computeroutput>
+(&re-match; "quick" "The quick brown fox jumped quickly." :start 8 :end 30)
+<computeroutput>&nil;</computeroutput>
+(&re-match; "\\([a-z]*\\)[0-9]*\\(bar\\)" "foo12bar")
+<computeroutput>#S(&match-t; :START 0 :END 8)</computeroutput> ;
+<computeroutput>#S(&match-t; :START 0 :END 3)</computeroutput> ;
+<computeroutput>#S(&match-t; :START 5 :END 8)</computeroutput>
+</programlisting></example>
+</para></listitem></varlistentry>
+
+<varlistentry id="re-match-access">
+ <term><code>(&re-match-start; &match-r;)</code></term>
+ <term><code>(&re-match-end; &match-r;)</code></term>
+ <listitem><simpara>Return the start and end the &match-r;; &setf;-able.
+</simpara></listitem></varlistentry>
+
+<varlistentry id="re-match-string">
+ <term><code>(&re-match-string; &string-r; &match-r;)</code></term>
+ <listitem><simpara>Extracts the substring of &string-r; corresponding
+   to the given pair of start and end indices of &match-r;.
+   The result is shared with &string-r;.
+   If you want a &fresh; &string-t;, use &copy-seq; or
+   &coerce; to &simple-string-t;.</simpara></listitem></varlistentry>
+
+<varlistentry id="re-regexp-quote"><term><code>(&re-regexp-quote;
+   &string-r; &optional-amp; <replaceable>extended</replaceable>)</code></term>
+ <listitem><para>This function returns a &reg-exp; &string-t;
+  that matches exactly &string-r; and nothing else.
+  This allows you to request an exact string match when calling a
+  function that wants a &reg-exp;.
+  <example id="ex-re-quote"><title>&re-regexp-quote;</title>
+   <programlisting language="lisp">
+(regexp-quote "^The cat$")
+<computeroutput>"\\^The cat\\$"</computeroutput>
+  </programlisting></example>
+  One use of &re-regexp-quote; is to combine an exact string match with
+  context described as a &reg-exp;.
+  When <replaceable>extended</replaceable> is non-&nil;, also
+  quote <keysym>#\+</keysym> and <keysym>#\?</keysym>.
+</para></listitem></varlistentry>
+
+<varlistentry id="re-regexp-compile"><term><code>(&re-regexp-compile;
+   &string-r; &key-amp; &re-cflags-opts;)</code></term>
+ <listitem><simpara>Compile the &reg-exp; &string-r; into an
+  object suitable for &re-regexp-exec;.</simpara></listitem></varlistentry>
+
+<varlistentry id="re-regexp-exec"><term><code>(&re-regexp-exec;
+     &pattern-r; &string-r; &key-amp; (&start-k; 0) &end-k;
+     &re-eflags-opts;)</code></term>
+ <listitem><simpara>Execute the &pattern-r;, which must be a compiled
+   &reg-exp; returned by &re-regexp-compile;, against the
+   appropriate portion of the &string-r;.</simpara>
+  <simpara>Negative &end-r; means <code>(&plus; (&length;
+    &string-r;) &end-r;)</code></simpara>
+  <simpara>Returns &match-t; structures as multiple values (one for each
+   subexpression which successfully matched and one for the whole pattern),
+   unless <literal>:BOOLEAN</literal> was non-&nil;, in which case
+   return &t; as an indicator of success, but do not allocate anything.
+</simpara></listitem></varlistentry>
+
+<varlistentry id="re-regexp-split"><term><code>(&re-regexp-split;
+     &pattern-r; &string-r; &key-amp; (&start-k; 0) &end-k;
+     &re-cflags-opts; &re-eflags-opts;)</code></term>
+ <listitem><simpara>Return a list of substrings of &string-r; (all
+  sharing the structure with &string-r;) separated by &pattern-r; (a
+  &reg-exp; &string-t; or a return value of &re-regexp-compile;)
+ </simpara></listitem></varlistentry>
+
+<varlistentry id="re-with-loop-split"><term><code>(&re-with-loop-split;
+     (&var-r; &stream-r; &pattern-r; &key-amp; (&start-k; 0) &end-k;
+     &re-cflags-opts; &re-eflags-opts;) &body-amp; &body-r;)</code></term>
+ <listitem><simpara>Read lines from &stream-r;, split them with
+  &re-regexp-split; on &pattern-r;, and bind the resulting list to
+  &var-r;.</simpara></listitem></varlistentry>
+
+<varlistentry id="re-cflags"><term>&re-cflags-opts;</term>
+ <listitem><simpara>These options control compilation of a pattern.
+   See <filename role="unix">regex.h</filename> for their meaning.
+</simpara></listitem></varlistentry>
+
+<varlistentry id="re-eflags"><term>&re-eflags-opts;</term>
+ <listitem><simpara>These options constrol execution of a pattern.
+   See <filename role="unix">regex.h</filename> for their meaning.
+</simpara></listitem></varlistentry>
+
+<varlistentry id="re-matcher"><term>&re-matcher;</term>
+ <listitem><simpara>A valid value for &apropos-matcher;.
+   This will work only when your &locale; is &utf-8;
+   because &clisp; uses &utf-8; internally and POSIX constrains
+   <filename role="unix">regex.h</filename> to use the current &locale;.
+</simpara></listitem></varlistentry>
+
+</variablelist></section>
+
+<section id="re-example"><title>Example</title>
+
+<para>The following code computes the number of people who use a
+ particular shell:<programlisting language="lisp">
+#!/usr/local/bin/clisp -C
+(&defpackage; "REGEXP-TEST" (:use "LISP" "REGEXP"))
+(&in-package; "REGEXP-TEST")
+(let ((h (make-hash-table :test #'equal :size 10)) (n 0))
+  (with-open-file (f "/etc/passwd")
+    (with-loop-split (s f ":")
+      (incf (gethash (seventh s) h 0))))
+  (with-hash-table-iterator (i h)
+    (loop (multiple-value-bind (r k v) (i)
+            (unless r (return))
+            (format t "[~d] ~s~30t== ~5:d~%" (incf n) k v)))))
+</programlisting></para>
+
+<para>For comparison, the same can be done by the following &perl;:
+<programlisting language="perl">
+#!/usr/local/bin/perl -w
+
+use diagnostics;
+use strict;
+
+my $IN = $ARGV[0];
+open(INF,"&lt; $IN") || die "$0: cannot read file [$IN]: $!\n;";
+my %hash;
+while (&lt;INF&gt;) {
+  chop;
+  my @all = split($ARGV[1]);
+  my $shell = ($#all &gt;= 6 ? $all[6] : "");
+  if ($hash{$shell}) { $hash{$shell} ++; }
+  else { $hash{$shell} = 1; }
+}
+my $ii = 0;
+for my $kk (keys(%hash)) {
+  print "[",++$ii,"] \"",$kk,"\"  --  ",$hash{$kk},"\n";
+}
+close(INF);
+</programlisting></para>
+</section>
+</section>

@@ -1,0 +1,73 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <langinfo.h> header file. */
+#undef HAVE_LANGINFO_H
+
+/* Define to 1 if you have the `localeconv' function. */
+#undef HAVE_LOCALECONV
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `nl_langinfo' function. */
+#undef HAVE_NL_LANGINFO
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if `int_n_cs_precedes' is member of `struct lconv'. */
+#undef HAVE_STRUCT_LCONV_INT_N_CS_PRECEDES
+
+/* Define to 1 if `int_n_sep_by_space' is member of `struct lconv'. */
+#undef HAVE_STRUCT_LCONV_INT_N_SEP_BY_SPACE
+
+/* Define to 1 if `int_n_sign_posn' is member of `struct lconv'. */
+#undef HAVE_STRUCT_LCONV_INT_N_SIGN_POSN
+
+/* Define to 1 if `int_p_cs_precedes' is member of `struct lconv'. */
+#undef HAVE_STRUCT_LCONV_INT_P_CS_PRECEDES
+
+/* Define to 1 if `int_p_sep_by_space' is member of `struct lconv'. */
+#undef HAVE_STRUCT_LCONV_INT_P_SEP_BY_SPACE
+
+/* Define to 1 if `int_p_sign_posn' is member of `struct lconv'. */
+#undef HAVE_STRUCT_LCONV_INT_P_SIGN_POSN
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS

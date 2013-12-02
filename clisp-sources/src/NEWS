@@ -1,0 +1,4076 @@
+2.38 (2006-01-24)
+=================
+
+User visible changes
+--------------------
+
+* SAVEINITMEM can create standalone executables.
+  Thanks to Frank Buß <fb@frank-buss.de> for the idea.
+  SAVEINITMEM also accepts :NORC argument do disable RC-file loading.
+  See <http://clisp.cons.org/impnotes/image.html> for details.
+
+* POSIX:SYSLOG no longer recognizes "%m" and other formatting instructions.
+  For your safety and security, please do all formatting in Lisp.
+
+* Fixed the OPEN :IF-EXISTS :APPEND bug introduced in 2.37.
+
+* Fixed a crash on woe32 in opening files with names longer than MAX_PATH.
+
+* Module berkeley-db now supports Berkeley DB 4.4.
+
+
+2.37 (2006-01-02)
+=================
+
+User visible changes
+--------------------
+
+* Signal a continuable error when an already opened file is opened again,
+  unless both streams are read-only.
+
+* SOCKET-SERVER now accepts :BACKLOG and :INTERFACE arguments.
+  The first (optional) argument should be the port number or NIL.
+  Use (SOCKET-SERVER NIL :INTERFACE SOCKET) instead of (SOCKET-SERVER SOCKET).
+  Thanks to Tomas Zellerin <zellerin@gmail.com>.
+  See <http://clisp.cons.org/impnotes/socket.html#sose> for details.
+
+* EXT:HTTP-PROXY now uses the environment variable "http_proxy", not
+  "HTTP_PROXY", like curl does, to avoid confusing it with CGI arguments.
+
+* OPEN :DIRECTION :OUTPUT now creates write-only handles and treats
+  named pipes correctly.
+
+* Fixed EXT:SETENV on non-POSIX systems (woe32 and BSD derivatives).
+
+* Fixed a bug in EXT:! on 64-bit platforms.
+  Thanks to Dr. Werner Fink <werner@suse.de>.
+
+
+2.36 (2005-12-04)
+=================
+
+User visible changes
+--------------------
+
+* Infrastructure:
+  + Top-level configure now accepts the option --enable-maintainer-mode
+    that affects autoconf-related Makefile targets.  The default value
+    is determined based on the presence of the CVS directories.
+  + When libsigsegv is not found, print instructions on getting/building
+    libsigsegv and bail out; override with --ignore-absence-of-libsigsegv.
+  + When --with-dynamic-ffi is supplied, but the FFI fails to build, abort.
+  + When --with-readline is supplied, but GNU readline is not found, abort.
+  + makemake no longer checks with_module_* variables.
+
+* New function EXT:OPEN-HTTP and macro EXT:WITH-HTTP-INPUT.
+  See <http://clisp.cons.org/impnotes/macros3.html#open-http> for details.
+
+* New declaration EXT:NOTSPECIAL undoes the effects of DEFVAR and DEFCONSTANT.
+  See <http://clisp.cons.org/impnotes/declarations.html#notspec-decl>
+  for details.
+
+* Function EXT:CLHS is now deprecated in favor of DESCRIBE, which can now
+  point your web browser to the ANSI CL and CLISP-specific documentation.
+  See <http://clisp.cons.org/impnotes/environment-dict.html#describe>
+  for details.
+
+* FFI modules can now take advantage of autoconf feature detection.
+  See <http://clisp.cons.org/impnotes/dffi.html#ffi-guard> for details.
+
+* New FFI macro FFI:DEF-C-CONST.
+  See <http://clisp.cons.org/impnotes/dffi.html#def-c-const> for details.
+
+* New charset BASE64 encodes arbitrary byte sequences with strings of
+  printable ASCII characters (4 characters per 3 bytes).
+  See <http://clisp.cons.org/impnotes/encoding.html#base64> for details.
+
+* New module readline offers some advanced readline and history features.
+  It is a BASE module and is available when both FFI and readline are present.
+
+* SOCKET:SOCKET-SERVICE-PORT is now deprecated in favor of OS:SERVICE.
+  See <http://clisp.cons.org/impnotes/syscalls.html#service> for details.
+
+* New SETF-able functions POSIX:GETUID, POSIX:GETGID, POSIX:GETEUID,
+  POSIX:GETEGID.
+  New functions POSIX:GROUP-INFO and POSIX:STRING-TIME.
+  Function POSIX:USER-DATA is renamed to POSIX:USER-INFO.
+  See <http://clisp.cons.org/impnotes/syscalls.html> for details.
+
+* New NEW-CLX demo: foch.lisp draws fractal snowflakes.
+  Implemented XLIB:SET-MODIFIER-MAPPING, XLIB:KEYSYM->KEYCODES,
+  XLIB:ACCESS-HOSTS, XLIB:ADD-ACCESS-HOST, XLIB:REMOVE-ACCESS-HOST,
+  XLIB:CHANGE-KEYBOARD-CONTROL, XLIB:CHANGE-KEYBOARD-MAPPING,
+  XLIB:KEYBOARD-MAPPING, XLIB:KEYSYM-NAME, XLIB:KEYCODE->CHARACTER,
+  XLIB:SHAPE-EXTENTS, XLIB:SHAPE-RECTANGLES, XLIB:DEFAULT-KEYSYM-INDEX.
+  Use MAP instead of ELT for sequence access in NEW-CLX.
+
+* ANSI CL compliance issues:
+  + DEFPACKAGE options :SHADOWING-IMPORT-FROM, :USE, :IMPORT-FROM
+    accept package designators, not just package names.
+  + ENCODE-UNIVERSAL-TIME is now the perfect inverse for DECODE-UNIVERSAL-TIME.
+
+* The command line option -v now affects *LOAD-ECHO* also.
+  See <http://clisp.cons.org/clisp.html#opt-v> for details.
+
+* When a CLISP process is killed, clean-up is always executed.
+
+* DEFCLASS now permits user-defined :ALLOCATION arguments.
+
+* Fixed (FUNCTION-LAMBDA-EXPRESSION #'(SETF FOO)) on compiled functions.
+
+* Fixed re-exporting symbols from POSIX to EXT.
+
+* Fixed module rawsock on platforms with non-trivial struct sockaddr layout.
+  Functions that take a BUFFER argument, also take :START and :END arguments.
+  Renamed RAWSOCK:LISTEN to RAWSOCK:SOCK-LISTEN to avoid a conflict with CL.
+  New functions RAWSOCK:PROTOCOL, RAWSOCK:NETWORK, RAWSOCK:GETADDRINFO,
+  RAWSOCK:GETNAMEINFO.
+  See <http://clisp.cons.org/impnotes/rawsock.html> for details.
+
+* Fixed module postgresql logging behavior.
+
+* Fixed clisp.h generation to conform to the internal definitions.
+
+
+2.35 (2005-08-29)
+=================
+
+User visible changes
+--------------------
+
+* SOCKET:SOCKET-STREAM-SHUTDOWN does not call CLOSE anymore,
+  just shutdown(2) - as it has always been documented.
+  It now also works on raw sockets, thus RAWSOCK:SHUTDOWN has been removed.
+  See <http://clisp.cons.org/impnotes.html#sost-shut> and
+  <http://clisp.cons.org/impnotes.html#rawsock> for details.
+
+* When the command line option -E receives an invalid encoding,
+  ISO-8859-1 is used instead. [It was ASCII (for *FOREIGN-ENCODING*) or
+  UTF-8 (for all other encodings) before.]
+  Rationale: this is a 1:1 that corresponds to CLISP CODE-CHAR/CHAR-CODE
+  and avoids spurious errors in DIRECTORY on startup.
+
+* New function EXT:COMPILED-FILE-P - checks whether the file is a
+  CLISP-compiled file with a compatible bytecode format.
+  See <http://clisp.cons.org/impnotes.html#compiled-file-p> for details.
+
+* New functions EXT:CHAR-INVERTCASE, EXT:STRING-INVERTCASE and
+  EXT:NSTRING-INVERTCASE invert case of characters and strings.
+  See <http://clisp.cons.org/impnotes.html#char-invertcase> and
+  <http://clisp.cons.org/impnotes.html#string-invertcase> for details.
+
+* New function POSIX:STREAM-OPTIONS calls fcntl(2).
+  See <http://clisp.cons.org/impnotes.html#fcntl> for details.
+
+* Explicitly close all possible file descriptors before exec().
+
+* Danish translations of the user interface messages have been added.
+  Thanks to Dennis Decker Jensen <dennisdjensen@tiscali.dk>.
+
+
+
+2.34 (2005-07-20)
+=================
+
+Important notes
+---------------
+
+* All .fas files generated by previous CLISP versions are invalid and
+  must be recompiled.  This is caused by the addition of MOP, the DEFSETF
+  fixes, and the TRANSLATE-PATHNAME and MAKE-HASH-TABLE enhancements.
+  Set CUSTOM:*LOAD-OBSOLETE-ACTION* to :COMPILE to automate this.
+  See <http://clisp.cons.org/impnotes.html#loadfile> for details.
+
+* The name of the Run-Control file has changed from '_clisprc' to
+  '.clisprc' on all platforms.
+  If you are using woe32, please rename your Run-Control file.
+
+* Modules i18n, regexp, and syscalls are now present even in the base
+  linking set.  Do not pass, e.g., "--with-module=regexp" to configure.
+
+User visible changes
+--------------------
+
+* The CLOS MetaObject Protocol is supported:
+  + New class METAOBJECT.
+  + Classes:
+    New classes
+      STANDARD-READER-METHOD, STANDARD-WRITER-METHOD, FORWARD-REFERENCED-CLASS.
+    New functions
+      ENSURE-CLASS.
+    New generic functions
+      CLASS-DIRECT-SUPERCLASSES, CLASS-PRECEDENCE-LIST, CLASS-DIRECT-SLOTS,
+      CLASS-SLOTS, CLASS-DIRECT-DEFAULT-INITARGS, CLASS-DEFAULT-INITARGS.
+    New customizable generic functions
+      For class creation:
+        ENSURE-CLASS-USING-CLASS, VALIDATE-SUPERCLASS,
+        COMPUTE-DIRECT-SLOT-DEFINITION-INITARGS,
+        COMPUTE-CLASS-PRECEDENCE-LIST, COMPUTE-EFFECTIVE-SLOT-DEFINITION,
+        COMPUTE-EFFECTIVE-SLOT-DEFINITION-INITARGS, COMPUTE-SLOTS,
+        COMPUTE-DEFAULT-INITARGS, READER-METHOD-CLASS, WRITER-METHOD-CLASS.
+      For notification about subclasses:
+        CLASS-DIRECT-SUBCLASSES, ADD-DIRECT-SUBCLASS, REMOVE-DIRECT-SUBCLASS.
+  + Generic Functions:
+    New classes
+      FUNCALLABLE-STANDARD-CLASS, FUNCALLABLE-STANDARD-OBJECT.
+    New functions
+      ENSURE-GENERIC-FUNCTION, SET-FUNCALLABLE-INSTANCE-FUNCTION,
+      COMPUTE-EFFECTIVE-METHOD-AS-FUNCTION.
+    New generic functions
+      GENERIC-FUNCTION-NAME, GENERIC-FUNCTION-METHODS,
+      GENERIC-FUNCTION-METHOD-CLASS, GENERIC-FUNCTION-LAMBDA-LIST,
+      GENERIC-FUNCTION-METHOD-COMBINATION,
+      GENERIC-FUNCTION-ARGUMENT-PRECEDENCE-ORDER, GENERIC-FUNCTION-DECLARATIONS.
+    New customizable generic functions
+      ENSURE-GENERIC-FUNCTION-USING-CLASS, COMPUTE-DISCRIMINATING-FUNCTION,
+      COMPUTE-APPLICABLE-METHODS, COMPUTE-APPLICABLE-METHODS-USING-CLASSES.
+  + Methods:
+    New generic functions
+      METHOD-FUNCTION, METHOD-GENERIC-FUNCTION, METHOD-LAMBDA-LIST,
+      METHOD-SPECIALIZERS, ACCESSOR-METHOD-SLOT-DEFINITION.
+    New functions
+      EXTRACT-LAMBDA-LIST, EXTRACT-SPECIALIZER-NAMES.
+  + Method-Combinations:
+    New generic function
+      FIND-METHOD-COMBINATION.
+    New customizable generic function
+      COMPUTE-EFFECTIVE-METHOD.
+  + Slot-Definitions:
+    New classes
+      SLOT-DEFINITION, STANDARD-SLOT-DEFINITION,
+      DIRECT-SLOT-DEFINITION, STANDARD-DIRECT-SLOT-DEFINITION,
+      EFFECTIVE-SLOT-DEFINITION, STANDARD-EFFECTIVE-SLOT-DEFINITION.
+    New generic functions
+      SLOT-DEFINITION-NAME, SLOT-DEFINITION-INITFORM,
+      SLOT-DEFINITION-INITFUNCTION, SLOT-DEFINITION-TYPE,
+      SLOT-DEFINITION-ALLOCATION, SLOT-DEFINITION-INITARGS,
+      SLOT-DEFINITION-READERS, SLOT-DEFINITION-WRITERS,
+      SLOT-DEFINITION-LOCATION.
+    New customizable generic functions
+      DIRECT-SLOT-DEFINITION-CLASS, EFFECTIVE-SLOT-DEFINITION-CLASS.
+  + Specializers:
+    New classes
+      SPECIALIZER, EQL-SPECIALIZER.
+    New generic functions
+      SPECIALIZER-DIRECT-GENERIC-FUNCTIONS, SPECIALIZER-DIRECT-METHODS.
+    New functions
+      EQL-SPECIALIZER-OBJECT, INTERN-EQL-SPECIALIZER.
+    New customizable generic functions
+      ADD-DIRECT-METHOD, REMOVE-DIRECT-METHOD.
+  + Slot access:
+    New generic functions
+      SLOT-VALUE-USING-CLASS, (SETF SLOT-VALUE-USING-CLASS),
+      SLOT-BOUNDP-USING-CLASS, SLOT-MAKUNBOUND-USING-CLASS.
+    New functions
+      STANDARD-INSTANCE-ACCESS, FUNCALLABLE-STANDARD-INSTANCE-ACCESS.
+  + Dependent object notification:
+    New functions
+      MAP-DEPENDENTS.
+    New customizable generic functions
+      ADD-DEPENDENT, REMOVE-DEPENDENT, UPDATE-DEPENDENT.
+  See <http://clisp.cons.org/impnotes.html#mop-chap> for details,
+  and <http://clisp.cons.org/impnotes.html#mop-clisp> for a list
+  of differences between CLISP and "The Art of the Metaobject Protocol".
+  *FEATURES* now contains :MOP.
+
+* CLISP now supports programming with case sensitive symbols. This is the
+  default when CLISP is started with the new command line option "-modern".
+  See <http://clisp.cons.org/impnotes.html#package-case> for details.
+
+* Several new datatypes that manage weak references:
+    WEAK-LIST, WEAK-AND-RELATION, WEAK-OR-RELATION,
+    WEAK-MAPPING, WEAK-AND-MAPPING, WEAK-OR-MAPPING, WEAK-ALIST.
+  New functions
+    - for WEAK-LIST:
+      MAKE-WEAK-LIST, WEAK-LIST-P, WEAK-LIST-LIST, (SETF WEAK-LIST-LIST),
+    - for WEAK-AND-RELATION:
+      MAKE-WEAK-AND-RELATION, WEAK-AND-RELATION-P, WEAK-AND-RELATION-LIST,
+    - for WEAK-OR-RELATION:
+      MAKE-WEAK-OR-RELATION, WEAK-OR-RELATION-P, WEAK-OR-RELATION-LIST,
+    - for WEAK-MAPPING:
+      MAKE-WEAK-MAPPING, WEAK-MAPPING-P, WEAK-MAPPING-PAIR, WEAK-MAPPING-VALUE,
+      (SETF WEAK-MAPPING-VALUE),
+    - for WEAK-AND-MAPPING:
+      MAKE-WEAK-AND-MAPPING, WEAK-AND-MAPPING-P, WEAK-AND-MAPPING-PAIR,
+      WEAK-AND-MAPPING-VALUE, (SETF WEAK-AND-MAPPING-VALUE),
+    - for WEAK-OR-MAPPING:
+      MAKE-WEAK-OR-MAPPING, WEAK-OR-MAPPING-P, WEAK-OR-MAPPING-PAIR,
+      WEAK-OR-MAPPING-VALUE, (SETF WEAK-OR-MAPPING-VALUE),
+    - for WEAK-ALIST:
+      MAKE-WEAK-ALIST, WEAK-ALIST-P, WEAK-ALIST-TYPE, WEAK-ALIST-CONTENTS,
+      (SETF WEAK-ALIST-CONTENTS), WEAK-ALIST-ASSOC, WEAK-ALIST-RASSOC,
+      WEAK-ALIST-VALUE, (SETF WEAK-ALIST-VALUE).
+  See <http://clisp.cons.org/impnotes.html#weak> for details.
+
+* You can create formatting streams of class EXT:FILL-STREAM.
+  See <http://clisp.cons.org/impnotes.html#fill-stream> for details.
+
+* SUBTYPEP can determine subtype relationship and type equivalence much better
+  than it could before.
+
+* When *PRINT-READABLY* is true, symbols are now printed with package marker
+  and vertical bars.
+
+* ANSI CL compliance issues:
+  + Issue <DECLARATION-SCOPE:NO-HOISTING> is implemented: The scope of
+    declarations that do not apply to bindings, such as free SPECIAL, NOTINLINE
+    or OPTIMIZE declarations, includes only the body forms and no longer
+    includes the initforms of the LAMBDA/LET/LET*/MULTIPLE-VALUE-BIND bindings.
+  + Vectors of element type NIL are now strings in all aspects. But the type
+    BASE-STRING does _not_ include vectors of element type NIL.
+  + TYPE-OF now returns STANDARD-CHAR instead of CHARACTER when possible.
+  + The type COMPILED-FUNCTION no longer encompasses generic functions.
+  + TYPE-OF now returns COMPILED-FUNCTION or STANDARD-GENERIC-FUNCTION instead
+    of FUNCTION when possible.
+  + The space character is printed as "#\ " if CUSTOM:*PRINT-SPACE-CHAR-ANSI*
+    is true.
+  + The #<PACKAGE KEYWORD> no longer has the nickname "". The syntax :FOO for
+    keywords still works, but is now special cased in the reader.
+  + Class redefinition with DEFCLASS no longer modifies the previous class if
+    it doesn't have a "proper name".
+  + Class redefinition with DEFCLASS removes accessor methods that have been
+    installed through the previous DEFCLASS definition of the same class.
+  + Generic function redefinition with DEFGENERIC removes methods that have
+    been installed through the previous DEFGENERIC definition of the same
+    function.
+  + The set of qualifiers allowed for methods that are combined with a method
+    combination defined through the short form of DEFINE-METHOD-COMBINATION
+    now includes the name of the method combination instead of the operator.
+  + FIND-METHOD now gives an error if the list of specializers has a wrong
+    length.
+  + ARRAY-TOTAL-SIZE-LIMIT, ARRAY-DIMENSION-LIMIT, ARRAY-RANK-LIMIT are now
+    fixnums.
+  + SHORT-FLOATs whose absolute value is an integer in the range between 10^5
+    and 10^7 are now printed with full precision.
+  + Operations combining rational and floating-point numbers now return a
+    floating-point result if CUSTOM:*FLOATING-POINT-RATIONAL-CONTAGION-ANSI*
+    is true. When the mathematical result in a situation is rational, a
+    warning is issued if CUSTOM:*WARN-ON-FLOATING-POINT-RATIONAL-CONTAGION* is
+    true.
+  + Class redefinition with DEFCLASS now updates existing instances as
+    specified.
+  + An ABORT restart is now always installed.
+  + UPDATE-INSTANCE-FOR-DIFFERENT-CLASS does the required argument checking.
+  + Passing invalid initialization arguments to MAKE-INSTANCE and similar
+    now generates a PROGRAM-ERROR instead of just an ERROR.
+  + Documentation strings are now attached to class objects, not just to
+    their name.
+  + Arrays with total array size 0 are printed in a lossy way if
+    CUSTOM:*PRINT-EMPTY-ARRAYS-ANSI* is true and *PRINT-READABLY* is false.
+  + Allow () to match NIL in destructuring lambda lists.
+  + Documentation strings at a place where only declarations and forms are
+    allowed now give a warning, not an error.
+  + LAST, BUTLAST and NBUTLAST check their list argument for circularity.
+  + Different LOAD-TIME-VALUE forms that are EQUAL but not EQ are no longer
+    coalesced by COMPILE-FILE.
+  + DEFSETF lambda-lists now support &ENVIRONMENT.
+  + DEFSETF lambda-lists are no longer destructuring lambda-lists.
+  + NAMESTRING no longer accepts an optional second argument.
+  + SETF of VALUES now uses only the first value of each subform.
+  + SPECIAL declarations of variables are now correctly respected inside
+    macro expanders defined through MACROLET within the declaration's scope.
+  + (EXPORT NIL), (UNEXPORT NIL), (IMPORT NIL), (SHADOWING-IMPORT NIL),
+    (SHADOW NIL) are now nops.
+  + An attempt to create a condition from an invalid condition designator now
+    always results in a TYPE-ERROR being signalled.
+  + The reader's errors are now of type READER-ERROR when they should be.
+  + READ-DELIMITED-LIST now returns NIL when *READ-SUPPRESS* is true.
+  + Printing of multidimensional arrays now respects *PRINT-LEVEL*.
+  + As required by 19.2.3, *DEFAULT-PATHNAME-DEFAULTS* is merged into
+    pathnames before accessing the file system.
+  + LOGICAL-PATHNAME now gives an error if the argument string does not
+    contain a host specification.
+  + The PRINT-UNREADABLE macro prints extraneous spaces if
+    CUSTOM:*PRINT-UNREADABLE-ANSI* is true.
+  + In the #n= and #n# reader syntax, the integer n may now be larger than
+    7 digits.
+  + IN-PACKAGE forms with constant arguments are no longer executed by the
+    compiler if they occur in a non-null lexical environment.
+  + COMPILE-FILE now always returns the TRUENAME of its output file.
+  + GET-SETF-EXPANSION now accepts NIL as the environment argument to
+    mean null lexical environment
+  Thanks to Paul F. Dietz <dietz@dls.net> and his ANSI compliance
+  suite, which helped detect some of these deficiencies.
+  Thanks to Yuji Minejima <ggb01164@nifty.ne.jp> and his ANSI compliance
+  suite, which helped detect some of these deficiencies.
+
+* Global error handlers can now be installed and removed using
+  EXT:SET-GLOBAL-HANDLER, EXT:WITHOUT-GLOBAL-HANDLERS,
+  and -on-error command line option.
+  See <http://clisp.cons.org/impnotes.html#global-handler> and
+  <http://clisp.cons.org/clisp.html#opt-on-error> for details.
+
+* TRANSLATE-PATHNAME and TRANSLATE-LOGICAL-PATHNAME accept a new keyword
+  argument :ABSOLUTE which makes them convert their return values to
+  absolute pathnames.
+  See <http://clisp.cons.org/impnotes.html#translate-pathname> and
+  <http://clisp.cons.org/impnotes.html#translate-logpath> for details.
+
+* New function EXT:ABSOLUTE-PATHNAME.
+  See <http://clisp.cons.org/impnotes.html#absolute-pathname> for details.
+
+* New function EXT:ELASTIC-NEWLINE and new FORMAT directive "~.".
+  See <http://clisp.cons.org/impnotes.html#elastic-newline>
+  and <http://clisp.cons.org/impnotes.html#format-dot> for details.
+  Through this function, CLISP no longer produces spurious blank lines when
+  a program uses the convention of printing a #\Newline before each line.
+
+* TRACE has a new option :MAX-DEPTH, that is useful to avoid infinite
+  recursions in the tracer.
+  See <http://clisp.cons.org/impnotes.html#trace> for details.
+
+* The function LENGTH and a few other sequence functions now signal a
+  TYPE-ERROR when a circular list has been given as argument.
+
+* Function UPGRADED-COMPLEX-PART-TYPE is now as precise as possible.
+  See <http://clisp.cons.org/impnotes.html#ucpt> for details.
+
+* In non-interactive batch mode, *ERROR-OUTPUT* now uses the system's
+  standard error stream, instead of the standard output stream.
+
+* The macros MUFFLE-CERRORS, APPEASE-CERRORS and EXIT-ON-ERROR now treat
+  CONTINUE restarts which require interactive user intervention like other
+  restarts. Only non-interactive CONTINUE restarts are silently invoked.
+
+* LOAD :OBSOLETE-ACTION can now also be :COMPILE to automatically
+  recompile the obsolete *.fas file.
+  LOAD can now ignore erroneous forms using SKIP and STOP restarts.
+  See <http://clisp.cons.org/impnotes.html#loadfile> for details.
+
+* References from within macros defined through MACROLET to variables or
+  functions defined in the lexical environment outside the MACROLET form
+  now signal an error. Previously, this resulted in undefined behavior.
+
+* The FFI recognizes the c-type declaration (FFI:C-POINTER <c-type>) to
+  handle references without conversion to/from Lisp structures.
+  See <http://clisp.cons.org/impnotes.html#c-pointer> for details.
+
+* The FFI variable FFI:*FOREIGN-ENCODING* can now be a multibyte encoding.
+  The warning "*FOREIGN-ENCODING*: reset to ASCII" at startup is gone.
+
+* New FFI constructor functions FFI:FOREIGN-VARIABLE and FFI:FOREIGN-FUNCTION,
+  more operators are now exported (FFI:FOREIGN-VALUE, FFI:PARSE-C-TYPE).
+  See <http://clisp.cons.org/impnotes.html#dffi-make-var>
+  and <http://clisp.cons.org/impnotes.html#dffi-make-func> for details.
+
+* FFI macro FFI:C-LINES can now be used to fine-tune
+  initialization and finalization.
+  See <http://clisp.cons.org/impnotes.html#c-lines> for details.
+
+* New FFI function FFI:CLOSE-FOREIGN-LIBRARY can be used to unload a library.
+  See <http://clisp.cons.org/impnotes.html#dffi-close-lib> for details.
+
+* New FFI low-level accessor FFI:MEMORY-AS.
+  See <http://clisp.cons.org/impnotes.html#memory-as> for details.
+
+* Foreign functions and variables can now be documented using the
+  :DOCUMENTATION option to FFI:DEF-CALL-OUT and FFI:DEF-C-VAR.
+
+* Buffered streams now are suitable for interactive streams. It is no longer
+  necessary to use :BUFFERED NIL to avoid blocking in various situations.
+
+* Function EXT:READ-BYTE-SEQUENCE takes a new keyword argument :INTERACTIVE.
+  See <http://clisp.cons.org/impnotes.html#rd-by-seq> for details.
+
+* Methods on GRAY:STREAM-READ-BYTE-SEQUENCE and GRAY:STREAM-WRITE-BYTE-SEQUENCE
+  now need to accept a second optional argument.
+
+* The possible values of the :WEAK argument of MAKE-HASH-TABLE are changed:
+  Use :KEY-AND-VALUE instead of :EITHER, :KEY-OR-VALUE instead of :BOTH now.
+
+* The :LIBRARY option argument to EXT:DEF-CALL-OUT and EXT:DEF-C-VAR is now
+  evaluated (i.e., it can now be a variable) and may take a value of
+  :DEFAULT and :NEXT in addition to being a string as before.
+  See <http://clisp.cons.org/impnotes.html#def-c-var> and
+  <http://clisp.cons.org/impnotes.html#def-call-out> for details.
+
+* New user variable CUSTOM:*PRINT-SYMBOL-PACKAGE-PREFIX-SHORTEST*
+  allows using the shortest package (nick)name as the symbol prefix.
+  See <http://clisp.cons.org/impnotes.html#pr-sym-pack-prefix> for details.
+
+* The user commands can now be extended using CUSTOM:*USER-COMMANDS*.
+  See <http://clisp.cons.org/impnotes.html#user-commands> for details.
+
+* Initialization and finalization of the CLISP process can now be
+  augmented with CUSTOM:*INIT-HOOKS* and CUSTOM:*FINI-HOOKS*.
+  See <http://clisp.cons.org/impnotes.html#init-hooks> and
+  <http://clisp.cons.org/impnotes.html#fini-hooks> for details.
+
+* SET functions (like UNION et al) are now much faster on large lists.
+
+* The second, optional argument of EXT:SPECIAL-VARIABLE-P can no longer be T;
+  please use (THE-ENVIRONMENT) instead.
+
+* New function EXT:FEATUREP - the run-time version of read-time #+/#-.
+  See <http://clisp.cons.org/impnotes.html#featurep> for details.
+
+* Bug fixes:
+  + The interpreter no longer executes the body of (EVAL-WHEN (COMPILE) ...)
+    forms.
+  + Fixes to internationalized error messages.
+  + When an interpreted INITIALIZE-INSTANCE method uses CALL-NEXT-METHOD with
+    a modified argument list, MAKE-INSTANCE could in some cases initialize
+    the new object three times instead of just once.
+  + Fixed a compiler bug that could lead to incorrect code when a LAMBDA
+    with SPECIAL-declared optional variables was compiled inline and the
+    initforms of the optional variables depended on the values of the previous
+    optional variables.
+  + Passing a package as second argument of RENAME-PACKAGE led to an
+    unjustified error.
+  + Passing a displaced vector as argument to REVERSE could lead to an
+    unjustified error.
+  + FRESH-LINE did not work in some situations.
+  + Fixed ATANH on complex numbers.
+  + The macros EXT:LETF and EXT:LETF* now work correctly on symbol-macros.
+  + Fixed a spurious crash of MULTIPLE-VALUE-SETQ in interpreted code.
+  + Fixed a crash of (COPY-READTABLE NIL some-readtable).
+  + Fixed a crash when using a hash-table as hash-table key.
+  + Fixed a crash triggered by the READ-BYTE function on streams with
+    element type ([UN]SIGNED-BYTE n), 24 < n < 32, on big-endian platforms.
+  + Fixed a crash that occurred on glibc platforms when writing Unicode
+    characters in the range #\U000E0000..#\U000E007F on a stream with an
+    encoding other than UTF-8.
+  + An invalid bignum could be returned by GET-INTERNAL-RUN-TIME on 64-bit
+    platforms.
+  + Third party code walkers can now handle HANDLER-BIND et al.
+
+* Woe32 distribution now comes with a binary driver clisp.exe.
+  Do not copy it anywhere - create a shortcut to it instead!
+  Use install.bat to automate shortcut creation.
+
+Modules
+-------
+
+* New module matlab interfaces to <http://www.mathworks.com/products/matlab/>
+  and allows complicated matrix computations.
+  See <http://clisp.cons.org/impnotes.html#matlab> for details.
+
+* New module rawsock offers low-level socket access.
+  Thanks to Fred and Don Cohens.
+  See <http://clisp.cons.org/impnotes.html#rawsock> for details.
+
+* New module zlib interfaces to <http://www.zlib.org> and allows
+  compression and uncompression of vectors.
+  See <http://clisp.cons.org/impnotes.html#zlib> for details.
+
+* New module i18n now contains the GNU gettext interface as well as
+  other functionality for Lisp program internationalization.
+  See <http://clisp.cons.org/impnotes.html#i18n-mod> for details.
+
+* New module PARI interfaces to <http://pari.math.u-bordeaux.fr/>.
+  See <http://clisp.cons.org/impnotes.html#pari> for details.
+
+* Module syscalls is significantly expanded.
+  See <http://clisp.cons.org/impnotes.html#syscalls> for details.
+
+* Module berkeley-db is vastly expanded.
+  See <http://clisp.cons.org/impnotes.html#berkeley-db> for details.
+  Added support for Berkeley DB 4.3.
+
+* Modules now have an exit function.
+  See <http://clisp.cons.org/impnotes.html#modexit> for details.
+
+Portability
+-----------
+
+* Heaps and memory images larger than 4 GB are now supported on 64-bit
+  platforms.
+
+* Support files larger than 2 GB or 4 GB also on Windows.
+
+* Weak pointers now also work on platforms without mmap().
+
+* Weak hash tables now also work on platforms without mmap().
+
+* Dynamic modules now work on woe32 too.
+
+* On most 64-bit platforms, fixnums are now 49 bits wide (including the sign
+  bit), instead of 33 bits wide.
+
+
+
+2.33.2 (2004-06-02)
+===================
+
+Portability
+-----------
+
+* Support for the Linux/x86 distributions called Redhat Fedora and Redhat
+  Enterprise Linux.
+
+
+2.33.1 (2004-05-22)
+===================
+
+User visible changes
+--------------------
+
+* Bug fixes:
+  + The return value of ASINH was always rounded to a SINGLE-FLOAT.
+  + The return value of NSTRING-UPCASE, NSTRING-DOWNCASE, NSTRING-CAPITALIZE,
+    WRITE-STRING, WRITE-LINE, when called with a displaced string as argument,
+    was wrong.
+  + Some cases of ,@ inside doubly-nested backquote led to an unjustified
+    error.
+
+Portability
+-----------
+
+* Improved portability for Solaris/SPARC64 in 64-bit mode.
+
+* Buildable with GCC-3.4.
+
+* Fixed a bug in (ASH x MOST-NEGATIVE-FIXNUM) on some platforms.
+
+* Fixed a bug in (SIGNUM negative-single-float) on 64-bit platforms.
+
+* Fixed a bug in (LOGAND fixnum bignum), (LOGNAND fixnum bignum),
+  (LOGANDC2 fixnum bignum), (LOGANDC1 bignum fixnum) on some rare platforms.
+
+
+2.33 (2004-03-17)
+=================
+
+Important notes
+---------------
+
+* All .fas files generated by previous CLISP versions are invalid and
+  must be recompiled.  Use CUSTOM:*LOAD-OBSOLETE-ACTION* to automate this.
+  See <http://clisp.cons.org/impnotes.html#loadfile> for details.
+
+User visible changes
+--------------------
+
+* NO-APPLICABLE-METHOD, NO-PRIMARY-METHOD and NO-NEXT-METHOD now signal
+  METHOD-CALL-ERROR or METHOD-CALL-TYPE-ERROR.
+  See <http://clisp.cons.org/impnotes.html#meth-call-err> for details.
+
+* New user variables CUSTOM:*APROPOS-MATCHER* and CUSTOM::*APROPOS-DO-MORE*
+  make APROPOS more flexible in search and output.
+  See <http://clisp.cons.org/impnotes.html#apropos> for details.
+
+* New function EXT:MOD-EXPT efficiently computes the composition of MOD
+  and EXPT on integers.
+  See <http://clisp.cons.org/impnotes.html#int-func-ext> for details.
+
+* New function EXT:ARGV returns the command line arguments passed to runtime.
+  See <http://clisp.cons.org/impnotes.html#argv> for details.
+
+* New generic function GRAY:STREAM-POSITION extends FILE-POSITION to
+  Gray streams; FILE-POSITION now works with streams other than FILE-STREAMs.
+  See <http://clisp.cons.org/impnotes.html#gray> for details.
+
+* DEFINE-METHOD-COMBINATION and friends are now implemented.
+  Thanks to James Anderson <james.anderson@setf.de>.
+  This change obsoleted all compiled file.
+
+Portability
+-----------
+
+* Improved portability for nearly all platforms: Linux, MacOS X, Solaris,
+  Tru64, HP-UX, AIX, FreeBSD, NetBSD, OpenBSD, BeOS.
+
+* Removed Acorn RISCOS support.
+
+* Removed AmigaOS support.
+
+* Removed support for MSDOS and OS/2, using EMX.
+
+* Removed support for Borland C compiler on Win32.
+
+* Added FFI support for x86_64 (AMD64) Linux and PowerPC MacOS X.
+
+
+2.32 (2003-12-29)
+=================
+
+User visible changes
+--------------------
+
+* WRITE-BYTE-SEQUENCE now accepts :NO-HANG keyword argument.
+  Thanks to Don Cohen <don-sourceforge@isis.cs3-inc.com>.
+
+* Support files larger than 2 GB or 4 GB on platforms with LFS
+  (Large File Support).
+
+* New module berkeley-db interfaces to
+  <http://www.sleepycat.com/docs/api_c/frame.html>
+  and allows working with Berkeley DB databases.
+  See <http://clisp.cons.org/impnotes.html#berkeley-db> for details.
+
+* New module pcre interfaces to <http://www.pcre.org/> and
+  makes Perl Compatible Regular Expressions available in CLISP.
+  See <http://clisp.cons.org/impnotes.html#pcre> for details.
+
+* Module syscalls now exports function POSIX:STAT-VFS.
+  See <http://clisp.cons.org/impnotes.html#syscalls> for details.
+
+* When the system C library provides a wildcard (fnmatch) implementation,
+  it is used instead of the GNU wildcard distributed with CLISP
+  when the CLISP wildcard module is built.
+
+* Prompt is now fully customizable by the user.
+  CUSTOM:*PROMPT* is replaced with 5 variables.
+  See <http://clisp.cons.org/impnotes.html#prompt> for details.
+
+* Readline is now used properly on Cygwin/X11.
+
+* Command line interface: the initial verbosity level is controlled
+  by the pair of mutually canceling options -q/-v.
+  See <http://clisp.cons.org/clisp.html#opt-verbose> for details.
+
+
+2.31 (2003-09-01)
+=================
+
+Important notes
+---------------
+
+* All .fas files generated by previous CLISP versions are invalid and
+  must be recompiled.  This is not as bad as it was before: the invalid
+  files will be ignored and the sources will be loaded instead of
+  signaling an error unless you set CUSTOM:*LOAD-OBSOLETE-ACTION*.
+  See <http://clisp.cons.org/impnotes.html#loadfile> for details.
+
+* All custom-written external modules must be updated to reflect
+  changes in the C definitions, e.g. many C types were renamed to a
+  trailing _t (subr_t, object_initdata_t) and LISPFUN takes an
+  additional side-effect class (seclass) parameter.
+
+User visible changes
+--------------------
+
+* Added a new module - "fastcgi": an interface to the FastCGI
+  Web server CGI-compatible protocol (see http://www.fastcgi.com/)
+  Thanks to John K. Hinsdale <hin@alma.com>.
+  See <http://clisp.cons.org/impnotes.html#fastcgi> for details.
+
+* External modules now work on win32 (when used with cygwin or mingw).
+  See <http://clisp.cons.org/impnotes.html#mod-win32> for details.
+
+* DIRKEY is now a standard module: use `--with-module=dirkey'
+  instead of `--with-dir-key' when configuring.
+  See <http://clisp.cons.org/impnotes.html#dirkey> for details.
+
+* SYSCALLS is now a standard module: use `--with-module=syscalls
+  instead of `--with-export-syscalls' when configuring.
+  See <http://clisp.cons.org/impnotes.html#syscalls> for details.
+
+* New module netica interfaces to <http://norsys.com/netica_c_api.htm>
+  and allows working with Bayesian belief networks and influence diagrams.
+  See <http://clisp.cons.org/impnotes.html#netica> for details.
+
+* READ-BYTE-SEQUENCE now accepts :NO-HANG keyword argument.
+
+* LOAD now takes an additional keyword argument :OBSOLETE-ACTION which
+  specifies what to do with the obsolete .fas files.
+  See <http://clisp.cons.org/impnotes.html#loadfile> for details.
+
+* EXT:SPECIAL-VARIABLE-P now accepts a second optional ENVIRONMENT argument.
+  See <http://clisp.cons.org/impnotes.html#spe-var-p> for details.
+
+* You can now set socket options using new function SOCKET:SOCKET-OPTIONS.
+  See <http://clisp.cons.org/impnotes.html#so-opt> for details.
+  Suggested by Dave Richards <dave@synergy.org>.
+
+* SOCKET:SOCKET-STATUS now distinguishes between :EOF and :INPUT.
+  Also, it does not have to cons up a fresh list even for multiple streams.
+  See <http://clisp.cons.org/impnotes.html#so-status> for details.
+
+* CLISP character set now uses Unicode 3.2.
+  See <http://clisp.cons.org/impnotes.html#characters> for details.
+
+* DIRECTORY now accepts a new keyword argument :IF-DOES-NOT-EXIST which
+  controls treatment of links pointing to non-existent files.
+  It defaults to :DISCARD which is fully backward compatible.
+  See <http://clisp.cons.org/impnotes.html#dir> for details.
+
+* DELETE-FILE no longer calls TRUENAME on its argument, which enables
+  you to delete symbolic links.  This is an incompatible change.
+  You can get the old behavior by doing (DELETE-FILE (TRUENAME path)).
+  See <http://clisp.cons.org/impnotes.html#del-file> for details.
+
+* DRIBBLE now works by redefining *TERMINAL-IO* instead of a host of
+  i/o variables.  This allows DRIBBLE to be started and stopped in
+  different break loops.
+  See <http://clisp.cons.org/impnotes.html#dribble> for details.
+
+* Weak hash tables can now remove key/value pairs when either or both
+  are garbage collected.
+  See <http://clisp.cons.org/impnotes.html#make-hash> for details.
+
+* You can use (SETF WEAK-POINTER-VALUE) to change the object to which
+  the given weak pointer point to.
+  See <http://clisp.cons.org/impnotes.html#weak> for details.
+
+* New macro EXT:DEFINE-HASH-TABLE-TEST allows user-defined hash table tests.
+  See <http://clisp.cons.org/impnotes.html#defhash> for details.
+
+* ANSI CL compliance issues:
+  + MAPC, MAPCAR, MAPCAN, MAPL, MAPLIST, MAPCON now require their list
+    arguments to be proper lists;
+  + TAILP uses EQL, not EQ, to compare the sublists;
+  + LOOP was fixed in many many ways, including
+    - using ATOM as the end test for ON iteration,
+    - returning the SUMs (and alike) of the specified type (if any),
+    - checking that the THEREIS return value is not shadowed,
+    - treating keyword IT in an inappropriate place as a variable,
+    - signaling SOURCE-PROGRAM-ERROR errors at macroexpansion time,
+    - not requiring the package argument for symbol iteration,
+    - making local variables accessible in the INITIALLY clauses,
+    - initializing accumulation variables after iteration variables
+      to avoid shadowing,
+    - using forward consing for APPEND/NCONC because REVAPPEND/NRECONC
+      drop the last atom in dotted lists,
+    - checking for duplicate variables in iteration clauses;
+  + DOCUMENTATION is now a generic function;
+  + implemented CHANGE-CLASS, UPDATE-INSTANCE-FOR-DIFFERENT-CLASS,
+    MAKE-INSTANCES-OBSOLETE, UPDATE-INSTANCE-FOR-REDEFINED-CLASS, and
+    ENSURE-GENERIC-FUNCTION;
+  + DEFCLASS no longer requires that direct superclasses already exist;
+  + sequence functions (MAP, LENGTH and such) no longer accept dotted lists
+    and treat NULL as LIST of length 0 and CONS as LIST of positive length;
+  + COERCE accepts CLOS class object as a type-spec (second argument) and
+    coerces FLOAT to COMPLEX by returning a COMPLEX number;
+  + DEFSTRUCT uses the slot name as is for the accessor when :CONC-NAME
+    is NIL (i.e., does not intern the name in *PACKAGE*), and does not
+    bind slot names in the arglist of keyword constructors;
+  + MAPCAN and MAPCON now correctly handle functions returning ATOMs;
+  + removed macro definition from GENERIC-FUNCTION;
+  + APPEND, COPY-ALIST, REVAPPEND, NRECONC, PAIRLIS, GET, GETF,
+    REMPROP, GET-PROPERTIES no longer accept dotted lists;
+  + implemented arrays with ARRAY-ELEMENT-TYPE NIL;
+  + implemented ANSI CL Issues <CONDITION-RESTARTS:PERMIT-ASSOCIATION>,
+    <DEBUGGER-HOOK-VS-BREAK:CLARIFY>, <DOCUMENTATION-FUNCTION-BUGS:FIX>,
+    <EXTERNAL-FORMAT-FOR-EVERY-FILE-CONNECTION:MINIMUM>,
+    <IMPORT-SETF-SYMBOL-PACKAGE>, <SETF-FIND-CLASS:ALLOW-NIL>,
+    <SUBTYPEP-ENVIRONMENT:ADD-ARG>, <THE-VALUES:RETURN-NUMBER-RECEIVED>,
+    <ADJUST-ARRAY-NOT-ADJUSTABLE:IMPLICIT-COPY>;
+  + EQUALP on HASH-TABLEs now correctly descends the structure;
+  + macro definitions now respect the lexical environment;
+  + more thorough lambda list matching check;
+  + DEFINE-CONDITION now return the condition name;
+  + a character is now accepted as a package designator.
+  Thanks to Paul F. Dietz <dietz@dls.net> and his ANSI compliance
+  suite, which helped detect some of these deficiencies.
+
+* FUNCTION-LAMBDA-EXPRESSION now always returns the correct function name.
+  See <http://clisp.cons.org/impnotes.html#fle> for details.
+
+* CONSTANTP now detects many more constant forms.
+  See <http://clisp.cons.org/impnotes.html#constantp> for details.
+
+* The code walker has now a public interface: EXT:EXPAND-FORM.
+  See <http://clisp.cons.org/impnotes.html#code-walk> for details.
+
+* Renamed macro SPACE to EXT:TIMES because SPACE is an ANSI Common Lisp
+  symbol without a macro definition.
+  See <http://clisp.cons.org/impnotes.html#time> for details.
+
+* New function EXT:XOR checks that exactly one of its arguments is non-NIL.
+  See <http://clisp.cons.org/impnotes.html#xor> for details.
+
+* New function EXT:MAKE-STREAM creates a stream out of a file descriptor
+  and facilitates CGI scripting.
+  See <http://clisp.cons.org/impnotes.html#make-stream> and
+  <http://clisp.cons.org/impnotes.html#bin-stdio> for details.
+
+* New function EXT:MODULE-INFO provides information about the CLISP
+  modules that comprise the running image.
+  See <http://clisp.cons.org/impnotes.html#modinfo> for details.
+
+* New generic function CLOS:CLASS-PROTOTYPE from MOP.
+  See <http://clisp.cons.org/impnotes.html#class-proto> for details.
+
+* New generic functions CLOS:CLASS-FINALIZED-P and
+  CLOS:FINALIZE-INHERITANCE from MOP.
+  See <http://clisp.cons.org/impnotes.html#def-class> for details.
+
+* New FFI functionality:
+  + functions FFI:FOREIGN-ALLOCATE and FFI:FOREIGN-FREE and macros
+    FFI:ALLOCATE-DEEP and FFI:ALLOCATE-SHALLOW permit heap allocation;
+    see <http://clisp.cons.org/impnotes.html#foreign-heap> for details;
+  + functions FFI:FOREIGN-ADDRESS-UNSIGNED and FFI:UNSIGNED-FOREIGN-ADDRESS,
+    see <http://clisp.cons.org/impnotes.html#faddr-u> for details;
+  + function FFI:FOREIGN-ADDRESS,
+    see <http://clisp.cons.org/impnotes.html#faddr> for details;
+  + functions FFI:FOREIGN-POINTER and (SETF FFI:FOREIGN-POINTER),
+    see <http://clisp.cons.org/impnotes.html#fptr> for details;
+  + macros FFI:C-VAR-ADDRESS, FFI:C-VAR-OBJECT and FFI:OFFSET,
+    see <http://clisp.cons.org/impnotes.html#offset> and
+    <http://clisp.cons.org/impnotes.html#c-var-addr>;
+  + function (SETF FFI:VALIDP) invalidates foreign objects
+    see <http://clisp.cons.org/impnotes.html#validp> for details;
+  + macros FFI:WITH-FOREIGN-STRING, and macro FFI:WITH-C-PLACE,
+    see <http://clisp.cons.org/impnotes.html#foreign-stack-string> and
+    <http://clisp.cons.org/impnotes.html#with-c-place>.
+  Thanks to Jörg Höhle <hoehle@users.sourceforge.net>.
+  + FFI:DEF-CALL-OUT and FFI:DEF-C-VAR now accept a :LIBRARY option which
+    allows you to specify the dynamic library which contains the object.
+    See <http://clisp.cons.org/impnotes.html#def-call-out> and
+    <http://clisp.cons.org/impnotes.html#def-c-var>.
+  + Introduced a bit of polymorphism: FFI:C-POINTER can be NIL and will
+    be treated as NULL; NULL return value of type FFI:C-POINTER is
+    returned as NIL.
+    See <http://clisp.cons.org/impnotes.html#c-pointer>.
+  + You can now map between numeric and symbolic C enum values using
+    functions FFI:ENUM-FROM-VALUE and FFI:ENUM-TO-VALUE.
+    See <http://clisp.cons.org/impnotes.html#def-c-enum>.
+
+* FFI does not output extern variable and function declarations unless
+  you set FFI:*OUTPUT-C-VARIABLES* and/or FFI:*OUTPUT-C-FUNCTIONS* to T.
+  Please use FFI:C-LINES to include the appropriate headers instead.
+  See <http://clisp.cons.org/impnotes.html#ffi-extern-output> for details.
+
+* Regexp module functions now support more options, e.g., :EXTENDED to
+  use extended regular expressions, and do not rely on FFI.
+  In particular, REGEXP:REGEXP-COMPILE now accepts keyword and not
+  optional arguments (this is not backwards compatible).
+  When the system library provides a regexp implementation,
+  it is used instead of the GNU regexp distributed with CLISP.
+  The number of subexpressions is now unlimited (the limit was 10).
+  See <http://clisp.cons.org/impnotes.html#regexp> for details.
+
+* Unified modules postgresql632 and postgresql642 into postgresql.
+  The postgresql module works with PostgreSQL 6 and 7 now.
+
+* Removed obsolete module linuxlibc5 and renamed module linuxlibc6 to glibc.
+
+* New module: bindings/win32 (highly incomplete, patches are welcome).
+
+* The BACKQUOTE reader has been reimplemented from scratch by
+  Kaz Kylheku <kaz@ashi.footprints.net>.
+
+* New function EXT:MAKE-XTERM-IO-STREAM creates an input-output stream
+  that uses a separate X terminal.  UNIX platforms only.
+  See <http://clisp.cons.org/impnotes.html#separate-io> for details.
+
+* Fixed a bug in PEEK-CHAR with non-NIL peek-type on ECHO-STREAMS.
+
+* Fixed a bug in FILE-POSITION after UNREAD-CHAR (or PEEK-CHAR).
+
+* Fixed a bug in bit operations on multi-dimensional arrays.
+
+* CLISP/MIT-CLX now compiles CLOCC CLUE/CLIO.
+  See <http://clocc.sourceforge.net/clocc/src/gui/clue/> and
+  <http://clisp.cons.org/impnotes.html#included-modules>.
+
+* CLISP/NEW-CLX on win32 with Cygwin X server compiles garnet.
+  See <http://article.gmane.org/gmane.lisp.clisp.devel/10093>.
+
+* Command line interface: allow multiple -x options.
+  New options -repl <http://clisp.cons.org/clisp.html#opt-repl>
+  and -v (--verbose) <http://clisp.cons.org/clisp.html#opt-verbose>.
+
+
+2.30 (2002-09-15)
+=================
+
+User visible changes
+--------------------
+
+* CLISP does not come with GNU libiconv anymore.  The most important
+  encodings are built-in anyway, and CLISP can use the GNU libc 2.2
+  iconv and a GNU libiconv when it is independently installed.
+
+* CLISP does not come with GNU gettext anymore.  This is a separate
+  package and should be installed separately, if you wish to use i18n.
+
+* CLISP does not come with GNU readline anymore, because, starting with
+  version 4.3, readline supports multibyte characters out of the box.
+
+* CLISP does not come with GNU libsigsegv anymore.  This means that in
+  certain cases of infinite recursion, the C stack overflow will not be
+  properly detected and will result in a segfault instead of an error.
+  You are urged to download and install GNU libsigsegv from
+  <ftp://ftp.gnu.org/pub/gnu/libsigsegv/> or
+  <http://sourceforge.net/projects/libsigsegv/>
+  before configuring CLISP.
+
+* Strings can now hold UCS-4 characters, instead of only UCS-2 characters.
+  CHAR-CODE-LIMIT increased from 65536 to 1114112.
+
+* Added a new module - "oracle": an interface to the Oracle ODBMS.
+  Thanks to John K. Hinsdale <hin@alma.com>.
+
+* New user variable CUSTOM:*PARSE-NAMESTRING-DOT-FILE* controls
+  how the file names starting with a dot are parsed.
+  By default, it is set to :NAME in config.lisp,
+  so #P".clisprc" is now #S(PATHNAME :NAME ".clisprc").
+  To get the old result of #S(PATHNAME :TYPE "clisprc"),
+  set this variable to :TYPE.
+  This is an incompatible change.
+  See <http://clisp.cons.org/impnotes.html#name-type-split> for details.
+
+* New user variable CUSTOM:*TRACE-INDENT* controls TRACE output indentation.
+  See <http://clisp.cons.org/impnotes.html#trace> for details.
+
+* SOCKET:SOCKET-ACCEPT and SOCKET:SOCKET-CONNECT now accept a :TIMEOUT
+  keyword argument.
+  See <http://clisp.cons.org/impnotes.html#timeout-k> for details.
+
+* SAVEINITMEM now accepts :START-PACKAGE, :VERBOSE, and :LOCKED-PACKAGES
+  keyword arguments.
+  See <http://clisp.cons.org/impnotes.html#image> for details.
+
+* You can now shutdown a socket for input or output separately
+  using SOCKET:SOCKET-STREAM-SHUTDOWN.
+  See <http://clisp.cons.org/impnotes.html#sost-shut> for details.
+
+* CUSTOM:*SOURCE-FILE-TYPES* and CUSTOM:*COMPILED-FILE-TYPES*
+  now contain strings, not pathnames.
+  See <http://clisp.cons.org/impnotes.html#loadfile> for details.
+
+* EXT:GETENV now returns all of the OS environment as an alist
+  when its argument is omitted or NIL.
+  See <http://clisp.cons.org/impnotes.html#getenv> for details.
+
+* When configured with --with-export-syscalls,
+  several new functions are available:
+   POSIX:STREAM-LOCK provides an interface to flock(2);
+   POSIX:COPY-FILE provides an interface to link(2)/symlink(2)/rename(2),
+     (in addition to the usual file copy);
+   POSIX:DUPLICATE-HANDLE provides an interface to dup(2)/dup2(2).
+  Thanks to Marco Baringer for COPY-FILE and DUPLICATE-HANDLE.
+  See <http://clisp.cons.org/impnotes.html#syscalls> for details.
+
+* You can now control the CLISP exit code better by passing a
+  non-negative integer to EXT:EXIT.
+  See <http://clisp.cons.org/impnotes.html#quit> for details.
+
+* New macros FFI:WITH-C-VAR and FFI:WITH-FOREIGN-OBJECT allow
+  allocating C data on the stack.
+  See <http://clisp.cons.org/impnotes.html#foreign-stack> for details.
+
+* Russian translations of the user interface messages have been added.
+  Thanks to Arseny Slobodjuck <ampy@ich.dvo.ru>.
+
+* When built with readline, CLISP will DESCRIBE the current function
+  when you hit TAB after a #\Space.
+
+* MAKE-ENCODING now checks whether the iconv charset is valid, and
+  signals an error if it is invalid unless given the :IF-DOES-NOT-EXIST
+  NIL argument.
+
+* New debugger command Quit (:q) aborts to the top-level read-eval-print
+  loop immediately, saving you typing :a several times.
+
+* When CUSTOM:*PARSE-NAMESTRING-ANSI* is non-NIL, do not accept symbols
+  as pathname designators.
+  See <http://clisp.cons.org/impnotes.html#filename-dict> for details.
+
+* COMPILE-FILE no longer clobbers an existing *.c file when the Lisp
+  file being compiled does not contain any FFI forms.
+  See <http://clisp.cons.org/impnotes.html#compilefile> for details.
+
+* Type COMPLEX now correctly uses UPGRADED-COMPLEX-PART-TYPE.
+
+* Improved accuracy of some transcendental functions, e.g., now
+  (EXPT -5.0 2.0) return #C(25.0 0.0).
+
+* Fixed a bug: Conversion from bytes to string did not work for the encoding
+  (MAKE-ENCODING :CHARSET CHARSET:UNICODE-32-LITTLE-ENDIAN
+                 :INPUT-ERROR-ACTION :IGNORE).
+
+* Fixed a bug in compiling duplicate keyword arguments.
+
+* Fixed the (destructuring-bind (&key (x x)) ...) bug.
+
+* Wide-mode -W backward compatibility option is now gone
+  (defunct since 1998-09-09).  This permits colons in memory image file
+  names (necessary on Cygwin).
+
+* CLISP on Cygwin now understands native pathnames like "c:/gnu/clisp/"
+  by translating them internally to "/cygdrive/c/gnu/clisp/".
+  CLISP on Win32 now understands Cygwin pathnames like "/cygdrive/c/gnu/clisp/"
+  by translating them internally to "c:/gnu/clisp/".
+  You can disable this by setting CUSTOM:*DEVICE-PREFIX* to NIL.
+  See <http://clisp.cons.org/impnotes.html#device-prefix> for details.
+
+* Readline is now used properly on Cygwin.
+
+* DIR-KEY now works on Cygwin.
+
+Portability
+-----------
+
+* CLISP now works on SPARC/Linux with glibc 2.2 when built with SAFETY=3.
+
+
+2.29 (2002-07-25)
+=================
+
+User visible changes [this is a bug-fix/portability release]
+--------------------
+
+* INSPECT: fixed bugs in HTML generation, Content-Length header,
+  removing incorrect package on exit, help in nested inspect sessions.
+
+* COMPILE-FILE: fixed :VERBOSE NIL handling.
+
+* DESCRIBE: handles DIR-KEY now.
+
+* (LAMBDA () (DEFMETHOD ...)) now works.
+
+* Fixed RETURN-FROM in deep nesting.
+
+* Fixed crash on errors in module initialization.
+
+* COMPILER-MACROs can now expand to special forms.
+
+* EVAL-WHEN now distinguishes between COMPILE and :COMPILE-TOPLEVEL
+  and between LOAD and :LOAD-TOLEVEL.
+
+Portability
+-----------
+
+* CLISP now builds with GCC-3.1 out of the box.
+
+
+2.28 (2002-03-03)
+=================
+
+Important notes
+---------------
+
+* All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* ANSI CL functions MAKE-LOAD-FORM and MAKE-LOAD-FORM-SAVING-SLOTS
+  are implemented.
+
+* ANSI CL pretty printer <http://www.lisp.org/HyperSpec/Body/sec_22-2.html>
+  is implemented.
+  In particular,
+    variables     *PRINT-LINES*, *PRINT-MISER-WIDTH*, *PRINT-PPRINT-DISPATCH*,
+    macro         PPRINT-LOGICAL-BLOCK,
+    local macros  PPRINT-EXIT-IF-LIST-EXHAUSTED, PPRINT-POP
+    and functions PPRINT-DISPATCH, COPY-PPRINT-DISPATCH, SET-PPRINT-DISPATCH,
+                  PPRINT-FILL, PPRINT-LINEAR, PPRINT-TABULAR, PPRINT-TAB,
+                  PPRINT-NEWLINE, PPRINT-INDENT
+  are implemented.
+  See <http://clisp.cons.org/impnotes.html#clpp> for details.
+
+* The functions WRITE and WRITE-TO-STRING now accept :LINES, :MISER-WIDTH
+  and :PRINT-PPRINT-DISPATCH keyword arguments.
+  This change requires recompilation of all .fas files.
+
+* Weak hash-tables are now supported.
+  See <http://clisp.cons.org/impnotes.html#make-hash> for details.
+
+* Support Cygwin's "/cygdrive/drive/path" pathname syntax on Win32.
+
+* New macro EXT:FCASE which allows specifying comparison function in CASE.
+  See <http://clisp.cons.org/impnotes.html#fcase> for details.
+
+* New user variable CUSTOM:*LOAD-LOGICAL-PATHNAME-TRANSLATIONS-DATABASE*.
+  See <http://clisp.cons.org/impnotes.html#load-lpt> for details.
+
+* Packages can now be locked and unlocked using EXT:PACKAGE-LOCK
+  See <http://clisp.cons.org/impnotes.html#pack-lock> for details.
+
+* CLISP now supports internationalized Lisp programs, via GNU gettext.
+  Macros ENGLISH, FRANCAIS and DEUTSCH have been removed.
+  See <http://clisp.cons.org/impnotes.html#language> for details.
+
+* The UI language can now be changed dynamically,
+  via symbol-macro *CURRENT-LANGUAGE*.
+  See <http://clisp.cons.org/impnotes.html#i18n> for details.
+
+* Fixed a bug: LDIFF now handles dotted lists correctly.
+
+
+2.27 (2001-07-17)
+=================
+
+User visible changes
+--------------------
+
+* EXT:GETENV is now setfable.
+
+* Hostname resolution is now optional in
+  EXT:SOCKET-STREAM-PEER and EXT:SOCKET-STREAM-LOCAL.
+
+* EXT:SOCKET-STATUS now accepts SOCKET-SERVERs too
+  and the direction of the checks can be specified.
+
+* Added install.bat for win32 installation.
+
+* ANSI CL compliance: more conformant pathname handling.
+
+* Speed up MEMBER &co when :TEST is EQ, EQL or EQUAL.
+
+* Optimize away local functions that are not used
+  (much less consing in CLOS).
+
+* When built with readline, CLISP allows multi-line form editing.
+  Use M-p and M-n to move between virtual lines.
+
+* Fixed handling of circular structs and pointers to functions in the FFI.
+
+* Fixed binary I/O for streams with element type longer than one byte,
+  but not a whole number of bytes.
+
+
+2.26 (2001-05-23)
+=================
+
+Important notes
+---------------
+
+* The CLISP extensions have been moved from the CLtL1 package LISP to
+  separate packages.
+  If you rely on any of the CLISP extensions, you will need to make
+  your packages use package EXT, which re-exports all exported symbols
+  from all extension packages.
+
+* All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* "LISP" is now a nickname of the ANSI CL package COMMON-LISP.
+  "USER" is now a nickname of the ANSI CL package COMMON-LISP-USER.
+  Support for CLtL1 has thus been removed.
+  For the benefit of package developers, *FEATURES* now contains :LISP=CL.
+
+* The *FEATURES* list now contains :ANSI-CL instead of :CLTL2 even when
+  running without '-ansi' ANSI compatibility mode.
+
+* ANSI CL compliance: function UPGRADED-COMPLEX-PART-TYPE implemented.
+
+* ANSI CL compliance: macro HANDLER-BIND invokes all handlers
+  for the condition, not just the first one.
+
+* ANSI CL compliance: CHAR does not check for FILL-POINTER, while ELT does.
+
+* ANSI CL compliance: FUNCTION-KEYWORDS returns 2 values.
+
+* ANSI CL compliance: COMPILED-FUNCTION is a subtype of FUNCTION.
+
+* ANSI CL compliance: implemented compiler macros.
+
+* Conforming to the ANSI CL issue CONSTANTP-ENVIRONMENT:ADD-ARG,
+  CONSTANTP now takes an optional second argument.
+
+* RUN-SHELL-COMMAND and RUN-PROGRAM now accept a :WAIT argument.
+
+* The compiler now checks the signature of function calls
+  for all functions, not just the inlined built-ins.
+
+
+2.25.1 (2001-04-06)
+===================
+
+User visible changes [this is a bug-fix only release]
+--------------------
+
+* ANSI CL compliance: INITIALIZE-INSTANCE accepts &KEY &ALLOW-OTHER-KEYS
+  arguments.
+
+* Fixed a bug: a single value was sometimes returned by READ-LINE.
+
+* Fixed a bug: re-exporting inherited symbols resulted in them being
+  reported as both external and inherited by WITH-PACKAGE-ITERATOR.
+
+* Fixed a bug: the full image and other images created with clisp-link
+  exited on error instead of entering the debugger.
+
+* Fixed a bug: COMPILE-FILE-PATHNAME could return bad results when given a
+  non-existent INPUT-FILE argument and an OUTPUT-FILE argument with
+  non-NIL directory part.
+
+* Fixed --without-unicode build.
+
+
+2.25 (2001-03-15)
+=================
+
+Important notes
+---------------
+
+* The default extension of Lisp source files for CLISP is now ".lisp" instead
+  of ".lsp". When both "foo.lisp" and "foo.lsp" exist, (LOAD "foo") will load
+  "foo.lisp".
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* A new version numbering scheme is adopted.
+
+* If an error is signalled by a form supplied with the command-line
+  option "-x", CLISP now exits with a non-zero status.
+
+* The pretty-printer does not print hanging parenthesis by default now.
+  *PRINT-RPARS* now defaults to NIL and *PRINT-INDENT-LISTS* to 1, so
+  that the lists are printed like in CLHS and CLtL.
+
+* New extension: directory access (win32 registry).
+  See <http://clisp.cons.org/impnotes.html#dir-key> for details.
+
+* Support UNC pathnames (\\host\dir\name.ext) on win32.
+
+* Support the SCREEN package on Win32. Thanks to Arseny Slobodjuck.
+
+* New functions CONVERT-STRING-FROM-BYTES and CONVERT-STRING-TO-BYTES.
+
+* Support for non-blocking binary I/O.
+  New functions READ-BYTE-LOOKAHEAD, READ-BYTE-WILL-HANG-P, READ-BYTE-NO-HANG.
+  New generic functions STREAM-READ-BYTE-LOOKAHEAD,
+  STREAM-READ-BYTE-WILL-HANG-P, STREAM-READ-BYTE-NO-HANG.
+
+* CONCATENATED-STREAM-STREAMS now returns only the remaining streams,
+  as per ANSI CL spec.
+
+* Implemented ANSI CL function INSPECT,
+  and a function LISP:CLHS for access of Common Lisp HyperSpec.
+
+* Characters have now the same names as in Unicode 3.0, with space replaced
+  by underscore.
+
+* ANSI CL compliance: CALL-NEXT-METHOD and NEXT-METHOD-P are now implemented
+  as local functions, not local macros. It is now possible to call
+  (APPLY #'CALL-NEXT-METHOD argument-list-of-unknown-length).
+
+* ANSI CL compliance: LOAD has a new keyword argument :EXTERNAL-FORMAT.
+
+* ANSI CL compliance: When an end-of-stream occurs, READ, READ-CHAR, PEEK-CHAR,
+  READ-CHAR-NO-HANG, READ-LINE, READ-BYTE, READ-INTEGER, READ-FLOAT, called
+  with arguments eof-error-p = NIL and without eof-value, now return NIL
+  instead of #<END OF FILE>.
+
+* ANSI CL compliance: When LISP:*PARSE-NAMESTRING-ANSI* is non-NIL,
+  PARSE-NAMESTRING parses strings with colons as logical pathnames.
+
+* New supported character sets in package CHARSET: GB18030, BIG5HKSCS.
+
+* Arguments passed to MAKE-PATHNAME with value NIL are not overridden by
+  pathname slots in the :DEFAULTS argument any more.
+
+* STREAM-ELEMENT-TYPE of a TWO-WAY-STREAM or an ECHO-STREAM now depends on
+  the stream's constituents. Previously, it was always (OR CHARACTER INTEGER).
+
+* Fixed a bug: REPLACE signalled an error if the source and destination
+  sequences were the same and the source and destination ranges did not
+  overlap.
+
+* Fixed a bug: A garbage collection during the execution of a foreign function
+  callback caused a crash.
+
+* Fixed a bug: Calling READ-LINE on a stream already positioned at EOF caused
+  a crash on 64-bit platforms.
+
+* Fixed a bug: For long-floats, (EQL x (- x)) returned true.
+
+* Fixed a bug: OPEN now returns NIL when the filename's directory does not
+  exist and :IF-DOES-NOT-EXIST NIL was specified. Previously, an error was
+  signalled except when :DIRECTION was :PROBE.
+
+* Fixed a bug: (subtypep 'fundamental-stream 'stream) returned NIL.
+
+Portability
+-----------
+
+* Added support for IA-64 running Linux.
+
+* Added support for BeOS 5. Thanks to Alexis Rivera Rios <ahrivera@yahoo.com>.
+
+* Removed support for DOS. Not to worry, OS/2 and Win32 are still supported.
+
+
+2000-03-06
+==========
+
+User visible changes
+--------------------
+
+* New functions READ-FLOAT and WRITE-FLOAT.
+
+* Implemented ANSI CL macro WITH-COMPILATION-UNIT.
+
+* Unicode support: The pretty-printer and FORMAT ~T now handle non-spacing and
+  double-width Unicode characters correctly. Pretty-printer slows down by 30%.
+  New functions CHAR-WIDTH, STRING-WIDTH.
+
+* Fixed two bugs in TRANSLATE-PATHNAME: Substitution of "**" did not work.
+  Substitutions without version into non-logical pathnames crashed.
+
+* Dutch translations of the user interface messages have been added
+  Thanks to Tijs van Bakel <smoke@casema.net>.
+
+* When configured with --with-export-syscalls, :SYSCALLS is in *FEATURES*
+  and functions POSIX:RESOLVE-IP-ADDR, POSIX:USER-DATA, POSIX:FILE-STAT,
+  POSIX:SYSINFO, POSIX:RESOURCE-USAGE-LIMITS,
+  as well as those libm.so functions which do not have a better
+  counterpart in ANSI CL are available.
+
+* New supported character sets in package CHARSET: ISO-8859-16, KOI8-U,
+  KOI8-RU, EUC-JP, SHIFT-JIS, CP932, ISO-2022-JP, ISO-2022-JP-2, ISO-2022-JP-1,
+  EUC-CN, HZ, GBK, CP936, EUC-TW, BIG5, CP950, ISO-2022-CN, ISO-2022-CN-EXT,
+  EUC-KR, CP949, ISO-2022-KR, ARMSCII-8, GEORGIAN-ACADEMY, GEORGIAN-PS,
+  TIS-620, MULELAO-1, CP1133, VISCII, TCVN, UTF-16, UTF-7, MACINTOSH (as an
+  alias for MAC-ROMAN).
+
+Other modifications
+-------------------
+
+* Speed up some sequence functions when operating on vectors: MAKE-SEQUENCE,
+  CONCATENATE, COPY-SEQ, COERCE, SUBSEQ, REPLACE, FILL, REVERSE, NREVERSE,
+  REMOVE[-IF[-NOT]] with :START/:END, SUBSTITUTE[-IF[-NOT]] with :START/:END,
+  SORT.
+
+* Speed up ADJUST-ARRAY.
+
+
+1999-07-22
+==========
+
+User visible changes
+--------------------
+
+* Added a new module - "postgresql": interface to the PostgreSQL ODBMS.
+
+* Implemented ANSI CL macro WITH-PACKAGE-ITERATOR.
+
+* Conforming to ANSI CL issue <ALLOCATE-INSTANCE:ADD>: New function
+  ALLOCATE-INSTANCE.
+
+* Conforming to ANSI CL issue <GENERIC-FLET-POORLY-DESIGNED:DELETE>: The
+  symbols GENERIC-FLET and GENERIC-LABELS are not exported from the
+  COMMON-LISP package any more.
+
+* Conforming to ANSI CL issues <KEYWORD-ARGUMENT-NAME-PACKAGE:ANY> and
+  <MULTIPLE-VALUE-SETQ-ORDER:LIKE-SETF-OF-VALUES>.
+
+* Conforming to ANSI CL Issue <MACRO-FUNCTION-ENVIRONMENT:YES>
+  MACRO-FUNCTION now takes an optional second argument ENV.
+
+* When CLISP is invoked with an "-a" option, *features* contain :ANSI-CL.
+
+* Weak pointers are implemented. New functions MAKE-WEAK-POINTER,
+  WEAK-POINTER-P, WEAK-POINTER-VALUE.
+
+* The function OPEN, when creating unbuffered file streams, now supports any
+  of the following :ELEMENT-TYPEs: CHARACTER and ([UN]SIGNED-BYTE n), where n
+  is a multiple of 8.
+
+* The functions
+    MAKE-PIPE-INPUT-STREAM, MAKE-PIPE-OUTPUT-STREAM, MAKE-PIPE-IO-STREAM,
+    SOCKET-ACCEPT, SOCKET-CONNECT
+  accept a keyword argument :ELEMENT-TYPE. Possible values are types
+  equivalent to CHARACTER or (UNSIGNED-BYTE n), (SIGNED-BYTE n), where n is
+  a positive multiple of 8. Previously these functions returned streams whose
+  element-type was (OR CHARACTER (UNSIGNED-BYTE 8)).
+
+* STREAM-ELEMENT-TYPE is SETFable. The element type of streams created by the
+  functions MAKE-PIPE-INPUT-STREAM, MAKE-PIPE-OUTPUT-STREAM,
+  MAKE-PIPE-IO-STREAM, SOCKET-ACCEPT, SOCKET-CONNECT can be modified, if the
+  old and the new element type are compatible.
+  (UNSIGNED-BYTE n) and (SIGNED-BYTE n) are compatible, and CHARACTER is
+  compatible with ([UN]SIGNED-BYTE 8).
+
+* Character I/O can now be customized via encodings. A stream's external
+  format is an encoding, and the symbol macros
+    *DEFAULT-FILE-ENCODING*, *PATHNAME-ENCODING*, *TERMINAL-ENCODING*,
+    *MISC-ENCODING*, FFI:*FOREIGN-ENCODING*, AFFI:*FOREIGN-ENCODING*
+  contain user-settable encodings.
+  Encodings can be obtained through the function MAKE-ENCODING, and as values
+  of the constants
+    CHARSET:UCS-2, CHARSET:UNICODE-16, CHARSET:UNICODE-16-BIG-ENDIAN,
+    CHARSET:UNICODE-16-LITTLE-ENDIAN, CHARSET:UCS-4, CHARSET:UNICODE-32,
+    CHARSET:UNICODE-32-BIG-ENDIAN, CHARSET:UNICODE-32-LITTLE-ENDIAN,
+    CHARSET:UTF-8, CHARSET:JAVA, CHARSET:ASCII, CHARSET:ISO-8859-1,
+    CHARSET:ISO-8859-2, CHARSET:ISO-8859-3, CHARSET:ISO-8859-4,
+    CHARSET:ISO-8859-5, CHARSET:ISO-8859-6, CHARSET:ISO-8859-7,
+    CHARSET:ISO-8859-8, CHARSET:ISO-8859-9, CHARSET:ISO-8859-10,
+    CHARSET:ISO-8859-13, CHARSET:ISO-8859-14, CHARSET:ISO-8859-15,
+    CHARSET:KOI8-R, CHARSET:MAC-ARABIC, CHARSET:MAC-CENTRAL-EUROPE,
+    CHARSET:MAC-CROATIAN, CHARSET:MAC-CYRILLIC, CHARSET:MAC-DINGBAT,
+    CHARSET:MAC-GREEK, CHARSET:MAC-HEBREW, CHARSET:MAC-ICELAND,
+    CHARSET:MAC-ROMAN, CHARSET:MAC-ROMANIA, CHARSET:MAC-SYMBOL,
+    CHARSET:MAC-THAI, CHARSET:MAC-TURKISH, CHARSET:MAC-UKRAINE,
+    CHARSET:CP437, CHARSET:CP737, CHARSET:CP775, CHARSET:CP850, CHARSET:CP852,
+    CHARSET:CP855, CHARSET:CP857, CHARSET:CP860, CHARSET:CP861, CHARSET:CP862,
+    CHARSET:CP863, CHARSET:CP864, CHARSET:CP865, CHARSET:CP866, CHARSET:CP869,
+    CHARSET:CP874, CHARSET:WINDOWS-1250, CHARSET:WINDOWS-1251,
+    CHARSET:WINDOWS-1252, CHARSET:WINDOWS-1253, CHARSET:WINDOWS-1254,
+    CHARSET:WINDOWS-1255, CHARSET:WINDOWS-1256, CHARSET:WINDOWS-1257,
+    CHARSET:WINDOWS-1258, CHARSET:HP-ROMAN8, CHARSET:NEXTSTEP.
+
+* The functions
+    OPEN, MAKE-PIPE-INPUT-STREAM, MAKE-PIPE-OUTPUT-STREAM, MAKE-PIPE-IO-STREAM,
+    SOCKET-ACCEPT, SOCKET-CONNECT
+  and the macro
+    WITH-OUTPUT-TO-PRINTER
+  accept a keyword argument :EXTERNAL-FORMAT. Possible values are encodings,
+  such as returned by the function MAKE-ENCODING, the line terminator keywords
+  :UNIX, :MAC, :DOS, and :DEFAULT. New function STREAM-EXTERNAL-FORMAT.
+
+* STREAM-EXTERNAL-FORMAT is SETFable. The external format of streams created
+  by the functions OPEN, MAKE-PIPE-INPUT-STREAM, MAKE-PIPE-OUTPUT-STREAM,
+  MAKE-PIPE-IO-STREAM, SOCKET-ACCEPT, SOCKET-CONNECT can be modified.
+
+* OPEN has a new keyword argument :BUFFERED. It determines whether the file
+  stream returned is buffered or not. Possible values for it are NIL, T, or
+  :DEFAULT. If it is :DEFAULT, buffered file streams will be returned for
+  regular files and (on Unix) block-devices, and unbuffered file streams for
+  special files.
+
+* The functions MAKE-PIPE-INPUT-STREAM, MAKE-PIPE-OUTPUT-STREAM,
+  MAKE-PIPE-IO-STREAM, SOCKET-ACCEPT, SOCKET-CONNECT have a new keyword
+  argument :BUFFERED. It determines whether the stream returned is buffered or
+  not. Possible values for it are NIL, T, or :DEFAULT. :DEFAULT is equivalent
+  to NIL.
+
+* New functions READ-INTEGER, WRITE-INTEGER which can be used to do binary I/O
+  on streams with element-type (UNSIGNED-BYTE 8).
+
+* The Gray proposal <STREAM-DEFINITION-BY-USER> is implemented:
+  New classes
+    FUNDAMENTAL-STREAM,
+    FUNDAMENTAL-INPUT-STREAM, FUNDAMENTAL-OUTPUT-STREAM,
+    FUNDAMENTAL-CHARACTER-STREAM, FUNDAMENTAL-BINARY-STREAM,
+    FUNDAMENTAL-CHARACTER-INPUT-STREAM, FUNDAMENTAL-CHARACTER-OUTPUT-STREAM,
+    FUNDAMENTAL-BINARY-INPUT-STREAM, FUNDAMENTAL-BINARY-OUTPUT-STREAM.
+  New generic functions
+    STREAM-READ-CHAR, STREAM-UNREAD-CHAR, STREAM-READ-CHAR-NO-HANG,
+    STREAM-PEEK-CHAR, STREAM-LISTEN, STREAM-READ-CHAR-WILL-HANG-P,
+    STREAM-READ-CHAR-SEQUENCE, STREAM-READ-LINE, STREAM-CLEAR-INPUT,
+    STREAM-WRITE-CHAR, STREAM-LINE-COLUMN, STREAM-START-LINE-P,
+    STREAM-WRITE-CHAR-SEQUENCE, STREAM-WRITE-STRING, STREAM-TERPRI,
+    STREAM-FRESH-LINE, STREAM-FINISH-OUTPUT, STREAM-FORCE-OUTPUT,
+    STREAM-CLEAR-OUTPUT, STREAM-ADVANCE-TO-COLUMN,
+    STREAM-READ-BYTE, STREAM-READ-BYTE-SEQUENCE,
+    STREAM-WRITE-BYTE, STREAM-WRITE-BYTE-SEQUENCE.
+  The functions CLOSE, OPEN-STREAM-P, STREAM-ELEMENT-TYPE are now generic
+  functions.
+  See <http://clisp.cons.org/impnotes.html#gray> for details.
+
+* The macros FFI:DEF-C-CALL-OUT and FFI:DEF-C-CALL-IN now add an argument
+  :LANGUAGE :STDC (means ANSI C) instead of :LANGUAGE :C (means old K&R C).
+
+* Conforming with ANSI CL, SIMPLE-CONDITION now has the initarg
+  :FORMAT-CONTROL instead of :FORMAT-STRING. New function
+  SIMPLE-CONDITION-FORMAT-CONTROL.
+
+* Conforming with ANSI CL, FILE-LENGTH and FILE-POSITION, when called on
+  an unbuffered file stream, now return NIL instead of signaling an error.
+
+* Conforming with ANSI CL, MACROEXPAND and MACROEXPAND-1 now accept NIL as
+  second argument, denoting the global environment.
+
+* Conforming with ANSI CL, the reader now signals an error of type
+  READER-ERROR when trying to parse tokens like 35/000 or 1.5e1000,
+  instead of DIVISION-BY-ZERO and FLOATING-POINT-OVERFLOW, respectively.
+
+* On Unix, calling OPEN on a block device now returns a buffered stream
+  instead of an unbuffered stream.
+
+* On Unix, writing to a pipe created by MAKE-PIPE-OUTPUT-STREAM or
+  MAKE-PIPE-IO-STREAM after the corresponding child process has exited
+  now leads to an error message instead of terminating the CLISP process.
+
+* The generic function GENERIC-STREAM-LISTEN is replaced with
+  GENERIC-STREAM-READ-CHAR-WILL-HANG-P.
+
+* The function XGCD now really always returns coefficients of smallest
+  possible absolute value.
+
+* Fixed a interpreter bug: (let (x) (declare (special x)) ...) did not change
+  the global value of x in interpreted mode.
+
+* Fixed a bug: On Win32, Ctrl-Z sometimes caused two levels of the read-eval-
+  print loop to be aborted instead of just one.
+
+* Fixed a bug: READ-CHAR-SEQUENCE, when called on a string input stream,
+  forgot to advance the pointer into the string.
+
+* Fixed a bug: WRITE-CHAR-SEQUENCE on Win32 failed to convert NL to CR/LF.
+
+* Fixed a bug: Calling (GET-DISPATCH-MACRO-CHARACTER disp-char sub-char) would
+  crash, instead of returning NIL, if there is no macro-character function
+  associated with sub-char after disp-char.
+
+* Fixed a bug: (CHECK-TYPE place typespec string) did not evaluate `string'.
+
+* Fixed a bug: Calling the function FINALIZE caused a crash during the next GC
+  on many platforms.
+
+* Fixed a bug: Calling a generic function without any installed method
+  resulted in an inappropriate error message, not a call to
+  NO-APPLICABLE-METHOD.
+
+* Fixed a bug: Closing a SOCKET-SERVER twice, or using a closed SOCKET-SERVER
+  could result in inappropriate error messages.
+
+* Fixed a bug: (format nil "~@D" 0) ==> "+0" now.
+
+Portability
+-----------
+
+* Added support for SPARC running Linux.
+
+* Added support for Apple PowerPC running MacOS X Server (a.k.a. Rhapsody).
+
+* Improved support for m68k running Linux.
+
+* Added build instructions for Win32 using MSVC 6.0.
+
+Other modifications
+-------------------
+
+* On Linux 2.2.x with glibc-2.1, Solaris, OSF/1 and Irix, stack overflow is
+  now caught reliably. Previously, endless recursion in interpreted code could
+  cause a crash in some cases.
+
+* Speed up the function DIRECTORY on Unix in some cases.
+
+* Speed up compiled calls to LDB, LDB-TEST, MASK-FIELD, DPB, DEPOSIT-FIELD.
+
+
+1999-01-08
+==========
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* Conforming to ANSI CL issue <SETF-MULTIPLE-STORE-VARIABLES:ALLOW>:
+  multiple values in ASSERT, ROTATEF, SHIFTF &c.
+
+* Conforming to ANSI CL issue <SETF-OF-VALUES:ADD>: `values' can take
+  multiple value places in setf &c.
+
+* The variable `*prompt-with-package*' is replaced with `*prompt*',
+  which can be a function.
+  See <http://clisp.cons.org/impnotes.html#prompt> for details.
+
+* Conforming with X3J13 writeup <FUNCTION-TYPE:X3J13-MARCH-88>, an error
+  is now signalled when a lambda expression (not a function) is passed to
+  APPLY, FUNCALL, SETF SYMBOL-FUNCTION, EVERY, SOME, NOTEVERY, NOTANY,
+  SET-MACRO-CHARACTER, SET-DISPATCH-MACRO-CHARACTER. The latter two now
+  accept a symbol instead of a function.
+
+* X3J13 vote <103> = writeup <IN-PACKAGE-FUNCTIONALITY:MAR89-X3J13> is
+  implemented: COMMON-LISP:IN-PACKAGE is now a macro. LISP:IN-PACKAGE retains
+  the old semantics as a function.
+  The syntaxes (IN-PACKAGE "FOO") and (IN-PACKAGE :FOO) work with both
+  variations.
+
+* X3J13 vote <11> = writeups <CHARACTER-PROPOSAL:2>,
+  <CHARACTER-LOOSE-ENDS:FIX>, <CHARACTER-VS-CHAR:LESS-INCONSISTENT-SHORT>,
+  <JUN90-TRIVIAL-ISSUES:24>, <STANDARD-REPERTOIRE-GRATUITOUS:RENAME> are
+  implemented: Characters do not have font and bits attributes any more.
+  The following symbols are not exported from package COMMON-LISP any more:
+     STRING-CHAR STRING-CHAR-P
+     CHAR-FONT-LIMIT CHAR-BITS-LIMIT
+     CHAR-CONTROL-BIT CHAR-META-BIT CHAR-SUPER-BIT CHAR-HYPER-BIT
+     CHAR-BITS CHAR-FONT MAKE-CHAR INT-CHAR CHAR-BIT SET-CHAR-BIT
+  MAKE-STRING and MAKE-STRING-OUTPUT-STREAM have a new keyword argument
+  :ELEMENT-TYPE.
+  New types BASE-CHAR, EXTENDED-CHAR, BASE-STRING, SIMPLE-BASE-STRING.
+
+* X3J13 writeup <SETF-METHOD-VS-SETF-METHOD:RENAME-OLD-TERMS> is implemented:
+  New function GET-SETF-EXPANSION, new macro DEFINE-SETF-EXPANDER. The old
+  symbols GET-SETF-METHOD-MULTIPLE-VALUE, GET-SETF-METHOD, DEFINE-SETF-METHOD
+  are removed from package COMMON-LISP.
+
+* X3J13 writeups <READER-ERROR:NEW-TYPE> and <PARSE-ERROR-STREAM:SPLIT-TYPES>
+  are implemented: New condition classes PARSE-ERROR and READER-ERROR.
+
+* X3J13 writeup <UNDEFINED-VARIABLES-AND-FUNCTIONS:COMPROMISE> is implemented:
+  New condition class UNBOUND-SLOT. New function UNBOUND-SLOT-INSTANCE.
+
+* X3J13 writeups <COMMON-TYPE:REMOVE> and <COMPILER-LET-CONFUSION:ELIMINATE>
+  are implemented: COMMONP and COMPILER-LET are not exported from package
+  COMMON-LISP any more.
+
+* X3J13 vote <138> = writeup <PEEK-CHAR-READ-CHAR-ECHO:FIRST-READ-CHAR> is
+  implemented: PEEK-CHAR does less side effects than READ-CHAR followed by
+  UNREAD-CHAR would do.
+
+* X3J13 writeup <SHARPSIGN-PLUS-MINUS-PACKAGE:KEYWORD> is implemented:
+  When looking up a feature symbol in *FEATURES*, the package is no longer
+  ignored. All initial elements of *FEATURES* are now keywords. The reader
+  binds *PACKAGE* to #<PACKAGE KEYWORD> during #+ and #-.
+
+* X3J13 writeup <SLOT-MISSING-VALUES:SPECIFY> is implemented: Some of the
+  values of SLOT-MISSING are ignored, depending on context.
+
+* X3J13 writeup <WITH-OPEN-FILE-SETQ:EXPLICITLY-VAGUE> is implemented:
+  Assigning the variable bound by the WITH-INPUT-FROM-STRING, WITH-OPEN-FILE,
+  WITH-OPEN-STREAM, WITH-OUTPUT-TO-STRING macros generates a compiler warning.
+
+* X3J13 writeup <SEQUENCE-TYPE-LENGTH:MUST-MATCH> is implemented: The
+  functions MAKE-SEQUENCE, COERCE, CONCATENATE, MAP, MERGE signal an error
+  if the result type specifies a length inconsistent with the other arguments.
+
+* X3J13 writeup <SYMBOL-MACROS-AND-PROCLAIMED-SPECIALS:SIGNALS-AN-ERROR> is
+  implemented: SYMBOL-MACROLET of special variables or constants now signals
+  an error.
+
+* Conforming with X3J13 writeup <DOTTED-LIST-ARGUMENTS:CLARIFY>, the first
+  argument of LDIFF may now be a dotted list.
+
+* PATHNAME-MATCH-P and TRANSLATE-PATHNAME now treat missing pathname
+  components the same as wild ones.
+
+* Renamed function SOCKET-STREAM-PEER-HOST to SOCKET-STREAM-PEER. New
+  functions SOCKET-STREAM-LOCAL and SOCKET-SERVER-HOST.
+
+* Conforming to ANSI CL, DEFSTRUCT with option :INCLUDE now does not define
+  accessors which were already defined in a superclass DEFSTRUCT. This solves
+  the problems that occur when using the same :CONC-NAME for the new and the
+  inherited structure, without need for the DEFSTRUCT option :INHERIT.
+
+* The functions MAKE-BROADCAST-STREAM, MAKE-CONCATENATED-STREAM,
+  MAKE-TWO-WAY-STREAM, MAKE-ECHO-STREAM now verify that their arguments are
+  input streams or output streams, respectively.
+
+* The function EQUALP now ignores the element type of arrays and looks only
+  at the array contents, as specified by ANSI CL.
+
+* The *FEATURES* list now contains the symbol CLTL2 instead of the symbol
+  CLTL1.
+
+* The limit for file size of files that can be accessed by CLISP is increased:
+  4 GB for character streams, 512 MB for integer streams. The previous limits
+  were 16 MB for character streams, 2 MB for integer streams.
+
+* Fixed a bug: Calling the function INTERACTIVE-STREAM-P with a non-stream
+  argument could cause a crash.
+
+* Fixed a bug in the LOOP macro: OF-TYPE was not supported in numeric
+  accumulation clauses (COUNT/SUM/MAXIMIZE/MINIMIZE).
+
+* Fixed a bug in the LOOP macro: The FOR clauses FROM/TO/BY can now be given
+  in any order.
+
+* Fixed a bug: (UPGRADED-ARRAY-ELEMENT-TYPE 'STANDARD-CHAR) returned T instead
+  of STRING-CHAR.
+
+* Fixed a bug: The function CERROR signalled an error if more than two
+  arguments were given and the second argument was a condition.
+
+* Fixed a bug: Hash tables with test #'EQUALP did not work correctly when the
+  keys are characters, multi-dimensional arrays or pathnames.
+
+* The function VALUES-LIST now verifies that its argument is a proper list.
+
+* The function XGCD now in most cases (but not always) returns coefficients of
+  smallest possible absolute value. Suggested by the LiDIA group.
+
+Portability
+-----------
+
+Other modifications
+-------------------
+
+
+9 September 1998
+================
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* The 16 MB memory size limit on 32-bit machines is gone. No need for
+  wide-mode binaries any more. The "makemake" option --with-wide is not
+  supported any more. The command-line option -W is supported for backward
+  compatibility, but will be removed in the future.
+
+* New variables *WARN-ON-FLOATING-POINT-CONTAGION* and
+  *FLOATING-POINT-CONTAGION-ANSI*.
+
+* New function PROBE-DIRECTORY which tests for the existence of a directory.
+  Suggested by many people.
+
+* New FORMAT directives ~/ (ANSI standard) and ~! (a better alternative).
+
+* ANSI CL variable *PRINT-RIGHT-MARGIN* is implemented.
+
+* The functions WRITE and WRITE-TO-STRING take the :RIGHT-MARGIN key argument.
+
+* X3J13 writeup <TYPE-BOOLEAN> is implemented: New type BOOLEAN.
+  Suggested by Sam Steingold.
+
+* X3J13 writeup <ARGUMENT-MISMATCH-ERROR-MOON:FIX> is implemented:
+  Errors during function calls (too few arguments, too many arguments,
+  invalid keyword arguments, odd number of keyword arguments, unrecognized
+  keyword arguments) are now of type PROGRAM-ERROR.
+
+* X3J13 writeup <ENSURE-DIRECTORIES-EXIST> is implemented:
+  New function ENSURE-DIRECTORIES-EXIST.
+  Suggested by Pierpaolo Bernardi.
+
+* X3J13 writeup <ISO-COMPATIBILITY:ADD-SUBSTRATE> is implemented:
+  The macro DEFINE-SYMBOL-MACRO is now exported from package COMMON-LISP.
+  Suggested by Pierpaolo Bernardi.
+
+* X3J13 writeup <DISPLACED-ARRAY-PREDICATE> is implemented:
+  New function ARRAY-DISPLACEMENT.
+
+* X3J13 writeup <CLASS-OBJECT-SPECIALIZER:AFFIRM> is implemented:
+  Class objects can now be used as parameter specializer names (not only
+  symbols and lists of the form (EQL object)).
+
+* X3J13 writeup <COMPILE-FILE-OUTPUT-FILE-DEFAULTS:INPUT-FILE> is implemented:
+  When :OUTPUT-FILE is given to COMPILE-FILE or COMPILE-FILE-PATHNAME, missing
+  pathname components are merged in from the input file pathname.
+
+* X3J13 writeup <COMPILE-FILE-PATHNAME-ARGUMENTS:MAKE-CONSISTENT> is
+  implemented: COMPILE-FILE-PATHNAME accepts any keyword arguments.
+
+* X3J13 writeup <COMPUTE-APPLICABLE-METHODS:GENERIC> is implemented:
+  COMPUTE-APPLICABLE-METHODS is now a generic function.
+
+* X3J13 writeup <CONDITION-SLOTS:HIDDEN> is implemented: Predefined condition
+  types have their own private slot names.
+
+* X3J13 vote <57> = writeup <DEFSTRUCT-SLOTS-CONSTRAINTS-NAME:DUPLICATES-ERROR>
+  is implemented: Different slots in a structure cannot have names whose
+  SYMBOL-NAME are equal.
+
+* X3J13 writeup <CONS-TYPE-SPECIFIER:ADD> is implemented:
+  New type specifier (CONS car-type cdr-type).
+
+* X3J13 writeup <DEFMACRO-BLOCK-SCOPE:EXCLUDES-BINDINGS> is implemented:
+  The implicit BLOCK generated by DEFMACRO and DEFTYPE encloses only the
+  body forms, not the forms occurring in the lambda list.
+
+* X3J13 writeup <DEFSTRUCT-COPIER:ARGUMENT-TYPE> is implemented:
+  New function COPY-STRUCTURE.
+
+* X3J13 writeup <JUN90-TRIVIAL-ISSUES:9> is implemented:
+  New classes GENERIC-FUNCTION, STRUCTURE-OBJECT, CLASS, METHOD. Removed
+  the type STRUCTURE.
+
+* X3J13 writeup <EVALHOOK-STEP-CONFUSION:X3J13-NOV-89> is implemented:
+  Do not export EVALHOOK, APPLYHOOK, *EVALHOOK*, *APPLYHOOK* from package
+  COMMON-LISP any more.
+
+* X3J13 writeup <MACRO-DECLARATIONS:MAKE-EXPLICIT> is implemented: NOTINLINE
+  declarations of macros having special compiler treatment are now respected.
+
+* X3J13 writeups <DEFSTRUCT-PRINT-FUNCTION-INHERITANCE:YES> and
+  <DEFSTRUCT-PRINT-FUNCTION-AGAIN:X3J13-MAR-93> are implemented:
+  DEFSTRUCT accepts an option :PRINT-OBJECT, similar to :PRINT-FUNCTION,
+  and each of these options causes a method on PRINT-OBJECT to be installed.
+
+* X3J13 writeup <SPECIAL-FORM-P-MISNOMER:RENAME> is implemented: New function
+  SPECIAL-OPERATOR-P. The function SPECIAL-FORM-P still exists, but its use
+  generates a compiler warning.
+
+* X3J13 writeup <FLOATING-POINT-CONDITION-NAMES:X3J13-NOV-89> is implemented:
+  New condition types FLOATING-POINT-INEXACT, FLOATING-POINT-INVALID-OPERATION.
+
+* Fixed a bug: Reading objects in #n# syntax into typed structure slots gave
+  an error if the structure's constructor was not compiled.
+  Reported by Sam Steingold.
+
+* BUTLAST and NBUTLAST are now ANSI CL compliant: They signal an error if the
+  argument is a dotted list of length 0. (Stupid.)
+
+* The macro WITH-OUTPUT-TO-STRING is now ANSI compliant.
+
+* Added FFI support for NetBSD/m68k.
+  Thanks to Jörn Clausen <joern@techfak.uni-bielefeld.de>.
+
+* Use of the deprecated functions GENTEMP and SET now generates a compiler
+  warning.
+
+* Stricter syntax checking for DO and DO*.
+
+* When CLOS:CALL-NEXT-METHOD is called with arguments, it is now checked that
+  the set of applicable methods is the same as for the original arguments, in
+  interpreted code only.
+
+* The CLX documentation now also exists in HTML format.
+  Thanks to Gilbert Baumann <unk6@rz.uni-karlsruhe.de>.
+
+* The normal read-eval-print loop does not call (CLEAR-INPUT *STANDARD-INPUT*)
+  any more. This means that under X11, cut and paste of multiple lines into
+  an xterm running clisp now works.
+  Suggested by Sam Steingold.
+
+* When opening socket servers, ignore EADDRINUSE errors coming from other
+  sockets, in TIME_WAIT or CLOSE_WAIT state, hanging around on the port.
+  Suggested by Don Cohen.
+
+* Fixed a bug: When *PRINT-PRETTY* = T, (PRINC #\Newline) often caused two
+  newline characters to be output instead of a single one.
+
+* Fixed a bug: The sequence type functions refused to handle sequence types
+  of the form ([SIMPLE-]ARRAY eltype 1). SUBTYPEP returned wrong results
+  for type specifiers of the form ([SIMPLE-]ARRAY eltype n).
+
+* Fixed a bug: GET-MACRO-CHARACTER on a dispatch macro character does not
+  result in an error any more.
+
+* Fixed a bug in ECASE, ETYPECASE, CCASE, CTYPECASE.
+  These macros now accept T and OTHERWISE as keys.
+
+* Fixed a bug: OPEN did not accept type specifiers defined by DEFTYPE as
+  :ELEMENT-TYPE argument.
+
+* Fixed a bug in the LOOP macro: Forms containing REPEAT clauses were
+  executed too often in the presence of FOR-= clauses.
+
+* Fixed a bug: The SPACE macro returned a list of the form's values, instead
+  of the values themselves.
+
+* Fixed a bug, implement X3J13 writeup <PRINC-READABLY:X3J13-DEC-91>:
+  When *PRINT-READABLY* = T, (PRINC string) caused the string to be output
+  in double-quotes instead of literally.
+
+* X3J13 writeup <IGNORE-USE-TERMINOLOGY:VALUE-ONLY> is implemented:
+  A "variable is used despite of IGNORE declaration" warning is not emitted
+  any more for a variable that is only assigned to and not used for value.
+  Suggested by Pierpaolo Bernardi.
+
+* Fixed a bug in function FILE-AUTHOR on Win32.
+
+* Fixed a bug: CLISP was unable to determine the user's homedir in
+  certain (obscure) circumstances.
+
+* Do not warn anymore if someone modifies one of the standard generic
+  functions of CL like PRINT-OBJECT and INITIALIZE-INSTANCE.
+
+Portability
+-----------
+
+* Added AmigaOS support for the socket functions. It's not perfect, but
+  sufficient for writing socket clients.
+  Thanks to Jörg Höhle.
+
+* Port to Win32 using msvc5. (Previously only msvc4 was supported.)
+
+* Dropped support for pre-ANSI-C compilers.
+
+* Updated support for EMX.
+
+* Dropped support for EMX versions older than 0.9c.
+
+* Added support for PowerPC running MkLinux.
+
+* Removed (incomplete) support for MS Windows 3.1.
+
+Other modifications
+-------------------
+
+* `clisp-link' has a new command `run', to run a linking set with some
+  modules loaded. If CLISP has been configured with option
+  --with-dynamic-modules, this is much faster than constructing a
+  temporary linking set.
+  Suggested by Gilbert Baumann <unk6@rz.uni-karlsruhe.de>.
+
+* Compiling IFs with no else part now produce better code (Jörg Höhle).
+
+* Speed up I/O to *STANDARD-INPUT*, *STANDARD-OUTPUT* and *TERMINAL-IO*:
+  If standard input is redirected from a file, the input side of *TERMINAL-IO*
+  will be buffered. If standard output is redirected to a file, the output
+  side of *TERMINAL-IO* will be buffered.
+
+* Dropped the STDWIN library.
+
+* Added a new type encoding scheme which allows all address ranges from
+  0x00000000 to 0x7FFFFFFF to be used. This should make porting to some
+  systems easier.
+
+* Added bindings to libc for Linux with libc6 (aka glibc 2.0).
+
+* Miscellaneous documentation updates.
+
+
+6 December 1997
+===============
+
+User visible changes
+--------------------
+
+* Fixed a bug which could cause a crash when Ctrl-C was pressed during heap
+  allocation on i386.
+
+Other modifications
+-------------------
+
+* The implementation notes now also exist in HTML format.
+
+
+25 September 1997
+=================
+
+User visible changes
+--------------------
+
+* X3J13 vote <53> is implemented: DEFSTRUCT BOA constructors can have &KEY
+  arguments.
+
+* X3J13 vote <40> is partially implemented: New variable *READ-EVAL*.
+
+* X3J13 vote <150> is implemented: (READTABLE-CASE readtable) can now have
+  the value :INVERT.
+
+* MAKE-PACKAGE and IN-PACKAGE accept a keyword argument :CASE-SENSITIVE.
+  Similarly, DEFPACKAGE accepts an option :CASE-SENSITIVE. When its value is
+  non-NIL, the package will be case sensitive, i.e. the reader will not
+  case-convert symbol names before looking them up or creating them in this
+  package. The package names are still subject to (READTABLE-CASE *READTABLE*),
+  though.
+
+* X3J13 vote <157> is implemented: ROOM accepts an optional argument with
+  default value :DEFAULT.
+
+* New macro SPACE. (SPACE form) evaluates form and prints information about
+  the memory allocations caused by this evaluation.
+
+* The spanish translation is now 100% complete. Thanks to Carlos Linares.
+
+* DESCRIBE of a structure now displays the structure's slots.
+
+* The reader now accepts the syntax #\^A ... #\^Z for the ASCII control
+  characters.
+
+* Fixed a CLOS bug: &ALLOW-OTHER-KEYS in lambda lists of INITIALIZE-INSTANCE
+  now disables the validity checking of corresponding MAKE-INSTANCE calls.
+  Thanks to Matthias Lindner <matthias@intellektik.informatik.th-darmstadt.de>.
+
+* Fixed a bug: The type REAL is now accepted as a declaration specifier.
+
+* Fixed a bug: When using GNU gettext, the LOCALIZED function always returned
+  the value corresponding to language ENGLISH, and the interactive conflict
+  resolution of some IMPORT/EXPORT package operations aborted with an internal
+  error.
+
+* Fixed a bug in the foreign function interface: call-ins did not work on
+  some platforms.
+  Thanks to Matthias Lindner <matthias@intellektik.informatik.th-darmstadt.de>.
+
+* Fixed a bug: Calling the function SOCKET-SERVICE-PORT with a non-string
+  argument caused a crash.
+
+* Fixed two bugs which could cause a crash when a GC occurred during an
+  IN-PACKAGE or during a pathname operation (DOS, OS/2, Win32 versions only).
+
+* Added image support to the clx/new-clx module.
+  Thanks to Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>.
+
+Portability
+-----------
+
+* More Win32 support: stack overflow handling, foreign function interface,
+  more robust memory management.
+
+* Added support for Win32 (WinNT and Win95), using Borland C++.
+
+* Fixed a compilation error when compiling for sparcv8.
+  Thanks to Hans Adams <adamsh@server.ecomp.de>.
+
+* Updated support for Solaris/x86.
+  Thanks to Lutz Euler <euler@lavielle.com>.
+
+Other modifications
+-------------------
+
+* Reduced the number of conses allocated by calling APPLY on a function with
+  both &KEY and &REST.
+  Thanks to Jörg Höhle.
+
+* The CLX documentation can now be viewed in ghostview.
+  Thanks to Karl M. Hegbloom <karlheg@inetarena.com>.
+
+
+7 August 1997
+=============
+
+User visible changes
+--------------------
+
+* Two new add-on modules:
+    clx/new-clx: Fast Common Lisp to X11 interface. Written by
+                 Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>.
+    clx/mit-clx: Classic Common Lisp to X11 interface.
+
+* (DRIBBLE filename) now appends to the given file instead of overwriting it.
+
+* Fixed a bug: Platform dependent constants are not inlined in .fas files any
+  more.
+
+* Fixed a bug: Binding *PRINT-PRETTY* to NIL inside a PRINT-OBJECT method or
+  inside a structure's print-function could result in undefined behaviour.
+  Thanks to Don Cohen <don@nichimen.com>.
+
+* Fixed a bug: For x a float, (= 0 x) and (EQUALP 0 x) could result in
+  undefined behaviour.
+  Thanks to Don Cohen <don@nichimen.com>.
+
+* Fixed a bug: The error message issued by CHECK-TYPE was wrong.
+
+* Fixed a bug: Calling (DRIBBLE pathname) after (DRIBBLE) did not work.
+  Thanks to Art Nuzzo <artn@bs724.comm.mot.com>.
+
+* Fixed a bug: The WITH-STANDARD-IO-SYNTAX macro caused *PACKAGE* to be bound
+  to an invalid value.
+
+* Fixed two bugs in the GC (one in the generational GC, one in the
+  non-generational GC).
+  Big thanks to Marcus Daniels.
+
+* Fixed a bug: Printing socket streams created by SOCKET-ACCEPT could result
+  in an error or an endless loop.
+
+Portability
+-----------
+
+* Added support for Win32 (WinNT and Win95), using Microsoft Visual C++.
+
+* Added support for Cygwin32 version 18 (Unix emulation on WinNT or Win95).
+
+* Added support for GNU 0.2 (the Hurd). Thanks to Marcus Daniels.
+
+Other modifications
+-------------------
+
+* "clisp" can now be called with "-" as argument. The standard input is then
+  executed by a read-eval-print loop without prompt, while the remaining
+  arguments will be assigned to the variable *ARGS*.
+
+* Overall speedup by 13% on i386.
+
+
+3 May 1997
+==========
+
+User visible changes
+--------------------
+
+* X3J13 vote <182> is now fully implemented: A LET/LET*/COMPILER-LET binding
+  specification may now be a list of length 1, without initial value.
+  Thanks to Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>.
+
+* X3J13 vote <78> is now fully implemented: FLET, LABELS, MACROLET establish
+  an implicit BLOCK.
+
+* X3J13 vote <100> is implemented: Hash tables with test function EQUALP.
+
+* X3J13 vote <131> is partially implemented: #P reader macro for pathnames.
+
+* The MULTIPLE-VALUE-BIND macro no longer allows lists as variable
+  specifications, only symbols.
+  Thanks to Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>.
+
+* DEFCLASS which changes a class is now allowed and generates a warning.
+  Since UPDATE-INSTANCE-FOR-REDEFINED-CLASS is not supported, it is your
+  responsibility to not use the old instances afterwards.
+  Suggested by Brian Dennis <xjam@CS.Berkeley.EDU> and Tobias Kunze
+  <tkunze@cmsgia.Stanford.EDU>.
+
+* The TIME macro now outputs to *TRACE-OUTPUT* instead of *STANDARD-OUTPUT*.
+  Thanks to Nathan Sidwell <nathan@bristol.st.com>.
+
+* When the argument of the function TRANSLATE-LOGICAL-PATHNAME is a string,
+  it is now interpreted as a logical pathname string. Previously, it was
+  coerced to a pathname through the function PATHNAME, yielding a physical
+  pathname.
+
+* CLISP now supports more than the three predefined user-interface languages.
+  New macros DEFLANGUAGE, DEFINTERNATIONAL, DEFLOCALIZED. New function
+  LOCALIZED. The macros ENGLISH, DEUTSCH, FRANCAIS now work only for strings.
+  Removed the macro LANGUAGE-CASE.
+  The implementation uses the GNU gettext library.
+  Thanks to Ulrich Drepper and Marcus Daniels.
+
+* New user-interface language ESPANOL.
+  Thanks to Carlos Linares López <clinares@delicias.dia.fi.upm.es> who has
+  translated about 55% of CLISP's messages to Spanish.
+
+* EQUALP now descends structures (but not CLOS instances!) on all platforms,
+  as requested by X3J13 vote <71>.
+
+* The EXIT-ON-ERROR macro now also exits when a Ctrl-C interrupt occurs.
+  Thanks to Roger Kehr <kehr@iti.informatik.th-darmstadt.de>.
+
+* The initial value of *LOAD-PATHS* on Unix is now (#"./" "~/lisp/**/")
+  instead of (#"./" #"./**/" "~/**/"). To be customized in config.lsp.
+
+* New variable *LOAD-COMPILING*, which provides the default value for the
+  :COMPILING keyword of function LOAD. The initial value of *LOAD-COMPILING*
+  can be specified by a command line option.
+
+* Fixed a bug: (VALUES-LIST '()) often returned one value.
+  Thanks to Gilbert Baumann <gilbert@ma2s2.mathematik.uni-karlsruhe.de>.
+
+* Fixed a bug in the compiler: When optimizing (OR T form), the compiler
+  could abort with an error message.
+  Thanks to Nathan Sidwell <nathan@bristol.st.com>.
+
+* Fixed a bug in the DEFSTRUCT macro which caused the compiler to issue
+  an error message when compiling a structure definition containing a slot
+  with a constant, non-NIL initializer.
+  Thanks to Matthias Lindner <lindner@forwiss.uni-erlangen.de>.
+
+* Fixed a bug in the DEFCLASS macro which caused DEFCLASS and DEFINE-CONDITION
+  to reject the :DOCUMENTATION class option.
+  Thanks to Don Cohen <donc@isi.edu>.
+
+* Fixed a bug: The use of type specifiers of the form
+  (FUNCTION argument-types result-type)
+  within THE, ETHE, LOOP and DEFSTRUCT forms could lead to errors.
+  Thanks to Marty Shannon <mshannon@i-2000.com>.
+
+* Fixed two bugs in the DRIBBLE function: After calling (DRIBBLE pathname)
+  followed by (DRIBBLE), *DEBUG-IO* referred to an unwritable stream.
+  Calling (DRIBBLE pathname) from within a break loop caused some of the
+  output to be logged twice.
+
+* Fixed a bug in the expansion of deeply nested backquotes.
+  Thanks to S. Wotherspoon <spoon@hilbert.maths.utas.edu.au>.
+
+* Fixed a bug in the LOOP macro: Stepping for FOR-AS-= clauses
+  (LOOP ... {FOR|AS} var = form1 THEN form2 ...) could be executed in the
+  wrong order if form1 is constant and form2 is non-constant.
+  Thanks to Russell Senior <seniorr@teleport.com>.
+
+* Fixed a bug in /= : When called with more than two arguments, only the
+  first two arguments were compared; the remaining arguments were ignored.
+  Thanks to J. V. Needham <jv@rdk840.dfci.harvard.edu>.
+
+* Fixed a bug in EQUAL and EQUALP: displaced strings were not compared
+  correctly.
+
+* Fixed a bug in EXPT: For x a (COMPLEX RATIONAL) and y = m/2^n, (EXPT X Y)
+  actually returned x ^ (m/2^(n+32)) instead of x ^ (m/2^n).
+
+* Fixed a bug in TRUENAME on Unix: If "aa.bb" is a symbolic link to "cc",
+  (TRUENAME "aa.bb") returned "cc.bb" instead of "cc".
+
+* Fixed a bug in the management of add-on modules: On some platforms,
+  GC in memory images containing add-on modules always crashed.
+
+* Fixed a bug in the generational GC on i386, rs6000, alpha: In some cases,
+  FFI objects in memory could cause the first "small" garbage collection to
+  fail.
+  Thanks to Dr. Werner Fink <werner@suse.de>.
+
+* Fixed a bug in the printing routine for SOCKET-SERVER objects.
+  Thanks to Alexey Goldin <goldin@spot.uchicago.edu> and Marcus Daniels.
+
+Portability
+-----------
+
+* The core of CLISP can now be compiled with a C++ compiler if no C compiler
+  is available (without readline library, FFI or modules).
+
+* Added support for Mips processors in 64-bit mode.
+
+* Updated support for Linux 2.0.
+
+* Support for immutable objects now works on Linux/ELF. It did already work
+  on Linux/a.out.
+
+* Updated Amiga support. Thanks to Jörg Höhle <Joerg.Hoehle@gmd.de>.
+
+* Updated Acorn support. Thanks to Peter Burwood <clisp@arcangel.dircon.co.uk>.
+
+* Updated OS/2 support. Thanks to Jörg Diederich <J_Diederich@herlab.ruhr.de>.
+
+* Updated support for Solaris/x86. Thanks to Marty Shannon <mjs@tiaa-cref.org>.
+
+* Fixed a bug which could cause the readline completion to dump core on HP-UX.
+
+* Fixed a bug relating to the read-eval-print loop's return point on some
+  platforms. Thanks to Peter Burwood <clisp@arcangel.dircon.co.uk>.
+
+* Removed an incompatibility between SPARC/Sun4 and UltraSPARC memory images.
+  Found by Martin Ginkel <ginkel@iik.cs.uni-magdeburg.de>.
+
+* Removed support for AmigaOS versions < 2.04.
+
+Other modifications
+-------------------
+
+* New "makemake" option --with-wide causes normal and wide-mode binaries to
+  be built and distributed simultaneously. New command-line option -W
+  for choosing the wide-mode binaries instead of the normal binaries.
+
+* On Unix, "clisp" is now an executable instead of a shell script.
+
+* "clisp" can now be called with a Lisp file as argument. The remaining
+  arguments will be passed to the Lisp program in the variable *ARGS*.
+  On Unix, you can thus make Lisp programs executable by putting
+  "#!/usr/local/bin/clisp" in the first line and doing a "chmod a+x".
+
+* The read-eval-print loop now calls FORCE-OUTPUT after outputting the prompt.
+  Thanks to Jörg Höhle <Joerg.Hoehle@gmd.de>.
+
+* Support for immutable objects now also works in the WIDE tagging scheme.
+
+* Reduced the startup time by 20-30%.
+
+
+21 July 1996
+============
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* X3J13 vote <72> is conditionally implemented: Objects other than symbols,
+  lists, numbers, characters, string, bit-vectors are now self-evaluating if
+  *PACKAGE* uses the COMMON-LISP package.
+
+* The package CLOS is now among the default use list of a new package.
+  (USE-PACKAGE "CLOS") is not needed any more. To use PCL, you now need
+  to (UNUSE-PACKAGE "CLOS") explicitly.
+
+* The bytecode format is now platform independent. As a consequence,
+  compiled functions can be printed readably when *PRINT-READABLY* = T.
+
+* Built-in function objects (SUBRs) are now printed readably when
+  *PRINT-READABLY* = T, instead of signaling an error.
+
+* Added a <c-type>, C-PTR-NULL to the FFI.  C-PTR-NULL will convert
+  NIL objects into NULL pointers (so that type conflicts can be avoided).
+
+* Socket streams are implemented. New functions SOCKET-SERVER,
+  SOCKET-SERVER-CLOSE, SOCKET-SERVER-PORT, SOCKET-WAIT, SOCKET-ACCEPT,
+  SOCKET-CONNECT, SOCKET-STREAM-HOST, SOCKET-STREAM-PORT, SOCKET-SERVICE-PORT,
+  SOCKET-STREAM-PEER-HOST.
+  See <http://clisp.cons.org/impnotes.html#socket> for details.
+  Thanks to Marcus Daniels <marcus@sysc.pdx.edu> and
+  Marco Ramoni <M.Ramoni@open.ac.uk>.
+
+* Pipe streams now support binary I/O.
+
+* MAKE-INSTANCE now also works for DEFSTRUCT classes, and DEFSTRUCT classes
+  can now be subclassed via DEFCLASS with option :METACLASS STRUCTURE-CLASS.
+  Suggested by Manuel Kolp <kolp@qant.ucl.ac.be>.
+
+* User defined methods on NO-APPLICABLE-METHOD now have a chance for a
+  corrective action. Thanks to Mark Thomas <thommark@access.digex.net>.
+
+* APROPOS and DESCRIBE now tell you about symbols which name a type or class.
+
+* During directory search, symbolic link loops are now ignored instead
+  of resulting in an error. Thanks to Dan Stanger.
+
+* Fixed a CLOS bug: REMOVE-METHOD did not work.
+  Thanks to Roger Kehr <kehr@iti.informatik.th-darmstadt.de>.
+
+* Fixed a bug in the compiler: A (MULTIPLE-VALUE-SETQ vars valform)
+  or (MULTIPLE-VALUE-BIND vars valform ...) form was miscompiled if
+  valform is known to produce a single value.
+  Thanks to Paul Graham <pg@das.harvard.edu>.
+
+* Fixed at least two bugs in the LOOP macro: FOR-AS-ACROSS clauses could
+  result in AREF signaling an out-of-bounds error at the end of the vector.
+  Initialisations for FOR-AS-= clauses could be executed in the wrong order.
+
+* Fixed a bug: the functions ENCODE-UNIVERSAL-TIME and DECODE-UNIVERSAL-TIME
+  computed a wrong DST flag for time values between (T - 2h) and T, where
+  T denotes a DST switch time.
+
+* Fixed two bugs in the foreign function interface: multi-dimensional arrays
+  and floating point numbers with value 0.0 were not correctly passed from
+  "foreign land" to "Lisp land". Thanks to Ken Olum <kdo@mit.edu>.
+
+* Fixed a bug in the foreign function interface: call-ins which return
+  structures or unions would not compile correctly. Thanks to Michael Stoll.
+
+* Fixed a bug: On Solaris, the function SYSTEM sometimes reported exit
+  status 0 although the command had failed.
+  Thanks to Brian F. Dennis <xjam@cs.Berkeley.edu>.
+
+* Fixed a bug: LOGTEST did not work correctly if both arguments were bignums.
+
+* Fixed a bug in the floating point number printing routine:
+  In rare cases, a number was printed with more digits than necessary
+  (without, however, violating the print-read consistency). For example,
+  2.1416s29 printed as 2.14159s29, and 3.002618f-31 printed as 3.0026179f-31.
+
+* Fixed a bug in ATAN: (ATAN y 0) with y < 0 returned pi/2 instead of -pi/2.
+
+* Fixed a bug in XGCD which caused the results to be wrong with a small
+  probability, for example in the case (XGCD 77874422 32223899).
+
+Portability
+-----------
+
+* FreeBSD/NetBSD patches and compilation notes.
+  Thanks to Douglas Crosher <dtc@stan.xx.swin.oz.au>.
+
+* Added support for SUNWspro cc 3.0.1 on Sparc.
+
+* Updated support for Ultrix.
+
+* Updated support for NeXTstep version 3.3.
+  Thanks to Robert Murphy <robert.murphy@yale.edu>.
+
+* Updated support for SINIX. Thanks to Michael Becker <mb12@coconet.de>.
+
+* Fixed a bug in the conversion of double-float numbers from "foreign land"
+  to "Lisp land" on DEC Alpha. Thanks to Ken Olum <kdo@mit.edu>.
+
+* Fixed a bug in the implementation of LISTEN on Irix: CLISP went into a
+  `function call not implemented' OS error loop. Thanks to Marcus Daniels.
+
+* Fixed a signal handling bug on some versions of SunOS 4: Strange things
+  could happen in a break loop.
+
+* The `configure' script now supports the --srcdir, --prefix and --exec-prefix
+  options.
+
+* Removed support for Atari ST/TT running TOS.
+
+Other modifications
+-------------------
+
+* The compiler now recognizes more function calls as inlinable: Cases like
+  (FUNCALL (LAMBDA ...) ...), (DECLAIM (INLINE F)) (MAPCAR #'F ...)
+  are now compiled as inline function calls. Previously you had to write
+  (FUNCTION (LAMBDA ...)) explicitly. Suggested by Jörg Höhle.
+
+* "makemake" now supports the --srcdir, --prefix and --exec-prefix options.
+
+* Added a testsuite for part of CLOS. Thanks to Christian Jullien.
+
+* Miscellaneous documentation updates.
+
+
+23 June 1995
+============
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* X3J13 vote <106> is implemented: LAST has an optional argument.
+  Thanks to Pierpaolo Bernardi.
+
+* X3J13 vote <87> is implemented: New function COMPLEMENT.
+  Thanks to Pierpaolo Bernardi.
+
+* X3J13 vote <40> is partially implemented: New macro WITH-STANDARD-IO-SYNTAX.
+  Thanks to Pierpaolo Bernardi.
+
+* X3J13 vote <98> is partially implemented: New macro WITH-HASH-TABLE-ITERATOR.
+  Thanks to Pierpaolo Bernardi.
+
+* X3J13 vote <97> is implemented: New functions HASH-TABLE-REHASH-SIZE,
+  HASH-TABLE-REHASH-THRESHOLD, HASH-TABLE-SIZE, HASH-TABLE-TEST.
+  Thanks to Pierpaolo Bernardi.
+
+* X3J13 votes <69> and <70> are implemented: New declaration DYNAMIC-EXTENT.
+
+* The dpANS macro LAMBDA is implemented.
+
+* The dpANS declaration IGNORABLE is implemented.
+
+* The dpANS function CONSTANTLY is implemented. Thanks to Pierpaolo Bernardi.
+
+* Better syntax checking for the CASE macro. Thanks to Pierpaolo Bernardi.
+
+* The user interface language may be chosen through the environment variable
+  LANG as well.
+
+* The pretty printer now indents lists spanning more than one line by two
+  spaces, instead of one. New variable *PRINT-INDENT-LISTS*.
+
+* *PRINT-PRETTY* is now initially T.
+
+* Foreign function interface: New foreign type constructor FFI:C-ARRAY-MAX,
+  implements zero-terminated arrays of bounded size.
+
+* On Unix, 8-bit characters are legal in pathnames if the operating system
+  accepts them.
+
+* On DOS, #\Newline is converted to CR/LF when doing character output to
+  unbuffered file streams (referring to special files).
+
+* Fixed a bug in the interpreter and compiler: A MULTIPLE-VALUE-SETQ form
+  which assigns to a symbol macro expanded to a wrong form; compiling it
+  produced a warning. Thanks to Pierpaolo Bernardi.
+
+* Fixed a bug in the compiler: Some CASE form with duplicate keys, when
+  compiled, chose the wrong clause to be executed.
+  Thanks to Pierpaolo Bernardi.
+
+* Fixed a bug in the #+/#- reader macros. (LIST #+FOO #-BAR 1 2 3) now
+  returns (2 3), not (3).
+
+* Fixed a bug in LOG: (LOG x^n x^m), where n, m are integers, |m| > 1, and
+  x is a rational number /= 1, now correctly returns n/m. Previously,
+  (LOG 2 4) returned 1/0.
+
+* Fixed a CLOS bug: Using the :DOCUMENTATION option in DEFGENERIC declarations
+  for function names of the form (SETF symbol) signalled an error.
+  Thanks to Pierpaolo Bernardi.
+
+* Fixed a bug in DEFSETF: An IGNORE declaration for the store variable had
+  no effect. Thanks to Pierpaolo Bernardi.
+
+Portability
+-----------
+
+* Added support for Linux/ELF. Thanks to Marcus Daniels.
+
+* Added support for Solaris/x86. Thanks to Marty Shannon.
+
+* On Solaris, LISTEN and READ-CHAR-NO-HANG did not work on the terminal stream
+  if standard input was redirected to come from a file.
+
+* On OS/2, consider the virtual directory \PIPE\ as existent.
+
+Other modifications
+-------------------
+
+* A couple of bug fixes and new functions in the STDWIN package.
+  Thanks to Pierpaolo Bernardi.
+
+* The structure of external modules has changed a bit.
+
+* Miscellaneous documentation updates.
+
+
+25 April 1995
+=============
+
+User visible changes
+--------------------
+
+* Michael Stoll has written a graphical user interface for CLISP under
+  NeXTstep.
+
+* Added a foreign language module WILDCARD for wildcard matching.
+
+* Added a foreign language module REGEXP for Unix-style regular expression
+  matching and searching.
+
+* X3J13 vote <94> is implemented: Calling GENSYM has no side effects except
+  incrementing the counter. New variable *GENSYM-COUNTER*.
+
+* New macro FORMATTER converts a FORMAT control string to a function.
+
+* Some FORMAT fixes:
+  + X3J13 vote <81> is implemented: The FORMAT ~:^ directive is more useful.
+    Warning: Old style "~:^" directives need to be converted to "~#:^".
+  + X3J13 vote <82> is implemented: The FORMAT ~D, ~B, ~O, ~X, ~R directives
+    accept an optional comma-interval parameter.
+  + X3J13 vote <84> is implemented: FORMAT ~C outputs characters with no bits
+    as if by WRITE-CHAR.
+  + Handling of ~^ within the FORMAT ~? directive.
+
+* X3J13 vote <167> is implemented: New types FILE-STREAM, SYNONYM-STREAM,
+  BROADCAST-STREAM, CONCATENATED-STREAM, TWO-WAY-STREAM, ECHO-STREAM,
+  STRING-STREAM. New functions OPEN-STREAM-P, SYNONYM-STREAM-SYMBOL,
+  BROADCAST-STREAM-STREAMS, CONCATENATED-STREAM-STREAMS,
+  TWO-WAY-STREAM-INPUT-STREAM, TWO-WAY-STREAM-OUTPUT-STREAM,
+  ECHO-STREAM-INPUT-STREAM, ECHO-STREAM-OUTPUT-STREAM.
+
+* New condition type PRINT-NOT-READABLE.
+  New function PRINT-NOT-READABLE-OBJECT.
+
+* New function FINALIZE. (FINALIZE object function) has the effect that
+  function will be called when object is being garbage collected.
+
+* DRIBBLE now also redirects *ERROR-OUTPUT*, *TRACE-OUTPUT*, *QUERY-IO*,
+  *DEBUG-IO* if they refer to *TERMINAL-IO*.
+
+* Calling SYMBOL-VALUE on a symbol defined as global symbol macro now returns
+  the value of the expansion. New function SYMBOL-MACRO-EXPAND.
+
+* Add FFI to the *FEATURES* if the foreign language interface is present.
+
+* Fixed a bug: An IGNORE declaration for a macro's &ENVIRONMENT argument now
+  has an effect.
+
+* Fixed a couple of bugs in the foreign language interface: Passing zero size
+  arrays did not work, parameters with mode :OUT did not work on SPARC and
+  HP-PA, and some error messages were deficient.
+
+* Fixed a bogus error message in SET-DISPATCH-MACRO-CHARACTER.
+
+Portability
+-----------
+
+* Fixed a couple of building problems relating to the foreign language
+  interface (missing `mark_fp_invalid' and `pr_hex8', missing makefile
+  dependencies, support for --with-dynamic-modules, warnings when compiling
+  user2.lsp and foreign1.lsp).
+
+* Fixed a building problem: Not all C compilers accept casts in constant
+  expressions used as initializers, e.g. gcc-2.5.8.
+
+* Foreign function interface: Fixed a couple of possible bugs in the low-level
+  foreign function call routine for i386/486/586, m680x0, SPARC CPUs.
+  Thanks to Jörg Höhle.
+
+* Small fixes for SCO.
+
+* Added a utility "hln" for making hard links. Needed for "make distrib";
+  Solaris "ln" does not make a hard link if a symbolic link is involved.
+
+* On some Unix systems, use "uname -m", not "arch", to determine
+  (MACHINE-TYPE) and (MACHINE-VERSION).
+
+* More support for BSDI 1.0, AIX, HP-UX, Solaris.
+
+* Changed STDWIN so that it compiles under X11R6.
+
+Other modifications
+-------------------
+
+* Speed up compiled calls to FORMAT with literal control string by use of
+  FORMATTER.
+
+* Miscellaneous documentation updates.
+
+
+4 April 1995
+============
+
+User visible changes
+--------------------
+
+* The initial value of *PACKAGE* can be specified by a command line option.
+
+* X3J13 vote <6> is implemented: New place ROW-MAJOR-AREF.
+
+* X3J13 vote <126> is implemented: New function DELETE-PACKAGE.
+
+* X3J13 vote <14> is implemented: Closing a synonym stream does not close
+  its constituent stream.
+
+* Foreign language interface for C and ANSI C. New package FFI. New macros
+  FFI:DEF-C-TYPE, FFI:DEF-C-VAR, FFI:DEF-C-CALL-OUT, FFI:DEF-C-CALL-IN,
+  FFI:DEF-C-ENUM, FFI:DEF-C-STRUCT, FFI:DEF-CALL-OUT, FFI:DEF-CALL-IN,
+  FFI:ELEMENT, FFI:DEREF, FFI:SLOT, FFI:CAST, FFI:TYPEOF, FFI:SIZEOF,
+  FFI:BITSIZEOF.
+  This currently works only on Unix and only with the CPUs
+  i386/486/586, m680x0, Mips, SPARC, DEC Alpha, HP-PA, RS/6000.
+  Warning: (COMPILE-FILE "filename.lsp") now overwrites the file "filename.c".
+
+* New macros MUFFLE-CERRORS and APPEASE-CERRORS. During their execution,
+  continuable errors are handled by the function CONTINUE. MUFFLE-CERRORS
+  does this silently, APPEASE-CERRORS prints the error as a warning.
+
+* New macro EXIT-ON-ERROR. During its execution, non-continuable errors
+  cause CLISP to exit with error status.
+
+* The function ED, when asked to edit a non-existent file, now creates that
+  file instead of signaling an error.
+
+* When a non-absolute pathname is specified for the -o command line option
+  (destination file of a compilation), it is interpreted as relative to the
+  current directory, not relative to the source file of the compilation.
+
+* The readline library now uses the last column of the screen if the terminal
+  is an xterm, for example. Work done by Chet Ramey.
+
+* Fixed two bugs in the LOOP macro: FOR-AS-ACROSS clauses could result in AREF
+  signaling an out-of-bounds error at the end of the vector. Initialisations
+  for FOR-AS-= clauses could be executed in the wrong order.
+
+* Fixed a bug in the compiler which caused LOAD-TIME-VALUE forms to be
+  evaluated at compile time.
+
+* Fixed a bug in the debugger: Choosing a restart Rnnn always invoked the
+  last restart listed, not the chosen one.
+
+* Fixed a bug: (CLOSE *TERMINAL-IO*) signals an error again.
+
+* On DOS and OS/2, the Lisp reader now treats Ctrl-Z as whitespace.
+
+* The -I command line option now tells the readline library to handle the Tab
+  character as normal self-inserting character.
+
+* Unix version only: DISASSEMBLE can display machine instructions, provided
+  that GNU gdb is present.
+
+Portability
+-----------
+
+* Updated support for EMX.
+
+* Fixed a bug which caused a preprocessor error on SunOS and OSF/1.
+
+* Small fixes for Sinix and SCO.
+
+* Removed support for Coherent.
+
+Other modifications
+-------------------
+
+* Generational garbage collection now also works on IRIX 5.2.
+
+* Generational garbage collection and support for immutable objects do not
+  exclude each other any more.
+
+* Speed up the bytecode interpreter by about 2%.
+
+* Miscellaneous documentation updates.
+
+
+1 January 1995
+==============
+
+CLISP now compiles and runs on
+* microcomputers:
+  * DOS
+  * OS/2 2.0
+  * MS Windows 3.1
+  * Amiga 500-4000, Amiga OS
+  * Atari ST/TT, TOS
+  * Acorn ARM Risc PC, RISC OS
+* Unix workstations:
+  * PC, Linux
+  * PC, USL SVR4
+  * DEC Alpha AXP, OSF/1
+  * Sun4, SunOS 4 or 5
+  * HP9000/800, HP-UX
+  * NeXT, NeXTstep 3.1
+  * PC, NeXTstep 3.2
+  * SGI Mips, Irix 4 or 5
+  * SNI Mips, USL SVR4
+  * DECstation 5000, Ultrix 4.2
+  * IBM RS/6000, AIX 3.2
+  * M88000
+  * Sun386, SunOS 4
+  * Sun3, SunOS 4 (?)
+  * HP9000/300, HP-UX or NetBSD
+  * Apple MacII, A/UX (?)
+  * Amiga 3000, Amiga Unix 2.1
+  * Sequent PTX
+  * PC, 386BSD or NetBSD or BSDI/386
+  * PC, UnixWare
+  * PC, SCO (?)
+  * PC, Coherent 4.0
+  * Convex, ConvexOS
+  * Atari ST/TT, MiNT
+
+Generational GC works on
+  * PC, Linux
+  * Sun4, SunOS 4 or 5
+  * NeXT, NeXTstep 3.1
+  * PC, NeXTstep 3.2
+  * DEC Alpha AXP, OSF/1 3.0
+
+
+1 January 1995
+==============
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* The destination file of a compilation can be specified by a command line
+  option.
+
+* X3J13 vote <152> is implemented: REDUCE has a keyword argument :KEY.
+
+* The printed representation of file streams of element type STRING-CHAR now
+  contains a line number.
+
+* Fixed a bug which caused the interpreter to signal an error when evaluating
+  nested DEFUNs.
+
+* Fixed a bug which could cause a crash when a GC occurred during single or
+  double float subtraction.
+
+Portability
+-----------
+
+* More support for Acorn ARM running RISCOS. Thanks to Peter Burwood.
+
+* Fixed a problem in the readline library on non-POSIX BSD systems: Only LF
+  was output instead of CR/LF.
+
+* Updated support for EMX.
+
+* The `configure' script now caches its results.
+
+Other modifications
+-------------------
+
+* New memory model TRIVIALMAP_MEMORY which supports generational garbage
+  collection in combination with the WIDE tagging scheme.
+
+* Generational garbage collection now also works on NeXTstep and OSF/1 3.0.
+
+* When a memory image is loaded, the terminal stream from the previous
+  session is closed.
+
+* Renamed `target' to `configure'.
+
+* Added a manual page in HTML format.
+
+* Miscellaneous documentation updates.
+
+
+26 October 1994
+===============
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* X3J13 vote <77> is implemented: CL:FLET, CL:LABELS, CL:MACROLET allow
+  declarations.
+
+* X3J13 vote <78> is implemented: CL:FLET, CL:LABELS, CL:MACROLET, DEFTYPE,
+  DEFSETF, DEFINE-SETF-METHOD establish an implicit BLOCK.
+
+* X3J13 vote <128> is implemented: MAKE-PATHNAME, PATHNAME-HOST,
+  PATHNAME-DEVICE, PATHNAME-DIRECTORY, PATHNAME-NAME, PATHNAME-TYPE have
+  a keyword argument :CASE. Thanks to Marcus Daniels.
+
+* X3J13 vote <137> is implemented: New functions WILD-PATHNAME-P,
+  PATHNAME-MATCH-P and TRANSLATE-PATHNAME. Thanks to Marcus Daniels.
+
+* X3J13 vote <130> is implemented: New built-in type LOGICAL-PATHNAME.
+  New place LOGICAL-PATHNAME-TRANSLATIONS. New functions LOGICAL-PATHNAME,
+  TRANSLATE-LOGICAL-PATHNAME, LOAD-LOGICAL-PATHNAME-TRANSLATIONS,
+  COMPILE-FILE-PATHNAME. Thanks to Marcus Daniels.
+
+* X3J13 vote <132> is implemented: Synonym streams to file streams are
+  allowed as pathnames.
+
+* Amiga version: SCREEN package is implemented. Thanks to Jörg Höhle.
+
+* The debugger emits some more messages to *DEBUG-IO*, not *ERROR-OUTPUT*.
+
+* (COERCE symbol 'FUNCTION) now works.
+
+* Fixed a bug in ENOUGH-NAMESTRING: In many cases, a relative directory
+  specification was returned instead of an absolute directory specification.
+
+* Fixed a CLOS bug which caused (DEFCLASS FOO (STANDARD-OBJECT) ()) and
+  (DEFINE-CONDITION FOO (CONDITION) ()) to signal errors.
+
+* Fixed a bug: In some situations, USE-PACKAGE reported a name conflict when
+  there was none.
+
+* Fixed a bug: (READ-CHAR-NO-HANG stream nil eof-object) now signals an error
+  if stream is not an input stream. Previously it returned eof-object.
+
+* Fixed a bug: On some Unix systems, (FINISH-OUTPUT *TERMINAL-IO*) signalled
+  an error if standard output was redirected to a file.
+
+* (SQRT 0) now returns an integer 0 instead of a floating-point 0.0.
+
+* Readline library: Fixed a small problem with input prompts longer than the
+  screen width.
+
+* Fixed three bugs in the built-in editor. One of them made the editor
+  entirely unusable.
+
+Portability
+-----------
+
+* Added some support for MS Windows.
+
+* On DOS, the readline library now handles the /!INPUTRC and history files
+  correctly.
+
+* Some modification for the sake of gcc-2.6.1.
+
+Other modifications
+-------------------
+
+* Generational garbage collection now also works on Linux (1.1.52 or newer).
+
+* On Unix, external modules written in C can be linked to CLISP without
+  recompiling CLISP from source. For example, the STDWIN library.
+
+* Small fix: On some machines, some internal objects were being printed as
+  #<SYSTEM-POINTER ...> instead of #<FRAME-POINTER ...>.
+
+* Miscellaneous documentation updates.
+
+
+1 September 1994
+================
+
+User visible changes
+--------------------
+
+* The DEFCONSTANT warning about redefinition of a constant is also inhibited
+  if the constant's new and old values are the same string (in the sense of
+  EQUAL). Thanks to Marcus Daniels.
+
+* Unix version only: The daylight saving time flag of a time zone (eighth
+  value of GET-DECODED-TIME and DECODE-UNIVERSAL-TIME) is now correct.
+
+Portability
+-----------
+
+* Added support for Acorn ARM running RISCOS. Thanks to Peter Burwood.
+
+* Added support for NetBSD 1.0. Thanks to Douglas Crosher.
+
+* Updated support for EMX and DJGPP.
+
+* GNU malloc for HP-UX now works.
+
+
+23 August 1994
+==============
+
+User visible changes
+--------------------
+
+* X3J13 vote <64> is implemented: New macro DESTRUCTURING-BIND.
+
+* The function ED can now edit functions that have been entered in
+  interpreted form even if they have later been compiled.
+
+* New function UNCOMPILE. (UNCOMPILE function-name) undoes the effect of
+  (COMPILE function-name) if the function's definition had been entered
+  in interpreted form.
+
+* The OPEN option :IF-EXISTS :RENAME-AND-DELETE now deletes the renamed
+  file. Previously :RENAME-AND-DELETE was equivalent to :RENAME.
+
+* (LISP-IMPLEMENTATION-VERSION) returns a more precise version string.
+
+* Readline library: Completion of a function call with no arguments
+  automatically adds the closing parenthesis.
+
+* Readline library: When a closing parenthesis is typed, the corresponding
+  opening parenthesis is displayed.
+
+Portability
+-----------
+
+* Added support for Convex. Thanks to Marcus Daniels.
+
+* Added support for SCO. Thanks to Cathy Bareiss and Marcus Daniels.
+
+* More NeXTstep support.
+
+* More Sinix support. Thanks to Manfred Weichel.
+
+* Updated support for AmigaOS. Thanks to Jörg Höhle.
+
+* Some modification for the sake of gcc-2.6.
+
+* Added GNU malloc. For HP-UX.
+
+* Added a bunch of character set conversion utilities. Covers the ASCII,
+  ISO Latin-1, IBM PC, HP Roman8, NeXTstep and Atari ST character sets.
+
+* The `configure' script now prints its results.
+
+* Floating point computations on some CPUs (Sparc, HP-PA, M88000, RS/6000):
+  Fixed some confusion between overflow and NaN and between underflow and zero.
+
+* Removed support for Atari Turbo-C (now known as PURE-C).
+
+Other modifications
+-------------------
+
+* Copyright clarification.
+
+* Generational garbage collection. This works only for Unix implementations
+  with powerful virtual memory management, currently only SunOS.
+
+* Improved virtual memory efficiency:
+  - Memory model SPVW_PAGES: do not put a piece of management data into
+    every page.
+  - Memory model SPVW_BLOCKS: compact conses, do not shuffle them, so that
+    they are kept sorted according to their age.
+  - Memory model SPVW_PURE_BLOCKS: pages containing garbage are
+    immediately freed.
+
+* Unix version only: To reduce the startup time, try to use mmap() instead
+  of read() for the startup file.
+
+* Added a readline manual page.
+
+* Miscellaneous documentation updates.
+
+
+4 July 1994
+===========
+
+User visible changes
+--------------------
+
+* X3J13 votes <115> and <114> are implemented: an elaborate LOOP macro.
+  New macro LOOP-FINISH.
+  Warning: The scoping rules for the iteration variables are hairy. If a
+  FOR/AS initialisation form refers to an iteration variable of a subsequent
+  FOR/AS clause, the effects are implementation dependent!
+
+* X3J13 vote <120> is implemented: New function MAP-INTO.
+
+* X3J13 vote <79> is implemented: New constants
+  LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT,
+  LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT,
+  LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT,
+  LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT,
+  LEAST-POSITIVE-NORMALIZED-DOUBLE-FLOAT,
+  LEAST-NEGATIVE-NORMALIZED-DOUBLE-FLOAT,
+  LEAST-POSITIVE-NORMALIZED-LONG-FLOAT,
+  LEAST-NEGATIVE-NORMALIZED-LONG-FLOAT.
+
+* The macro WITH-OUTPUT-TO-PRINTER now also works on DOS.
+
+* Fixed a bug in DO-SYMBOLS: A symbol which is exported from a used package
+  was considered accessible in the using package even if it was shadowed by
+  another present symbol of the same name.
+
+* Fixed a bug in the debugger which caused the BACKTRACE commands to print
+  garbage if the current user interface language was not English.
+
+Other modifications
+-------------------
+
+* Miscellaneous documentation updates.
+
+
+22 June 1994
+============
+
+User visible changes
+--------------------
+
+* French support is now complete. Thanks to Jörg Höhle.
+
+* The user interface language (english, german or french) can now be chosen
+  at startup time through a command line option. The constant *LANGUAGE* has
+  been removed, and its value has been removed from *FEATURES*. New macros
+  ENGLISH, DEUTSCH, FRANCAIS and LANGUAGE-CASE.
+
+* There is a command line option that makes CLISP behave more like what
+  ILISP (a popular Emacs LISP interface) expects.
+
+* The function CLOS:CALL-NEXT-METHOD can now be called with arguments, but
+  the check that the set of applicable methods must be the same as for the
+  original arguments will be bypassed.
+
+* New functions READ-CHAR-SEQUENCE, WRITE-CHAR-SEQUENCE, READ-BYTE-SEQUENCE,
+  WRITE-BYTE-SEQUENCE which perform fast block I/O.
+
+* Errors of type FLOATING-POINT-UNDERFLOW are inhibited in floating point
+  computations (and zero is returned instead) during execution of the new
+  macro WITHOUT-FLOATING-POINT-UNDERFLOW.
+
+* X3J13 vote <95> is implemented: If the readtable argument passed to
+  GET-MACRO-CHARACTER and GET-DISPATCH-MACRO-CHARACTER is NIL, the standard
+  readtable is used.
+
+* PROBE-FILE does not report an error any more if an intermediate directory
+  in the path does not exist. NIL is returned instead.
+
+* The DEFCONSTANT warning about redefinition of a constant is inhibited if
+  the constant's new and old values are the same (in the sense of EQL).
+  Thanks to Marcus Daniels.
+
+* The function INTERACTIVE-STREAM-P knows that if the terminal stream is
+  referring to a regular file (via input redirection) it is not interactive.
+
+* There is a user programmable kind of streams, called generic streams.
+  New functions MAKE-GENERIC-STREAM, GENERIC-STREAM-CONTROLLER,
+  GENERIC-STREAM-P, GENERIC-STREAM-READ-CHAR, GENERIC-STREAM-READ-BYTE,
+  GENERIC-STREAM-LISTEN, GENERIC-STREAM-WRITE-CHAR, GENERIC-STREAM-WRITE-BYTE,
+  GENERIC-STREAM-WRITE-STRING, GENERIC-STREAM-CLEAR-INPUT,
+  GENERIC-STREAM-CLEAR-OUTPUT, GENERIC-STREAM-FINISH-OUTPUT,
+  GENERIC-STREAM-FORCE-OUTPUT, GENERIC-STREAM-CLOSE.
+  See <http://clisp.cons.org/impnotes.html#gstream> for details.
+  Thanks to Marcus Daniels and Don Cohen.
+
+* The macro WITH-OUTPUT-TO-PRINTER may now also work on OS/2.
+
+* Fixed a CLOS bug: Generic functions with both optional and keyword
+  arguments did not work.
+
+* Fixed a serious bug in the compiler which caused incorrect code to be
+  generated for functions like (LAMBDA (X) (SETQ X 1)).
+
+* Fixed a serious bug in the compiler which caused the compiler to crash
+  when compiling functions which contain two or more calls to ASSERT.
+
+* Fixed a bug: The macroexpander of MULTIPLE-VALUE-SETQ built up a
+  syntactically illegal form.
+
+* Fixed a bug in the reader: When reading pathnames from the syntax
+  #S(PATHNAME ...), #n# references in pathname components were not
+  resolved prior to calling MAKE-PATHNAME.
+
+* Fixed a bug in the reader: (read-from-string "1/") signalled an error
+  of type DIVISION-BY-ZERO.
+
+* Fixed a bug in the terminal stream: If several consecutive READ-LINE
+  operations on the terminal stream were performed without any text
+  containing newlines being output between them, the prompt finally got
+  duplicated and then became longer and longer.
+
+* Fixed a bug in the readline library (bad handling of prompts longer than
+  one line). Thanks to Marcus Daniels.
+
+Installation
+------------
+
+* All non-Unix versions: Setting the local time zone should now be much
+  easier. 122 time zone names are supported.
+
+Portability
+-----------
+
+* Unix version only: Getting the time zone should be more robust.
+
+* Added support for NeXT (68k or i386 CPU) running NeXTstep 3.2.
+  Thanks to Marcus Daniels.
+
+* Added support for Sequent PTX. Thanks to Marcus Daniels.
+
+* Added support for m88000 running DG/UX. Thanks to Pat McClanahan.
+
+* Added support for UnixWare. Thanks to Alexander Adam.
+
+* Added support for BSDI/386. Thanks to Atsuo Ohki.
+
+* More support for WATCOM C on DOS. Thanks to Blake McBride.
+
+* More support for IRIX 5. Thanks to Bjorn Remseth.
+
+* More support for Sun4m. Thanks to Neil Faulks.
+
+* Better support (speedup) for HP 9000/800 running HP-UX.
+
+* On HP 9000/700 running HP-UX: Do not depend directly on the assembler.
+
+* Maybe some support for SCO. Thanks to Cathy Bareiss.
+
+Other modifications
+-------------------
+
+* Speedup SUBLIS and NSUBLIS.
+
+* Let all known versions of gcc2 emit dbra instructions for loops.
+  Thanks to Jörg Höhle.
+
+* Renamed condition.lsp to conditio.lsp.
+
+* Miscellaneous documentation updates.
+
+
+8 January 1994
+==============
+
+Portability
+-----------
+
+* Remove (incomplete) support for VMS.
+
+
+7 January 1994
+==============
+
+CLISP now compiles and runs on
+* microcomputers:
+  * Atari ST/TT
+  * Amiga 500-4000
+  * DOS
+  * MS Windows 3.1
+  * OS/2 2.0
+* Unix workstations:
+  * PC, Linux
+  * PC, USL SVR4
+  * Sun4, SunOS 4 or 5
+  * HP9000/800, HP-UX
+  * SGI Mips, Irix 4 or 5
+  * DEC Alpha AXP, OSF 1.3
+  * DECstation 5000, Ultrix 4.2
+  * IBM RS/6000, AIX 3.2
+  * M88000
+  * Sun386, SunOS 4
+  * Sun3, SunOS 4 (?)
+  * HP9000/300, HP-UX or NetBSD
+  * Apple MacII, A/UX (?)
+  * Amiga 3000, Amiga Unix 2.1
+  * NeXT, NeXTstep 3.1
+  * PC, 386BSD or NetBSD
+  * PC, Coherent 4.0
+  * Atari ST/TT, MiNT
+
+
+7 January 1994
+==============
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* X3J13 votes <186> and <31> are implemented: the Common Lisp Condition System.
+  New macros
+    DEFINE-CONDITION, IGNORE-ERRORS, HANDLER-CASE, HANDLER-BIND,
+    RESTART-CASE, WITH-RESTARTS, WITH-SIMPLE-RESTART, RESTART-BIND,
+    WITH-CONDITION-RESTARTS,
+  new types
+    RESTART, CONDITION, SERIOUS-CONDITION, ERROR, PROGRAM-ERROR, CONTROL-ERROR,
+    ARITHMETIC-ERROR, DIVISION-BY-ZERO, FLOATING-POINT-OVERFLOW,
+    FLOATING-POINT-UNDERFLOW, CELL-ERROR, UNBOUND-VARIABLE, UNDEFINED-FUNCTION,
+    TYPE-ERROR, PACKAGE-ERROR, STREAM-ERROR, END-OF-FILE, FILE-ERROR,
+    STORAGE-CONDITION, WARNING,
+    SIMPLE-CONDITION, SIMPLE-ERROR, SIMPLE-TYPE-ERROR, SIMPLE-WARNING,
+  new functions
+    MAKE-CONDITION, SIGNAL, COMPUTE-RESTARTS, FIND-RESTART, INVOKE-RESTART,
+    INVOKE-RESTART-INTERACTIVELY, ABORT, CONTINUE, MUFFLE-WARNING, STORE-VALUE,
+    USE-VALUE, INVOKE-DEBUGGER, RESTART-NAME,
+    ARITHMETIC-ERROR-OPERATION, ARITHMETIC-ERROR-OPERANDS, CELL-ERROR-NAME,
+    TYPE-ERROR-DATUM, TYPE-ERROR-EXPECTED-TYPE, PACKAGE-ERROR-PACKAGE,
+    STREAM-ERROR-STREAM, FILE-ERROR-PATHNAME, SIMPLE-CONDITION-FORMAT-STRING,
+    SIMPLE-CONDITION-FORMAT-ARGUMENTS,
+  new variables
+    *BREAK-ON-SIGNALS*, *DEBUGGER-HOOK*.
+  See <http://clisp.cons.org/impnotes.html#conditions> for details.
+  Thanks to David Gadbois who wrote most of this.
+
+* X3J13 vote <40> is partially implemented: New variable *PRINT-READABLY*.
+
+* X3J13 vote <34> is implemented: Arrays and packages may now appear as
+  constants in compiled code.
+
+* X3J13 vote <90> is implemented: FUNCTIONP on symbols and conses now always
+  returns NIL. The type FUNCTION is disjoint from SYMBOL and CONS.
+  (COERCE object 'FUNCTION) is implemented.
+  Warning: Old style calls like
+    (FUNCTIONP object)
+  may need to be converted to
+    (OR (FUNCTIONP object)
+        (SYMBOLP object)
+        (AND (CONSP object) (EQ (CAR object) 'LAMBDA))
+    )
+  This fixes a CLOS bug: (TYPEP object 'FUNCTION) was not equivalent to
+  (TYPEP object (FIND-CLASS 'FUNCTION)).
+
+* Two new debugger commands Break+ and Break- permit to set resp. remove
+  breakpoints at specified EVAL or APPLY frames.
+
+* Warnings and errors produced by COMPILE-FILE are now accompanied by
+  source line number information.
+
+* The sub-char passed as second argument to read dispatch macros is now
+  exactly the first non-digit read from the stream. Previously it was its
+  upper-case equivalent.
+
+* DEFPACKAGE now accepts an option (:DOCUMENTATION docstring).
+
+* DIRECTORY now accepts a keyword argument :CIRCLE. If it is non-NIL,
+  the directory search for ".../" and "**/" wildcards on Unix avoids endless
+  loops that may result from symbolic links.
+
+* The variable *LOAD-PATHS* in the Unix versions of config.lsp now uses
+  "~/" (the home directory at run time) instead of #"~/" (the home directory
+  at installation time). Thanks to Gabor Herr.
+
+* Unix and OS/2 versions: New dangerous functions MAKE-PIPE-IO-STREAM,
+  RUN-SHELL-COMMAND and RUN-PROGRAM.
+
+* Unix version only:
+  The command shell used by MAKE-PIPE-...-STREAM is now always /bin/sh; the
+  environment variable SHELL is only used as interactive shell.
+  Fixed a race condition in the functions EXECUTE, MAKE-PIPE-INPUT-STREAM,
+  MAKE-PIPE-OUTPUT-STREAM that caused the child process to fail mysteriously.
+
+* Attacks such as  (DO-ALL-SYMBOLS (S) (UNLESS (CONSTANTP S) (SET S NIL)))
+  no longer crash CLISP.
+
+* Fixed a CLOS bug: DEFCLASS failed to signal an error if several direct slots
+  had identical names.
+
+* Fixed a bug in the reader: When reading hash tables which contain #n#
+  references, the hash codes must be recomputed after resolving the
+  references. Thanks to Marcus Daniels.
+
+* Fixed a bug in the printer: Printed representations with two different
+  #1= definitions could result when PRINT-OBJECT methods were called while
+  *PRINT-CIRCLE* was true. Thanks to Marcus Daniels.
+
+Portability
+-----------
+
+* Fixed five bugs in the number crunching routines that appeared on
+  64-bit processors or in combination with the WIDE tagging scheme.
+
+* More support for 64-bit processors like DEC Alpha.
+
+* Added support for NeXT running NeXTstep 3.1. Thanks to Marcus Daniels.
+
+* Added support for Amiga 3000 running AMIX Unix. Thanks to Michel Loi.
+
+* Fixed a problem with Ctrl-C on HP-UX. Thanks to Gabor Herr.
+
+* Added support for HP9000/300 running HP-UX. Thanks to Gabor Herr.
+
+* Added support for WATCOM C 9.5 on DOS.
+
+* Amiga version: Tolerate memory outside the 27-bit addressable range.
+
+* Remove support for the Atari ST assembly language version CLISP1.
+
+Other modifications
+-------------------
+
+* Added some documentation of the GNU readline library.
+
+* Changed the default memory size back from 2.5 megabytes to 2 megabytes.
+
+* Miscellaneous documentation updates.
+
+
+8 November 1993
+===============
+
+User visible changes
+--------------------
+
+* The STDWIN library can now be made part of CLISP by calling makemake with
+  argument --with-stdwin.
+
+* X3J13 vote <108> is implemented: New packages COMMON-LISP and
+  COMMON-LISP-USER.
+
+* X3J13 vote <112> is implemented:
+  LOAD binds the variables *LOAD-PATHNAME* and *LOAD-TRUENAME*, COMPILE-FILE
+  binds the variables *COMPILE-FILE-PATHNAME* and *COMPILE-FILE-TRUENAME*.
+  New variables *LOAD-PATHNAME*, *LOAD-TRUENAME*, *COMPILE-FILE-PATHNAME*,
+  *COMPILE-FILE-TRUENAME*.
+
+* X3J13 vote <26> is implemented: COMPILE-FILE has a keyword argument :PRINT.
+  New variables *COMPILE-WARNINGS*, *COMPILE-VERBOSE*, *COMPILE-PRINT*.
+
+* Fixed two bugs in DEFPACKAGE: *PACKAGE* is not modified by DEFPACKAGE
+  any more, and the :INTERN option now works.
+
+* Fixed FUNCTION-LAMBDA-EXPRESSION such that it works on built-in functions.
+  Thanks to France Dacar.
+
+* Fixed a serious bug in GCD on 16-bit processors: (GCD x y) with
+  2^k - 2^(k-16) <= |x|,|y| < 2^k could cause a division by zero.
+
+Portability
+-----------
+
+* Added support for DEC Alpha AXP running OSF/1 Unix.
+
+* Added support for Apple Mac II running A/UX.
+
+* Added support for Atari ST/TT running MiNT. Thanks to Scott Kolodzieski.
+
+* Support for SunOS4 cc now works.
+
+* The makefile now also works with "parallel" make utilities (e.g. GNU make
+  with option -j). Thanks to Rick Sladkey.
+
+* Easier porting: The most dangerous optimizations (inline asm() statements,
+  global register allocations, ...) are inhibited if CLISP is compiled with
+  option SAFETY=3.
+
+* Some modifications for the sake of gcc-2.5.
+
+Other modifications
+-------------------
+
+* Speed up generic function dispatch.
+
+* Some kinds of objects take less space (all CPUs except 680x0).
+
+* The list of X3J13 votes and their current status in CLISP has been moved
+  from file `src/defs2.lsp' to file `src/cltl2.txt'.
+
+* The code for setting up a connection to an X server (file `src/socket.d')
+  has been completely rewritten.
+
+* Miscellaneous documentation updates.
+
+
+27 September 1993
+=================
+
+User visible changes
+--------------------
+
+* COMPILE-FILE now handles top-level forms as described in CLtL2 p. 90:
+  The macroexpansion of a top-level form is considered a top-level form.
+  When a top-level form is a PROGN, LOCALLY, COMPILER-LET, SYMBOL-MACROLET
+  or MACROLET form, the subforms of its body are considered top-level forms
+  too and are compiled separately.
+  This allows things like
+    (PROGN (DEFCONSTANT X 3141) (DEFUN GET-X () X))
+  or
+    (PROGN (DEFCLASS SHIP () ()) (DEFUN SHIP-P (X) (TYPEP X 'SHIP)))
+  to work.
+  Warning: If you want to inhibit this splitting into separate forms (for
+  example, because several of the forms refer to the same uninterned symbol),
+  you have to use (LET () (PROGN ...)) instead of (PROGN ...).
+
+* X3J13 vote <144> is implemented: New macro DECLAIM.
+
+* X3J13 vote <113> is implemented: The macro LOCALLY is now a special form.
+
+* Fixed a serious bug in the compiler: When compiling functions inline
+  whose parameters are special variables, incorrect code could be generated.
+
+* Fixed a bug in the compiler which caused the compiler to crash in some
+  rare cases, notably when compiling Garnet-2.2.
+
+* Fixed a bug that prevented the debugger commands DOWN and BOTTOM from
+  working on Linux and SunOS.
+
+* Fixed a CLOS bug: Specifying &KEY without &REST in generic function
+  lambda lists did not have the desired effect.
+
+* DEFCLASS supports both :DEFAULT-INITARGS syntaxes.
+
+* DEFGENERIC is more tolerant about invalid declarations.
+
+Portability
+-----------
+
+* Added Dynix/ptx Sequent support. Thanks to Esther Davis.
+
+* Added support for RS/6000 CPU and AIX. Thanks to Gabor Herr.
+
+Other modifications
+-------------------
+
+* Made the memory allocation and (ROOM), (TIME ...) more virtual memory
+  efficient (less paging on Unix and DOS). Thanks to Don Cohen.
+
+* Added Geoffrey Gordon's "LISP tutorial".
+
+* Renamed stdwin.lsp to stdwin2.lsp.
+
+* Miscellaneous documentation updates.
+
+
+1 September 1993
+================
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* Unix version only: The command line option -M now also accepts memory images
+  that were compressed using GNU gzip.
+
+* Fixed a CLOS bug: MAKE-INSTANCE now behaves as if it were calling
+  INITIALIZE-INSTANCE, and INITIALIZE-INSTANCE and REINITIALIZE-INSTANCE
+  behave as if they were calling SHARED-INITIALIZE.
+
+* Fixed a CLOS bug: NO-APPLICABLE-METHOD failed to be called in some cases
+  when no method was applicable.
+
+* Relating to X3J13 vote <89>: The first argument to the functions FUNCALL and
+  APPLY, denoting a function, may now also be a list (SETF symbol).
+
+* Fixed a bogus error message that occurred when storing an out-of-range
+  integer into an array of element-type (UNSIGNED-BYTE 32).
+
+Portability
+-----------
+
+* Added NetBSD support. Thanks to Charles Hannum.
+
+Other modifications
+-------------------
+
+* Added Jeff Dalton's "brief CLOS guide".
+
+* Miscellaneous documentation updates.
+
+
+22 August 1993
+==============
+
+Important note
+--------------
+
+* Changed bytecode format. All .fas files generated by previous CLISP versions
+  are invalid and must be recompiled.
+
+User visible changes
+--------------------
+
+* X3J13 vote <12> is partially implemented: Native CLOS. New package CLOS
+  containing the macros
+    DEFCLASS, DEFMETHOD, DEFGENERIC, GENERIC-FUNCTION, GENERIC-FLET,
+    GENERIC-LABELS, WITH-SLOTS, WITH-ACCESSORS,
+  the functions
+    FIND-CLASS, (SETF FIND-CLASS), CLASS-OF, CLASS-NAME, (SETF CLASS-NAME),
+    SLOT-VALUE, SLOT-BOUNDP, SLOT-MAKUNBOUND, SLOT-EXISTS-P,
+    CALL-NEXT-METHOD, NEXT-METHOD-P,
+    NO-APPLICABLE-METHOD, NO-PRIMARY-METHOD, NO-NEXT-METHOD,
+    FIND-METHOD, ADD-METHOD, REMOVE-METHOD, COMPUTE-APPLICABLE-METHODS,
+    METHOD-QUALIFIERS, FUNCTION-KEYWORDS, SLOT-MISSING, SLOT-UNBOUND,
+    PRINT-OBJECT, DESCRIBE-OBJECT, MAKE-INSTANCE, INITIALIZE-INSTANCE,
+    REINITIALIZE-INSTANCE, SHARED-INITIALIZE,
+  the classes
+    STANDARD-CLASS, STRUCTURE-CLASS, BUILT-IN-CLASS, STANDARD-OBJECT,
+    STANDARD-GENERIC-FUNCTION, STANDARD-METHOD and all predefined classes,
+  and the method combination
+    STANDARD.
+  See <http://clisp.cons.org/impnotes.html#classes> for details.
+  X3J13 vote <13> is implemented, too.
+
+* X3J13 vote <63> is implemented: DESCRIBE receives the output stream as
+  optional argument. New function CLOS:DESCRIBE-OBJECT.
+
+* X3J13 vote <149> is implemented: The second argument to SUBSEQ may now
+  be NIL. Thanks to Thomas Kirk.
+
+* X3J13 vote <175> is implemented: TAILP now also works on dotted lists.
+
+* X3J13 vote <124> is implemented: (DECLARE (OPTIMIZE (DEBUG ...))) is legal.
+
+* The type specifier (EQL object), a synonym for (MEMBER object), is now
+  implemented.
+
+* New DEFSTRUCT option :INHERIT which is exactly like :INCLUDE except that it
+  does not create new accessors for the inherited slots. Use this option to
+  avoid the problems that occur when using the same :CONC-NAME for the new
+  and the inherited structure.
+
+* Fixed EXPORT and USE-PACKAGE: Do not signal a name conflict between the
+  symbol being exported and a symbol accessible in the using package if
+  the latter symbol is on the list of shadowing symbols of the using package.
+
+* Fixed VECTOR-PUSH-EXTEND. It now works on vectors of dimension 0 and
+  on bit-vectors.
+
+* Fixed PRINT-UNREADABLE-OBJECT: Do not output adjacent spaces.
+
+* Fixed a bug in the reader that caused an endless loop or endless recursion
+  when resolving #n=/#n# references in objects that already contained cyclic
+  data structures, e.g. when reading (#1=a #.'#2=(b . #2#) #1#).
+
+* Fixed a bogus error message in the complex number reader.
+
+Portability
+-----------
+
+* The DOS README explains how to run CLISP in the DOS box of Microsoft
+  Windows. Thanks to Ralf Muschall.
+
+* Added Sinix support. Thanks to Manfred Weichel.
+
+* Improved installation on OS/2.
+
+Other modifications
+-------------------
+
+* A function proclaimed INLINE will be taken inline in a wider set of
+  circumstances. (Previously INLINE worked only when that function was being
+  used in the same file or in a file that REQUIREd the file defining the
+  function.)
+
+* The compiler now produces better code for (APPLY (FUNCTION fun) args).
+
+* Changed the default memory size from 2 megabytes to 2.5 megabytes.
+
+* Miscellaneous documentation updates.
+
+
+17 July 1993
+============
+
+User visible changes
+--------------------
+
+* X3J13 vote <150> is mostly implemented: Reading and printing of symbols
+  (and characters with bits or fonts attributes) is now affected by
+  (READTABLE-CASE *READTABLE*), whose value may be one of :UPCASE, :DOWNCASE
+  and :PRESERVE. New place READTABLE-CASE.
+
+* Support for immutable objects is implemented. Attempts to modify read-only
+  data will signal an error. Program text and quoted constants loaded from
+  files are considered read-only data. Never again will you be allowed to
+  write programs that destructively modify themselves!
+  This works only for Unix implementations with powerful virtual memory
+  management, currently only Linux and SunOS. To enable it, you have to
+  add -DIMMUTABLE to the CFLAGS in the makefile when building CLISP.
+
+* Fixed DEFUN such that
+  (progn
+    (flet ((bar (x) (+ x 10))) (defun bar (y) (if (zerop y) 1 (bar (1- y))))
+    (bar 1)
+  )
+  returns 10 instead of 1.
+
+* Fixed a bug in the compiler that caused the compiler to crash by endless
+  recursion and stack overflow when compiling assignments to symbol macros.
+
+Portability
+-----------
+
+* Added support for m88000 CPU.
+
+* Amiga version: detect 68000 CPU, for better use of present memory.
+
+Other modifications
+-------------------
+
+* Miscellaneous documentation updates.
+
+
+29 June 1993
+============
+
+User visible changes
+--------------------
+
+* X3J13 vote <89> is implemented: (SETF symbol) is now a valid syntax for a
+  function name in (funname ...), (FUNCTION funname), (DEFUN funname ...),
+  (COMPILE funname ...), (DISASSEMBLE funname), (ED funname), FLET, LABELS etc.
+  New function FDEFINITION.
+
+* X3J13 vote <173> is implemented: New special form SYMBOL-MACROLET. The
+  macroexpansion environment passed to macro expanders and to MACROEXPAND-1,
+  MACROEXPAND, GET-SETF-METHOD, GET-SETF-METHOD-MULTIPLE-VALUE now comprises
+  both the variable environment and the function environment.
+  New macro DEFINE-SYMBOL-MACRO.
+
+* New macro PRINT-UNREADABLE-OBJECT.
+
+* Fixed a bug: The string comparison functions STRING<, STRING>, STRING<=,
+  STRING>=, STRING/=, STRING-LESSP, STRING-GREATERP, STRING-NOT-GREATERP,
+  STRING-NOT-LESSP, STRING-NOT-EQUAL now return the index of the first mismatch
+  instead of T.
+
+* Fixed a bug: The functions REMOVE-DUPLICATES and DELETE-DUPLICATES produced
+  an out-of-bounds error when called on a small sequence, with :FROM-END T
+  argument and without :END argument.
+
+Portability
+-----------
+
+* Updated support for DJGPP.
+
+Other modifications
+-------------------
+
+* The macros SETF, PUSH, POP, PUSHNEW have been completely rewritten.
+
+* Changed internal representation of special form handlers: They now consume
+  regular memory. This frees one type tag, which will be used by CLOS
+  instances.
+
+* Miscellaneous documentation updates.
+
+
+24 May 1993
+===========
+
+User visible changes
+--------------------
+
+* New macro DEFPACKAGE.
+
+* New function FUNCTION-LAMBDA-EXPRESSION.
+
+* New package SCREEN containing some functions for random screen access
+  (Unix, DOS, OS/2, Atari, VMS versions only).
+
+* X3J13 vote <5> is implemented: The value of *APPLYHOOK* must now be
+  a function of two arguments.
+
+* X3J13 vote <104> is implemented: COMPILE-FILE now binds *READTABLE*.
+
+* X3J13 vote <161> is implemented: SHADOW now accepts strings as well
+  as symbols.
+
+* Fixed a bug in the compiler which caused the compiler to crash when
+  compiling (CASE key ...) forms with constant key.
+
+* Fixed a bug in the compiler which produced unloadable .fas files
+  when compiling forms like (SETF ... (FUNCTION LIST)).
+
+* Fixed a bogus error message in the AREF function.
+
+* The built-in editor on Unix now handles the Delete key the same way
+  as the Backspace key or Ctrl-H.
+
+* Fixed a bug in + that occasionally caused (- x x) to return a
+  long-float zero which was not EQL to the other zeroes of type LONG-FLOAT.
+
+* Fixed a bug: Correctly do round-to-even when adding two long-floats.
+
+* Fixed a bug: The destructive sequence functions DELETE etc. failed to
+  produce an error when called on a sequence of type LIST and with an :END
+  argument larger than the list's length.
+
+* Corrected the branch cuts of the complex ATAN and ATANH functions.
+
+Portability
+-----------
+
+* 68000 and other versions: Fixed a bug in the low-level division algorithm.
+
+* Mips and Vax versions: Finished the low-level number crunching routines.
+
+* Added Ultrix support.
+
+* Added Coherent support.
+
+* Finished Sun3 support.
+
+Other modifications
+-------------------
+
+* The file `src/defs2.lsp' contains a list of X3J13 votes and their current
+  status in CLISP.
+
+* The file `src/foreign.txt' documents how to do function calls to foreign
+  language routines from within CLISP.
+
+* Miscellaneous documentation updates.
+
+
+5 April 1993
+============
+
+Portability
+-----------
+
+* 68000/68020 versions: Fixed some bugs in the low-level number crunching
+  routines.
+
+* Improved efficiency of the WIDE tagging scheme.
+
+
+30 March 1993
+=============
+
+User visible changes
+--------------------
+
+* Fixed a bug in + that caused the sign of (+ x y) to be wrong when x and y
+  were double-floats satisfying  0 < x < -y  or  0 > x > -y .
+
+* New special form LOAD-TIME-VALUE.
+
+* The function DIR now sorts its output.
+
+* A new place (DEFAULT-DIRECTORY) manages the "current directory".
+
+* When LOAD is called with a pathname as argument that contains a parent
+  directory component (".."): Ignore the variable *LOAD-PATHS*, avoid an error.
+
+* Fixed TRACE so that functions calling TRACE are correctly handled by
+  COMPILE-FILE.
+
+Portability
+-----------
+
+* Unix version: Correct handling of system calls that are interrupted
+  by signals.
+
+* Finished IRIX support.
+
+Other modifications
+-------------------
+
+* Miscellaneous documentation updates.
+
+
+19 March 1993
+=============
+
+User visible changes
+--------------------
+
+* Replaced variable *TEMPFILE* by a function EDITOR-TEMPFILE.
+
+Portability
+-----------
+
+* Unix version: Corrected detection of ANSI C header files.
+
+* Unix version: Check whether signal handlers are automatically reinstalled
+  when activated.
+
+* Made readline library ANSI C compliant and (on Unix) auto-configuring.
+
+* In case there is no room for three extra bits in a symbol pointer,
+  allocate three stack words per binding in a VAR frame (instead of two stack
+  words). This completes the Amiga 3000/4000 version.
+
+* Completed memory model SPVW_PURE_BLOCKS: There is a large contiguous memory
+  area for each kind of Lisp object. This model is used only if memory can
+  be allocated at prescribed addresses, for example on Unix with mmap().
+
+* More 386BSD support.
+
+Other modifications
+-------------------
+
+* Remove limit on the number of files that may be specified on the command
+  line. Limit was 1000.
+
+* Miscellaneous documentation updates.
+
+
+4 March 1993
+============
+
+User visible changes
+--------------------
+
+* Fixed a bug in ADJOIN that caused ADJOJN and PUSHNEW to push (key item)
+  instead of item onto the list when a :KEY argument was present.
+
+* Amiga version: allow opening of "files" on special devices.
+
+* OS/2 version: Long filenames on DOS (FAT) filesystems no longer produce
+  errors. They are now silently truncated to 8+3 characters.
+
+* Unix, Amiga, OS/2 versions: When a pathname is to be fully specified, no
+  subdirectory wildcard "**/" or ".../" is allowed. Check this.
+
+Portability
+-----------
+
+* Corrected underflow detection in SCALE-FLOAT on 16-bit processors.
+
+* Atari ST version: fixed getenv(), wrote INSTALL instructions.
+
+Other modifications
+-------------------
+
+* Miscellaneous documentation updates.
+
+
+21 February 1993
+================
+
+User visible changes
+--------------------
+
+* Include test suite into distribution.
+
+* Add COMMON-LISP and CLTL1 to the *FEATURES*.
+
+* Fixed a bug in the compiler which caused the compiler to crash in some
+  rare cases.
+
+* Fixed a bug in WITH-OPEN-FILE: handle the case when OPEN returns NIL.
+
+* Amiga version: Fixed bug in FILE-POSITION.
+
+* Amiga version: Renamed REXX-WAIT-COMMAND to REXX-WAIT-SENT-COMMAND.
+
+Portability
+-----------
+
+* On HP-UX: Use /bin/ksh for shell scripts instead of the buggy /bin/sh.
+
+* Now compiles on IRIX using CC="cc -ansi".
+
+* Added 386BSD support.
+
+Other modifications
+-------------------
+
+* Miscellaneous documentation updates.
+
+
+3 February 1993
+===============
+
+Portability
+-----------
+
+* Support for 386 UHC UNIX System V release 4 now works.
+
+Other modifications
+-------------------
+
+* lispbibl.d: Rename macro `untype' to `upointer', `type_untype_object' to
+  `type_pointer_object'.
+
+* lispbibl.d: Clean up selection of type code and frame code tables.
+
+* Remove init streams. Use string input streams instead.
+
+
+1 February 1993
+===============
+
+User visible changes
+--------------------
+
+* Fixed handling of declarations in macros DO-SYMBOLS, DO-EXTERNAL-SYMBOLS,
+  DO-ALL-SYMBOLS, DOSEQ, DOHASH.
+
+* LISTEN on file streams opened with :DIRECTION :OUTPUT now returns NIL.
+
+* Pathnames resulting from OPEN on special files are now called
+  "file handle streams", they are unbuffered file streams.
+  They can now be used as argument in situations where a pathname is expected.
+
+Portability
+-----------
+
+* The `target' and `configure' scripts no longer depend on awk.
+
+* Support Sun4 with 32 bit address range (kernel architecture "Sun4m") as
+  well as Sun4 with 29 bit address range (kernel architecture "Sun4", "Sun4c).
+
+* Can now exploit the shared memory facilities of SunOS 4.1 and of Linux.
+
+* Added support for 386 UHC UNIX System V release 4.
+
+Other modifications
+-------------------
+
+* Implemented memory model SPVW_PURE_PAGES where memory is divided
+  into many small pages each containing objects of the same type.
+
+* Fixed up source for systems without window streams.
+
+* lispbibl.d, constobj.d: reorder the stream types such that the test for
+  file stream becomes faster.
+
+* /usr/local/lib/aclocal.m4, configure.in, unixconf.h.in: prefix my own local
+  macros by CL_ instead of AC_.
+
+* Miscellaneous documentation updates.
+
+
+11 January 1993
+===============
+
+User visible changes
+--------------------
+
+* Fixed meaning of :KEY argument for SUBLIS and NSUBLIS.
+
+* DOS, OS/2 versions: adapted to emx 0.8f. This results in better
+  *KEYBOARD-INPUT* on DOS and faster screen access on OS/2.
+
+* Amiga version: implemented SHELL.
+
+* OS/2 version: implemented MAKE-PIPE-INPUT-STREAM and MAKE-PIPE-OUTPUT-STREAM.
+
+* compiler.lsp: Emit a warning when #'foo is used but foo is undefined.
+
+* rexx.d, rexx.lsp: remove the trailing "p" from the keywords.
+
+* init.lsp: do not call a macro a "Common Lisp function".
+
+* stream.d, readline/readline.[ch]: exported rl_deprep_terminal such that a
+  failing call to xmalloc() can now signal an ordinary error instead of exiting.
+
+Portability
+-----------
+
+* Rewrote makemake.in using indentation.
+
+* /usr/local/lib/aclocal.lsp: fixed AC_SYS_ERRLIST (m4 bug?) and AC_RENAME,
+  improved AC_SELECT and added AC_SETITIMER.
+
+* spvw.d: implement ualarm for Unix with interval timers, e.g. HP/UX or Linux.
+
+* Remove support for Linux 0.12.
+
+Other modifications
+-------------------
+
+* Language (DEUTSCH resp. ENGLISH) can now be set from CFLAGS, without
+  modifying lispbibl.d.
+
+* _README translated into german.
+
+* Renamed clispsrc.1 to FILES.1.
+
+* Renamed pseudofu.d to pseudofun.d.
+
+* Sun4 version: merged il_sparc.il into cc_sparc.il.
+
+* lispbibl.d: use an enum type to get the stream types converted
+  to consecutive numbers without risking clashes.
+
+* intgcd.d: found algorithm for binary extended gcd.
+
+* intlog.d: make use of 80386 instruction "bsfl" where possible.
+
+* lispbibl.d: let gcc2 on 680x0 emit "dbra" instructions.
+
+* spvw.d: use IPC_PRIVATE as key for all shared memory segments.
+
+* avl.d: do not generate code for unused functions insert and delete.
+
+* Miscellaneous documentation updates.
+
+
+1 January 1993
+==============
+
+Release of the first portable version of CLISP.
+It now compiles and runs under
+* Atari ST
+* Amiga 500-2000
+* DOS
+* OS/2 2.0
+* Linux
+* Sun4
+* Sun386
+* HP9000/800
+
+Now that the tests passed, I hope I'll never again have to remove a serious
+bug.
+
+Local Variables:
+mode: text
+coding: utf-8
+end:

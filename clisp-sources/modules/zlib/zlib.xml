@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section id="zlib"><title>ZLIB Interface</title>
+
+<para>This is an &ffi-pac;-based interface to the
+ <ulink url="http://www.zlib.org">ZLIB</ulink>.</para>
+
+<variablelist>
+<varlistentry><term><code>(ZLIB:Z-VERSION)</code></term>
+ <listitem><simpara>Return the string version of the underlying library.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(ZLIB:COMPRESS source &key-amp; level)</code></term>
+ <listitem><simpara>Compress the source &vector-t;.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(ZLIB:UNCOMPRESS
+   source destination-length)</code></term>
+ <listitem><simpara>Uncompress the source &vector-t; (returned
+   by <function>ZLIB:COMPRESS</function>).
+   <replaceable>destination-length</replaceable> should be no less than
+   the length of the uncompressed &vector-t;.
+</simpara></listitem></varlistentry>
+<varlistentry><term><code>(ZLIB:COMPRESS-BOUND source-length)</code></term>
+ <listitem><simpara>Return the maximum length of the return value
+   of <function>ZLIB:COMPRESS</function>.</simpara></listitem></varlistentry>
+<varlistentry><term><code>(ZLIB:ERROR-STRING errno)</code></term>
+ <listitem><simpara>Return a descriptive string for the supplied error
+   code.</simpara></listitem></varlistentry>
+<varlistentry><term><classname>ZLIB:ZERROR</classname></term>
+ <listitem><simpara>An &error-t; sometimes &signal;ed
+   by <function>ZLIB:COMPRESS</function>
+   and <function>ZLIB:UNCOMPRESS</function>.
+   You can find the error code and the caller
+   using <function>ZLIB:ZERROR-ERRNO</function>
+   and <function>ZLIB:ZERROR-CALLER</function>.
+</simpara></listitem></varlistentry>
+</variablelist>
+
+</section>

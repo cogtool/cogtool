@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- *** Entities for mop.xml *** -->
+
+<!-- *** objects *** -->
+<!ENTITY accessor-method-slotdef '<link linkend="accessor-method-slotdef"><function>CLOS:ACCESSOR-METHOD-SLOT-DEFINITION</function></link>'>
+<!ENTITY add-dependent '<link linkend="add-dependent"><function>CLOS:ADD-DEPENDENT</function></link>'>
+<!ENTITY add-direct-method '<link linkend="add-direct-method"><function>CLOS:ADD-DIRECT-METHOD</function></link>'>
+<!ENTITY add-direct-subclass '<link linkend="add-direct-subclass"><function>CLOS:ADD-DIRECT-SUBCLASS</function></link>'>
+<!ENTITY canonicalized-default-initarg '<link linkend="mop-canonicalized-default-initarg">canonicalized default initialization argument</link>'>
+<!ENTITY canonicalized-slot-spec '<link linkend="mop-canonicalized-slot-spec">canonicalized slot specification</link>'>
+<!ENTITY class-default-initargs '<link linkend="class-default-initargs"><function>CLOS:CLASS-DEFAULT-INITARGS</function></link>'>
+<!ENTITY class-direct-default-initargs '<link linkend="class-direct-default-initargs"><function>CLOS:CLASS-DIRECT-DEFAULT-INITARGS</function></link>'>
+<!ENTITY class-direct-slots '<link linkend="class-direct-slots"><function>CLOS:CLASS-DIRECT-SLOTS</function></link>'>
+<!ENTITY class-direct-subclasses '<link linkend="class-direct-subclasses"><function>CLOS:CLASS-DIRECT-SUBCLASSES</function></link>'>
+<!ENTITY class-direct-superclasses '<link linkend="class-direct-superclasses"><function>CLOS:CLASS-DIRECT-SUPERCLASSES</function></link>'>
+<!ENTITY class-finalized-p '<link linkend="class-finalized-p"><function>CLOS:CLASS-FINALIZED-P</function></link>'>
+<!ENTITY class-prototype '<link linkend="class-prototype"><function>CLOS:CLASS-PROTOTYPE</function></link>'>
+<!ENTITY class-slots '<link linkend="class-slots"><function>CLOS:CLASS-SLOTS</function></link>'>
+<!ENTITY compute-applicable-methods-mop '<link linkend="compute-applicable-methods"><function>CLOS:COMPUTE-APPLICABLE-METHODS</function></link>'>
+<!ENTITY compute-applicable-methods-UC '<link linkend="compute-applicable-methods-UC"><function>CLOS:COMPUTE-APPLICABLE-METHODS-USING-CLASSES</function></link>'>
+<!ENTITY compute-cpl '<link linkend="compute-cpl"><function>CLOS:COMPUTE-CLASS-PRECEDENCE-LIST</function></link>'>
+<!ENTITY compute-default-initargs '<link linkend="compute-default-initargs"><function>CLOS:COMPUTE-DEFAULT-INITARGS</function></link>'>
+<!ENTITY compute-dsd-initargs '<link linkend="compute-dsd-initargs"><function>CLOS:COMPUTE-DIRECT-SLOT-DEFINITION-INITARGS</function></link>'>
+<!ENTITY compute-discriminating-function '<link linkend="compute-discriminating-function"><function>CLOS:COMPUTE-DISCRIMINATING-FUNCTION</function></link>'>
+<!ENTITY compute-effective-method '<link linkend="compute-effective-method"><function>CLOS:COMPUTE-EFFECTIVE-METHOD</function></link>'>
+<!ENTITY compute-effective-method-as-function '<link linkend="compute-effective-method-as-function"><function>CLOS:COMPUTE-EFFECTIVE-METHOD-AS-FUNCTION</function></link>'>
+<!ENTITY compute-esd '<link linkend="compute-esd"><function>CLOS:COMPUTE-EFFECTIVE-SLOT-DEFINITION</function></link>'>
+<!ENTITY compute-esd-initargs '<link linkend="compute-esd-initargs"><function>CLOS:COMPUTE-EFFECTIVE-SLOT-DEFINITION-INITARGS</function></link>'>
+<!ENTITY compute-slots '<link linkend="compute-slots"><function>CLOS:COMPUTE-SLOTS</function></link>'>
+<!ENTITY cpl '<link linkend="cpl"><function>CLOS:CLASS-PRECEDENCE-LIST</function></link>'>
+<!ENTITY dsd-class '<link linkend="dsd-class"><function>CLOS:DIRECT-SLOT-DEFINITION-CLASS</function></link>'>
+<!ENTITY dsd-t '<link linkend="mop-inherit-struct"><classname>CLOS:DIRECT-SLOT-DEFINITION</classname></link>'>
+<!ENTITY ensure-class '<link linkend="ensure-class"><function>CLOS:ENSURE-CLASS</function></link>'>
+<!ENTITY ensure-class-UC '<link linkend="ensure-class-UC"><function>CLOS:ENSURE-CLASS-USING-CLASS</function></link>'>
+<!ENTITY ensure-gf '<link linkend="ensure-gf"><function>ENSURE-GENERIC-FUNCTION</function></link>'>
+<!ENTITY ensure-gf-UC '<link linkend="ensure-gf-UC"><function>CLOS:ENSURE-GENERIC-FUNCTION-USING-CLASS</function></link>'>
+<!ENTITY eql-specializer-object '<link linkend="eql-specializer-object"><function>CLOS:EQL-SPECIALIZER-OBJECT</function></link>'>
+<!ENTITY eql-specializer-t '<link linkend="mop-inherit-struct"><classname>CLOS:EQL-SPECIALIZER</classname></link>'>
+<!ENTITY esd-class '<link linkend="esd-class"><function>CLOS:EFFECTIVE-SLOT-DEFINITION-CLASS</function></link>'>
+<!ENTITY esd-t '<link linkend="mop-inherit-struct"><classname>CLOS:EFFECTIVE-SLOT-DEFINITION</classname></link>'>
+<!ENTITY extract-lambda-list '<link linkend="extract-lambda-list"><function>CLOS:EXTRACT-LAMBDA-LIST</function></link>'>
+<!ENTITY extract-specializer-names '<link linkend="extract-specializer-names"><function>CLOS:EXTRACT-SPECIALIZER-NAMES</function></link>'>
+<!ENTITY finalize-inheritance '<link linkend="finalize-inheritance"><function>CLOS:FINALIZE-INHERITANCE</function></link>'>
+<!ENTITY find-method-combination '<link linkend="find-method-combination"><function>CLOS:FIND-METHOD-COMBINATION</function></link>'>
+<!ENTITY forward-referenced-class '<link linkend="mop-inherit-struct"><classname>CLOS:FORWARD-REFERENCED-CLASS</classname></link>'>
+<!ENTITY funcallable-standard-class '<link linkend="mop-sa-funcallable"><classname>CLOS:FUNCALLABLE-STANDARD-CLASS</classname></link>'>
+<!ENTITY funcallable-standard-instance-access '<link linkend="funcallable-standard-instance-access"><function>CLOS:FUNCALLABLE-STANDARD-INSTANCE-ACCESS</function></link>'>
+<!ENTITY funcallable-standard-object-t '<link linkend="mop-sa-funcallable"><classname>CLOS:FUNCALLABLE-STANDARD-OBJECT</classname></link>'>
+<!ENTITY gf-argument-precedence-order '<link linkend="gf-argument-precedence-order"><function>CLOS:GENERIC-FUNCTION-ARGUMENT-PRECEDENCE-ORDER</function></link>'>
+<!ENTITY gf-declarations '<link linkend="gf-declarations"><function>CLOS:GENERIC-FUNCTION-DECLARATIONS</function></link>'>
+<!ENTITY gf-lambda-list '<link linkend="gf-lambda-list"><function>CLOS:GENERIC-FUNCTION-LAMBDA-LIST</function></link>'>
+<!ENTITY gf-method-class '<link linkend="gf-method-class"><function>CLOS:GENERIC-FUNCTION-METHOD-CLASS</function></link>'>
+<!ENTITY gf-method-combination '<link linkend="gf-method-combination"><function>CLOS:GENERIC-FUNCTION-METHOD-COMBINATION</function></link>'>
+<!ENTITY gf-methods '<link linkend="gf-methods"><function>CLOS:GENERIC-FUNCTION-METHODS</function></link>'>
+<!ENTITY gf-name '<link linkend="gf-name"><function>CLOS:GENERIC-FUNCTION-NAME</function></link>'>
+<!ENTITY gf-oper '<ulink url="&clhs;/Issues/iss181.html"><function>CLOS:GENERIC-FUNCTION</function></ulink>'>
+<!ENTITY intern-eql-specializer '<link linkend="intern-eql-specializer"><function>CLOS:INTERN-EQL-SPECIALIZER</function></link>'>
+<!ENTITY make-method-lambda '<link linkend="make-method-lambda"><function>CLOS:MAKE-METHOD-LAMBDA</function></link>'>
+<!ENTITY map-dependents '<link linkend="map-dependents"><function>CLOS:MAP-DEPENDENTS</function></link>'>
+<!ENTITY metaobject-t '<link linkend="mop-metaobjects"><classname>CLOS:METAOBJECT</classname></link>'>
+<!ENTITY method-function '<link linkend="method-function"><function>CLOS:METHOD-FUNCTION</function></link>'>
+<!ENTITY method-gf '<link linkend="method-gf"><function>CLOS:METHOD-GENERIC-FUNCTION</function></link>'>
+<!ENTITY method-lambda-list '<link linkend="method-lambda-list"><function>CLOS:METHOD-LAMBDA-LIST</function></link>'>
+<!ENTITY method-specializers '<link linkend="method-specializers"><function>CLOS:METHOD-SPECIALIZERS</function></link>'>
+<!ENTITY reader-method-class '<link linkend="reader-method-class"><function>CLOS:READER-METHOD-CLASS</function></link>'>
+<!ENTITY remove-dependent '<link linkend="remove-dependent"><function>CLOS:REMOVE-DEPENDENT</function></link>'>
+<!ENTITY remove-direct-method '<link linkend="remove-direct-method"><function>CLOS:REMOVE-DIRECT-METHOD</function></link>'>
+<!ENTITY remove-direct-subclass '<link linkend="remove-direct-subclass"><function>CLOS:REMOVE-DIRECT-SUBCLASS</function></link>'>
+<!ENTITY set-funcallable-instance-function '<link linkend="set-fif"><function>CLOS:SET-FUNCALLABLE-INSTANCE-FUNCTION</function></link>'>
+<!ENTITY setf-class-name '<link linkend="setf-class-name"><code>(SETF CLASS-NAME)</code></link>'>
+<!ENTITY setf-gf-name '<link linkend="setf-gf-name"><code>(SETF CLOS:GENERIC-FUNCTION-NAME)</code></link>'>
+<!ENTITY setf-slot-value '<code>(&setf; &slot-value;)</code>'>
+<!ENTITY setf-slot-value-UC '<link linkend="setf-slot-value-UC"><code>(SETF CLOS:SLOT-VALUE-USING-CLASS)</code></link>'>
+<!ENTITY slot-boundp-UC '<link linkend="slot-boundp-UC"><function>CLOS:SLOT-BOUNDP-USING-CLASS</function></link>'>
+<!ENTITY slot-definition-t '<link linkend="mop-sd"><classname>CLOS:SLOT-DEFINITION</classname></link>'>
+<!ENTITY slot-makunbound-UC '<link linkend="slot-makunbound-UC"><function>CLOS:SLOT-MAKUNBOUND-USING-CLASS</function></link>'>
+<!ENTITY slot-value-UC '<link linkend="slot-value-UC"><function>CLOS:SLOT-VALUE-USING-CLASS</function></link>'>
+<!ENTITY slotdef-allocation '<link linkend="slotdef-allocation"><function>CLOS:SLOT-DEFINITION-ALLOCATION</function></link>'>
+<!ENTITY slotdef-initargs '<link linkend="slotdef-initargs"><function>CLOS:SLOT-DEFINITION-INITARGS</function></link>'>
+<!ENTITY slotdef-initform '<link linkend="slotdef-initform"><function>CLOS:SLOT-DEFINITION-INITFORM</function></link>'>
+<!ENTITY slotdef-initfunction '<link linkend="slotdef-initfunction"><function>CLOS:SLOT-DEFINITION-INITFUNCTION</function></link>'>
+<!ENTITY slotdef-location '<link linkend="slotdef-location"><function>CLOS:SLOT-DEFINITION-LOCATION</function></link>'>
+<!ENTITY slotdef-name '<link linkend="slotdef-name"><function>CLOS:SLOT-DEFINITION-NAME</function></link>'>
+<!ENTITY slotdef-readers '<link linkend="slotdef-readers"><function>CLOS:SLOT-DEFINITION-READERS</function></link>'>
+<!ENTITY slotdef-t '<link linkend="mop-sd"><classname>CLOS:SLOT-DEFINITION</classname></link>'>
+<!ENTITY slotdef-type '<link linkend="slotdef-type"><function>CLOS:SLOT-DEFINITION-TYPE</function></link>'>
+<!ENTITY slotdef-writers '<link linkend="slotdef-writers"><function>CLOS:SLOT-DEFINITION-WRITERS</function></link>'>
+<!ENTITY specializer-direct-gfs '<link linkend="specializer-direct-gfs"><function>CLOS:SPECIALIZER-DIRECT-GENERIC-FUNCTIONS</function></link>'>
+<!ENTITY specializer-direct-methods '<link linkend="specializer-direct-methods"><function>CLOS:SPECIALIZER-DIRECT-METHODS</function></link>'>
+<!ENTITY specializer-t '<link linkend="mop-mo-spec"><classname>CLOS:SPECIALIZER</classname></link>'>
+<!ENTITY standard-accessor-method-t '<link linkend="mop-meth-init-mo"><classname>CLOS:STANDARD-ACCESSOR-METHOD</classname></link>'>
+<!ENTITY standard-dsd-t '<link linkend="mop-inherit-struct"><classname>CLOS:STANDARD-DIRECT-SLOT-DEFINITION</classname></link>'>
+<!ENTITY standard-esd-t '<link linkend="mop-inherit-struct"><classname>CLOS:STANDARD-EFFECTIVE-SLOT-DEFINITION</classname></link>'>
+<!ENTITY standard-instance-access '<link linkend="standard-instance-access"><function>CLOS:STANDARD-INSTANCE-ACCESS</function></link>'>
+<!ENTITY standard-reader-method-t '<link linkend="mop-inherit-struct"><classname>CLOS:STANDARD-READER-METHOD</classname></link>'>
+<!ENTITY standard-slotdef-t '<link linkend="mop-inherit-struct"><classname>CLOS:STANDARD-SLOT-DEFINITION</classname></link>'>
+<!ENTITY standard-writer-method-t '<link linkend="writer-method-class"><classname>CLOS:STANDARD-WRITER-METHOD</classname></link>'>
+<!ENTITY update-dependent '<link linkend="update-dependent"><function>CLOS:UPDATE-DEPENDENT</function></link>'>
+<!ENTITY validate-superclass '<link linkend="validate-superclass"><function>CLOS:VALIDATE-SUPERCLASS</function></link>'>
+<!ENTITY writer-method-class '<link linkend="writer-method-class"><function>CLOS:WRITER-METHOD-CLASS</function></link>'>
+
+<!-- *** shortcuts *** -->
+
+<!ENTITY doc-li '<listitem><simpara>The documentation is available as a
+ &string-t; or &nil;.</simpara></listitem>'>
+<!ENTITY doc-k-li '<listitem><simpara>The &documentation-k; argument is
+ a &string-t; or &nil;. An &err-sig; if it is not. This argument default
+ to &nil; during initialization.</simpara></listitem>'>
+<!ENTITY else-undefined '<simpara>The results are undefined if any of
+ these restrictions are violated.</simpara>'>
+<!ENTITY result-immutable '<simpara>The list returned by this function
+ will not be mutated by the implementation.  The results are undefined
+ if a portable program mutates the list returned by this function.</simpara>'>
+<!ENTITY result-immutable-all '<simpara>For any of these generic
+ functions which returns a list, such lists will not be mutated by the
+ implementation.  The results are undefined if a portable program allows
+ such a list to be mutated.</simpara>'>
+<!ENTITY init-method-restrictions '<itemizedlist>
+ <listitem><simpara>Portable programs must not define primary methods.
+ </simpara></listitem>
+ <listitem><simpara>Portable programs may define around-methods, but
+   these must be extending, not overriding methods.</simpara></listitem>
+ <listitem><simpara>Portable before-methods must assume that when they
+   are run, none of the initialization behavior described above has been
+   completed.</simpara></listitem>
+ <listitem><simpara>Portable after-methods must assume that when they
+   are run, all of the initialization behavior described above has been
+   completed.</simpara></listitem></itemizedlist>'>
+<!ENTITY no-extra-spec '<simpara>No behavior is specified for this
+   method beyond that which is specified for the generic function.</simpara>'>
+<!ENTITY no-extra-specs '<simpara>No behavior is specified for these
+   methods beyond that which is specified for their respective generic
+   functions.</simpara>'>
+<!ENTITY values-unspecified '<simpara>The value returned by this generic
+ function is unspecified.</simpara>'>
+<!ENTITY also-must-override 'This method cannot be overridden unless the
+ following methods are overridden as well:'>
+<!ENTITY may-override '<simpara>Overriding these methods is permitted,
+ but may require overriding other methods in the standard implementation
+ of the slot access protocol.</simpara>'>
+<!ENTITY class-slot-UC-consistent '<simpara>The results are undefined if
+ the &class-r; argument is not the class of the &object-r; argument, or
+ if the &slot-r; argument does not appear among the set of effective
+ slots associated with the &class-r; argument.</simpara>'>
+<!ENTITY class-slot-alloc-inst-class '<simpara>These methods implement
+ the full behavior of this generic function for slots with allocation
+ &instance-k; and &class-k;.  If the supplied slot has an allocation
+ other than &instance-k; or &class-k; an &err-sig;.</simpara>'>
+<!ENTITY overridable '<simpara>This method can be overridden.</simpara>'>
+<!ENTITY overridables '<simpara>These methods can be overridden.</simpara>'>
+<!ENTITY see-dep-maint '<formalpara><title>Remarks</title>
+ <para>See <xref linkend="mop-dep-maint"/> for remarks about the
+  use of this facility.</para></formalpara>'>
+<!ENTITY class-mo-arg '<varlistentry><term>&class-r;</term>
+  <listitem><simpara>a &c-mo;.</simpara></listitem></varlistentry>'>
+<!ENTITY gf-mo-arg '<varlistentry><term>&gf-r;</term>
+    <listitem><simpara>a &gfmo;.</simpara></listitem></varlistentry>'>
+<!ENTITY method-mo-arg '<varlistentry><term>&method-r;</term>
+ <listitem><simpara>a &m-mo;.</simpara></listitem></varlistentry>'>
+<!ENTITY specializer-mo-arg '<varlistentry><term>&specializer-r;</term>
+    <listitem><simpara>a specializer metaobject.
+   </simpara></listitem></varlistentry>'>
+<!ENTITY clisp-defclass-ensure-class-default '<simpara>This is needed to
+ fulfill the &ansi-cl; requirement (see <xref linkend="redef-class"/>) that
+ the resulting &class; object reflects the &defclass; form.</simpara>'>
+<!ENTITY implements-inheritance '<simpara>This method implements the
+ inheritance and defaulting of slot options following the rules
+ described in the &ansi-cl; section <ulink url="&clhs;/Body/sec_7-5-3.html"
+ >7.5.3 <quote>Inheritance of Slots and Options</quote></ulink>.</simpara>'>
+<!ENTITY dsds-r '<replaceable>direct-slot-definitions</replaceable>'>
+<!ENTITY c-mo '<link linkend="mop-class-mo">class metaobject</link>'>
+<!ENTITY dsdmo '<link linkend="mop-dsd-mo">direct</link> &sdmo;'>
+<!ENTITY esdmo '<link linkend="mop-esd-mo">effective</link> &sdmo;'>
+<!ENTITY gfmo '<link linkend="mop-gen-fun-mo">generic function metaobject</link>'>
+<!ENTITY m-mo '<link linkend="mop-method-mo">method metaobject</link>'>
+<!ENTITY mcmo '<link linkend="mop-meth-comp-mo">method combination metaobject</link>'>
+<!ENTITY sdmo '<link linkend="mop-slot-def-mo">slot definition metaobject</link>'>

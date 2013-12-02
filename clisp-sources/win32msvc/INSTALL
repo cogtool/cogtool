@@ -1,0 +1,118 @@
+Installation on Win32 (WinNT, Win95) using the MSVC4.0 or MSVC5.0 or MSVC6.0
+============================================================================
+or MSVC7.0 development environment, using native system calls
+=============================================================
+
+** Note! Binaries created with MSVC 7.0 with MFLAGS=-MD should not be
+   distributed: They depend on a closed-source library 'msvcr70.dll' which is
+   not normally part of a Woe32 installation. You cannot distribute
+   'msvcr70.dll' with the binaries - this would be a violation of the GPL and
+   of the Microsoft EULA. You can distribute the binaries without including
+   'msvcr70.dll', but this will cause problems for users that don't have this
+   library on their system. Therefore it is not recommended. This problem does
+   not occur with MSVC 6.0 and earlier.
+
+** Note! The easiest way to get a native win32 version of CLISP is to use
+   -- cygwin <http://cywgin.com> or
+   -- mingw/msys <http://gnuwin32.sourceforge.net/>.
+   Either way, read ../unix/INSTALL, get libsigsegv, and do
+   $ ./configure --with-mingw --build build-mingw --with-module=...
+   $ cd build-mingw
+   $ make distrib
+   unzip the distribution in your preferred location, and run install.bat.
+   The GCC builds should be faster than the MSVC builds
+   because CLISP uses some GCC-specific assembly code.
+
+If you still want to use the MS C compiler, here are the steps:
+
+1. Build a few recommended libraries: libiconv and libsigsegv.
+   - GNU libsigsegv (highly recommended for C stack overflow detection
+     and high-performance Generational GC),
+   - GNU libiconv (for more character set conversions).
+
+2. Unpack the source, start a console with a shell.
+   Make sure that the MSVC4.0 or MSVC5.0 or MSVC6.0 utilities ("cl" etc.)
+   are found in PATH. For example, I use the following settings:
+
+        set MSDEVDIR=C:\Program Files\Microsoft Visual Studio
+        set MSVCDIR=%MSDEVDIR%\VC98
+        set Include=%MSDEVDIR%\VC98\include
+        set Lib=%MSDEVDIR%\VC98\lib
+        set PATH=%MSDEVDIR%\VC98\bin;%MSDEVDIR%\Common\MSDev98\Bin;%PATH%
+
+   Alternatively you can use a file vcvars32.bat supplied with MSVC. Copy
+   it to some location in the PATH and add the following line to its end:
+
+        %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+   Now you can call VC command line utilities in the proper environment
+   prepending it with vcvars32. For example
+
+        vcvars32 nmake
+
+3. Ensure unix-like command-line utilities used in the build: sed, grep,
+   touch, rm (more the better) are in the PATH.
+   There are quite a few such packages available, for example
+   - UnxUtils <http://unxutils.sourceforge.net/>,
+   - GnuWin32 <http://gnuwin32.sourceforge.net/> or
+   - cygwin <http://cywgin.com> (overkill for this particular case).
+
+4. Then build a few tools and libraries:
+
+        cd utils
+        cd gcc-cccp
+        nmake -f Makefile.msvc
+        cd ..
+        cd ..
+
+        cd ffcall
+        nmake -f Makefile.msvc check
+        cd ..
+
+        cd libcharset
+        nmake -f Makefile.msvc check
+        cd ..
+
+   Copy the appropriate makefile to src\makefile:
+
+     for MSVC4.0:
+
+        copy win32msvc\makefile.msvc4 src\makefile
+
+     for MSVC5.0:
+
+        copy win32msvc\makefile.msvc5 src\makefile
+
+     for MSVC6.0:
+
+        copy win32msvc\makefile.msvc6 src\makefile
+
+     for MSVC7.0:
+
+        copy win32msvc\makefile.msvc7 src\makefile
+
+     same, debug versions:
+
+        copy win32msvc\makefile.msvc5d src\makefile
+        copy win32msvc\makefile.msvc6d src\makefile
+
+   Check that environment variable MSVCDIR points to VC98 directory
+   or uncomment and modify the value of MSVCDIR in src\makefile to
+   match your site.
+
+   Now that the libraries recommended in 1. are not distributed with
+   CLISP anymore, the makefiles do not make use of them. For
+   actually using libsigsegv with CLISP, here is a way to go:
+        a) Compile the library as per libsigsegv\README.woe32
+        b) Copy sigsegv.lib and sigsegv.h to src
+        c) Remove -DNO_SIGSEGV from CFLAGS in src\makefile
+        d) Add sigsegv.lib to LIBS in src\makefile
+
+        cd src
+        nmake
+
+5. (optional) Using cygwin:
+
+        cd src
+        make distrib
+

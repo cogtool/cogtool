@@ -1,0 +1,185 @@
+# This is the developer's -*- Makefile -*-, not the user's makefile.
+# Do not use it unless you know exactly what you are doing!
+
+# This Makefile requires GNU make and
+# GNU gettext 0.15 or above (msgfmt, msguniq, msgen, xgettext).
+
+SHELL = /bin/sh
+RM = rm -rf
+
+GMSGFMT = /cygdrive/d/gnu/gettext-0.15-pre1/gettext-tools/src/msgfmt.exe --statistics --check
+
+all : tmp pot gmo
+
+# This is hardwired. (See clisp-xgettext.)
+PREDEF_LINGUAS = en
+# Other languages must be translated by hand. They must also be added
+# to the variable ALL_LINGUAS in ../configure.in.
+OTHER_LINGUAS = da de fr es nl ru
+
+LINGUAS = $(PREDEF_LINGUAS) $(OTHER_LINGUAS)
+
+DSOURCES = \
+ lispbibl fsubr subr pseudofun constsym constobj constpack avl sort subrkw \
+    bytecode unix win32 xthread \
+ spvw spvw_module spvw_debug spvw_alloca spvw_mmap spvw_multimap \
+    spvw_singlemap spvw_page spvw_heap spvw_global spvw_gcstat spvw_space \
+    spvw_mark spvw_objsize spvw_update spvw_fault spvw_sigsegv spvw_sigcld \
+    spvw_sigpipe spvw_sigint spvw_sigwinch spvw_garcol spvw_genera1 \
+    spvw_gcmark spvw_genera2 spvw_weak spvw_genera3 spvw_allocate spvw_sigterm \
+    spvw_typealloc spvw_circ spvw_walk spvw_ctype spvw_language spvw_memfile \
+ spvwtabf spvwtabs spvwtabo \
+ eval control \
+ encoding pathname stream socket io \
+ array hashtabl list package record weak sequence \
+ charstrg debug \
+ error errunix errwin32 \
+ misc time predtype symbol \
+ lisparit aridecl arilev0 arilev1 arilev1c arilev1e arilev1i intelem \
+    intlog intplus intcomp intbyte intmal intdiv intgcd int2adic intsqrt \
+    intprint intread intserial rational sfloat ffloat dfloat lfloat flo_konv \
+    flo_rest realelem realrand realtran compelem comptran \
+ affi \
+ foreign \
+ unixaux win32aux \
+ built
+
+# Keep this in the same order as the LPARTS variable in makemake.in !
+LISPSOURCES = init defseq backquote defmacro macros1 macros2 defs1 \
+              timezone lambdalist places floatprint defpackage type subtypep \
+              clos-package clos-macros clos-class0 clos-metaobject1 \
+              clos-slotdef1 clos-stablehash1 clos-specializer1 clos-class1 \
+              clos-class2 clos-class3 defstruct format \
+              international savemem functions trace cmacros compiler \
+              defs2 loop clos \
+              clos-stablehash2 \
+              clos-specializer2 clos-specializer3 \
+              clos-class4 clos-class5 clos-class6 \
+              clos-slotdef2 clos-slotdef3 clos-slots1 clos-slots2 \
+              clos-method1 clos-method2 clos-method3 clos-method4 \
+              clos-methcomb1 clos-methcomb2 clos-methcomb3 clos-methcomb4 \
+              clos-genfun1 clos-genfun2a clos-genfun2b clos-genfun3 clos-genfun4 clos-genfun5 \
+              clos-dependent clos-print clos-custom documentation \
+              fill-out disassem condition loadform gstream xcharin keyboard \
+              screen runprog query reploop dribble complete \
+              describe room edit macros3 clhs inspect gray threads \
+              case-sensitive foreign1 exporting \
+              german french spanish russian dutch danish \
+              deprecated affi1
+
+SOURCES := $(patsubst %,%.d,$(DSOURCES)) $(patsubst %,%.lisp,$(LISPSOURCES))
+
+# Lots of small catalog pieces. This will help reduce the building time
+# for the catalogs, since most often only a few source files change.
+SOURCES_POT := $(patsubst %,tmp/%.pot,$(SOURCES))
+DSOURCES_POT := $(patsubst %,tmp/%.pot,$(patsubst %,%.d,$(DSOURCES)))
+LISPSOURCES_POT := $(patsubst %,tmp/%.pot,$(patsubst %,%.lisp,$(LISPSOURCES)))
+SOURCES_POT2 := $(patsubst %,tmp/%.pot2,$(patsubst %,%.d,$(DSOURCES)))
+
+tmp :
+	test -d tmp || mkdir tmp
+
+$(DSOURCES_POT) : tmp/%.pot : ../% clisp-xgettext
+	(cd .. ; $${CLISP} po/clisp-xgettext $* po/tmp)
+
+# xgettext >= 0.13 has extra support for Lisp format string recognition.
+XGETTEXT = xgettext
+XGETTEXT_OPTIONS = \
+  --from-code=UTF-8 \
+  --add-comments=TRANSLATORS: \
+  --keyword --keyword=TEXT --flag=TEXT:1:pass-lisp-format \
+  --flag=break:1:lisp-format \
+  --flag=c-comment:1:lisp-format \
+  --flag=c-error:1:lisp-format \
+  --flag=c-style-warn:1:lisp-format \
+  --flag=c-warn:1:lisp-format \
+  --flag=cerror-of-type:1:lisp-format \
+  --flag=cerror:1:lisp-format \
+  --flag=cerror:2:lisp-format \
+  --flag=do-c-lines:1:lisp-format \
+  --flag=error:1:lisp-format \
+  --flag=format:2:lisp-format \
+  --flag=formatter:1:lisp-format \
+  --flag=invalid-method-error:2:lisp-format \
+  --flag=method-combination-error:1:lisp-format \
+  --flag=warn:1:lisp-format \
+  --flag=y-or-n-p:1:lisp-format \
+  --flag=yes-or-no-p:1:lisp-format
+
+$(LISPSOURCES_POT) : tmp/%.pot : ../%
+	(cd .. ; $(XGETTEXT) $(XGETTEXT_OPTIONS) --omit-header -o - $*) > $@
+
+# When a .pot file is built, it automatically builds also the .pot2 file.
+$(SOURCES_POT2) : tmp/%.pot2 : tmp/%.pot
+
+pot : clisp.pot $(patsubst %,%.po,$(LINGUAS)) \
+      clisplow.pot $(patsubst %,clisplow_%.po,$(LINGUAS))
+
+MSGUNIQ = msguniq -w 1000
+MSGEN = msgen -w 1000
+
+# We build the .pot file by simple concatenation. No sorting!!
+clisp.pot : $(SOURCES_POT) ../../version.sh po_header
+	(./po_header t ; cat $(SOURCES_POT)) > clisp.pox
+	$(MSGUNIQ) clisp.pox -o $@
+	$(RM) clisp.pox
+
+en.po : $(SOURCES_POT) ../../version.sh po_header
+	(./po_header en ; cat $(SOURCES_POT)) | $(MSGUNIQ) | $(MSGEN) - > $@
+
+
+PACKAGE = clisp
+MSGMERGE = msgmerge -v -w 1000
+
+update-po : force
+	for lang in $(OTHER_LINGUAS); do \
+	  echo "$$lang:"; \
+	  if $(MSGMERGE) $$lang.po $(PACKAGE).pot -o $$lang.new.po; then \
+	    mv -f $$lang.new.po $$lang.po; \
+	  else \
+	    echo "msgmerge for $$lang.po failed!"; \
+	  fi; \
+	  rm -f $$lang.new.po; \
+	done
+
+$(patsubst %,%.po,$(OTHER_LINGUAS)) : %.po : $(PACKAGE).pot
+	$(MSGMERGE) $*.po $(PACKAGE).pot -o $*.pox
+	cp -p $*.pox $*.po
+	$(RM) $*.pox
+
+# A single "$(MSGMERGE) $*.po.new $(PACKAGE).pot" throws away old
+# translations. Two separate $(MSGMERGE) runs don't do this.
+$(patsubst %,%.po.merged,$(OTHER_LINGUAS)) : %.po.merged : %.po.new %.po $(PACKAGE).pot
+	$(MSGMERGE) $*.po.new $*.po -o $*.po.tmp
+	$(MSGMERGE) $*.po.tmp $(PACKAGE).pot -o $*.po.merged
+	$(RM) $*.po.tmp
+
+
+# clisplow.pot is a subset of clisp.pot.
+
+MSGATTRIB = msgattrib -w 1000
+
+clisplow.pot : $(SOURCES_POT2) ../../version.sh po_header
+	(./po_header t ; cat $(SOURCES_POT2)) > clisplow.pox
+	$(MSGUNIQ) clisplow.pox -o $@
+	$(RM) clisplow.pox
+
+$(patsubst %,clisplow_%.po,$(LINGUAS)) : clisplow_%.po : clisplow.pot %.po
+	$(MSGMERGE) $*.po clisplow.pot -o - | $(MSGATTRIB) --no-obsolete > clisplow_$*.po
+
+
+# We must generate and distribute the .gmo files, because on the machine
+# where clisp is built, GNU's [g]msgfmt might not be available.
+
+GMOFILES = $(patsubst %,%.gmo, $(LINGUAS) $(patsubst %,clisplow_%,$(LINGUAS)))
+
+gmo : $(GMOFILES)
+
+$(GMOFILES) : %.gmo : %.po
+	$(GMSGFMT) -o $@ $<
+
+
+clean :
+	$(RM) *.pox *.new.po tmp
+
+force :

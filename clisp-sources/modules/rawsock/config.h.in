@@ -1,0 +1,224 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* Define to 1 if you have the <arpa/inet.h> header file. */
+#undef HAVE_ARPA_INET_H
+
+/* Define to 1 if you have the `endnetent' function. */
+#undef HAVE_ENDNETENT
+
+/* Define to 1 if you have the `endprotoent' function. */
+#undef HAVE_ENDPROTOENT
+
+/* Define to 1 if you have the <errno.h> header file. */
+#undef HAVE_ERRNO_H
+
+/* Define to 1 if you have the `freeaddrinfo' function. */
+#undef HAVE_FREEADDRINFO
+
+/* Define to 1 if you have the `getaddrinfo' function. */
+#undef HAVE_GETADDRINFO
+
+/* Define to 1 if you have the `getnameinfo' function. */
+#undef HAVE_GETNAMEINFO
+
+/* Define to 1 if you have the `getnetbyaddr' function. */
+#undef HAVE_GETNETBYADDR
+
+/* Define to 1 if you have the `getnetbyname' function. */
+#undef HAVE_GETNETBYNAME
+
+/* Define to 1 if you have the `getnetent' function. */
+#undef HAVE_GETNETENT
+
+/* Define to 1 if you have the `getprotobyname' function. */
+#undef HAVE_GETPROTOBYNAME
+
+/* Define to 1 if you have the `getprotobynumber' function. */
+#undef HAVE_GETPROTOBYNUMBER
+
+/* Define to 1 if you have the `getprotoent' function. */
+#undef HAVE_GETPROTOENT
+
+/* Define to 1 if you have the `getsockopt' function. */
+#undef HAVE_GETSOCKOPT
+
+/* Define to 1 if you have the `htonl' function. */
+#undef HAVE_HTONL
+
+/* Define to 1 if you have the `htons' function. */
+#undef HAVE_HTONS
+
+/* Define to 1 if you have the `inet_addr' function. */
+#undef HAVE_INET_ADDR
+
+/* Define to 1 if you have the `inet_ntop' function. */
+#undef HAVE_INET_NTOP
+
+/* Define to 1 if you have the `inet_pton' function. */
+#undef HAVE_INET_PTON
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* <sys/socket.h> defines AF_INET */
+#undef HAVE_IPV4
+
+/* <sys/socket.h> defines AF_INET6 */
+#undef HAVE_IPV6
+
+/* Define to 1 if you have the <linux/if_packet.h> header file. */
+#undef HAVE_LINUX_IF_PACKET_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <netdb.h> header file. */
+#undef HAVE_NETDB_H
+
+/* Define to 1 if you have the <netinet/if_ether.h> header file. */
+#undef HAVE_NETINET_IF_ETHER_H
+
+/* Define to 1 if you have the <netinet/in.h> header file. */
+#undef HAVE_NETINET_IN_H
+
+/* Define to 1 if you have the <netinet/tcp.h> header file. */
+#undef HAVE_NETINET_TCP_H
+
+/* Define to 1 if you have the <net/if.h> header file. */
+#undef HAVE_NET_IF_H
+
+/* Define to 1 if you have the `ntohl' function. */
+#undef HAVE_NTOHL
+
+/* Define to 1 if you have the `ntohs' function. */
+#undef HAVE_NTOHS
+
+/* Define to 1 if you have the <poll.h> header file. */
+#undef HAVE_POLL_H
+
+/* Define to 1 if you have the `readv' function. */
+#undef HAVE_READV
+
+/* Define to 1 if you have the `recvmsg' function. */
+#undef HAVE_RECVMSG
+
+/* Define to 1 if you have the `sendmsg' function. */
+#undef HAVE_SENDMSG
+
+/* Define to 1 if you have the `setnetent' function. */
+#undef HAVE_SETNETENT
+
+/* Define to 1 if you have the `setprotoent' function. */
+#undef HAVE_SETPROTOENT
+
+/* Define to 1 if you have the `setsockopt' function. */
+#undef HAVE_SETSOCKOPT
+
+/* Define to 1 if you have the `sockatmark' function. */
+#undef HAVE_SOCKATMARK
+
+/* Define to 1 if you have the `socketpair' function. */
+#undef HAVE_SOCKETPAIR
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <stropts.h> header file. */
+#undef HAVE_STROPTS_H
+
+/* Define to 1 if the system has the type `struct iovec'. */
+#undef HAVE_STRUCT_IOVEC
+
+/* Define to 1 if `msg_control' is member of `struct msghdr'. */
+#undef HAVE_STRUCT_MSGHDR_MSG_CONTROL
+
+/* Define to 1 if `msg_flags' is member of `struct msghdr'. */
+#undef HAVE_STRUCT_MSGHDR_MSG_FLAGS
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define to 1 if you have the <sys/socket.h> header file. */
+#undef HAVE_SYS_SOCKET_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/uio.h> header file. */
+#undef HAVE_SYS_UIO_H
+
+/* Define to 1 if you have the <sys/un.h> header file. */
+#undef HAVE_SYS_UN_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the <winsock2.h> header file. */
+#undef HAVE_WINSOCK2_H
+
+/* Define to 1 if you have the `writev' function. */
+#undef HAVE_WRITEV
+
+/* Define to 1 if you have the <ws2tcpip.h> header file. */
+#undef HAVE_WS2TCPIP_H
+
+/* declaration of inet_addr() needs const */
+#undef INET_ADDR_CONST
+
+/* Define as .s_addr if the return type of inet_addr() is a struct type, as
+   empty if it is a scalar type */
+#undef INET_ADDR_SUFFIX
+
+/* need <linux/in6.h> for the in6_addr and sockaddr_in6 types */
+#undef IPV6_NEED_LINUX_IN6_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* return type of inet_addr() */
+#undef RET_INET_ADDR_TYPE
+
+/* type of `optval' in setsockopt() declaration */
+#undef SETSOCKOPT_ARG_T
+
+/* declaration of setsockopt() needs const */
+#undef SETSOCKOPT_CONST
+
+/* type of `optlen' in setsockopt() declaration */
+#undef SETSOCKOPT_OPTLEN_T
+
+/* The size of a `size_t', as computed by sizeof. */
+#undef SIZEOF_SIZE_T
+
+/* The size of a `ssize_t', as computed by sizeof. */
+#undef SIZEOF_SSIZE_T
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME

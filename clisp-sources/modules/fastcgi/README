@@ -1,0 +1,144 @@
+
+        README for CLISP FastCGI interface module
+        http://clisp.alma.com
+
+        John Hinsdale, Alma Mater Software, Inc.
+        hin@alma.com
+
+        $Id: README,v 1.2 2003/09/08 23:33:29 hin Exp $
+
+This CLISP module provides an interface with the FastCGI protocol,
+which implements a fully CGI-compatible process model for running Web
+server back-end scripts.  See http://www.fastcgi.com
+
+This README is organized as follows:
+
+        (1) System requirements
+        (2) Building the module
+        (3) Using the module
+
+Each section follows.
+
+        (1) SYSTEM REQUIREMENTS
+            -------------------
+
+You will need to:
+
+    - Know how to compile CLISP from source code (the binaries do
+      not contain the extra modules compiled in).
+
+    - Understand FastCGI by reading up on it at http://www.fastcgi.com
+
+    - Download the FastCGI developer's kit, build it, and install it
+      See http://www.fastcgi.com  Win32 users should see
+          http://www.caraveo.com/fastcgi/
+
+    - Upgrade your Web server to speak FastCGI.  For Apache, this
+      means getting and installing the module "mod_fastcgi" and then
+      configuring your Web server to use it.  I personally compile
+      it in statically with Apache and then just add
+		Addhandler fastcgi-script .fcgi
+      to my .conf file.  Then I make symbolic links to my "foo.cgi" to
+      also point to "foo.fcgi" and invoke the appropriate URL.
+
+    - Re-compile your CLISP to use this module (see (2) below).
+
+    - If you have existing CLISP CGI scripts, you will need to make
+      some slight modifications as to how the do input and output,
+      so that they will work both as CGIs and as "FastCGIs".
+
+
+        (2) BUILDING THE MODULE
+            -------------------
+
+As of ver. 2.31, CLISP comes with module in the source distribution.
+The modules is in the subdirectory "modules/fastcgi".
+
+Run (or re-run) CLISP configure, adding the option
+"--with-module=fastcgi"
+
+Re-compile and install CLISP.  Note you have to use the "full" linking
+set to get the extra modules (e.g., "clisp -K full").  You'll know you
+have it installed when you can do "(DESCRIBE 'FASTCGI:ACCEPT)" and get
+something.
+
+        (3) USING THE MODULE
+            ----------------
+
+Most CGI programs work by doing input/output with the Web server via
+the following channels:
+
+	(a) environment variables (e.g., "HTTP_USER_AGENT" is the
+	    set by the Web server to name the browser used
+
+	(b) reading from standard input (i.e., to get input data in 
+            a "method=POST" request
+
+	(c) writing an HTTP response document (usually "Content-type:
+	    text/html") to the standard output, for eventual transmission
+	    back to the browser client
+
+	(d) writing error messages to the standard error, usually captured
+	    by the Web server and logged in its log files.
+
+The FastCGI module involves replacing calls the standard routines to
+do the above with calls in the FASTCGI package.  These calls will then
+work exactly as before when the program is invoked as a CGI, but will
+also work when invoked as a FastCGI.
+
+Here is how to do each of the above using this module:
+
+	(a) To get an environment variable, use (FASTCGI:GETENV var),
+            e.g., (setf browser (fastcgi:getenv "HTTP_USER_AGENT"))
+            instead of the regular operating system's getenv() call.
+
+	(b) To read the entirety of the standard input, usually what
+	    one does, use FASTCGI:SLURP-STDIN, e.g.
+	    (setf stdin (fastcgi:slurp-stdin))
+
+	(c) To print output, instead of writing to the stream
+	    *standard-output* using normal Lisp I/O function, instead
+            call (FASTCGI:WRITE-STDOUT string).  If you want to use
+            FORMAT, then you can use (FASTCGI:WRITE-STDOUT (format ...))
+            For convenient, there is a function (FASTCGI:OUT ...) that
+            will print multiple arguments.
+
+	(d) Same as above, but use FASTCGI:WRITE-STDERR.
+
+In addition to the above, it is also useful to test if the script is
+running in CGI mode or in "FastCGI mode".  This is useful if you have
+installed the (same) script under two different names (e.g., "foo.cgi"
+and "foo.fcgi") to have the Web server launch it differently based on
+its name.  In that situation, any links you generate back to the same
+script you will want to make to the CGI or FastCGI depending on how
+the script was launched.  The way to test for this is to call
+(FASTCGI:IS-CGI) which will return T iff the script is running in CGI
+mode.
+
+A complete example follows.  Try installing the program below under
+the name "foo.cgi" to run it as CGI and also (perhaps via a symbolic
+link) as "foo.fcgi" to run it as FastCGI, assuming that is how your
+Web server is set up.  Reload the page a few times under CGI mode and
+then under FastCGI.  Make sure that the mode reported by the script is
+what you expected.  Notice how much faster it is under FastCGI and
+then Email me and tell me whether this all was worth it.  :)
+
+#-----------------  Cut here ------
+#!/usr/local/bin/clisp -q -L en_US -K full
+
+(defun nl () (format nil "~%"))
+
+(do ((count 1 (1+ count)))
+    ((not (fastcgi:accept)) nil)
+
+    (fastcgi:out "Content-type: text/plain" (nl) (nl))
+    (fastcgi:out
+     "I am running in mode: " (if (fastcgi:is-cgi) "CGI" "FastCGI") (nl)
+     "This is execution no.: " count (nl)
+     "The browser string is '" (fastcgi:getenv "HTTP_USER_AGENT") "'" (nl))
+
+    (fastcgi:finish))
+#-----------------  Cut here ------
+
+
+                *   *   *

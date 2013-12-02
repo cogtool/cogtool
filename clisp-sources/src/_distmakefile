@@ -1,0 +1,142 @@
+# Makefile for installing CLISP
+
+# -------------- Start of configurable section --------------------
+
+# Linking sets to be installed:
+linkingsets = base full
+
+# Directories used by "make install":
+# Common base directory for not architecture dependent files.
+prefix = /usr/local
+# Common base directory for architecture dependent files.
+exec_prefix = $(prefix)
+# Common base directory for architecture independent files
+datadir = $(prefix)/share
+# Directory where executables are installed.
+bindir = $(exec_prefix)/bin
+# Directory where manual pages are installed.
+mandir = $(datadir)/man
+# Directory where documentation is installed.
+docdir = $(datadir)/doc/clisp
+# Directory where manual pages in HTML/DVI/PS/PDF format are installed.
+htmldir = $(docdir)
+dvidir = $(docdir)
+psdir = $(docdir)
+pdfdir = $(docdir)
+libdir = $(exec_prefix)/lib
+lisplibdir = $(libdir)/clisp
+lexe=@@LEXE@@
+#ifdef GNU_GETTEXT
+# If you have $(exec_prefix) different from $(prefix), and indend to use
+# different versions of CLISP on different architectures, replace the
+# following line with:  datadir = $(exec_prefix)/share
+datadir = $(prefix)/share
+localedir = $(datadir)/locale
+#endif
+
+#ifndef UNIX_BINARY_DISTRIB
+# Programs used by "make":
+#ifdef UNIX_AIX
+CC = xlc
+#else
+#if defined(UNIX_SUNOS4) || defined(UNIX_CYGWIN32)
+CC = gcc
+#else
+#ifdef UNIX_HPUX
+CC = cc -Aa
+#else
+CC = cc
+#endif
+#endif
+#endif
+CFLAGS = -O
+
+#endif
+# Programs used by "make install":
+INSTALL = cp
+INSTALL_PROGRAM = $(INSTALL)
+INSTALL_DATA = $(INSTALL)
+
+# -------------- End of configurable section --------------------
+
+SHELL = /bin/sh
+
+all : base/lisp$(lexe) full/lisp$(lexe) clisp
+
+#ifndef UNIX_BINARY_DISTRIB
+base/lisp$(lexe) : @@BASE_FILES@@
+	$(CC) $(CFLAGS) @@BASE_LIBS@@ -o base/lisp$(lexe)
+
+full/lisp$(lexe) : @@FULL_FILES@@
+	$(CC) $(CFLAGS) @@FULL_LIBS@@ -o full/lisp$(lexe)
+
+#endif
+#ifdef UNIX_BINARY_DISTRIB
+clisp: force
+	./hardcode -DLISPLIBDIR="`pwd`" -DLOCALEDIR="`pwd`/locale" clisp clisp
+#else /* new executable */
+clisp: src/clisp.c
+	$(CC) $(CFLAGS) -DLISPLIBDIR='"'`pwd`'"' -DLOCALEDIR='"'`pwd`/locale'"' src/clisp.c -o clisp
+#endif
+
+install : install-bin install-man install-doc
+
+install-bin : all force
+	if [ ! -d $(prefix) ] ; then mkdir $(prefix) ; fi
+	if [ ! -d $(exec_prefix) ] ; then mkdir $(exec_prefix) ; fi
+	if [ ! -d $(libdir) ] ; then mkdir $(libdir) ; fi
+	if [ ! -d $(lisplibdir) ] ; then mkdir $(lisplibdir) ; fi
+	tar cf - data | (cd $(lisplibdir) && tar xf -)
+	(cd $(lisplibdir) && rm -rf $(linkingsets))
+	tar cf - clisp-link linkkit | (cd $(lisplibdir) && tar xf -)
+	tar cf - $(linkingsets) | (cd $(lisplibdir) && tar xf -)
+#ifdef GNU_GETTEXT
+	if [ ! -d $(datadir) ] ; then mkdir $(datadir) ; fi
+	if [ ! -d $(localedir) ] ; then mkdir $(localedir) ; fi
+	(cd locale && tar cf - .) | (cd $(localedir) && tar xf -)
+#endif
+	if [ ! -d $(bindir) ] ; then mkdir $(bindir) ; fi
+#ifdef UNIX_BINARY_DISTRIB
+	./hardcode -DLISPLIBDIR='$(lisplibdir)' -DLOCALEDIR='$(localedir)' clisp $(bindir)/clisp
+#else /* new executable */
+	$(CC) $(CFLAGS) -DLISPLIBDIR='"$(lisplibdir)"' -DLOCALEDIR='"$(localedir)"' src/clisp.c -o $(bindir)/clisp
+#endif
+
+install-man : doc/clisp.1 doc/clisp.html force
+	if [ ! -d $(prefix) ] ; then mkdir $(prefix) ; fi
+	if [ ! -d $(exec_prefix) ] ; then mkdir $(exec_prefix) ; fi
+	if [ ! -d $(mandir) ] ; then mkdir $(mandir) ; fi
+	if [ ! -d $(mandir)/man1 ] ; then mkdir $(mandir)/man1 ; fi
+	if [ ! -d $(exec_prefix)/share ] ; then mkdir $(exec_prefix)/share ; fi
+	if [ ! -d $(htmldir) ] ; then mkdir $(htmldir) ; fi
+	if [ ! -d $(dvidir) ] ; then mkdir $(dvidir) ; fi
+	if [ ! -d $(psdir) ] ; then mkdir $(psdir) ; fi
+	if [ ! -d $(pdfdir) ] ; then mkdir $(pdfdir) ; fi
+	$(INSTALL_DATA) doc/clisp.1 $(mandir)/man1/clisp.1
+	$(INSTALL_DATA) doc/clisp.html $(htmldir)/clisp.html
+	$(INSTALL_DATA) doc/clisp.dvi $(dvidir)/clisp.dvi
+	$(INSTALL_DATA) doc/clisp.ps $(psdir)/clisp.ps
+	$(INSTALL_DATA) doc/clisp.pdf $(pdfdir)/clisp.pdf
+
+install-doc : force
+	if [ ! -d $(prefix) ] ; then mkdir $(prefix) ; fi
+	if [ ! -d $(exec_prefix) ] ; then mkdir $(exec_prefix) ; fi
+	if [ ! -d $(datadir)/doc ] ; then mkdir $(datadir)/doc ; fi
+	if [ ! -d $(docdir) ] ; then mkdir $(docdir) ; fi
+	tar cf - ANNOUNCE COPYRIGHT GNU-GPL SUMMARY NEWS README README.de README.es MAGIC.add doc | (cd $(docdir) && tar xf -)
+
+uninstall : force
+	rm -rf $(lisplibdir)
+#ifdef GNU_GETTEXT
+	(files=`find locale -type f -print`; cd $(localedir) && rm -f $${files})
+#endif
+	rm -f $(bindir)/clisp
+	rm -f $(mandir)/man1/clisp.1
+	rm -f $(htmldir)/clisp.html
+	rm -f $(dvidir)/clisp.dvi
+	rm -f $(psdir)/clisp.ps
+	rm -f $(pdfdir)/clisp.pdf
+	rm -rf $(docdir)
+
+force:
+

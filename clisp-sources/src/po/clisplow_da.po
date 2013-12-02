@@ -1,0 +1,830 @@
+# Danish translation of CLISP messages
+# Copyright (C) 2004,2005 Free Software Foundation, Inc.
+# Dennis Decker Jensen <dennisdjensen@tiscali.dk>, 2004,2005
+msgid ""
+msgstr ""
+"Project-Id-Version: clisp 2.32.91\n"
+"Report-Msgid-Bugs-To: clisp-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2006-01-23 16:48:22-0500\n"
+"PO-Revision-Date: 2004-09-08 23:56:00 GMT\n"
+"Last-Translator: Dennis Decker Jensen <dennisdjensen@tiscali.dk>\n"
+"Language-Team: Danish <dansk@klid.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: spvw.d:482
+msgid "*** - Program stack overflow. RESET"
+msgstr "*** - Programstak-overløb. NULSTILLET"
+
+#: spvw.d:497
+msgid "*** - Lisp stack overflow. RESET"
+msgstr "*** - Lispstak-overløb. NULSTILLET"
+
+#: spvw.d:712
+msgid "Unknown FSUBR signature: %d %d %d\n"
+msgstr "Ukendt FSUBR-signatur: %d %d %d\n"
+
+#: spvw.d:820
+msgid "Unknown SUBR signature: %d %d %d %d"
+msgstr "Ukendt SUBR-signatur: %d %d %d %d"
+
+#: spvw.d:1546
+msgid "module '%s' requires package %s.\n"
+msgstr "modulet '%s' kræver pakken %s.\n"
+
+#: spvw.d:1556
+msgid "module '%s' redefines symbol "
+msgstr "modulet '%s' redefinerer symbol "
+
+#: spvw.d:1558
+msgid " in the locked package "
+msgstr " i den låste pakke "
+
+#: spvw.d:1560
+msgid ""
+"\n"
+"old definition: "
+msgstr ""
+"\n"
+"gammel definition: "
+
+#: spvw.d:1597
+msgid "is an ANSI Common Lisp."
+msgstr "er en ANSI Common Lisp."
+
+#: spvw.d:1599
+msgid "Usage:  "
+msgstr "Brug:  "
+
+# Tvetydig:
+# Hvad er det danske begreb for read-eval-print-loop (REPL)?
+# Begrebet anvendes systematisk og idiomatisk i engelske artikler.
+# Alternativer:
+# *interaktiv prompt, *indtastningsløkke
+# læs, find værdi og udskriv-løkke
+# læs-find værdi-udskriv-sløjfe
+#
+#: spvw.d:1601
+msgid ""
+" [options] [lispfile [argument ...]]\n"
+" When 'lispfile' is given, it is loaded and '*ARGS*' is set\n"
+" to the list of argument strings. Otherwise, an interactive\n"
+" read-eval-print loop is entered.\n"
+msgstr ""
+" [tilvalg] [lispfil [argument ...]]\n"
+" Hvis 'lispfil' angives, indlæses den og '*ARGS*' sættes\n"
+" til listen af argumentstrenge. Ellers påbegyndes en interaktiv\n"
+" prompt (læs, find værdi og udskriv-løkke).\n"
+
+#: spvw.d:1605
+msgid "Informative output:\n"
+msgstr "Generelle informationer:\n"
+
+#: spvw.d:1606
+msgid " -h, --help    - print this help and exit\n"
+msgstr " -h, --help    - udskriv denne hjælp og afslut\n"
+
+#: spvw.d:1607
+msgid " --version     - print the version information\n"
+msgstr " --version     - udskriv versionsinformation\n"
+
+#: spvw.d:1608
+msgid " --license     - print the licensing information\n"
+msgstr " --license     - udskriv licensinformation\n"
+
+#: spvw.d:1609
+msgid "Memory image selection:\n"
+msgstr "Valg af hukommelsesbillede:\n"
+
+#: spvw.d:1610
+msgid " -B lisplibdir - set the installation directory\n"
+msgstr " -B lispbibkat - sæt installationskataloget\n"
+
+# Tvetydig:
+# Der er tale om angivelse af det katalog, der indeholder
+# såvel billede såvel som objektkodefiler, der
+# lænkes med hovedbilledet.
+#: spvw.d:1612
+msgid " -K linkingset - use this executable and memory image\n"
+msgstr ""
+" -K lænkemængde - brug dette eksekverbare program og\n"
+"                                             hukommelsesbillede\n"
+
+#: spvw.d:1614
+msgid " -M memfile    - use this memory image\n"
+msgstr " -M hukfil     - brug dette hukommelsesbillede\n"
+
+#: spvw.d:1615
+msgid " -m size       - memory size (size = xxxxxxxB or xxxxKB or xMB)\n"
+msgstr ""
+" -m størr.  - hukommelsesstørrelse\n"
+"                             (størr. = xxxxxxxB, xxxxKB eller xMB)\n"
+
+#: spvw.d:1617
+msgid " -t tmpdir     - temporary directory for memmap\n"
+msgstr " -t midkat     - midlertidigt katalog til hukommelses-afbildning\n"
+
+# Tvetydig:
+# Ordet findes endnu ikke i ordbogen, men er ikke desto mindre
+# korrekt dannet.
+#: spvw.d:1619
+msgid "Internationalization:\n"
+msgstr "Internationalisation:\n"
+
+#: spvw.d:1620
+msgid " -L language   - set user language\n"
+msgstr " -L sprog      - sæt brugersprog\n"
+
+#: spvw.d:1621
+msgid " -N nlsdir     - NLS catalog directory\n"
+msgstr " -N nlskat     - NLS-katalog\n"
+
+#: spvw.d:1622
+msgid " -Edomain encoding - set encoding\n"
+msgstr " -Edomænekodning - sæt kodning\n"
+
+#: spvw.d:1623
+msgid "Interoperability:\n"
+msgstr "Samspilsevne:\n"
+
+#: spvw.d:1624
+msgid ""
+" -q, --quiet, --silent, -v, --verbose - verbosity level:\n"
+"     affects banner, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"     and *LOAD-PRINT*/*COMPILE-PRINT*\n"
+msgstr ""
+" -q, --quiet, --silent, -v, --verbose - verbalniveau:\n"
+"     påvirker banner, *LOAD-VERBOSE*/*COMPILE-VERBOSE*,\n"
+"     og *LOAD-PRINT*/*COMPILE-PRINT*\n"
+
+#: spvw.d:1627
+msgid " -w            - wait for a keypress after program termination\n"
+msgstr " -w            - vent på tastetryk efter programafslutning\n"
+
+#: spvw.d:1628
+msgid " -I            - be ILISP-friendly\n"
+msgstr " -I            - vær ILISP-venlig\n"
+
+#: spvw.d:1629
+msgid "Startup actions:\n"
+msgstr "Opstartshandlinger:\n"
+
+#: spvw.d:1630
+msgid " -ansi         - more ANSI CL compliance\n"
+msgstr ""
+" -ansi         - bedre overenstemmelse med ANSI-standarden\n"
+"                                                 for Common Lisp\n"
+
+#: spvw.d:1631
+msgid " -traditional  - traditional (undoes -ansi)\n"
+msgstr " -traditional  - traditionel Common Lisp (nulstiller -ansi)\n"
+
+#: spvw.d:1632
+msgid " -modern       - start in a case-sensitive lowercase-preferring package\n"
+msgstr " -modern       - begynd i en versalfølsom pakke med små bostaver foretrukne\n"
+
+#: spvw.d:1633
+msgid " -p package    - start in the package\n"
+msgstr " -p pakke      - begynd i denne pakke\n"
+
+#: spvw.d:1634
+msgid " -C            - set *LOAD-COMPILING* to T\n"
+msgstr " -C            - sæt *LOAD-COMPILING* til T\n"
+
+#: spvw.d:1635
+msgid " -norc         - do not load the user ~/.clisprc file\n"
+msgstr " -norc         - indlæs ikke brugerens fil ~/.clisprc\n"
+
+#: spvw.d:1636
+msgid " -i file       - load initfile (can be repeated)\n"
+msgstr " -i fil        - indlæs initialfil (kan gentages)\n"
+
+#: spvw.d:1637
+msgid "Actions:\n"
+msgstr "Handlinger:\n"
+
+#: spvw.d:1638
+msgid " -c [-l] lispfile [-o outputfile] - compile lispfile\n"
+msgstr " -c [-l] lispfil [-o uddatafil] - oversæt lispfil\n"
+
+#: spvw.d:1639
+msgid " -x expressions - execute the expressions, then exit\n"
+msgstr " -x udtryk - eksekvér udtrykkene og afslut\n"
+
+#: spvw.d:1640
+msgid " lispfile [argument ...] - load lispfile, then exit\n"
+msgstr " lispfil [argument ...] - indlæs fil og afslut\n"
+
+#: spvw.d:1641
+msgid "These actions put CLISP into a batch mode, which is overridden by\n"
+msgstr "Disse handlinger sætter CLISP i skripttilstand, som tilsidesættes af\n"
+
+#: spvw.d:1642
+msgid " -on-error action - action can be one of debug, exit, abort, appease\n"
+msgstr " -on-error handling - handling kan være en af debug, exit, abort eller appease\n"
+
+#: spvw.d:1643
+msgid " -repl            - enter the interactive read-eval-print loop when done\n"
+msgstr " -repl            - påbegynd den interaktive prompt, når program er afsluttet\n"
+
+#: spvw.d:1644
+msgid "Default action is an interactive read-eval-print loop.\n"
+msgstr "Standardhandling er en interaktiv prompt.\n"
+
+#: spvw.d:1653
+msgid "%s: use '-h' for help"
+msgstr "%s: brug '-h' for at få hjælp"
+
+#: spvw.d:1656
+msgid "invalid argument"
+msgstr "ugyldigt argument"
+
+#: spvw.d:2056
+msgid "Syntax for %s: nnnnnnn or nnnnKB or nMB"
+msgstr "Syntaks for %s: nnnnnnn eller nnnnKB eller nMB"
+
+#: spvw.d:2061
+msgid "%s out of range"
+msgstr "%s ude af rækkevidde"
+
+#: spvw.d:2066
+msgid "warning: %s out of range, using %u instead"
+msgstr "advarsel: %s er uden for interval, brug %u istedet"
+
+#: spvw.d:2082
+msgid "memory size"
+msgstr "hukommelsesstørrelse"
+
+#: spvw.d:2098
+msgid "multiple -t"
+msgstr "multibel -t"
+
+#: spvw.d:2118
+msgid "multiple -B"
+msgstr "multibel -B"
+
+#: spvw.d:2153
+msgid "-E requires an argument"
+msgstr "-E kræver et argument"
+
+#: spvw.d:2419
+msgid "-l without -c is invalid"
+msgstr "-l uden -c er ugyldigt"
+
+#: spvw.d:2425
+msgid "-x with -c is invalid"
+msgstr "-x med -c er ugyldigt"
+
+#: spvw.d:2430
+msgid "-x with lisp-file is invalid"
+msgstr "-x med lispfil er ugyldigt"
+
+#: spvw.d:2550
+msgid "Return value of malloc() = %lx is not compatible with type code distribution."
+msgstr "Returværdien af malloc() = %lx er ikke kompatibel med typekode-distributionen."
+
+#: spvw.d:2557
+msgid "Only %d bytes available."
+msgstr "Kun %d byte ledig."
+
+#: spvw.d:2807
+msgid "Could not determine the end of the SP stack!"
+msgstr "Kunne ikke afgøre, hvad slutningen på programstakken var!"
+
+#: spvw.d:3326
+msgid "%s: Not enough memory for Lisp."
+msgstr "%s: Ikke nok hukommelse til Lisp."
+
+#: spvw_alloca.d:48
+msgid "*** - Virtual memory exhausted. RESET"
+msgstr "*** - Virtuel hukommelse opbrugt. NULSTILLET"
+
+#: spvw_alloca.d:50
+msgid "*** - Memory exhausted. RESET"
+msgstr "*** - Hukommelse opbrugt. NULSTILLET"
+
+# Tvetydig:
+# "Afbilde hukommelse"? Jeg kan selv komme i tvivl, hvad katten
+# det kan betyde... Det danske ord skal dække over betydningen
+# at "kortlægge" fra en ting til noget andet, f.eks. fra et tlf.nr.
+# eller et cpr.nr. til en persons adresse eller navn.
+# Alternativer:
+# Kortlægge, spejle
+#
+#: spvw_mmap.d:66 spvw_mmap.d:197 spvw_mmap.d:357 spvw_multimap.d:161
+msgid "Cannot map memory to address 0x%lx ."
+msgstr "Kan ikke lægge hukommelseslageret på adressen 0x%lx ."
+
+#: spvw_mmap.d:170
+msgid "Cannot reserve address range at 0x%lx ."
+msgstr "Kan ikke reservere adresseområdet ved 0x%lx ."
+
+#: spvw_mmap.d:180
+msgid "Cannot reserve address range 0x%lx-0x%lx ."
+msgstr "Kan ikke reservere adresseområdet 0x%lx-0x%lx ."
+
+#: spvw_mmap.d:225
+msgid "CreateFileMapping() failed."
+msgstr "CreateFileMapping() mislykkedes."
+
+#: spvw_mmap.d:233
+msgid "MapViewOfFileEx(addr=0x%x,off=0x%x) failed."
+msgstr "MapViewOfFileEx(addr=0x%x,off=0x%x) mislykkedes."
+
+#: spvw_mmap.d:239
+msgid "MapViewOfFileEx() returned 0x%x instead of 0x%x."
+msgstr "MapViewOfFileEx() returnerede 0x%x i stedet for 0x%x."
+
+#: spvw_mmap.d:254
+msgid "VirtualFree() failed."
+msgstr "VirtualFree() mislykkedes."
+
+#: spvw_mmap.d:267
+msgid "VirtualProtect() failed."
+msgstr "VirtualProtect() mislykkedes."
+
+#: spvw_mmap.d:337 spvw_multimap.d:115 spvw_multimap.d:190
+msgid "Cannot open <%s>."
+msgstr "Kan ikke åbne <%s>."
+
+#: spvw_multimap.d:139
+msgid "msync(0x%lx,0x%x,MS_INVALIDATE) failed."
+msgstr "msync(0x%lx,0x%x,MS_INVALIDATE) mislykkedes."
+
+#: spvw_multimap.d:199
+msgid "Cannot delete <%s>."
+msgstr "Kan ikke slette <%s>."
+
+#: spvw_multimap.d:217
+msgid "** WARNING: ** Too little free disk space for <%s>."
+msgstr "** ADVARSEL: ** For lidt ledig diskplads til <%s>."
+
+#: spvw_multimap.d:219
+msgid "Please restart LISP with less memory (option -m)."
+msgstr "Genstart venligst LISP med mindre hukommelse (tilvalg -m)."
+
+#: spvw_multimap.d:228
+msgid "Cannot make <%s> long enough."
+msgstr "Kan ikke gøre <%s> lang nok."
+
+#: spvw_multimap.d:242
+msgid "Cannot fill <%s>."
+msgstr "Kan ikke udfylde <%s>."
+
+#: spvw_multimap.d:255 spvw_multimap.d:289
+msgid "Cannot close <%s>."
+msgstr "Kan ikke lukke <%s>."
+
+#: spvw_multimap.d:327
+msgid "Recompile your operating system with SYSV IPC support."
+msgstr "Genoversæt dit styresystem med SYSV-IPC-understøttelse."
+
+#: spvw_multimap.d:340
+msgid "Cannot allocate private shared memory segment of size %d."
+msgstr "Kan ikke tildele privat og delt hukommelsessegment på størrelsen %d."
+
+# Tvetydig:
+# Afbilde bør måske nok her være "kortlægge",
+# se længere oppe...
+#
+#: spvw_multimap.d:357
+msgid "Cannot map shared memory to address 0x%lx."
+msgstr "Kan ikke lægge det delte hukommelseslager på adressen 0x%lx."
+
+#: spvw_multimap.d:375 spvw_multimap.d:381
+msgid "%s: Cannot fill shared memory."
+msgstr "%s: Kan ikke udfylde delt hukommelse."
+
+#: spvw_multimap.d:394
+msgid "Cannot remove shared memory segment."
+msgstr "Kan ikke fjerne delt hukommelsessegment."
+
+#: spvw_fault.d:277
+msgid "mprotect(0x%lx,%d,%d) failed."
+msgstr "mprotect(0x%lx,%d,%d) mislykkedes."
+
+#: spvw_sigsegv.d:23
+msgid "Permanently allocated: %lu bytes."
+msgstr "Permanent allokeret: %lu byte."
+
+#: spvw_sigsegv.d:26
+msgid "Currently in use: %lu bytes."
+msgstr "Aktuelt i brug: %lu byte."
+
+#: spvw_sigsegv.d:29
+msgid "Free space: %lu bytes."
+msgstr "Ledig plads: %lu byte."
+
+#: spvw_sigsegv.d:40
+msgid "SIGSEGV cannot be cured. Fault address = 0x%lx."
+msgstr "SIGSEGV kan ikke reddes. Fejladresse = 0x%lx."
+
+#: spvw_sigsegv.d:76
+msgid "Apollo 13 scenario: Stack overflow handling failed. On the next stack overflow we will crash!!!"
+msgstr "Apollo-13-scenarium: Håndtering af stakoverløb mislykkedes. Ved næste stakoverløb sker der nedbrud!!!"
+
+#: spvw_garcol.d:1983
+msgid "munmap() failed."
+msgstr "munmap() mislykkedes."
+
+#: spvw_allocate.d:50
+msgid "*** - No more room for LISP objects: RESET"
+msgstr "*** - Ikke mere ledig plads til LISP-objekter: NULSTILLET"
+
+#: spvw_allocate.d:251 spvw_allocate.d:311 spvw_allocate.d:396
+msgid "Trying to make room through a GC..."
+msgstr "Prøver at gøre ledig plads via spildopsamling..."
+
+#: spvw_memfile.d:926 spvw_memfile.d:1683
+msgid "%s: operating system error during load of initialization file `%s'"
+msgstr "%s: styresystemfejl under indlæsning af initialfil `%s'"
+
+#: spvw_memfile.d:1389
+msgid "%s: Cannot map the initialization file `%s' into memory."
+msgstr "%s: Kan ikke lægge initialfilen `%s' ind i hukommelsen."
+
+#: spvw_memfile.d:1688
+msgid "%s: initialization file `%s' was not created by this version of CLISP runtime"
+msgstr "%s: initialfil `%s' var ikke oprettet af denne version af CLISP"
+
+#: spvw_memfile.d:1692
+msgid "%s: not enough memory for initialization"
+msgstr "%s: ikke nok ledig hukommelse til initiation"
+
+#: spvw_memfile.d:1761
+msgid "%s: 'image size' method failed, but found image header at %d\n"
+msgstr ""
+
+#: errunix.d:58
+msgid "Invalid multibyte or wide character"
+msgstr "Ugyldigt flerbyte- eller bredtegn"
+
+#: errunix.d:65
+msgid "Operation not permitted"
+msgstr "Handling ikke tilladt"
+
+#: errunix.d:71
+msgid "No such file or directory"
+msgstr "Ingen sådan fil eller katalog"
+
+#: errunix.d:77
+msgid "No such process"
+msgstr "Ingen sådan process"
+
+#: errunix.d:83
+msgid "Interrupted system call"
+msgstr "Afbrudt systemkald"
+
+#: errunix.d:89
+msgid "I/O error"
+msgstr "Inddata/uddata-fejl"
+
+#: errunix.d:95
+msgid "No such device or address"
+msgstr "Ingen sådan enhed eller adresse"
+
+#: errunix.d:101
+msgid "Arg list too long"
+msgstr "Argumentliste for lang"
+
+#: errunix.d:107
+msgid "Exec format error"
+msgstr "Exec-formatfejl"
+
+#: errunix.d:113
+msgid "Bad file number"
+msgstr "Ugyldigt fil-tal"
+
+#: errunix.d:119
+msgid "No child processes"
+msgstr "Ingen barneprocesser"
+
+#: errunix.d:125
+msgid "No more processes"
+msgstr "Ingen flere processer"
+
+#: errunix.d:131
+msgid "Not enough memory"
+msgstr "Ikke nok hukommelse"
+
+#: errunix.d:137
+msgid "Permission denied"
+msgstr "Tilladelse nægtet"
+
+#: errunix.d:143
+msgid "Bad address"
+msgstr "Ugyldig adresse"
+
+#: errunix.d:149
+msgid "Block device required"
+msgstr "Blokenheder krævet"
+
+#: errunix.d:155
+msgid "Device busy"
+msgstr "Enhed låst"
+
+#: errunix.d:161
+msgid "File exists"
+msgstr "Fil eksisterer"
+
+#: errunix.d:167
+msgid "Cross-device link"
+msgstr "lænke mellem adskilte enheder"
+
+#: errunix.d:173
+msgid "No such device"
+msgstr "Ingen sådan enhed"
+
+#: errunix.d:179
+msgid "Not a directory"
+msgstr "Ikke et katalog"
+
+#: errunix.d:185
+msgid "Is a directory"
+msgstr "Er et katalog"
+
+#: errunix.d:191
+msgid "Invalid argument"
+msgstr "Ugyldigt argument"
+
+#: errunix.d:197
+msgid "File table overflow"
+msgstr "Filtabel-overløb"
+
+#: errunix.d:203
+msgid "Too many open files"
+msgstr "For mange åbne filer"
+
+#: errunix.d:209
+msgid "Inappropriate ioctl for device"
+msgstr "Upassende ioctl for enhed"
+
+#: errunix.d:215
+msgid "Text file busy"
+msgstr "Almindelig fil låst"
+
+#: errunix.d:221
+msgid "File too large"
+msgstr "Fil for stor"
+
+#: errunix.d:227
+msgid "No space left on device"
+msgstr "Ingen ledig plads tilbage på enhed"
+
+#: errunix.d:233
+msgid "Illegal seek"
+msgstr "Ugyldig seek"
+
+#: errunix.d:239
+msgid "Read-only file system"
+msgstr "Skrivebeskyttet filsystem"
+
+#: errunix.d:245
+msgid "Too many links"
+msgstr "For mange lænker"
+
+#: errunix.d:251
+msgid "Broken pipe, child process terminated or socket closed"
+msgstr "Ødelagt dataledning, barneproces afsluttet eller sokkel lukket"
+
+#: errunix.d:261
+msgid "Argument out of domain"
+msgstr "Argument uden for domæne"
+
+#: errunix.d:267
+msgid "Result too large"
+msgstr "Resultat for stort"
+
+#: errunix.d:274
+msgid "Operation would block"
+msgstr "Handling vil blokere"
+
+#: errunix.d:280
+msgid "Operation now in progress"
+msgstr "Handling nu i fremskred"
+
+#: errunix.d:286
+msgid "Operation already in progress"
+msgstr "Handling allerede i fremskred"
+
+#: errunix.d:293
+msgid "Too many levels of symbolic links"
+msgstr "For mange niveauer af symbolske lænker"
+
+#: errunix.d:299
+msgid "File name too long"
+msgstr "Filnavn for langt"
+
+#: errunix.d:305
+msgid "Directory not empty"
+msgstr "Katalog ikke tomt"
+
+#: errunix.d:312
+msgid "Stale NFS file handle"
+msgstr "Gammelt NFS-filhåndtag"
+
+#: errunix.d:318
+msgid "Too many levels of remote in path"
+msgstr "For mange fjerne niveauer i stien"
+
+#: errunix.d:325
+msgid "Socket operation on non-socket"
+msgstr "Sokkelhandling på ikke-sokkel"
+
+#: errunix.d:331
+msgid "Destination address required"
+msgstr "Måladresse krævet"
+
+#: errunix.d:337
+msgid "Message too long"
+msgstr "Besked for lang"
+
+#: errunix.d:343
+msgid "Protocol wrong type for socket"
+msgstr "Protokol er forkert type for sokkel"
+
+#: errunix.d:349
+msgid "Option not supported by protocol"
+msgstr "Tilvalg ikke understøttet af protokol"
+
+#: errunix.d:355
+msgid "Protocol not supported"
+msgstr "Protokol ikke understøttet"
+
+#: errunix.d:361
+msgid "Socket type not supported"
+msgstr "Sokkeltype ikke understøttet"
+
+#: errunix.d:367
+msgid "Operation not supported on socket"
+msgstr "Handling ikke understøtteet på sokkel"
+
+#: errunix.d:373
+msgid "Protocol family not supported"
+msgstr "Protocolfamilie ikke understøttet"
+
+#: errunix.d:379
+msgid "Address family not supported by protocol family"
+msgstr "Adressefamilie ikke understøttet af protokolfamilie"
+
+#: errunix.d:385
+msgid "Address already in use"
+msgstr "Adresse allerede i brug"
+
+#: errunix.d:391
+msgid "Cannot assign requested address"
+msgstr "Kan ikke tildele krævet adresse"
+
+#: errunix.d:397
+msgid "Network is down"
+msgstr "Netværket er nede"
+
+#: errunix.d:403
+msgid "Network is unreachable"
+msgstr "Netværket er unåeligt"
+
+#: errunix.d:409
+msgid "Network dropped connection on reset"
+msgstr "Netværket tabte forbindelsen ved nulstilning"
+
+#: errunix.d:415
+msgid "Software caused connection abort"
+msgstr "Programmel forårsagede forbindelses-afbrydelse"
+
+#: errunix.d:421
+msgid "Connection reset by peer"
+msgstr "Forbindelse nulstillet af ligemand/tjener"
+
+#: errunix.d:427
+msgid "No buffer space available"
+msgstr "Ingen ledig bufferplads"
+
+#: errunix.d:433
+msgid "Socket is already connected"
+msgstr "Sokkel er allerede forbunden"
+
+#: errunix.d:439
+msgid "Socket is not connected"
+msgstr "Sokkel er ikke forbunden"
+
+#: errunix.d:445
+msgid "Cannot send after socket shutdown"
+msgstr "Kan ikke sende efter sokkel-nedlukning"
+
+#: errunix.d:451
+msgid "Too many references: cannot splice"
+msgstr "For mange referencer: kan ikke splejse"
+
+#: errunix.d:457
+msgid "Connection timed out"
+msgstr "Forbindelsen udløb for ventetid"
+
+#: errunix.d:463
+msgid "Connection refused"
+msgstr "Forbindelse afvist"
+
+#: errunix.d:468
+msgid "Remote peer released connection"
+msgstr "Fjern ligemand/tjener frigav forbindelse"
+
+#: errunix.d:473
+msgid "Host is down"
+msgstr "Vært(smaskine) er nede"
+
+#: errunix.d:479
+msgid "Host is unreachable"
+msgstr "Vært(smaskine) er unåelig"
+
+#: errunix.d:484
+msgid "Networking error"
+msgstr "Netværksfejl"
+
+#: errunix.d:490
+msgid "Too many processes"
+msgstr "For mange processser"
+
+#: errunix.d:496
+msgid "Too many users"
+msgstr "For mange brugere"
+
+#: errunix.d:502
+msgid "Disk quota exceeded"
+msgstr "Diskkvote overskreden"
+
+#: errunix.d:509
+msgid "Not a stream device"
+msgstr "Ikke en strømenhed"
+
+#: errunix.d:515
+msgid "Timer expired"
+msgstr "Ventetiden udløb for strøm"
+
+#: errunix.d:521
+msgid "Out of stream resources"
+msgstr "Løbet tør for strømressource"
+
+#: errunix.d:527
+msgid "No message of desired type"
+msgstr "Der findes ingen besked af den ønskede type"
+
+#: errunix.d:533
+msgid "Not a data message"
+msgstr "Databesked af ukendt type ankommen"
+
+# Tvetydig
+# tysk oversættelse havde semafor-navn,
+# men identifikator isf. navn ville måske være
+# lettere at forstå for fagfolk, da terminologien
+# dybest set er latin
+#: errunix.d:540
+msgid "Identifier removed"
+msgstr "Semafor-navn fjernet"
+
+#: errunix.d:547
+msgid "Resource deadlock would occur"
+msgstr "Ressource ville gå i baglås"
+
+#: errunix.d:553
+msgid "No record locks available"
+msgstr "Ingen ledige postlåse"
+
+#: errunix.d:560
+msgid "Machine is not on the network"
+msgstr "Maskinen kan ikke nås på netværket"
+
+#: errunix.d:566 errunix.d:572
+msgid "Object is remote"
+msgstr "Det kan kun den derværende maskine"
+
+#: errunix.d:578
+msgid "Link has been severed"
+msgstr "Forbindelsen er brudt sammen"
+
+#: errunix.d:584
+msgid "Advertise error"
+msgstr "Anden maskine bruger endnu vore ressourcer"
+
+#: errunix.d:590
+msgid "Srmount error"
+msgstr "Anden maskine bruger endnu vore ressourcer"
+
+#: errunix.d:596
+msgid "Communication error on send"
+msgstr "Kommunikationsfejl ved forsendelse"
+
+#: errunix.d:602
+msgid "Protocol error"
+msgstr "Protokolfejl: protokollen stemmer ikke"
+
+#: errunix.d:608
+msgid "Multihop attempted"
+msgstr "Flerfoldige spring forsøgt: maskinen kan ikke nås direkte"
+
+#: errunix.d:620
+msgid "Remote address changed"
+msgstr "Fjernadresse ændret: maskinen har nu en anden adresse"
+
+#: errunix.d:627
+msgid "Function not implemented"
+msgstr "Funktionen er ikke implementeret"

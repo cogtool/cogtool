@@ -1,0 +1,342 @@
+Dies ist GNU CLISP, eine Implementierung von COMMON LISP.
+
+
+Was ist LISP?
+-------------
+
+LISP ist eine Programmiersprache, die 1959 von J. McCarthy erfunden wurde.
+Früher gab's viele verschiedene Dialekte, heute ist LISP durch den Industrie-
+Standard COMMON LISP standardisiert und weit verbreitet worden. Anwendungen
+reichen von der symbolischen Wissensverarbeitung (KI) über die Numerik
+(MACLISP lieferte einen ebensoguten Numerik-Code wie FORTRAN) bis hin zu
+verbreiteten Programmen wie Editoren (EMACS) oder CAD-Systemen (AUTOCAD).
+Eine Einführung in die Sprache ist:
+
+  Sheila Hughes: Lisp. Pitman Publishing Limited, London 1986.
+  107 Seiten. ca. DM 15,80.
+  Paul Graham: "ANSI Common Lisp", Prentice Hall, 1995, ISBN 0133708756.
+  <http://paulgraham.com/acl.html>
+  und "On Lisp", Prentice Hall, 1993. ISBN 0130305529.
+  <http://paulgraham.com/onlisp.html>
+
+Nach einiger Zeit unentbehrlich ist das Standardwerk mit der Sprachdefinition
+
+  Guy L. Steele Jr.: Common Lisp - The Language. Digital Press.
+  1. Auflage 1984, 465 Seiten, ca. DM 73,60.
+  2. Auflage 1990, 1032 Seiten. ca. DM 94,90.
+
+Dieses Buch ist in HTML-Format per FTP erhältlich von
+  ftp://ftp.cs.cmu.edu/user/ai/lang/lisp/doc/cltl/cltl_ht.tgz
+und per WWW einsehbar unter
+  http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html oder
+  http://www-2.cs.cmu.edu/afs/cs/project/ai-repository/ai/html/cltl/cltl2.html .
+
+Für Experten: Dieses Standardwerk hat sich zu einem ANSI-Standard
+weiterentwickelt, der ausnahmsweise kostenlos erhältlich ist von
+  http://www.lisp.org/HyperSpec/FrontMatter/
+
+LISP liegt in einer interaktiven Umgebung vor, d.h. man gibt Formen ein, die
+dann sofort ausgewertet werden. So kann man Variablen inspizieren, Funktionen
+mit wechselnden Argumenten aufrufen oder auch eigene Funktionen definieren.
+
+
+Inhalt:
+-------
+
+Zu CLISP gehören folgende Dateien:
+
+#ifdef UNIX
+#ifndef UNIX_BINARY_DISTRIB
+   base/lisp.a          Hauptprogramm, muß erst noch gelinkt werden
+#endif
+#ifdef UNIX_BINARY_DISTRIB
+   base/lisp.run        Hauptprogramm
+#endif
+   base/lispinit.mem    beim Start benötigtes Speicherabbild
+   doc/clisp.1          Benutzungshinweise im man-Format von Unix
+   doc/clisp.man        Benutzungshinweise
+   doc/clisp.html       Benutzungshinweise im HTML-Format
+   doc/impnotes.html    Dokumentation von Implementierungsdetails
+   doc/LISP-tutorial.txt  Kurzkurs LISP für Anfänger
+   doc/CLOS-guide.txt     Kurzkurs CLOS
+   README               dies hier
+   SUMMARY              Kurzbeschreibung von CLISP
+   ANNOUNCE             Ankündingung
+   NEWS                 Liste der Veränderungen seit der letzten Version
+   COPYRIGHT            Klarstellung des Urheberrechts
+   GNU-GPL              Gebrauchslizenz für Offene Software
+   doc/editors.txt      Überblick über Editoren mit Lisp-Unterstützung
+   emacs/*.el           Anpassung von Emacs, siehe doc/editors.txt
+#ifndef UNIX_BINARY_DISTRIB
+   src/clisp.c          Quellen des Wegweisers
+#endif
+   src/config.lisp      örtliche Konfiguration
+
+und - als Zugabe, für den Fall, daß Sie Quellen lesen möchten -
+
+   src/*.lisp           die Quellen zu lispinit.mem
+   src/*.fas            dieselben Dateien in compilierter Form
+#if !defined(UNIX_BINARY_DISTRIB) && defined(GNU_READLINE)
+
+Um das ausführbare Programm zu erstellen, brauchen Sie ferner:
+
+   base/libreadline.a    die GNU Readline-Bibliothek
+
+oder
+
+   base/libnoreadline.a  wertloser Ersatz für die GNU Readline-Bibliothek
+#endif
+#else /* !defined(UNIX) */
+      lispinit.mem     beim Start benötigtes Speicherabbild
+#ifdef GNU_GETTEXT
+      locale/*/LC_MESSAGES/clisp.mo  Datenbanken lokalisierter Meldungen
+#endif
+      clisp.1          Benutzungshinweise im man-Format von Unix
+      clisp.man        Benutzungshinweise
+      clisp.html       Benutzungshinweise im HTML-Format
+      impnotes.html    Dokumentation von Implementierungsdetails
+      LISP-tutorial.txt  Kurzkurs LISP für Anfänger
+      CLOS-guide.txt     Kurzkurs CLOS
+      editors.txt        ein paar Worte über Texteditoren für Lisp
+      README           dies hier
+      SUMMARY          Kurzbeschreibung von CLISP
+      ANNOUNCE         Ankündingung
+      NEWS             Liste der Veränderungen seit der letzten Version
+      COPYRIGHT        Klarstellung des Urheberrechts
+      GNU-GPL          Gebrauchslizenz für Offene Software
+      config.lisp      örtliche Konfiguration
+#if !(defined(UNIX) || defined(WIN32))
+      timezone.lisp    örtliche Zeitzone
+#endif
+
+und - als Zugabe, für den Fall, daß Sie Quellen lesen möchten -
+
+      *.lisp           die Quellen zu lispinit.mem
+      *.fas            dieselben Dateien in compilierter Form
+#endif
+
+#if defined(SINGLEMAP_MEMORY) && (defined(UNIX_LINUX) || !defined(HAVE_MMAP_ANON))
+
+Software-Voraussetzungen:
+-------------------------
+
+#ifdef UNIX_LINUX
+#ifdef GENERATIONAL_GC
+#ifdef IMMUTABLE
+Diese CLISP-Version setzt Linux 1.2.2 oder neuer voraus.
+#else
+Diese CLISP-Version setzt Linux 1.1.52 oder neuer voraus.
+#endif
+#else
+Diese CLISP-Version setzt Linux 0.99.7 oder neuer voraus.
+#endif
+#endif
+#if !defined(HAVE_MACH_VM) && !defined(HAVE_MMAP_ANON) /* impliziert HAVE_MMAP_DEVZERO */
+/dev/zero muß von jedermann lesbar sein. Um das sicherzustellen, können Sie
+ein "chmod a+r /dev/zero" ausführen.
+#endif
+
+#endif
+
+Installation:
+-------------
+
+#if defined(UNIX) || defined(WIN32)
+#if defined(UNIX) && !defined(UNIX_BINARY_DISTRIB)
+Um das ausführbare Programm zu erstellen, geben Sie ein:
+
+         make
+
+#if 0 /* def GNU_READLINE - man muß Makefile verändern */
+Wenn Sie auf die Editiermöglichkeiten der GNU Readline-Bibliothek verzichten
+möchten, ersetzen Sie vorher in der LIBS-Zeile der Datei base/makevars
+"libreadline.a" durch "libnoreadline.a".
+
+#endif
+#endif
+Passen Sie die Strings innerhalb von src/config.lisp mit einem Texteditor an.
+#else
+Passen Sie den Inhalt von config.lisp, insbesondere die Definitionen von
+short-site-name und long-site-name, an Ihre örtlichen Gegebenheiten an.
+Vielleicht möchten Sie auch die Zeitzonendefinition am Ende von timezone.lisp
+ändern.
+#endif
+Starten Sie dann
+
+#ifdef WIN32_NATIVE
+         lisp.exe -M lispinit.mem
+#endif
+#ifdef UNIX
+         base/lisp.run -M base/lispinit.mem
+#endif
+
+Auf den LISP-Prompt
+
+      > _
+
+hin eingeben:
+
+#if defined(UNIX) || defined(WIN32)
+      (without-package-lock ()
+        (compile-file "src/config.lisp")
+        (load "src/config.fas"))
+#else
+      (without-package-lock ()
+        (compile-file "config.lisp")
+        (load "config.fas"))
+
+und - falls Sie timezone.lisp verändert haben -
+
+      (without-package-lock ()
+        (compile-file "timezone.lisp")
+        (load "timezone.fas"))
+#endif
+
+und dann
+
+#ifdef UNIX
+        (cd "base/")
+#endif
+        (saveinitmem)
+
+Damit überschreiben Sie die Datei lispinit.mem mit Ihrer Konfiguration. Sodann
+
+        (exit)
+
+#ifdef UNIX
+Alles weitere erledigt ein
+
+        make install
+
+Sie können dies stattdessen auch selber, schrittweise tun:
+
+#endif
+Legen Sie ein Verzeichnis an und legen Sie das ausführbare Programm und das
+Speicherabbild dort ab.
+#ifdef UNIX
+Ich schlage hierfür /usr/local/lib/lisp vor:
+
+   mkdir /usr/local/lib/lisp
+   mv base/lisp.run /usr/local/lib/lisp
+   mv base/lispinit.mem /usr/local/lib/lisp
+#endif
+#ifdef WIN32_NATIVE
+Angenommen, Sie wählen dafür D:\LIB\LISP :
+
+   mkdir d:\lib\lisp
+   copy lisp.exe d:\lib\lisp
+   copy lispinit.mem d:\lib\lisp
+#endif
+
+#ifdef WIN32_NATIVE
+Und erstellen Sie eine Kommando-Datei, die Lisp startet:
+
+   copy con c:\bat\clisp.bat
+   d:\lib\lisp\lisp.exe -M d:\lib\lisp\lispinit.mem -B d:\lib\lisp\ %1 %2 %3 %4 %5 %6 %7 %8 %9
+   [Ctrl-Z]
+#endif
+#ifdef UNIX
+Und erstellen Sie den Wegweiser, der Lisp startet:
+
+#ifdef UNIX_BINARY_DISTRIB
+   cc -O -DLISPLIBDIR='"/usr/local/lib/lisp"' \
+         -DLOCALEDIR='"/usr/local/share/locale"' \
+      src/clisp.c -o /usr/local/bin/clisp
+#else
+   ./hardcode -DLISPLIBDIR='/usr/local/lib/lisp' \
+              -DLOCALEDIR='/usr/local/share/locale' \
+              clisp /usr/local/bin/clisp
+#endif
+#ifdef WIN32_NATIVE
+You can also use file install.bat which creates the driver file
+on your desktop and sets up the registry. [FIXME]
+#endif
+
+Installieren Sie nun die Benutzungshinweise
+
+   mv doc/clisp.1 /usr/local/man/man1/clisp.1
+#ifdef GNU_READLINE
+   mv doc/clreadline.3 /usr/local/man/man3/clreadline.3
+#endif
+
+and probieren Sie
+
+   man clisp
+#endif
+
+Wenn's Probleme gibt:
+---------------------
+
+Bei Errors befindet man sich im Debugger:
+
+     1. Break> _
+
+Hier kann man wie üblich Formen auswerten.
+Außerdem:
+
+     Help
+               ruft Hilfestellung an.
+     Abort     oder
+     Unwind
+               steigt hoch in die nächsthöhere Hauptschleife.
+     Backtrace
+               zeigt den Stackinhalt an. Das hilft bei der Fehlersuche.
+
+Außerdem kann man sich die Werte der Variablen der Funktion anzeigen lassen,
+in der der Fehler passierte.
+
+Bei größeren Problemen, z.B. harten Abstürzen, bitte Fehlerbeschreibung
+und reproduzierbare Vorgehensweise zur Erzeugung dieses Fehlers an die
+Autoren senden. Bitte nennen Sie dabei auch die Version von CLISP; sie
+erhalten sie durch Aufrufen von (lisp-implementation-version).
+Quellen:
+--------
+
+Die Quellen von CLISP gibt es von
+     ftp://clisp.cons.org/pub/lisp/clisp/source/clispsrc*
+#ifdef UNIX_LINUX
+Die Quellen der jüngsten Distribution von CLISP für Linux findet man in
+     ftp://sunsite.unc.edu/pub/Linux/devel/lang/lisp/clisp-source.tar.gz
+#endif
+
+
+Mailing-Liste:
+--------------
+
+Für die Benutzer von CLISP gibt es drei Mailing-Listen. Sie finden
+Abonnier-Informationen und Archive auf der Homepage http://clisp.cons.org/.
+
+
+Dank:
+-----
+
+Wir schulden Dank
+  * Guy L. Steele und vielen anderen für die Spezifikation von Common Lisp.
+#ifdef UNIX
+  * dem GNU-Projekt von Richard Stallman für GCC, Autoconf und die
+    Readline-Bibliothek.
+#else
+#ifdef GNU_READLINE
+  * dem GNU-Projekt von Richard Stallman für GCC und die Readline-Bibliothek.
+#else
+#ifdef GNU
+  * dem GNU-Projekt von Richard Stallman für GCC.
+#endif
+#endif
+#endif
+
+
+Autoren:
+--------
+
+        Bruno Haible
+        Michael Stoll
+
+Email: clisp-list@lists.sourceforge.net
+
+Wartung und Pflege:
+-------------------
+
+        Sam Steingold
+
+Email: clisp-list@lists.sourceforge.net

@@ -1,0 +1,163 @@
+# Makefile for the safe GNU ln.
+# Copyright (C) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1999 Bruno Haible
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+srcdir = @srcdir@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+libdir = $(exec_prefix)/lib
+mandir = $(prefix)/man
+man1dir = $(mandir)/man1
+manext = 1
+
+CC = @CC@
+CFLAGS = @CFLAGS@
+DEFS = @DEFS@
+LIBS = @LIBS@
+LDFLAGS = @LDFLAGS@
+AR = ar
+RANLIB = @RANLIB@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+
+VPATH = @srcdir@
+@SET_MAKE@
+
+SHELL = /bin/sh
+
+PROGS = hln
+MANFILES = ln.1
+LIBSOURCES = alloca.c argmatch.c backupfile.c basename.c dirname.c error.c \
+             getopt.c getopt1.c getversion.c isdir.c realpath.c resolve.c \
+             safe-lstat.c safe-stat.c stpcpy.c stripslash.c xmalloc.c yesno.c
+LIBOBJECTS = @ALLOCA@ argmatch.o backupfile.o basename.o dirname.o error.o \
+             getopt.o getopt1.o getversion.o isdir.o realpath.o resolve.o \
+             safe-lstat.o safe-stat.o stpcpy.o stripslash.o xmalloc.o yesno.o
+SOURCES = ln.c version.c
+OBJECTS = ln.o version.o
+
+
+all : libfu.a $(PROGS)
+
+libfu.a: $(LIBOBJECTS)
+	rm -f $@
+	$(AR) rc $@ $(LIBOBJECTS)
+	-$(RANLIB) $@
+
+hln : ln.o version.o libfu.a
+	$(CC) $(LDFLAGS) -o $@ ln.o version.o libfu.a $(LIBS)
+
+alloca.o : $(srcdir)/alloca.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/alloca.c
+
+argmatch.o : $(srcdir)/argmatch.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/argmatch.c
+
+backupfile.o : $(srcdir)/backupfile.c $(srcdir)/backupfile.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/backupfile.c
+
+basename.o : $(srcdir)/basename.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/basename.c
+
+dirname.o : $(srcdir)/dirname.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/dirname.c
+
+error.o : $(srcdir)/error.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/error.c
+
+getopt.o : $(srcdir)/getopt.c $(srcdir)/getopt.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/getopt.c
+
+getopt1.o : $(srcdir)/getopt1.c $(srcdir)/getopt.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/getopt1.c
+
+getversion.o : $(srcdir)/getversion.c $(srcdir)/backupfile.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/getversion.c
+
+isdir.o : $(srcdir)/isdir.c $(srcdir)/safe-stat.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/isdir.c
+
+ln.o : $(srcdir)/ln.c $(srcdir)/system.h $(srcdir)/pathmax.h $(srcdir)/backupfile.h $(srcdir)/version.h $(srcdir)/safe-lstat.h $(srcdir)/safe-stat.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/ln.c
+
+realpath.o : $(srcdir)/realpath.c $(srcdir)/system.h $(srcdir)/pathmax.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/realpath.c
+
+resolve.o : $(srcdir)/resolve.c $(srcdir)/system.h $(srcdir)/pathmax.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/resolve.c
+
+safe-lstat.o : $(srcdir)/safe-lstat.c $(srcdir)/safe-lstat.h $(srcdir)/safe-stat.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/safe-lstat.c
+
+safe-stat.o : $(srcdir)/safe-stat.c $(srcdir)/safe-stat.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/safe-stat.c
+
+stpcpy.o : $(srcdir)/stpcpy.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/stpcpy.c
+
+stripslash.o : $(srcdir)/stripslash.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/stripslash.c
+
+version.o : $(srcdir)/version.c $(srcdir)/version.h
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/version.c
+
+xmalloc.o : $(srcdir)/xmalloc.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/xmalloc.c
+
+yesno.o : $(srcdir)/yesno.c
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $(srcdir)/yesno.c
+
+
+installdirs:
+	test -d $(bindir) || mkdir $(bindir)
+	test -d $(mandir) || mkdir $(mandir)
+	test -d $(man1dir) || mkdir $(man1dir)
+
+install: all
+	test -d $(bindir) || mkdir $(bindir)
+	$(INSTALL_PROGRAM) hln $(bindir)/hln
+	test -d $(mandir) || mkdir $(mandir)
+	test -d $(man1dir) || mkdir $(man1dir)
+	$(INSTALL_DATA) ln.1 $(man1dir)/hln.$(manext)
+
+uninstall:
+	rm -f $(bindir)/hln.1
+	rm -f $(man1dir)/hln.$(manext)
+
+check:
+
+mostlyclean: clean
+
+clean: force
+	rm -f *.a *.o core
+
+distclean: clean
+	rm -f Makefile config.h config.status config.log config.cache
+
+maintainer-clean: distclean
+
+force:
+
+
+# Tell versions [3.59,3.63) of GNU make not to export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

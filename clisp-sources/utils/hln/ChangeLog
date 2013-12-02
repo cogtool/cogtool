@@ -1,0 +1,22 @@
+2003-07-02  Sam Steingold  <sds@gnu.org>
+
+	* configure.in: AC_PREREQ(2.57) because Makefile.devel calls
+	autoconf with the option --include which 2.13 does not understand
+
+1999-05-23  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* resolve.c (resolve): Fix an off-by-one error.
+
+1999-02-03  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* ln.c (main): Change return type to `int'.
+
+1999-02-01  Bruno Haible  <bruno@linuix.math.u-bordeaux.fr>
+
+	* Makefile.in: No suffix rule .c.o, for the sake of Solaris make which
+	  apparently doesn't understand VPATH.
+
+1998-05-08  Bruno Haible  <bruno@linuix.mathematik.uni-karlsruhe.de>
+
+	Support DEC Alpha running Linux (libc6):
+	* basename.c, backupfile.c, ln.c: Don't define basename().

@@ -1,0 +1,8 @@
+make clisp-module \
+  CC="${CC}" CPPFLAGS="${CPPFLAGS}" CFLAGS="${CFLAGS}" \
+  INCLUDES="$absolute_linkkitdir"
+NEW_FILES="clx.o"
+NEW_LIBS="${NEW_FILES} @X_LIBS@"
+NEW_MODULES="clx"
+TO_PRELOAD='clx-preload.lisp'
+TO_LOAD='clx image resource'

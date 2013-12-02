@@ -1,0 +1,44 @@
+#
+# Makefile.in for FastCGI CLISP module
+#
+# $Id: Makefile.in,v 1.3 2004/08/12 14:38:36 sds Exp $
+
+CC = @CC@
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+CLISP = clisp -q -norc
+
+LN = ln
+
+MAKE = make
+
+SHELL = /bin/sh
+
+DISTRIBFILES = fastcgi.o fastcgi_wrappers.o link.sh Makefile fastcgi.lisp
+distribdir =
+
+all : fastcgi.o fastcgi_wrappers.o
+
+fastcgi.c:       fastcgi.lisp
+	$(CLISP) -c fastcgi.lisp
+
+fastcgi.o:       fastcgi.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) -I.. -c fastcgi.c
+
+fastcgi_wrappers.o:       fastcgi_wrappers.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDES) -I.. -c fastcgi_wrappers.c
+
+# Make a module
+clisp-module : all
+
+# Make a module distribution into $(distribdir)
+clisp-module-distrib : clisp-module force
+	$(LN) $(DISTRIBFILES) $(distribdir)
+
+clean : force
+	rm -f core *.o *.a
+	rm -f *.aux *.cp *.fn *.ky *.log *.pg *.toc *.tp *.vr
+
+distclean : clean
+
+force :
