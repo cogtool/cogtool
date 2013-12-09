@@ -103,4 +103,4 @@ saveAs takes one argument, the pathname of the file to save the current project 
 
 quit takes no arguments, and indicates that CogTool should terminate; no further commands will be processed; if quit is not supplied the running CogTool will remain up and can be manipulated with its GUI as normal
 
-As of mid-September 2013 just before CogTool executes each line of the command file it writes to the console each command, and then each argument, one per line. This can be helpful for debugging. If for some reason it is prefered not to have this information written to the console it can be suppressed by passing the -Q (it must be capital) command line option to CogTool along with the -f option.
+As of mid-December 2013 just before CogTool executes each line of the command file it writes to the console each command, and then each argument, one per line. This can be helpful for debugging. If for some reason it is prefered not to have this information written to the console it can be suppressed by passing the -Q (it must be capital) command line option to CogTool along with the -f option.
