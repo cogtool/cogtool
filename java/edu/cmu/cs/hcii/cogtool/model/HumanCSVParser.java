@@ -1,6 +1,6 @@
 /*******************************************************************************
  * CogTool Copyright Notice and Distribution Terms
- * CogTool 1.2, Copyright (c) 2005-2013 Carnegie Mellon University
+ * CogTool 1.3, Copyright (c) 2005-2013 Carnegie Mellon University
  * This software is distributed under the terms of the FSF Lesser
  * Gnu Public License (see LGPL.txt). 
  * 
@@ -47,7 +47,7 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simpler
+ * jopt-simple
  * 
  * Copyright (c) 2004-2013 Paul R. Holser, Jr.
  * 
