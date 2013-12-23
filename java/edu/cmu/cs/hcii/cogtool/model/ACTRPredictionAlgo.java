@@ -531,6 +531,9 @@ public class ACTRPredictionAlgo extends APredictionAlgo
                 // LispUtil.clean'd+quoted or LispUtil.safeString'd before being
                 // inserted into the Map.
                 for (String k : variablesToDefine.keySet()) {
+                    if (k.equals("*cogtool-files-to-load*")) {
+                        continue;
+                    }
                     w.print("(defparameter " + k + " ");
                     Object val = variablesToDefine.get(k);
                     if (val == null) {

@@ -6,6 +6,7 @@
 ;; Debugging tool -- if non-nil whynot-fct will be called on this production name at end of run
 (defparameter *why-not* nil)
 
+;; Note that the following is ignored if this variable has already been initialized
 (defvar *suppress-trace* nil)
 
 (defmacro cogtool-debug (level message &rest args)
@@ -21,15 +22,8 @@
 ;; Note that the following is ignored if this variable has already been initialized
 (defvar *system-wait-blocks-only-vision* nil)
 
-;; Note that the following is ignored if this variable has already been initialized
-(defvar *cogtool-files-to-load* nil)
-
-(defun load-pending-cogtool-files ()
-  (when *suppress-trace*
-    (push :suppress-trace *features*))
-  (loop for file in *cogtool-files-to-load*
-        do (load file :verbose (not *suppress-trace*))
-        finally (setq *cogtool-files-to-load* nil)))
+(when *suppress-trace*
+  (push :suppress-trace *features*))
 
 (defvar *log-file* nil)
 (defvar *log-stream* nil)
