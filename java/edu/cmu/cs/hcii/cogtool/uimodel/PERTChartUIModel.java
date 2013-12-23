@@ -21,15 +21,15 @@
  * CogTool makes use of several third-party components, with the 
  * following notices:
  * 
- * Eclipse SWT
- * Eclipse GEF Draw2D
+ * Eclipse SWT version 3.448
+ * Eclipse GEF Draw2D version 3.2.1
  * 
  * Unless otherwise indicated, all Content made available by the Eclipse 
  * Foundation is provided to you under the terms and conditions of the Eclipse 
  * Public License Version 1.0 ("EPL"). A copy of the EPL is provided with this 
  * Content and is also available at http://www.eclipse.org/legal/epl-v10.html.
  * 
- * CLISP
+ * CLISP version 2.38
  * 
  * Copyright (c) Sam Steingold, Bruno Haible 2001-2006
  * This software is distributed under the terms of the FSF Gnu Public License.
@@ -47,7 +47,7 @@
  * This product contains software developed by the Apache Software Foundation
  * (http://www.apache.org/)
  * 
- * jopt-simple
+ * jopt-simple version 1.0
  * 
  * Copyright (c) 2004-2013 Paul R. Holser, Jr.
  * 
@@ -81,7 +81,7 @@
  * License for the specific language governing rights and limitations
  * under the License.
  * 
- * The J2SE(TM) Java Runtime Environment
+ * The J2SE(TM) Java Runtime Environment version 5.0
  * 
  * Copyright 2009 Sun Microsystems, Inc., 4150
  * Network Circle, Santa Clara, California 95054, U.S.A.  All
