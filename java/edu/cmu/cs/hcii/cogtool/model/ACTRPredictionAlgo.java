@@ -562,7 +562,13 @@ public class ACTRPredictionAlgo extends APredictionAlgo
             else if (design.getDeviceTypes().contains(DeviceType.Touchscreen)) {
                 w.println("\n(setq *use-finger-default-value* t)");
             }
-            w.println("\n(load-pending-cogtool-files)");
+            //w.println("\n(load-pending-cogtool-files)");
+            if (variablesToDefine != null && variablesToDefine.get("*cogtool-files-to-load*") != null) {
+                for (String s : (List<String>)variablesToDefine.get("*cogtool-files-to-load*")) {
+                    s = s.substring(1, s.length() - 1);
+                    FileUtil.copyTextFileToPrintWriter(new File(s), w);
+                }
+            }
             w.println("\n(setq *cogtool-result* (cogtool-run-model))");
         }
         finally {
