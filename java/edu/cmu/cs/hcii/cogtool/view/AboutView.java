@@ -220,10 +220,10 @@ public class AboutView extends WindowUtil.SimpleDialog
         // to behave most bizarrely if you combine a tilde in the middle of
         // a URL with a trailing slash at its end.
         addLink("Download updates from",
-                L10N.get("CT.MainURL", "http://cogtool.hcii.cs.cmu.edu"));
+                L10N.get("CT.MainURL", "https://github.com/cogtool/cogtool/releases/latest"));
         addLink("Documentation",
                 L10N.get("CT.UserGuideURL",
-                         "http://cogtool.hcii.cs.cmu.edu/CogToolUserGuide.pdf"));
+                         "https://github.com/cogtool/cogtool/releases/download/1.2.2/CogToolUserGuide_1_2.pdf"));
 
         Label memory = new Label(dialog, SWT.NONE);
         GridData memoryLayout =
