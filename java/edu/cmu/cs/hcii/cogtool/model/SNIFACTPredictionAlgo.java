@@ -171,6 +171,8 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
     public static final int NO_BACK = 0;
     public static final int EXPLICT_BACK = 1;
     public static final int IMPLICIT_BACK = 2;
+    
+    public static File exportCTEModelFile = null;
 
     /**
      * The five parameters that the SNIF-ACT algorithm needs for execution.
@@ -1088,7 +1090,7 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
     {
         parameters = parms;
     }
-
+    
     @Override
     public IAnalysisInput prepareComputation(Design design)
     {
@@ -1100,9 +1102,13 @@ public class SNIFACTPredictionAlgo extends APredictionAlgo
 
         boolean oldEmitVirtualFrames = ACTRPredictionAlgo.emitVirtualFrames;
         try {
+            if (exportCTEModelFile == null) {
             // Create a temp file to hold the ACT-R model
-            actrFile = File.createTempFile("cogtool-actr-model-", ".lisp");
-            actrFile.deleteOnExit();
+                actrFile = File.createTempFile("cogtool-actr-model-", ".lisp");
+                actrFile.deleteOnExit();
+            } else {
+                actrFile = exportCTEModelFile;
+            }
             ACTRPredictionAlgo.emitVirtualFrames = true;
             ACTR6PredictionAlgo.ONLY.outputModel(design,
                                                  null,

@@ -1250,6 +1250,10 @@ public class ProjectController extends DefaultController
                                            interaction,
                                            group,
                                            groupParms);
+        
+        if (context == null) {
+            return true;
+        }
 
         group.setAttribute(WidgetAttributes.SNIFACT_CONTEXT_ATTR, context);
 

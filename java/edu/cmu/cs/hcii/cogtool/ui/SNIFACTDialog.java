@@ -108,6 +108,7 @@ import org.eclipse.swt.widgets.Spinner;
 
 import edu.cmu.cs.hcii.cogtool.model.Frame;
 import edu.cmu.cs.hcii.cogtool.model.ITermSimilarity;
+import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTGroupParameters;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTParameters;
 import edu.cmu.cs.hcii.cogtool.uimodel.DictionaryEditorUIModel;
@@ -116,6 +117,7 @@ import edu.cmu.cs.hcii.cogtool.util.L10N;
 import edu.cmu.cs.hcii.cogtool.util.SWTStringUtil;
 import edu.cmu.cs.hcii.cogtool.util.StringUtil;
 import edu.cmu.cs.hcii.cogtool.util.WindowUtil;
+import edu.cmu.cs.hcii.cogtool.view.PersistenceView;
 
 /**
  * Creates a dialog box that allows users to send parameters to the SNIF-ACT
@@ -152,6 +154,7 @@ public class SNIFACTDialog extends WindowUtil.PromptDialog
     protected List targetFrameList;
     protected Button addToGroup = null;
     protected Combo algCombo;
+    protected Button exportOnly;
 
     protected int addGroupMode;
     protected SNIFACTParameters defaultParameters;
@@ -412,6 +415,15 @@ public class SNIFACTDialog extends WindowUtil.PromptDialog
 
             addToGroup.setLayoutData(lblLayout);
         }
+        
+        exportOnly = new Button(dialog, SWT.CHECK);
+        exportOnly.setText(L10N.get("PM.ExportOnly", "Only export model, do not run it"));
+        exportOnly.setEnabled(true);
+        exportOnly.setSelection(false);
+        lblLayout = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        lblLayout.grabExcessHorizontalSpace = true;
+        lblLayout.horizontalSpan = 3;
+        exportOnly.setLayoutData(lblLayout);
     }
 
     @Override
@@ -438,6 +450,13 @@ public class SNIFACTDialog extends WindowUtil.PromptDialog
                                                      targets,
                                                      algArray[algIndex],
                                                      add);
+        
+        if (exportOnly.getSelection()) {
+            SNIFACTPredictionAlgo.exportCTEModelFile = 
+                    (new PersistenceView(parent)).selectFileDest("Exported CT-E Model", ".lisp");
+        } else {
+            SNIFACTPredictionAlgo.exportCTEModelFile = null;
+        }            
 
         super.onOK();
     }

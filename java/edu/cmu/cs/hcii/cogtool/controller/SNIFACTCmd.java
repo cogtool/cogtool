@@ -98,31 +98,31 @@ import java.util.List;
 import java.util.Map;
 
 import edu.cmu.cs.hcii.cogtool.controller.ComputePredictionCmd.AnalysisWorkThread;
+import edu.cmu.cs.hcii.cogtool.model.APredictionResult;
+import edu.cmu.cs.hcii.cogtool.model.AScriptStep;
 import edu.cmu.cs.hcii.cogtool.model.AUndertaking;
 import edu.cmu.cs.hcii.cogtool.model.CognitiveModelGenerator;
 import edu.cmu.cs.hcii.cogtool.model.DefaultModelGeneratorState;
-import edu.cmu.cs.hcii.cogtool.model.Design;
 import edu.cmu.cs.hcii.cogtool.model.Demonstration;
+import edu.cmu.cs.hcii.cogtool.model.Design;
 import edu.cmu.cs.hcii.cogtool.model.IPredictionAlgo;
-import edu.cmu.cs.hcii.cogtool.model.APredictionResult;
-import edu.cmu.cs.hcii.cogtool.model.Script;
-import edu.cmu.cs.hcii.cogtool.model.AScriptStep;
-import edu.cmu.cs.hcii.cogtool.model.TaskApplication;
-import edu.cmu.cs.hcii.cogtool.model.TaskParent;
 import edu.cmu.cs.hcii.cogtool.model.IdentityModelGenerator;
 import edu.cmu.cs.hcii.cogtool.model.Project;
+import edu.cmu.cs.hcii.cogtool.model.Project.ITaskDesign;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTExecContext;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo;
+import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTParameters;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionResult;
+import edu.cmu.cs.hcii.cogtool.model.Script;
+import edu.cmu.cs.hcii.cogtool.model.TaskApplication;
 import edu.cmu.cs.hcii.cogtool.model.TaskGroup;
+import edu.cmu.cs.hcii.cogtool.model.TaskParent;
 import edu.cmu.cs.hcii.cogtool.model.TimeDistributionPredictionResult;
 import edu.cmu.cs.hcii.cogtool.model.WidgetAttributes;
-import edu.cmu.cs.hcii.cogtool.model.Project.ITaskDesign;
-import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTParameters;
 import edu.cmu.cs.hcii.cogtool.ui.Interaction;
+import edu.cmu.cs.hcii.cogtool.ui.Interaction.ITraceWindow;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectLID;
 import edu.cmu.cs.hcii.cogtool.ui.RcvrExceptionHandler;
-import edu.cmu.cs.hcii.cogtool.ui.Interaction.ITraceWindow;
 import edu.cmu.cs.hcii.cogtool.util.AUndoableEdit;
 import edu.cmu.cs.hcii.cogtool.util.IUndoableEdit;
 import edu.cmu.cs.hcii.cogtool.util.NamedObjectUtil;
@@ -245,6 +245,10 @@ public class SNIFACTCmd
                                               interaction,
                                               group,
                                               parms);
+            
+            if (SNIFACTPredictionAlgo.exportCTEModelFile != null) {
+                return null;
+            }
 
             ITraceWindow traceWin =
                 interaction.createTraceWindow("Computation trace",
