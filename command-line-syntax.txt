@@ -1,10 +1,10 @@
 It is possible to do some limited actions in CogTool from the command line. This is both (a) ongoing development, so the things it is possible to do will be growing in coming weeks; and (b) very much intended for researchers, so not very robust. Regarding (b), please note that
 
-- Errors are not handled very gracefully. For the most part if anything goes wrong, CogTool will spit out an error message to the terminal window and die. And the error messages, particularly for the syntax of the commands provided not being correct, may not be as informative as one would like..
+- Errors are not handled very gracefully. For the most part if anything goes wrong, CogTool will spit out an error message to the terminal window and die. And the error messages, particularly for the syntax of the commands provided not being correct, may not be as informative as one would like.
 
 - It is far from a general purpose command language. Not only are the possibilities limited, if you try to combine them in too complex a manner Bad Things may happen.
 
-- The syntax is subject to change. It is currently fairly idiosyncratic using dollar signs to separate things. This will likely change to something a little more graceful.
+- The syntax is subject to change. It is currently fairly idiosyncratic using dollar signs to separate things. This may eventually change to something a little more graceful.
 
 What can be passed to CogTool on the command line has grown over the years, and is now in its third, and most useful, iteration, which subsumes all the possibilities previously supported. However, for backward compatibility the old syntaxes are still supported. However, this note will only describe the newest, and there are no guarantees the old will continue to be supported.
 
@@ -36,9 +36,9 @@ Were C:\path\to\command\file is wherever you have put the command file you write
 
 It is also possible to start it from CygWin
 
-/cygdrive/c/Program\ Files\ (x86)\CogToo.exe -f 'C:\path\to\command\file'
+/cygdrive/c/Program\ Files\ (x86)/CogToo.exe -f 'C:\path\to\command\file'
 
-Note, however, that the path to the command file must still be given in Windows style, not CygWin, and any pathnames within the command file must still be in Windows style.
+Note, however, that the path to the command file must still be given in Windows style, not Unix, and any pathnames within the command file must still be in Windows style.
 
 
 
@@ -102,5 +102,6 @@ saveAs takes one argument, the pathname of the file to save the current project 
 
 
 quit takes no arguments, and indicates that CogTool should terminate; no further commands will be processed; if quit is not supplied the running CogTool will remain up and can be manipulated with its GUI as normal
+
 
 As of mid-December 2013 just before CogTool executes each line of the command file it writes to the console each command, and then each argument, one per line. This can be helpful for debugging. If for some reason it is prefered not to have this information written to the console it can be suppressed by passing the -Q (it must be capital) command line option to CogTool along with the -f option.
