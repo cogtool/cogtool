@@ -550,24 +550,7 @@ public class ProjectInteraction extends DefaultInteraction
 
         public ITermSimilarity getAlgorithm()
         {
-            String useURL;
-            //String useURL =
-            //    DictionaryEditorUIModel.DEFAULT_ALGORITHM.equals(algString)
-            //       ? urlString
-            //       : promptResponse;
-            
-            if ( DictionaryEditorUIModel.DEFAULT_ALGORITHM.equals(algString) ) {
-                useURL = urlString;
-            }
-            else if ( DictionaryEditorUIModel.ALGORITHMS[DictionaryEditorUIModel.GENSIM_LSA_INDEX].equals(algString) ) {
-                useURL = urlString;
-            }
-            else 
-                useURL = promptResponse;
-            
-            return DictionaryEditorUIModel.getAlgorithm(algString,
-                                                        useURL,
-                                                        spaceString);
+            return DictionaryEditorUIModel.computeAlgorithm(algString, urlString, spaceString, promptResponse);
         }
 
         public ProjectInteraction.GenerateEntriesData getData()

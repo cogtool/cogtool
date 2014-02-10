@@ -105,13 +105,18 @@ import edu.cmu.cs.hcii.cogtool.CogToolPref;
 import edu.cmu.cs.hcii.cogtool.model.AUndertaking;
 import edu.cmu.cs.hcii.cogtool.model.Design;
 import edu.cmu.cs.hcii.cogtool.model.ISimilarityDictionary;
+import edu.cmu.cs.hcii.cogtool.model.ITermSimilarity;
 import edu.cmu.cs.hcii.cogtool.model.Project;
 import edu.cmu.cs.hcii.cogtool.model.SNIFACTPredictionAlgo.SNIFACTGroupParameters;
 import edu.cmu.cs.hcii.cogtool.model.SimilarityDictionary;
 import edu.cmu.cs.hcii.cogtool.model.WidgetAttributes;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectContextSelectionState;
+import edu.cmu.cs.hcii.cogtool.ui.ProjectInteraction;
 import edu.cmu.cs.hcii.cogtool.ui.ProjectUI;
+import edu.cmu.cs.hcii.cogtool.uimodel.DictionaryEditorUIModel;
+import edu.cmu.cs.hcii.cogtool.util.IUndoableEditSequence;
 import edu.cmu.cs.hcii.cogtool.util.ObjectPersister;
+import edu.cmu.cs.hcii.cogtool.util.ThreadManager;
 import edu.cmu.cs.hcii.cogtool.util.WindowUtil;
 
 public class CommandFile
@@ -288,6 +293,34 @@ public class CommandFile
                 ISimilarityDictionary dict = new SimilarityDictionary();
                 design.setAttribute(WidgetAttributes.DICTIONARY_ATTR, dict);
                 DictionaryEditorCmd.importDictionary(design, dict, null, null, null, args[1]);
+            }});
+        
+        defineExecutor("generateDictionary", new CommandExecutor() {
+            @Override
+            protected void execute(String[] args, CommandFile cf) throws Exception {
+                Design design = cf.currentProject.getProject().getDesign(args[0]);
+                String algorithm = args[1];
+                String site = args[2];
+                String space = args[3];
+                String url = args[4];
+                ITermSimilarity data = DictionaryEditorUIModel.computeAlgorithm(algorithm, url, space, site);
+                GenerateDictEntriesWorkThread workThread =
+                        new GenerateDictEntriesWorkThread(cf.currentProject.getInteraction(),
+                                                          design,
+                                                          new AUndertaking[0],
+                                                          cf.currentProject.getProject(),
+                                                          (IUndoableEditSequence)null,
+                                                          new ProjectInteraction.GenerateEntriesData(data, true));
+                CogTool.logger.info(String.format(
+                        "Generating dictionary for design %s in project %s.",
+                        design.getName(), cf.currentProject.getProject().getName()));
+                ThreadManager.startNewThread(workThread);
+                while (!workThread.isFinished()) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch(InterruptedException ex) {
+                    }
+                }
             }});
 
         defineExecutor("saveAs", new CommandExecutor() {

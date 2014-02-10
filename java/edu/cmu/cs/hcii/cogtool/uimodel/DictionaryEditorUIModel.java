@@ -445,4 +445,18 @@ public class DictionaryEditorUIModel extends DefaultUIModel
             c.select(DictionaryEditorUIModel.getAlgIndex(entry.algorithm));
         }
     }
+    
+    public static ITermSimilarity computeAlgorithm(String algString, String urlString, String spaceString, String limitingSite)
+    {
+        String useURL;
+        if (DEFAULT_ALGORITHM.equals(algString)) {
+            useURL = urlString;
+        }
+        else if (ALGORITHMS[GENSIM_LSA_INDEX].equals(algString) ) {
+            useURL = urlString;
+        }
+        else 
+            useURL = limitingSite;
+        return getAlgorithm(algString, useURL, spaceString);
+    }
 }

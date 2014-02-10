@@ -152,6 +152,16 @@ public class GenerateDictEntriesWorkThread extends CogToolWorkThread
     protected CompoundUndoableEdit editSequence =
          new CompoundUndoableEdit(DictEntryGenerator.GENERATE_DICTIONARY,
                                   ProjectLID.GenerateDictionary);
+    
+    // TODO replace this crock with a general purpose mechanism for synchronizing
+    //      completion of CogToolWorkThreads, so we don't terminate early. Why
+    //      this was never done in the first place is a deep mystery.
+    private boolean finished = false;
+    public boolean isFinished() {
+        synchronized (this) {
+            return finished;
+        }
+    }
 
     public GenerateDictEntriesWorkThread(ProjectInteraction interactionSpt,
                                          Design d,
@@ -258,6 +268,11 @@ public class GenerateDictEntriesWorkThread extends CogToolWorkThread
                                 requestData.algorithm);
             }
         }
+        
+        synchronized (this) {
+            finished = true;
+        }
+
     }
 
     protected void openDictionaryEditor(Design d)
@@ -324,7 +339,9 @@ public class GenerateDictEntriesWorkThread extends CogToolWorkThread
             }
 
             editSequence.end();
-            undoMgr.addEdit(editSequence);
+            if (undoMgr != null) {
+                undoMgr.addEdit(editSequence);
+            }
         }
 
         super.doneCallback();
