@@ -77,6 +77,17 @@ import takes one or two arguments. The first is the pathname of an xml file to i
 computeAllSkilled takes no arguments, and computes all the scripts in the current project
 
 
+generateDictionary takes five arguments, and generates a dictionary for a specified design in the current project. The arguments are, in order
+- the name of the design
+- the name of the algorithm, such as LSA or GENSIM
+- the limiting site, which is used only for the PMI-G algorithms
+- the LSA Space, which is only used for the LSA or GENSIM algorithms
+- the URL
+
+
+$ theDesign $ LSA $ $ General_Reading_Up_to_1st_Year_College $ http://autocww2.colorado.edu/cgi-bin/nph-elaborate.cgi?Frequency=50&Cosine=0.5&
+
+
 computeNovice takes seven or more arguments, and computes a CogTool Explorer task for a particular design. The arguments are, in order
 - the name of the design
 - the name of the task
@@ -104,4 +115,4 @@ saveAs takes one argument, the pathname of the file to save the current project 
 quit takes no arguments, and indicates that CogTool should terminate; no further commands will be processed; if quit is not supplied the running CogTool will remain up and can be manipulated with its GUI as normal
 
 
-As of mid-December 2013 just before CogTool executes each line of the command file it writes to the console each command, and then each argument, one per line. This can be helpful for debugging. If for some reason it is prefered not to have this information written to the console it can be suppressed by passing the -Q (it must be capital) command line option to CogTool along with the -f option.
+Just before CogTool executes each line of the command file it writes to the console each command, and then each argument, one per line. This can be helpful for debugging. If for some reason it is prefered not to have this information written to the console it can be suppressed by passing the -Q (it must be capital) command line option to CogTool along with the -f option.
