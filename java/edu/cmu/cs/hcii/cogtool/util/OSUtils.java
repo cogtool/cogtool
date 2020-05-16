@@ -199,7 +199,7 @@ public class OSUtils
         if (MACOSX) {
             String osArch = System.getProperty("os.arch");
 
-            if (osArch.toLowerCase().equals("i386")) {
+            if (osArch.toLowerCase().equals("i386") || osArch.toLowerCase().contains("x86")) {
                 return true;
             }
             else {
