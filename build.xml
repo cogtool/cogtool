@@ -150,17 +150,6 @@
 			<mapper type="flatten" />
 		</pathconvert>
 
-		<condition property="svnversion" value="/usr/local/bin/svnversion" else="svnversion">
-			<and>
-				<os family="mac" />
-				<os family="unix" />
-			</and>
-		</condition>
-
-		<exec executable="${svnversion}" vmlauncher="true" resolveexecutable="true" outputproperty="revision">
-			<arg file="${basedir}" />
-		</exec>
-
 		<echo message="${revision}" />
 
 		<replace file="${distdir}/CogTool.app/Contents/Info.plist" token="DISTJARSTR" value="${distjarstr}" />
